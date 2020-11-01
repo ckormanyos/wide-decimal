@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="test">
+      <UniqueIdentifier>{bbddb5ca-79f9-477f-8652-e38bbe8e40ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{56bf9369-9572-4e09-84af-489768ea3ef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\wide_decimal">
+      <UniqueIdentifier>{bc66d909-39fc-45a0-89a3-5ff18bbefa82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mcal_lcd">
+      <UniqueIdentifier>{bb7f72c6-8aa6-4939-888a-4d56b399d3c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{eb46c8a6-70b3-424d-9087-36efc281c492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util\utility">
+      <UniqueIdentifier>{626a839b-e96c-4b20-b52a-6078c16cf9ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util\memory">
+      <UniqueIdentifier>{f5dd60b8-f09c-4cc6-bf68-29f0eaab702e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="examples">
+      <UniqueIdentifier>{a67ac907-9446-43ff-90e8-0aec2fd2c943}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mcal_lcd\mcal_lcd_console.h">
+      <Filter>mcal_lcd</Filter>
+    </ClInclude>
+    <ClInclude Include="mcal_lcd\mcal_lcd_generic_st7066.h">
+      <Filter>mcal_lcd</Filter>
+    </ClInclude>
+    <ClInclude Include="mcal_lcd\mcal_lcd_base.h">
+      <Filter>mcal_lcd</Filter>
+    </ClInclude>
+    <ClInclude Include="util\memory\util_n_slot_array_allocator.h">
+      <Filter>util\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="util\utility\util_lexical_cast.h">
+      <Filter>util\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="util\utility\util_numeric_cast.h">
+      <Filter>util\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="util\utility\util_dynamic_array.h">
+      <Filter>util\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t.h">
+      <Filter>math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t_detail_fft.h">
+      <Filter>math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t_detail_helper.h">
+      <Filter>math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t_detail_karatsuba.h">
+      <Filter>math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="test\independent_algebra_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\independent_algebra_test_base.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\independent_algebra_test_boost_cpp.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\independent_algebra_test_wide_decimal.h">
+      <Filter>test</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test\test.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002_pi.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_decwide_t_examples.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_decwide_t_algebra.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example001_sqrt.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
