@@ -2075,6 +2075,33 @@
       return static_cast<limb_type>(prev);
     }
 
+    static void mul_loop_karatsuba_n_by_n_to_2n(      limb_type*          r,
+                                                const limb_type*          a,
+                                                const limb_type*          b,
+                                                const std::uint_fast32_t count)
+    {
+    }
+
+    static void mul_loop_karatsuba_propagate_carry(limb_type* t, const std::uint_fast32_t n, const bool has_borrow)
+    {
+    }
+
+    static void mul_loop_karatsuba_propagate_borrow(limb_type* t, const std::uint_fast32_t n, const bool has_borrow)
+    {
+    }
+
+    static void mul_loop_karatsuba_n_by_n_to_2n(      limb_type*          r,
+                                                const limb_type*          a,
+                                                const limb_type*          b,
+                                                const std::uint_fast32_t n,
+                                                      limb_type*          t)
+    {
+    }
+
+    static void mul_loop_karatsuba(limb_type* const u, const limb_type* const v, const std::int32_t p)
+    {
+    }
+
     static void mul_loop_fft(limb_type* const u, const limb_type* const v, const std::int32_t p)
     {
       // Determine the required FFT size,
@@ -3393,8 +3420,6 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool isone   (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x) { return x.isone(); }
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool iszero  (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x) { return x.iszero(); }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> void to_parts(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x, double& mantissa, std::int64_t& exponent);
-
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> double to_double(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::int64_t to_int64(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
@@ -3707,7 +3732,7 @@
       InternalFloatType dd;
       std::int64_t      ne;
 
-      math::wide_decimal::to_parts(x, dd, ne);
+      x.extract_parts(dd, ne);
 
       // Adjust exponent and mantissa such that ne is an even power of p.
       while(ne % static_cast<std::int64_t>(p))
@@ -3884,11 +3909,6 @@
     const std::int64_t n64 = to_int64(x);
 
     return static_cast<std::int32_t>((std::min)((std::max)(n64, n32_min), n32_max));
-  }
-
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> void to_parts(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x, double& mantissa, std::int64_t& exponent)
-  {
-    x.extract_parts(mantissa, exponent);
   }
 
   bool example001_sqrt();
