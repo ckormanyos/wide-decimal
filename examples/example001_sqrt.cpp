@@ -35,8 +35,6 @@ bool math::wide_decimal::example001_sqrt()
                                        s.crepresentation().cbegin() + control.size(),
                                        control.cbegin());
 
-  std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
-
   return result_is_ok;
 }
 

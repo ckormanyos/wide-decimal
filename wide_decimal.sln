@@ -6,20 +6,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wide_decimal", "wide_decima
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		debug-efx|x64 = debug-efx|x64
-		debug-efx|x86 = debug-efx|x86
-		release-efx|x64 = release-efx|x64
-		release-efx|x86 = release-efx|x86
+		debug-wide-decimal|x64 = debug-wide-decimal|x64
+		debug-wide-decimal|x86 = debug-wide-decimal|x86
+		release-wide-decimal|x64 = release-wide-decimal|x64
+		release-wide-decimal|x86 = release-wide-decimal|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-efx|x64.ActiveCfg = debug-efx|x64
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-efx|x64.Build.0 = debug-efx|x64
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-efx|x86.ActiveCfg = debug-efx|Win32
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-efx|x86.Build.0 = debug-efx|Win32
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-efx|x64.ActiveCfg = release-efx|x64
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-efx|x64.Build.0 = release-efx|x64
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-efx|x86.ActiveCfg = release-efx|Win32
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-efx|x86.Build.0 = release-efx|Win32
+		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-wide-decimal|x64.ActiveCfg = debug-wide-decimal|x64
+		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-wide-decimal|x64.Build.0 = debug-wide-decimal|x64
+		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-wide-decimal|x86.ActiveCfg = debug-wide-decimal|Win32
+		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-wide-decimal|x86.Build.0 = debug-wide-decimal|Win32
+		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-wide-decimal|x64.ActiveCfg = release-wide-decimal|x64
+		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-wide-decimal|x64.Build.0 = release-wide-decimal|x64
+		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-wide-decimal|x86.ActiveCfg = release-wide-decimal|Win32
+		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-wide-decimal|x86.Build.0 = release-wide-decimal|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
