@@ -72,13 +72,13 @@ with the representation of 1/3 and prints its 101 digit value to the console.
 The example below calculates the square root of the decimal representation of
 <img src="https://render.githubusercontent.com/render/math?math=\sqrt{1234.56}">,
 the result of which is approximately
-<img src="https://render.githubusercontent.com/render/math?math=35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220978">.
+<img src="https://render.githubusercontent.com/render/math?math=35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220\ldots">.
 
 ```
+#include <array>
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
-#include <initializer_list>
 
 #include <math/wide_decimal/decwide_t.h>
 
@@ -115,3 +115,81 @@ int main()
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
 ```
+
+In the following code, we compute one million and one decimal digits of the fundamental constant
+<img src="https://render.githubusercontent.com/render/math?math=\pi">, the result of which is
+<img src="https://render.githubusercontent.com/render/math?math=3.14159\,\ldots\,10582097">.
+In this particular example, all _heavy-weight_ components are deactivated and
+this is suitable for a _bare-metal_ mega-digit pi calculation.
+
+Note in this example, how a specialized custom allocator called
+`util::n_slot_array_allocator` is utilized for exact memory management
+of a certain number of temporary storages of mega-digit numbers
+(tuned to 18 in this particular example).
+
+```
+#include <array>
+#include <iomanip>
+#include <iostream>
+
+#define WIDE_DECIMAL_DISABLE_IOSTREAM
+#define WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
+#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
+#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
+
+#include <math/wide_decimal/decwide_t.h>
+#include <util/memory/util_n_slot_array_allocator.h>
+
+bool math::wide_decimal::example002_pi()
+{
+  using local_limb_type = std::uint32_t;
+
+  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1000001);
+
+  constexpr std::int32_t local_elem_number =
+    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
+
+  math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi = math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
+
+  constexpr std::array<local_limb_type, 8U> control_head =
+  {{
+    local_limb_type(3ULL),
+    local_limb_type(14159265ULL),
+    local_limb_type(35897932ULL),
+    local_limb_type(38462643ULL),
+    local_limb_type(38327950ULL),
+    local_limb_type(28841971ULL),
+    local_limb_type(69399375ULL),
+    local_limb_type(10582097ULL)
+  }};
+
+  constexpr std::array<local_limb_type, 8U> control_tail =
+  {{
+    local_limb_type(20875424ULL),
+    local_limb_type(50598956ULL),
+    local_limb_type(78796130ULL),
+    local_limb_type(33116462ULL),
+    local_limb_type(83996346ULL),
+    local_limb_type(46042209ULL),
+    local_limb_type( 1061057ULL),
+    local_limb_type(79458151ULL)
+  }};
+
+  const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
+                                     my_pi.crepresentation().cbegin() + control_head.size(),
+                                     control_head.cbegin());
+
+  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + 125001UL - 8UL,
+                                     my_pi.crepresentation().cbegin() + 125001UL,
+                                     control_tail.cbegin());
+
+  const bool result_is_ok = (head_is_ok && tail_is_ok);
+
+  std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
+}
+```
+
+The million digit run is comparatively slow and requires on the order of
+5 to 10 seconds on a modern PC.
