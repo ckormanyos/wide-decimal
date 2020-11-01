@@ -116,9 +116,10 @@ int main()
 }
 ```
 
-In the following code, we compute one million and one decimal digits of the fundamental constant
+In the following code, we compute <img src="https://render.githubusercontent.com/render/math?math=1,000,001">
+(one million and one) decimal digits of the fundamental constant
 <img src="https://render.githubusercontent.com/render/math?math=\pi">, the result of which is
-<img src="https://render.githubusercontent.com/render/math?math=3.14159\,\ldots\,10582097">.
+<img src="https://render.githubusercontent.com/render/math?math=3.14159265\,\ldots\,10582097">.
 In this particular example, all _heavy-weight_ components are deactivated and
 this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit pi calculation.
 
