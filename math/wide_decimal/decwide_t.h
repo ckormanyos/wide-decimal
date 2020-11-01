@@ -3893,6 +3893,7 @@
 
   bool example001_sqrt();
   bool example002_pi  ();
+  bool example003_zeta();
 
   } } // namespace math::wide_decimal
 

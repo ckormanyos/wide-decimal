@@ -89,5 +89,8 @@
     <ClCompile Include="examples\example001_sqrt.cpp">
       <Filter>examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example003_zeta.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -322,6 +322,7 @@
   <ItemGroup>
     <ClCompile Include="examples\example001_sqrt.cpp" />
     <ClCompile Include="examples\example002_pi.cpp" />
+    <ClCompile Include="examples\example003_zeta.cpp" />
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
     <ClCompile Include="test\test_decwide_t_examples.cpp" />
