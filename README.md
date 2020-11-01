@@ -120,7 +120,7 @@ In the following code, we compute one million and one decimal digits of the fund
 <img src="https://render.githubusercontent.com/render/math?math=\pi">, the result of which is
 <img src="https://render.githubusercontent.com/render/math?math=3.14159\,\ldots\,10582097">.
 In this particular example, all _heavy-weight_ components are deactivated and
-this is suitable for a _bare-metal_ mega-digit pi calculation.
+this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit pi calculation.
 
 Note in this example, how a specialized custom allocator called
 `util::n_slot_array_allocator` is utilized for exact memory management
@@ -140,7 +140,7 @@ of a certain number of temporary storages of mega-digit numbers
 #include <math/wide_decimal/decwide_t.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 
-bool math::wide_decimal::example002_pi()
+int main()
 {
   using local_limb_type = std::uint32_t;
 
@@ -192,4 +192,6 @@ bool math::wide_decimal::example002_pi()
 ```
 
 The million digit run is comparatively slow and requires on the order of
-5 to 10 seconds on a modern PC.
+5 to 10 seconds on a modern PC. Considering, however, the design goals
+of header-only and capable of running on bare-metal, this is
+a very nice calculational result.
