@@ -7,6 +7,11 @@ Wide-decimal features realizations of a few `<cmath>`-like anc C++-like function
 
 Wide-decimal is written in header-only C++11.
 
+# Implementation goals
+
+  - Portability
+  - Clean header-only C++11 design
+
 # Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
@@ -38,9 +43,12 @@ See the examples directory as more use cases are being created.
 
 # Quick start
 Easy application follows via a traditional C-style typedef or C++11 alias.
-The defined type can be used very much like a built-in unsinged integral type.
+The defined type can be used very much like a built-in floating-point type.
 
-For instance,
+The following sample, for instance, defines and uses a decimal type
+called `dec101_t` having
+<img src="https://render.githubusercontent.com/render/math?math=101">
+decimal digits of precision.
 
 ```
 #include <iomanip>
@@ -59,8 +67,8 @@ void do_something()
 }
 ```
 
-The code sequence above defines the local data type `dec101_t` with
-a C++11 alias. The first template parameter `101U` sets the decimal digit
+The local data type `dec101_t` is defined with a C++11 alias.
+The first template parameter `101U` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
 the default limb type is 32 bits in width and unsigned.
