@@ -7,6 +7,14 @@ Wide-decimal features realizations of a few `<cmath>`-like anc C++-like function
 
 Wide-decimal is written in header-only C++11.
 
+# Implementation goals
+
+  - wide precision range up to one million decimal digits,
+  - moderate efficiency over the entire wide precision range,
+  - portability,
+  - clean header-only C++11 design.
+  - scalability with small footprint capable of being handily embedding in _bare-metal_ systems.
+
 # Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
@@ -28,7 +36,7 @@ and construction from character string
 can optionally be disabled with the compiler switches:
 
 ```
-define WIDE_DECIMAL_DISABLE_IOSTREAM
+#define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
@@ -38,9 +46,12 @@ See the examples directory as more use cases are being created.
 
 # Quick start
 Easy application follows via a traditional C-style typedef or C++11 alias.
-The defined type can be used very much like a built-in unsinged integral type.
+The defined type can be used very much like a built-in floating-point type.
 
-For instance,
+The following sample, for instance, defines and uses a decimal type
+called `dec101_t` having
+<img src="https://render.githubusercontent.com/render/math?math=101">
+decimal digits of precision.
 
 ```
 #include <iomanip>
@@ -59,8 +70,8 @@ void do_something()
 }
 ```
 
-The code sequence above defines the local data type `dec101_t` with
-a C++11 alias. The first template parameter `101U` sets the decimal digit
+The local data type `dec101_t` is defined with a C++11 alias.
+The first template parameter `101U` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
 the default limb type is 32 bits in width and unsigned.
@@ -152,7 +163,9 @@ int main()
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
 
-  math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi = math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
+  // Calculate pi.
+  math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
+    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
 
   constexpr std::array<local_limb_type, 8U> control_head =
   {{
@@ -178,6 +191,7 @@ int main()
     local_limb_type(79458151ULL)
   }};
 
+  // Verify the pi result at the front and back.
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
                                      my_pi.crepresentation().cbegin() + control_head.size(),
                                      control_head.cbegin());
