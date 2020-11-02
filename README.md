@@ -28,7 +28,7 @@ and construction from character string
 can optionally be disabled with the compiler switches:
 
 ```
-define WIDE_DECIMAL_DISABLE_IOSTREAM
+#define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
@@ -152,7 +152,9 @@ int main()
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
 
-  math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi = math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
+  // Calculate pi.
+  math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
+    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
 
   constexpr std::array<local_limb_type, 8U> control_head =
   {{
@@ -178,6 +180,7 @@ int main()
     local_limb_type(79458151ULL)
   }};
 
+  // Verify the pi result at the front and back.
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
                                      my_pi.crepresentation().cbegin() + control_head.size(),
                                      control_head.cbegin());
