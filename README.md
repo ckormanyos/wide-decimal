@@ -9,8 +9,11 @@ Wide-decimal is written in header-only C++11.
 
 # Implementation goals
 
-  - Portability
-  - Clean header-only C++11 design
+  - wide precision range up to one million decimal digits,
+  - moderate efficiency over the entire wide precision range,
+  - portability,
+  - clean header-only C++11 design.
+  - scalability with small footprint capable of being handily embedding in _bare-metal_ systems.
 
 # Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
