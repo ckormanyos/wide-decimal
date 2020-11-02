@@ -438,10 +438,10 @@
   public:
     // Default constructor.
     decwide_t() noexcept : my_data     (),
-                         my_exp      (static_cast<std::int64_t>(0)),
-                         my_neg      (false),
-                         my_fpclass  (decwide_t_finite),
-                         my_prec_elem(decwide_t_elem_number) { }
+                           my_exp      (static_cast<std::int64_t>(0)),
+                           my_neg      (false),
+                           my_fpclass  (decwide_t_finite),
+                           my_prec_elem(decwide_t_elem_number) { }
 
     // Constructors from built-in unsigned integral types.
     template<typename UnsignedIntegralType,
@@ -449,10 +449,10 @@
                                       && (std::is_unsigned<UnsignedIntegralType>::value == true)
                                       && (std::numeric_limits<UnsignedIntegralType>::digits <= std::numeric_limits<limb_type>::digits))>::type const* = nullptr>
     decwide_t(const UnsignedIntegralType u) : my_data     (decwide_t_elem_number, 0U),
-                                            my_exp      (static_cast<std::int64_t>(0)),
-                                            my_neg      (false),
-                                            my_fpclass  (decwide_t_finite),
-                                            my_prec_elem(decwide_t_elem_number)
+                                              my_exp      (static_cast<std::int64_t>(0)),
+                                              my_neg      (false),
+                                              my_fpclass  (decwide_t_finite),
+                                              my_prec_elem(decwide_t_elem_number)
     {
       my_data[0U] = u;
     }
@@ -463,10 +463,10 @@
                                       && (std::is_unsigned<UnsignedIntegralType>::value == true)
                                       && (std::numeric_limits<limb_type>::digits) < std::numeric_limits<UnsignedIntegralType>::digits)>::type const* = nullptr>
     decwide_t(const UnsignedIntegralType u) : my_data     (),
-                                            my_exp      (static_cast<std::int64_t>(0)),
-                                            my_neg      (false),
-                                            my_fpclass  (decwide_t_finite),
-                                            my_prec_elem(decwide_t_elem_number)
+                                              my_exp      (static_cast<std::int64_t>(0)),
+                                              my_neg      (false),
+                                              my_fpclass  (decwide_t_finite),
+                                              my_prec_elem(decwide_t_elem_number)
     {
       from_unsigned_long_long(u);
     }
@@ -476,10 +476,10 @@
               typename std::enable_if<(   (std::is_integral<SignedIntegralType>::value == true)
                                        && (std::is_signed  <SignedIntegralType>::value == true))>::type const* = nullptr>
     decwide_t(const SignedIntegralType n) : my_data     (),
-                                          my_exp      (static_cast<std::int64_t>(0)),
-                                          my_neg      (n < static_cast<signed long long>(0)),
-                                          my_fpclass  (decwide_t_finite),
-                                          my_prec_elem(decwide_t_elem_number)
+                                            my_exp      (static_cast<std::int64_t>(0)),
+                                            my_neg      (n < static_cast<signed long long>(0)),
+                                            my_fpclass  (decwide_t_finite),
+                                            my_prec_elem(decwide_t_elem_number)
     {
       const unsigned long long u =
         ((!my_neg) ? static_cast<unsigned long long>(n)
@@ -539,24 +539,24 @@
 
     // Copy constructor.
     decwide_t(const decwide_t& f) : my_data     (f.my_data),
-                                my_exp      (f.my_exp),
-                                my_neg      (f.my_neg),
-                                my_fpclass  (f.my_fpclass),
-                                my_prec_elem(f.my_prec_elem) { }
-
-    // Move constructor.
-    decwide_t(decwide_t&& f) noexcept : my_data     (static_cast<array_type&&>(f.my_data)),
                                     my_exp      (f.my_exp),
                                     my_neg      (f.my_neg),
                                     my_fpclass  (f.my_fpclass),
                                     my_prec_elem(f.my_prec_elem) { }
 
+    // Move constructor.
+    decwide_t(decwide_t&& f) noexcept : my_data     (static_cast<array_type&&>(f.my_data)),
+                                        my_exp      (f.my_exp),
+                                        my_neg      (f.my_neg),
+                                        my_fpclass  (f.my_fpclass),
+                                        my_prec_elem(f.my_prec_elem) { }
+
     // Constructor from floating-point class.
     explicit decwide_t(const fpclass_type fpc) : my_data     (),
-                                               my_exp      (static_cast<std::int64_t>(0)),
-                                               my_neg      (false),
-                                               my_fpclass  (fpc),
-                                               my_prec_elem(decwide_t_elem_number) { }
+                                                 my_exp      (static_cast<std::int64_t>(0)),
+                                                 my_neg      (false),
+                                                 my_fpclass  (fpc),
+                                                 my_prec_elem(decwide_t_elem_number) { }
 
     // Constructor from initializer list of limbs,
     // exponent value (normed to limb granularity) 
@@ -843,6 +843,11 @@
     // Binary arithmetic operators.
     decwide_t& operator+=(const decwide_t& v)
     {
+      // TBD: Eliminate the temporary storage array my_n_data_for_add_sub.
+
+      // TBD: Limit the length of add/sub to only those ranges needed,
+      // whereby propagate borrow/carry may be necessary as well.
+
       if(isnan())
       {
         return *this;
@@ -881,7 +886,6 @@
       }
 
       // Do the add/sub operation.
-      // TBD: Eliminate the temporary storage array my_n_data_for_add_sub.
 
       typename array_type::iterator       p_u    =   my_data.begin();
       typename array_type::const_iterator p_v    = v.my_data.cbegin();
@@ -920,7 +924,7 @@
           b_copy = true;
         }
 
-        // Addition algorithm
+        // Addition.
         const limb_type carry = add_loop_uv(p_u, p_v, decwide_t_elem_number);
 
         if(b_copy)
@@ -988,7 +992,7 @@
           b_copy = true;
         }
 
-        // Subtraction algorithm
+        // Subtraction.
         const signed_limb_type borrow = sub_loop_uv(p_u, p_v, decwide_t_elem_number);
 
         static_cast<void>(borrow);
@@ -1170,7 +1174,7 @@
     decwide_t& operator/=(const decwide_t& v)
     {
       const bool u_and_v_are_finite_and_identical =
-        (   isfinite()
+        (    isfinite()
          && (my_fpclass == v.my_fpclass)
          && (my_exp     == v.my_exp)
          && (cmp_data(v.my_data) == static_cast<std::int32_t>(0)));
@@ -1427,13 +1431,13 @@
       // is used. During the iterative steps, the precision of the calculation is limited
       // to the minimum required in order to minimize the run-time.
 
-      static const std::int32_t double_digits10_minus_a_few = static_cast<std::int32_t>(static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10) - static_cast<std::int32_t>(3));
-
-      for(std::int32_t digits = double_digits10_minus_a_few; digits < static_cast<std::int32_t>(math::wide_decimal::tolerance<MyDigits10, LimbType, AllocatorType, InternalFloatType>()); digits *= static_cast<std::int32_t>(2))
+      for(std::int32_t digits = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1); digits < decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_max_digits10; digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
-          precision(static_cast<std::int32_t>(digits * 2) + 10);
-        x.precision(static_cast<std::int32_t>(digits * 2) + 10);
+        const std::int32_t new_prec = static_cast<std::int32_t>(digits * 2) + 8;
+
+          precision(new_prec);
+        x.precision(new_prec);
 
         // Next iteration.
         operator=(*this * (two<MyDigits10, LimbType, AllocatorType, InternalFloatType>() - (*this * x)));
@@ -1501,10 +1505,10 @@
       // http://www.jjj.de/pibook/pibook.html
       // http://www.amazon.com/exec/obidos/tg/detail/-/3540665722/qid=1035535482/sr=8-7/ref=sr_8_7/104-3357872-6059916?v=glance&n=507846
 
-      for(std::int32_t digits = (std::int32_t) std::numeric_limits<InternalFloatType>::digits10; digits < decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_max_digits10; digits *= static_cast<std::int32_t>(2))
+      for(std::int32_t digits = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1); digits < decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_max_digits10; digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
-        const std::int32_t new_prec = static_cast<std::int32_t>(digits * 2) + decwide_t_elem_digits10;
+        const std::int32_t new_prec = static_cast<std::int32_t>(digits * 2) + 8;
 
            precision(new_prec);
         vi.precision(new_prec);
