@@ -29,9 +29,9 @@
 
       b.get_string(str_b);
 
-      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ef_b(str_b);
+      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> decwide_t_b(str_b);
 
-      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ratio = fabs(1 - fabs(a.my_decwide_t / ef_b));
+      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ratio = fabs(1 - fabs(a.my_decwide_t / decwide_t_b));
 
       static const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> eps =
         std::numeric_limits<math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::epsilon() * 10;
@@ -50,7 +50,7 @@
       static std::mt19937     eng_mantissa;
 
       static std::uniform_int_distribution<std::uint32_t> dst_sign    (UINT32_C(0), UINT32_C(1));
-      static std::uniform_int_distribution<std::uint32_t> dst_exp     (UINT32_C(0), (std::uint32_t) (((unsigned long long) math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::ef_digits10 * 6ULL) / 10ULL));
+      static std::uniform_int_distribution<std::uint32_t> dst_exp     (UINT32_C(0), (std::uint32_t) (((unsigned long long) math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_digits10 * 6ULL) / 10ULL));
       static std::uniform_int_distribution<std::uint32_t> dst_mantissa(UINT32_C(0), UINT32_C(99999999));
 
       if(do_seed_random_generators)
