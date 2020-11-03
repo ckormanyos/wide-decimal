@@ -3931,9 +3931,10 @@
     return static_cast<std::int32_t>((std::min)((std::max)(n64, n32_min), n32_max));
   }
 
-  bool example001_sqrt();
-  bool example002_pi  ();
-  bool example003_zeta();
+  bool example001_sqrt          ();
+  bool example002_pi            ();
+  bool example002a_pi_small_limb();
+  bool example003_zeta          ();
 
   } } // namespace math::wide_decimal
 

@@ -9,9 +9,9 @@ namespace
   void compute_primes_via_square_root(std::deque<std::uint_fast16_t>& primes,
                                       const std::uint_fast16_t maximum_value)
   {
-    // This is a helper function that uses rudimentary trial division
-    // up to an upper limit of the square root of the largest expected
-    // prime in order to produce a small table of primes.
+    // This is a helper function that produces a small table of primes.
+    // It uses rudimentary (and slow) trial division with denominator
+    // ranging from 3 up to the square root of the largest expected prime.
 
     for(std::uint_fast16_t i = UINT32_C(3); i <= maximum_value; i += UINT32_C(2))
     {
