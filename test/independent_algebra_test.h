@@ -69,7 +69,7 @@
 
       while(str.length() < std::string::size_type(std::numeric_limits<math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10))
       {
-        std::uint32_t u = dst_mantissa(eng_mantissa);
+        u = dst_mantissa(eng_mantissa);
 
         ss << std::setw(8) << std::setfill('0') << u;
 
@@ -118,10 +118,10 @@
     std::string str_a;
     std::string str_b;
 
-    std::uint32_t i;
-    std::uint32_t j;
+    std::uint32_t i = 0U;
+    std::uint32_t j = 0U;
 
-    for(i = 0U; i < round && result_is_ok; ++i)
+    for( ; i < round && result_is_ok; ++i)
     {
       for(j = 0U; j < count && result_is_ok; ++j)
       {
@@ -164,10 +164,10 @@
     std::string str_a;
     std::string str_b;
 
-    std::uint32_t i;
-    std::uint32_t j;
+    std::uint32_t i = 0U;
+    std::uint32_t j = 0U;
 
-    for(i = 0U; i < round && result_is_ok; ++i)
+    for( ; i < round && result_is_ok; ++i)
     {
       for(j = 0U; j < count && result_is_ok; ++j)
       {
@@ -210,10 +210,10 @@
     std::string str_a;
     std::string str_b;
 
-    std::uint32_t i;
-    std::uint32_t j;
+    std::uint32_t i = 0U;
+    std::uint32_t j = 0U;
 
-    for(i = 0U; i < round && result_is_ok; ++i)
+    for( ; i < round && result_is_ok; ++i)
     {
       for(j = 0U; j < count && result_is_ok; ++j)
       {
@@ -256,10 +256,10 @@
     std::string str_a;
     std::string str_b;
 
-    std::uint32_t i;
-    std::uint32_t j;
+    std::uint32_t i = 0U;
+    std::uint32_t j = 0U;
 
-    for(i = 0U; i < round && result_is_ok; ++i)
+    for( ; i < round && result_is_ok; ++i)
     {
       for(j = 0U; j < count && result_is_ok; ++j)
       {
@@ -302,10 +302,10 @@
     std::string str_a;
     std::string str_b;
 
-    std::uint32_t i;
-    std::uint32_t j;
+    std::uint32_t i = 0U;
+    std::uint32_t j = 0U;
 
-    for(i = 0U; i < round && result_is_ok; ++i)
+    for( ; i < round && result_is_ok; ++i)
     {
       for(j = 0U; j < count && result_is_ok; ++j)
       {
