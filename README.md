@@ -13,7 +13,7 @@ Wide-decimal is written in header-only C++11.
   - moderate efficiency over the entire wide precision range,
   - portability,
   - clean header-only C++11 design.
-  - scalability with small memory footprint ready for _bare-metal_ embedded systems.
+  - scalability with small memory footprint appropriate for _bare-metal_ embedded systems.
 
 # Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
@@ -75,8 +75,9 @@ The first template parameter `101U` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
 the default limb type is 32 bits in width and unsigned.
-The subroutine `do_something()` initializes a variable of type `dec101_t` named `d`
-with the representation of 1/3 and prints its 101 digit value to the console.
+The subroutine `do_something()` initializes the variable `d`
+of type `dec101_t` with 1/3 and subsequently prints the 101 digit
+value of `d` to the console.
 
 # Detailed examples
 

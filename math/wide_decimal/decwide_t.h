@@ -324,6 +324,8 @@
   class decwide_t
   {
   public:
+    static constexpr std::int32_t decwide_t_elems_for_fft     = 64;
+
     static constexpr std::int32_t decwide_t_digits10          = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
     static constexpr std::int32_t decwide_t_digits            = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
     static constexpr std::int32_t decwide_t_max_digits10      = detail::decwide_t_helper<MyDigits10, LimbType>::max_digits10;
@@ -336,7 +338,7 @@
     static constexpr std::int32_t decwide_t_elem_mask_half    = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask_half;
 
     static constexpr std::int64_t decwide_t_max_exp10         = static_cast<std::int64_t>(9223372036854775795LL - (9223372036854775795LL % decwide_t_elem_digits10));
-    static constexpr std::int64_t decwide_t_min_exp10         = static_cast<std::int64_t>(-decwide_t_max_exp10);
+    static constexpr std::int64_t decwide_t_min_exp10         = static_cast<std::int64_t>(-static_cast<std::int64_t>(decwide_t_max_exp10));
     static constexpr std::int64_t decwide_t_max_exp           = decwide_t_max_exp10;
     static constexpr std::int64_t decwide_t_min_exp           = decwide_t_min_exp10;
 
@@ -592,7 +594,7 @@
         return;
       }
 
-      const bool b_neg = (mantissa < 0.0);
+      const bool b_neg = (mantissa < InternalFloatType(0.0F));
 
       InternalFloatType d = ((!b_neg) ? mantissa : -mantissa);
       std::int64_t  e = exponent;
@@ -1118,52 +1120,9 @@
       // Set the exponent of the result.
       my_exp += v.my_exp;
 
-      const std::int32_t prec_for_multiply     = (std::min)(my_prec_elem, v.my_prec_elem);
-      const std::int32_t digits10_for_multiply = static_cast<std::int32_t>(prec_for_multiply * decwide_t_elem_digits10);
+      const std::int32_t prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
-      // Note: Karatsuba multiplication is not used for intermediate digit counts.
-      // Consider implementing Karatsuba multiplication for intermediate digit counts.
-
-      if(digits10_for_multiply < static_cast<std::int32_t>(120))
-      {
-        // Use school multiplication.
-        const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_for_multiply);
-
-        // Handle a potential carry.
-        if(carry != static_cast<limb_type>(0U))
-        {
-          my_exp += static_cast<std::int64_t>(decwide_t_elem_digits10);
-
-          // Shift the result of the multiplication one element to the right.
-          std::copy_backward(my_data.cbegin(),
-                             my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - static_cast<std::int32_t>(1)),
-                             my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
-
-          my_data.front() = static_cast<limb_type>(carry);
-        }
-      }
-      else
-      {
-        // Use FFT-based multiplication.
-        mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(prec_for_multiply));
-
-        // Adjust the exponent because of the internal scaling of the FFT multiplication.
-        my_exp += static_cast<std::int64_t>(decwide_t_elem_digits10);
-
-        // Check for justify
-        if(my_data.front() == static_cast<limb_type>(0U))
-        {
-          // Justify the data.
-          std::copy(my_data.cbegin() + static_cast<std::ptrdiff_t>(1),
-                    my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem),
-                    my_data.begin());
-
-          my_data.back() = static_cast<limb_type>(0U);
-
-          // Adjust the exponent accordingly.
-          my_exp -= static_cast<std::int64_t>(decwide_t_elem_digits10);
-        }
-      }
+      eval_mul_dispatch_multiplication_method<decwide_t_elem_number>(v, prec_elems_for_multiply);
 
       // Set the sign of the result.
       my_neg = b_result_is_neg;
@@ -1470,8 +1429,8 @@
       // Generate the initial estimate using division.
       // Extract the mantissa and exponent for a "manual"
       // computation of the estimate.
-      InternalFloatType       dd;
-      std::int64_t ne;
+      InternalFloatType dd;
+      std::int64_t      ne;
 
       extract_parts(dd, ne);
 
@@ -1479,7 +1438,7 @@
       if((ne % static_cast<std::int64_t>(2)) != static_cast<std::int64_t>(0))
       {
         ++ne;
-        dd /= 10.0;
+        dd /= InternalFloatType(10.0F);
       }
 
       using std::sqrt;
@@ -2210,6 +2169,78 @@
 
       // De-allocate the dynamic memory for the FFT result arrays.
       // (Previously) delete [] af_bf;
+    }
+
+    template<const std::int32_t ElemsForFftThreshold>
+    void eval_mul_dispatch_multiplication_method(const decwide_t& v,
+                                                 const std::int32_t p,
+                                                 const std::int32_t = ElemsForFftThreshold,
+                                                 const typename std::enable_if<(decwide_t_elems_for_fft >= ElemsForFftThreshold)>::type* = nullptr)
+    {
+      // Use school multiplication.
+      const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), p);
+
+      // Handle a potential carry.
+      if(carry != static_cast<limb_type>(0U))
+      {
+        my_exp += static_cast<std::int64_t>(decwide_t_elem_digits10);
+
+        // Shift the result of the multiplication one element to the right.
+        std::copy_backward(my_data.cbegin(),
+                            my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
+                            my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
+
+        my_data.front() = static_cast<limb_type>(carry);
+      }
+    }
+
+    template<const std::int32_t ElemsForFftThreshold>
+    void eval_mul_dispatch_multiplication_method(const decwide_t& v,
+                                                 const std::int32_t p,
+                                                 const std::int32_t = ElemsForFftThreshold,
+                                                 const typename std::enable_if<(ElemsForFftThreshold > decwide_t_elems_for_fft)>::type* = nullptr)
+    {
+      // Note: Karatsuba multiplication is not used for intermediate digit counts.
+      // TBD: Implement Karatsuba multiplication for intermediate digit counts.
+
+      if(p < decwide_t_elems_for_fft)
+      {
+        // Use school multiplication.
+        const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), p);
+
+        // Handle a potential carry.
+        if(carry != static_cast<limb_type>(0U))
+        {
+          my_exp += static_cast<std::int64_t>(decwide_t_elem_digits10);
+
+          // Shift the result of the multiplication one element to the right.
+          std::copy_backward(my_data.cbegin(),
+                             my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
+                             my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
+
+          my_data.front() = static_cast<limb_type>(carry);
+        }
+      }
+      else
+      {
+        // Use FFT-based multiplication.
+        mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(p));
+
+        if(my_data.front() != static_cast<limb_type>(0U))
+        {
+          // Adjust the exponent because of the internal scaling of the FFT multiplication.
+          my_exp += static_cast<std::int64_t>(decwide_t_elem_digits10);
+        }
+        else
+        {
+          // Justify the data.
+          std::copy(my_data.cbegin() +  static_cast<std::ptrdiff_t>(1),
+                    my_data.cbegin() + (static_cast<std::ptrdiff_t>(1) + static_cast<std::ptrdiff_t>(my_prec_elem)),
+                    my_data.begin());
+
+          my_data.back() = static_cast<limb_type>(0U);
+        }
+      }
     }
 
     std::int64_t get_order_exact() const { return get_order_fast(); }

@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2020.                        //
+//  Distributed under the Boost Software License,                //
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
+//  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
+///////////////////////////////////////////////////////////////////
+
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
@@ -17,7 +24,8 @@ bool math::wide_decimal::example002_pi()
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
 
-  math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi = math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
+  math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
+    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
 
   constexpr std::array<local_limb_type, 8U> control_head =
   {{
