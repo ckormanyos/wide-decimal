@@ -13,7 +13,7 @@ Wide-decimal is written in header-only C++11.
   - moderate efficiency over the entire wide precision range,
   - portability,
   - clean header-only C++11 design.
-  - scalability with small footprint capable of being handily embedding in _bare-metal_ systems.
+  - scalability with small memory footprint appropriate for _bare-metal_ embedded systems.
 
 # Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
@@ -75,8 +75,9 @@ The first template parameter `101U` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
 the default limb type is 32 bits in width and unsigned.
-The subroutine `do_something()` initializes the `dec101_t` named `d`
-with the representation of 1/3 and prints its 101 digit value to the console.
+The subroutine `do_something()` initializes the variable `d`
+of type `dec101_t` with 1/3 and subsequently prints the 101 digit
+value of `d` to the console.
 
 # Detailed examples
 
@@ -130,7 +131,7 @@ int main()
 In the following code, we compute <img src="https://render.githubusercontent.com/render/math?math=1,000,001">
 (one million and one) decimal digits of the fundamental constant
 <img src="https://render.githubusercontent.com/render/math?math=\pi">, the result of which is
-<img src="https://render.githubusercontent.com/render/math?math=3.14159265\,\ldots\,10582097">.
+<img src="https://render.githubusercontent.com/render/math?math=3.14159265\,\ldots\,79458151">.
 In this particular example, all _heavy-weight_ components are deactivated and
 this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit pi calculation.
 

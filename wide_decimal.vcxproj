@@ -321,6 +321,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001_sqrt.cpp" />
+    <ClCompile Include="examples\example002a_pi_small_limb.cpp" />
     <ClCompile Include="examples\example002_pi.cpp" />
     <ClCompile Include="examples\example003_zeta.cpp" />
     <ClCompile Include="test\test.cpp" />

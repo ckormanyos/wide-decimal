@@ -5,7 +5,6 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-
 #ifndef INDEPENDENT_ALGEBRA_TEST_2020_10_17_H_
   #define INDEPENDENT_ALGEBRA_TEST_2020_10_17_H_
 

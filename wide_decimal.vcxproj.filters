@@ -92,5 +92,8 @@
     <ClCompile Include="examples\example003_zeta.cpp">
       <Filter>examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example002a_pi_small_limb.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
