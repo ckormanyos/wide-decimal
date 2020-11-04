@@ -130,12 +130,13 @@ int main()
 
 In the following code, we compute <img src="https://render.githubusercontent.com/render/math?math=1,000,001">
 (one million and one) decimal digits of the fundamental constant
-<img src="https://render.githubusercontent.com/render/math?math=\pi">, the result of which is
+<img src="https://render.githubusercontent.com/render/math?math=\pi">.
+The truncated (non-rounded) expected result is
 <img src="https://render.githubusercontent.com/render/math?math=3.14159265\,\ldots\,79458151">.
 In this particular example, all _heavy-weight_ components are deactivated and
 this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit pi calculation.
 
-Note in this example, how a specialized custom allocator called
+In this example, note how a specialized custom allocator called
 `util::n_slot_array_allocator` is utilized for exact memory management
 of a certain number of temporary storages of mega-digit numbers
 (tuned to 18 in this particular example).
@@ -207,7 +208,7 @@ int main()
 }
 ```
 
-The million digit run is comparatively slow and requires on the order of
-5 to 10 seconds on a modern PC. Considering, however, the design goals
+The million digit run is comparatively slow and requires approximately
+10 seconds on a modern PC. Considering, however, the design goals
 of header-only and capable of running on bare-metal, this is
 a very nice calculational result.
