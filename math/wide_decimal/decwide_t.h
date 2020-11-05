@@ -1063,28 +1063,8 @@
       // Artificially set the sign of the result to be positive.
       my_neg = false;
 
-      // Handle special cases like zero, inf and NaN.
-      const bool b_u_is_inf  =   isinf();
-      const bool b_v_is_inf  = v.isinf();
-      const bool b_u_is_zero =   iszero();
-      const bool b_v_is_zero = v.iszero();
-
-      if(   (isnan()    || v.isnan())
-         || (b_u_is_inf && b_v_is_zero)
-         || (b_v_is_inf && b_u_is_zero)
-        )
-      {
-        return (*this = my_value_nan());
-      }
-
-      if(b_u_is_inf || b_v_is_inf)
-      {
-        *this = ((!b_result_is_neg) ?  my_value_inf() : -my_value_inf());
-
-        return *this;
-      }
-
-      if(b_u_is_zero || b_v_is_zero)
+      // Handle multiplication by zero.
+      if(iszero() || v.iszero())
       {
         return (*this = zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>());
       }

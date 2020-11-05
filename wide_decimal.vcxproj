@@ -288,9 +288,11 @@
     <ClInclude Include="test\independent_algebra_test_base.h" />
     <ClInclude Include="test\independent_algebra_test_boost_cpp.h" />
     <ClInclude Include="test\independent_algebra_test_wide_decimal.h" />
+    <ClInclude Include="test\parallel_for.h" />
     <ClInclude Include="util\memory\util_n_slot_array_allocator.h" />
     <ClInclude Include="util\utility\util_dynamic_array.h" />
     <ClInclude Include="util\utility\util_lexical_cast.h" />
+    <ClInclude Include="util\utility\util_noncopyable.h" />
     <ClInclude Include="util\utility\util_numeric_cast.h" />
     <CustomBuildStep Include="..\src\e_float\efx\e_float_efx.h" />
     <CustomBuildStep Include="..\src\e_float\efx\e_float_efx_array.h" />
