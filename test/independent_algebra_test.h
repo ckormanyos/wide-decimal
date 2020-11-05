@@ -8,6 +8,7 @@
 #ifndef INDEPENDENT_ALGEBRA_TEST_2020_10_17_H_
   #define INDEPENDENT_ALGEBRA_TEST_2020_10_17_H_
 
+  #include <atomic>
   #include <iostream>
   #include <random>
 
@@ -15,6 +16,7 @@
 
   #include <test/independent_algebra_test_wide_decimal.h>
   #include <test/independent_algebra_test_boost_cpp.h>
+  #include <test/parallel_for.h>
 
   namespace test { namespace independent_algebra {
 
@@ -110,40 +112,52 @@
   bool independent_algebra_test_add_()
   {
     using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
-    const std::uint32_t count = CountN;
-    const std::uint32_t round = RoundN;
+
+    constexpr std::uint32_t count = CountN;
+    constexpr std::uint32_t round = RoundN;
 
     bool result_is_ok = true;
 
-    std::string str_a;
-    std::string str_b;
+    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
 
-    std::uint32_t i = 0U;
-    std::uint32_t j = 0U;
-
-    for( ; i < round && result_is_ok; ++i)
+    for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
-      for(j = 0U; j < count && result_is_ok; ++j)
-      {
-        test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
-        independent_algebra_test_control_type                                                                               a_ctrl(str_a.c_str());
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+      my_concurrency::parallel_for
+      (
+        std::size_t(0U),
+        std::size_t(count),
+        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        {
+          std::string str_a;
+          std::string str_b;
 
-        test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
-        independent_algebra_test_control_type                                                                               b_ctrl(str_b.c_str());
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
+          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-        independent_algebra_test_control_type                                                                               result_ctrl;
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
+          independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
-        eval_add(result_ctrl, a_ctrl, b_ctrl);
-        eval_add(result_ef,   a_ef,   b_ef);
+          independent_algebra_test_control_type                                                                                 result_ctrl;
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
-        result_is_ok &= test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-      }
+          eval_add(result_ctrl, a_ctrl, b_ctrl);
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          eval_add(result_ef, a_ef, b_ef);
+          operation_iteration_lock.clear();
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          operation_iteration_lock.clear();
+
+          result_is_ok &= b;
+        }
+      );
     }
 
-    return ((i == round) && (j == count));
+    return result_is_ok;
   }
 
   template<const std::int32_t MyDigits10,
@@ -156,40 +170,52 @@
   bool independent_algebra_test_sub_()
   {
     using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
-    const std::uint32_t count = CountN;
-    const std::uint32_t round = RoundN;
+
+    constexpr std::uint32_t count = CountN;
+    constexpr std::uint32_t round = RoundN;
 
     bool result_is_ok = true;
 
-    std::string str_a;
-    std::string str_b;
+    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
 
-    std::uint32_t i = 0U;
-    std::uint32_t j = 0U;
-
-    for( ; i < round && result_is_ok; ++i)
+    for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
-      for(j = 0U; j < count && result_is_ok; ++j)
-      {
-        test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
-        independent_algebra_test_control_type                                                                               a_ctrl(str_a.c_str());
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+      my_concurrency::parallel_for
+      (
+        std::size_t(0U),
+        std::size_t(count),
+        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        {
+          std::string str_a;
+          std::string str_b;
 
-        test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
-        independent_algebra_test_control_type                                                                               b_ctrl(str_b.c_str());
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
+          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-        independent_algebra_test_control_type                                                                               result_ctrl;
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
+          independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
-        eval_sub(result_ctrl, a_ctrl, b_ctrl);
-        eval_sub(result_ef,   a_ef,   b_ef);
+          independent_algebra_test_control_type                                                                                 result_ctrl;
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
-        result_is_ok &= test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-      }
+          eval_sub(result_ctrl, a_ctrl, b_ctrl);
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          eval_sub(result_ef, a_ef, b_ef);
+          operation_iteration_lock.clear();
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          operation_iteration_lock.clear();
+
+          result_is_ok &= b;
+        }
+      );
     }
 
-    return ((i == round) && (j == count));
+    return result_is_ok;
   }
 
   template<const std::int32_t MyDigits10,
@@ -202,40 +228,52 @@
   bool independent_algebra_test_mul_()
   {
     using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
-    const std::uint32_t count = CountN;
-    const std::uint32_t round = RoundN;
+
+    constexpr std::uint32_t count = CountN;
+    constexpr std::uint32_t round = RoundN;
 
     bool result_is_ok = true;
 
-    std::string str_a;
-    std::string str_b;
+    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
 
-    std::uint32_t i = 0U;
-    std::uint32_t j = 0U;
-
-    for( ; i < round && result_is_ok; ++i)
+    for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
-      for(j = 0U; j < count && result_is_ok; ++j)
-      {
-        test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
-        independent_algebra_test_control_type                                                                               a_ctrl(str_a.c_str());
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+      my_concurrency::parallel_for
+      (
+        std::size_t(0U),
+        std::size_t(count),
+        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        {
+          std::string str_a;
+          std::string str_b;
 
-        test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
-        independent_algebra_test_control_type                                                                               b_ctrl(str_b.c_str());
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
+          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-        independent_algebra_test_control_type                                                                               result_ctrl;
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
+          independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
-        eval_mul(result_ctrl, a_ctrl, b_ctrl);
-        eval_mul(result_ef,   a_ef,   b_ef);
+          independent_algebra_test_control_type                                                                                 result_ctrl;
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
-        result_is_ok &= test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-      }
+          eval_mul(result_ctrl, a_ctrl, b_ctrl);
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          eval_mul(result_ef, a_ef, b_ef);
+          operation_iteration_lock.clear();
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          operation_iteration_lock.clear();
+
+          result_is_ok &= b;
+        }
+      );
     }
 
-    return ((i == round) && (j == count));
+    return result_is_ok;
   }
 
   template<const std::int32_t MyDigits10,
@@ -248,40 +286,52 @@
   bool independent_algebra_test_div_()
   {
     using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
-    const std::uint32_t count = CountN;
-    const std::uint32_t round = RoundN;
+
+    constexpr std::uint32_t count = CountN;
+    constexpr std::uint32_t round = RoundN;
 
     bool result_is_ok = true;
 
-    std::string str_a;
-    std::string str_b;
+    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
 
-    std::uint32_t i = 0U;
-    std::uint32_t j = 0U;
-
-    for( ; i < round && result_is_ok; ++i)
+    for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
-      for(j = 0U; j < count && result_is_ok; ++j)
-      {
-        test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
-        independent_algebra_test_control_type                                                                               a_ctrl(str_a.c_str());
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+      my_concurrency::parallel_for
+      (
+        std::size_t(0U),
+        std::size_t(count),
+        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        {
+          std::string str_a;
+          std::string str_b;
 
-        test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
-        independent_algebra_test_control_type                                                                               b_ctrl(str_b.c_str());
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
+          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-        independent_algebra_test_control_type                                                                               result_ctrl;
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
+          independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
-        eval_div(result_ctrl, a_ctrl, b_ctrl);
-        eval_div(result_ef,   a_ef,   b_ef);
+          independent_algebra_test_control_type                                                                                 result_ctrl;
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
-        result_is_ok &= test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-      }
+          eval_div(result_ctrl, a_ctrl, b_ctrl);
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          eval_div(result_ef, a_ef, b_ef);
+          operation_iteration_lock.clear();
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          operation_iteration_lock.clear();
+
+          result_is_ok &= b;
+        }
+      );
     }
 
-    return ((i == round) && (j == count));
+    return result_is_ok;
   }
 
   template<const std::int32_t MyDigits10,
@@ -294,36 +344,47 @@
   bool independent_algebra_test_sqrt()
   {
     using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
-    const std::uint32_t count = CountN;
-    const std::uint32_t round = RoundN;
+
+    constexpr std::uint32_t count = CountN;
+    constexpr std::uint32_t round = RoundN;
 
     bool result_is_ok = true;
 
-    std::string str_a;
-    std::string str_b;
+    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
 
-    std::uint32_t i = 0U;
-    std::uint32_t j = 0U;
-
-    for( ; i < round && result_is_ok; ++i)
+    for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
-      for(j = 0U; j < count && result_is_ok; ++j)
-      {
-        test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U, true);
-        independent_algebra_test_control_type                                                                               a_ctrl(str_a.c_str());
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+      my_concurrency::parallel_for
+      (
+        std::size_t(0U),
+        std::size_t(count),
+        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        {
+          std::string str_a;
 
-        independent_algebra_test_control_type                                             result_ctrl;
-        test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U, true);
+          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-        eval_sqrt(result_ctrl, a_ctrl);
-        eval_sqrt(result_ef,   a_ef);
+          independent_algebra_test_control_type                                                                                 result_ctrl;
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
-        result_is_ok &= test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-      }
+          eval_sqrt(result_ctrl, a_ctrl);
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          eval_sqrt(result_ef, a_ef);
+          operation_iteration_lock.clear();
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          operation_iteration_lock.clear();
+
+          result_is_ok &= b;
+        }
+      );
     }
 
-    return ((i == round) && (j == count));
+    return result_is_ok;
   }
 
   } }
