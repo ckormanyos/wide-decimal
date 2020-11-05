@@ -34,7 +34,7 @@ bool math::wide_decimal::example002a_pi_small_limb()
 
   const std::clock_t stop = std::clock();
 
-  std::cout << "Time   example002a_pi_small_limb(): "
+  std::cout << "Time example002a_pi_small_limb(): "
     << float(stop - start) / float(CLOCKS_PER_SEC)
     << std::endl;
 

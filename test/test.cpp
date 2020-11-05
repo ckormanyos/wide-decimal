@@ -19,22 +19,31 @@
 #define BOOST_TEST_MODULE test_decwide_t
 #include <boost/test/included/unit_test.hpp>
 
-bool test_decwide_t_algebra_add_();
-bool test_decwide_t_algebra_sub_();
-bool test_decwide_t_algebra_mul_();
-bool test_decwide_t_algebra_div_();
-bool test_decwide_t_algebra_sqrt();
-bool test_decwide_t_examples();
+#include <test/test_decwide_t_algebra.h>
+#include <test/test_decwide_t_examples.h>
+
+namespace
+{
+  boost::unit_test::log_level& test_log_level()
+  {
+    static boost::unit_test::log_level my_test_log_level =
+      boost::unit_test::unit_test_log.set_threshold_level(boost::unit_test::log_level::log_test_units);
+
+    return my_test_log_level;
+  }
+}
 
 BOOST_AUTO_TEST_CASE(test_decwide_t_examples_tag)
 {
+  (void) test_log_level();
   std::cout << "running: test_decwide_t_examples" << std::endl;
-  const bool result_test_decwide_t_examples_is_ok = test_decwide_t_examples();
+  const bool result_test_decwide_t_examples_is_ok = test_decwide_t_examples____();
   BOOST_CHECK(result_test_decwide_t_examples_is_ok);
 }
 
 BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_add__tag)
 {
+  (void) test_log_level();
   std::cout << "running: test_decwide_t_algebra_add_" << std::endl;
   const bool result_test_decwide_t_algebra_add__is_ok = test_decwide_t_algebra_add_();
   BOOST_CHECK(result_test_decwide_t_algebra_add__is_ok);
@@ -42,6 +51,7 @@ BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_add__tag)
 
 BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_sub__tag)
 {
+  (void) test_log_level();
   std::cout << "running: test_decwide_t_algebra_sub_" << std::endl;
   const bool result_test_decwide_t_algebra_sub__is_ok = test_decwide_t_algebra_sub_();
   BOOST_CHECK(result_test_decwide_t_algebra_sub__is_ok);
@@ -49,6 +59,7 @@ BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_sub__tag)
 
 BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_mul__tag)
 {
+  (void) test_log_level();
   std::cout << "running: test_decwide_t_algebra_mul_" << std::endl;
   const bool result_test_decwide_t_algebra_mul__is_ok = test_decwide_t_algebra_mul_();
   BOOST_CHECK(result_test_decwide_t_algebra_mul__is_ok);
@@ -56,6 +67,7 @@ BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_mul__tag)
 
 BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_div__tag)
 {
+  (void) test_log_level();
   std::cout << "running: test_decwide_t_algebra_div_" << std::endl;
   const bool result_test_decwide_t_algebra_div__is_ok = test_decwide_t_algebra_div_();
   BOOST_CHECK(result_test_decwide_t_algebra_div__is_ok);
@@ -63,6 +75,7 @@ BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_div__tag)
 
 BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_sqrt_tag)
 {
+  (void) test_log_level();
   std::cout << "running: test_decwide_t_algebra_sqrt" << std::endl;
   const bool result_test_decwide_t_algebra_sqrt_is_ok = test_decwide_t_algebra_sqrt();
   BOOST_CHECK(result_test_decwide_t_algebra_sqrt_is_ok);

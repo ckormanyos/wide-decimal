@@ -78,6 +78,12 @@
     <ClInclude Include="test\parallel_for.h">
       <Filter>test</Filter>
     </ClInclude>
+    <ClInclude Include="test\test_decwide_t_algebra.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\test_decwide_t_examples.h">
+      <Filter>test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\test.cpp">
