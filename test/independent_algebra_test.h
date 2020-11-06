@@ -20,9 +20,13 @@
 
   namespace test { namespace independent_algebra {
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  template<const std::int32_t MyDigits10,
+           typename LimbType,
+           typename AllocatorType,
+           typename InternalFloatType>
   struct control
   {
+  public:
     static bool eval_eq(const independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>&   a,
                         const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& b)
     {
@@ -42,18 +46,10 @@
       return compare_is_ok;
     }
 
-    static void get_random_float_string(std::string& str,
-                                        const bool do_seed_random_generators = false,
-                                        const bool value_is_unsigned = false)
+    static void get_random_float_string(      std::string& str,
+                                        const bool         do_seed_random_generators,
+                                        const bool         value_is_unsigned = false)
     {
-      static std::ranlux24    eng_sign;
-      static std::minstd_rand eng_exp;
-      static std::mt19937     eng_mantissa;
-
-      static std::uniform_int_distribution<std::uint32_t> dst_sign    (UINT32_C(0), UINT32_C(1));
-      static std::uniform_int_distribution<std::uint32_t> dst_exp     (UINT32_C(0), (std::uint32_t) (((unsigned long long) math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_digits10 * 6ULL) / 10ULL));
-      static std::uniform_int_distribution<std::uint32_t> dst_mantissa(UINT32_C(0), UINT32_C(99999999));
-
       if(do_seed_random_generators)
       {
         const std::clock_t s = std::clock();
@@ -100,7 +96,34 @@
 
       str = (value_is_unsigned ? "" : ((u_sign == 0U) ? "" : "-")) + ss.str() + "." + str;
     }
+
+  private:
+    static std::ranlux24    eng_sign;
+    static std::minstd_rand eng_exp;
+    static std::mt19937     eng_mantissa;
+
+    static std::uniform_int_distribution<std::uint32_t> dst_sign;
+    static std::uniform_int_distribution<std::uint32_t> dst_exp;
+    static std::uniform_int_distribution<std::uint32_t> dst_mantissa;
   };
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  std::ranlux24 control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eng_sign;
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  std::minstd_rand control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eng_exp;
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  std::mt19937 control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eng_mantissa;
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::dst_sign(UINT32_C(0), UINT32_C(1));
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::dst_exp(UINT32_C(0), (std::uint32_t) (((unsigned long long) math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_digits10 * 6ULL) / 10ULL));
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::dst_mantissa(UINT32_C(0), UINT32_C(99999999));
 
   template<const std::int32_t MyDigits10,
            typename LimbType,
@@ -135,7 +158,7 @@
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
@@ -193,7 +216,7 @@
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
@@ -251,7 +274,7 @@
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
@@ -309,7 +332,7 @@
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b);
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
