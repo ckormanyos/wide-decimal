@@ -1,6 +1,7 @@
 #include <math/wide_decimal/decwide_t.h>
+#include <test/test_decwide_t_examples.h>
 
-bool test_decwide_t_examples()
+bool test_decwide_t_examples____()
 {
   bool result_is_ok = true;
 
