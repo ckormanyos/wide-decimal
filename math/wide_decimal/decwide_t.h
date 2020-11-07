@@ -98,8 +98,8 @@
 
       std::copy(lst.begin(),
                 lst.begin() + (std::min)((typename base_class_type::size_type) lst.size(),
-                                         (typename base_class_type::size_type) base_class_type::elem_count),
-                base_class_type::elems);
+                                         (typename base_class_type::size_type) MySize),
+                base_class_type::begin());
     }
 
     dynamic_array(dynamic_array&& other_array)
@@ -1931,7 +1931,8 @@
                       typename array_type::const_iterator> mismatch_pair =
         std::mismatch(my_data.cbegin(), my_data.cend(), vd.cbegin());
 
-      const bool is_equal = ((mismatch_pair.first == my_data.cend()) && (mismatch_pair.second == vd.cend()));
+      const bool is_equal = (   (mismatch_pair.first  == my_data.cend())
+                             && (mismatch_pair.second == vd.cend()));
 
       if(is_equal)
       {
@@ -2097,15 +2098,15 @@
 
       for(std::uint32_t i = static_cast<std::uint32_t>(0U); i < static_cast<std::uint32_t>(p); ++i)
       {
-        af[(i * 2U)]      = (u[i] / decwide_t_elem_mask_half);
-        af[(i * 2U) + 1U] = (u[i] % decwide_t_elem_mask_half);
+        af[(i * 2U)]      = InternalFloatType(u[i] / decwide_t_elem_mask_half);
+        af[(i * 2U) + 1U] = InternalFloatType(u[i] % decwide_t_elem_mask_half);
 
-        bf[(i * 2U)]      = (v[i] / decwide_t_elem_mask_half);
-        bf[(i * 2U) + 1U] = (v[i] % decwide_t_elem_mask_half);
+        bf[(i * 2U)]      = InternalFloatType(v[i] / decwide_t_elem_mask_half);
+        bf[(i * 2U) + 1U] = InternalFloatType(v[i] % decwide_t_elem_mask_half);
       }
 
-      std::fill(af + (p * 2), af + n_fft, 0.0);
-      std::fill(bf + (p * 2), bf + n_fft, 0.0);
+      std::fill(af + (p * 2), af + n_fft, InternalFloatType(0.0F));
+      std::fill(bf + (p * 2), bf + n_fft, InternalFloatType(0.0F));
 
       // Perform forward FFTs on the data arrays a and b.
       detail::fft::rfft_lanczos_rfft<InternalFloatType, true>(n_fft, af);
