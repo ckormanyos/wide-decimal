@@ -581,7 +581,9 @@
                                            my_prec_elem(decwide_t_elem_number)
     {
       // Create an decwide_t from mantissa and exponent.
-      // This ctor does not maintain the full precision of InternalFloatType.
+
+      // This constructor is intended to maintain the
+      // full precision of the InternalFloatType.
 
       using std::fabs;
 
@@ -2136,12 +2138,12 @@
       for(std::uint32_t j = static_cast<std::uint32_t>((p * 2) - 2); static_cast<std::int32_t>(j) >= 0; j -= 2U)
       {
         InternalFloatType                 xaj = af[j] / (n_fft / 2);
-        const double_limb_type xlo = static_cast<double_limb_type>(xaj + InternalFloatType(0.5F)) + carry;
+        const double_limb_type xlo = static_cast<double_limb_type>(xaj + detail::fft::template_half<InternalFloatType>()) + carry;
         carry                      = static_cast<double_limb_type>(xlo / static_cast<limb_type>(decwide_t_elem_mask_half));
         const limb_type        nlo = static_cast<limb_type>(xlo - static_cast<std::uint64_t>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
 
                                xaj = ((j != static_cast<std::int32_t>(0)) ? (af[j - 1U] / (n_fft / 2)) : InternalFloatType(0.0F));
-        const double_limb_type xhi = static_cast<double_limb_type>(xaj + InternalFloatType(0.5F)) + carry;
+        const double_limb_type xhi = static_cast<double_limb_type>(xaj + detail::fft::template_half<InternalFloatType>()) + carry;
         carry                      = static_cast<double_limb_type>(xhi / static_cast<limb_type>(decwide_t_elem_mask_half));
         const limb_type        nhi = static_cast<limb_type>(xhi - static_cast<double_limb_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
 
@@ -3656,70 +3658,70 @@
       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 61U)),
       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 62U)),
       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 63U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.844674407370955161600000000000000000000000000000000000000000000000000000000000000000000000000000000e19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.689348814741910323200000000000000000000000000000000000000000000000000000000000000000000000000000000e19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.378697629483820646400000000000000000000000000000000000000000000000000000000000000000000000000000000e19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.475739525896764129280000000000000000000000000000000000000000000000000000000000000000000000000000000e20"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.951479051793528258560000000000000000000000000000000000000000000000000000000000000000000000000000000e20"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.902958103587056517120000000000000000000000000000000000000000000000000000000000000000000000000000000e20"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.180591620717411303424000000000000000000000000000000000000000000000000000000000000000000000000000000e21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.361183241434822606848000000000000000000000000000000000000000000000000000000000000000000000000000000e21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.722366482869645213696000000000000000000000000000000000000000000000000000000000000000000000000000000e21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.444732965739290427392000000000000000000000000000000000000000000000000000000000000000000000000000000e21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.888946593147858085478400000000000000000000000000000000000000000000000000000000000000000000000000000e22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.777893186295716170956800000000000000000000000000000000000000000000000000000000000000000000000000000e22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.555786372591432341913600000000000000000000000000000000000000000000000000000000000000000000000000000e22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.511157274518286468382720000000000000000000000000000000000000000000000000000000000000000000000000000e23"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.022314549036572936765440000000000000000000000000000000000000000000000000000000000000000000000000000e23"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.044629098073145873530880000000000000000000000000000000000000000000000000000000000000000000000000000e23"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.208925819614629174706176000000000000000000000000000000000000000000000000000000000000000000000000000e24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.417851639229258349412352000000000000000000000000000000000000000000000000000000000000000000000000000e24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.835703278458516698824704000000000000000000000000000000000000000000000000000000000000000000000000000e24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.671406556917033397649408000000000000000000000000000000000000000000000000000000000000000000000000000e24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.934281311383406679529881600000000000000000000000000000000000000000000000000000000000000000000000000e25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.868562622766813359059763200000000000000000000000000000000000000000000000000000000000000000000000000e25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.737125245533626718119526400000000000000000000000000000000000000000000000000000000000000000000000000e25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.547425049106725343623905280000000000000000000000000000000000000000000000000000000000000000000000000e26"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.094850098213450687247810560000000000000000000000000000000000000000000000000000000000000000000000000e26"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.189700196426901374495621120000000000000000000000000000000000000000000000000000000000000000000000000e26"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.237940039285380274899124224000000000000000000000000000000000000000000000000000000000000000000000000e27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.475880078570760549798248448000000000000000000000000000000000000000000000000000000000000000000000000e27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.951760157141521099596496896000000000000000000000000000000000000000000000000000000000000000000000000e27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.903520314283042199192993792000000000000000000000000000000000000000000000000000000000000000000000000e27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.980704062856608439838598758400000000000000000000000000000000000000000000000000000000000000000000000e28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.961408125713216879677197516800000000000000000000000000000000000000000000000000000000000000000000000e28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.922816251426433759354395033600000000000000000000000000000000000000000000000000000000000000000000000e28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.584563250285286751870879006720000000000000000000000000000000000000000000000000000000000000000000000e29"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.169126500570573503741758013440000000000000000000000000000000000000000000000000000000000000000000000e29"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.338253001141147007483516026880000000000000000000000000000000000000000000000000000000000000000000000e29"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.267650600228229401496703205376000000000000000000000000000000000000000000000000000000000000000000000e30"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.535301200456458802993406410752000000000000000000000000000000000000000000000000000000000000000000000e30"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.070602400912917605986812821504000000000000000000000000000000000000000000000000000000000000000000000e30"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.014120480182583521197362564300800000000000000000000000000000000000000000000000000000000000000000000e31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.028240960365167042394725128601600000000000000000000000000000000000000000000000000000000000000000000e31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.056481920730334084789450257203200000000000000000000000000000000000000000000000000000000000000000000e31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.112963841460668169578900514406400000000000000000000000000000000000000000000000000000000000000000000e31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.622592768292133633915780102881280000000000000000000000000000000000000000000000000000000000000000000e32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.245185536584267267831560205762560000000000000000000000000000000000000000000000000000000000000000000e32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.490371073168534535663120411525120000000000000000000000000000000000000000000000000000000000000000000e32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.298074214633706907132624082305024000000000000000000000000000000000000000000000000000000000000000000e33"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.596148429267413814265248164610048000000000000000000000000000000000000000000000000000000000000000000e33"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.192296858534827628530496329220096000000000000000000000000000000000000000000000000000000000000000000e33"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.038459371706965525706099265844019200000000000000000000000000000000000000000000000000000000000000000e34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.076918743413931051412198531688038400000000000000000000000000000000000000000000000000000000000000000e34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.153837486827862102824397063376076800000000000000000000000000000000000000000000000000000000000000000e34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.307674973655724205648794126752153600000000000000000000000000000000000000000000000000000000000000000e34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.661534994731144841129758825350430720000000000000000000000000000000000000000000000000000000000000000e35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.323069989462289682259517650700861440000000000000000000000000000000000000000000000000000000000000000e35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.646139978924579364519035301401722880000000000000000000000000000000000000000000000000000000000000000e35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.329227995784915872903807060280344576000000000000000000000000000000000000000000000000000000000000000e36"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.658455991569831745807614120560689152000000000000000000000000000000000000000000000000000000000000000e36"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.316911983139663491615228241121378304000000000000000000000000000000000000000000000000000000000000000e36"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.063382396627932698323045648224275660800000000000000000000000000000000000000000000000000000000000000e37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.126764793255865396646091296448551321600000000000000000000000000000000000000000000000000000000000000e37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.253529586511730793292182592897102643200000000000000000000000000000000000000000000000000000000000000e37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.507059173023461586584365185794205286400000000000000000000000000000000000000000000000000000000000000e37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.701411834604692317316873037158841057280000000000000000000000000000000000000000000000000000000000000e38")
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.8446744073709551616e19"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.6893488147419103232e19"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.3786976294838206464e19"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.47573952589676412928e20"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.95147905179352825856e20"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.90295810358705651712e20"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.180591620717411303424e21"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.361183241434822606848e21"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.722366482869645213696e21"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.444732965739290427392e21"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.8889465931478580854784e22"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.7778931862957161709568e22"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.5557863725914323419136e22"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.51115727451828646838272e23"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.02231454903657293676544e23"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.04462909807314587353088e23"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.208925819614629174706176e24"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.417851639229258349412352e24"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.835703278458516698824704e24"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.671406556917033397649408e24"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.9342813113834066795298816e25"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.8685626227668133590597632e25"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.7371252455336267181195264e25"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.54742504910672534362390528e26"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.09485009821345068724781056e26"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.18970019642690137449562112e26"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.237940039285380274899124224e27"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.475880078570760549798248448e27"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.951760157141521099596496896e27"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.903520314283042199192993792e27"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.9807040628566084398385987584e28"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.9614081257132168796771975168e28"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.9228162514264337593543950336e28"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.58456325028528675187087900672e29"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.16912650057057350374175801344e29"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.33825300114114700748351602688e29"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.267650600228229401496703205376e30"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.535301200456458802993406410752e30"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.070602400912917605986812821504e30"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.0141204801825835211973625643008e31"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.0282409603651670423947251286016e31"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.0564819207303340847894502572032e31"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.1129638414606681695789005144064e31"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.62259276829213363391578010288128e32"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.24518553658426726783156020576256e32"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.49037107316853453566312041152512e32"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.298074214633706907132624082305024e33"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.596148429267413814265248164610048e33"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.192296858534827628530496329220096e33"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.0384593717069655257060992658440192e34"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.0769187434139310514121985316880384e34"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.1538374868278621028243970633760768e34"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.3076749736557242056487941267521536e34"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.66153499473114484112975882535043072e35"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.32306998946228968225951765070086144e35"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.64613997892457936451903530140172288e35"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.329227995784915872903807060280344576e36"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.658455991569831745807614120560689152e36"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.316911983139663491615228241121378304e36"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.0633823966279326983230456482242756608e37"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.1267647932558653966460912964485513216e37"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.2535295865117307932921825928971026432e37"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.5070591730234615865843651857942052864e37"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.70141183460469231731687303715884105728e38")
     }};
 
     if((p > static_cast<std::int64_t>(-128)) && (p < static_cast<std::int64_t>(+128)))
