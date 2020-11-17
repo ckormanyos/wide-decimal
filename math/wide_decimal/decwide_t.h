@@ -345,7 +345,7 @@
     // Rebind the specific allocator to the granularity of LimbType.
     using allocator_type = typename AllocatorType::template rebind<LimbType>::other;
 
-    // Here array_type is the internal representation of the data field of an decwide_t.
+    // Here array_type is the internal representation of the data field of a decwide_t.
     using array_type = detail::dynamic_array<typename allocator_type::value_type,
                                              static_cast<std::size_t>(decwide_t_elem_number),
                                              allocator_type>;
@@ -580,7 +580,7 @@
                                            my_fpclass  (decwide_t_finite),
                                            my_prec_elem(decwide_t_elem_number)
     {
-      // Create an decwide_t from mantissa and exponent.
+      // Create a decwide_t from mantissa and exponent.
 
       // This constructor is intended to maintain the
       // full precision of the InternalFloatType.
@@ -1905,7 +1905,7 @@
 
       const native_float_parts<long double> ld_parts(my_ld);
 
-      // Create an decwide_t from the fractional part of the
+      // Create a decwide_t from the fractional part of the
       // mantissa expressed as an unsigned long long.
       from_unsigned_long_long(ld_parts.get_mantissa());
 
@@ -2066,57 +2066,53 @@
 
     static void mul_loop_fft(limb_type* const u, const limb_type* const v, const std::int32_t p)
     {
-      // Determine the required FFT size,
-      // where n_fft is constrained to be a power of two.
+      // Determine the required FFT size n_fft,
+      // where n_fft must be a power of two.
 
-      // InternalFloatType the FFT size because only half-limbs
-      // are used as points in the FFT arrays. Splitting
-      // into half-limbs follows below. We use half-limbs
-      // in order to reduce the point size of the FFTs
-      // and thereby preserve precision to very large
+      // We use half-limbs in the FFT in order to reduce
+      // the size of the data points in the FFTs.
+      // This helps preserve precision for large
       // array lengths.
 
-      // The size is doubled in order to contain the multiplication result.
-      // This is because we are performing (n * n -> 2n) multiplication.
-      // Furthermore, since half-limbs are used, the FFT size is doubled again.
+      // The size is doubled in order to contain the multiplication
+      // result. This is because we are performing (n * n -> 2n)
+      // multiplication. Furthermore, the FFT size is doubled again
+      // since half-limbs are used.
 
       std::uint32_t n_fft;
 
       {
         std::uint32_t p_fft = (std::uint32_t) ((p * 2L) * 2L);
 
-        if((std::uint32_t) p > UINT32_C(0x00FFFFFF))
+        if     (p_fft > UINT32_C(0x00FFFFFF)) { n_fft = 24U; p_fft >>= 24U; }
+        else if(p_fft > UINT32_C(0x0000FFFF)) { n_fft = 16U; p_fft >>= 16U; }
+        else if(p_fft > UINT32_C(0x000000FF)) { n_fft =  8U; p_fft >>=  8U; }
+        else                                  { n_fft =  0U; p_fft >>=  0U; }
+
+        if(p_fft > UINT32_C(0x0000000F))
         {
-          n_fft = 24U;
-        }
-        else if((std::uint32_t) p > UINT32_C(0x0000FFFF))
-        {
-          n_fft = 16U;
-        }
-        else if((std::uint32_t) p > UINT32_C(0x000000FF))
-        {
-          n_fft = 8U;
-        }
-        else
-        {
-          n_fft = 0U;
+          n_fft  += 4U;
+
+          p_fft >>= 4U;
         }
 
-        p_fft >>= n_fft;
-
-        while(p_fft > 0U)
+        constexpr std::uint_fast8_t p_fft_data[16U] =
         {
-          p_fft >>= 1U;
+          0U, 1U, 2U, 2U,
+          3U, 3U, 3U, 3U,
+          4U, 4U, 4U, 4U,
+          4U, 4U, 4U, 4U
+        };
 
-          ++n_fft;
-        }
-
-        // We now have the needed FFT size (doubled and doubled again).
-        n_fft = (std::uint32_t) (1UL << n_fft);
+        n_fft += p_fft_data[p_fft];
       }
 
+      // We now have the needed FFT size doubled (and doubled again).
+      n_fft = (std::uint32_t) (1UL << n_fft);
+
       // Use pre-allocated static memory for the FFT result arrays.
-      // (Previously) InternalFloatType* af_bf = new InternalFloatType[n_fft * 2U];
+      // This was previously given by:
+      //   InternalFloatType* af_bf = new InternalFloatType[n_fft * 2U];
 
       InternalFloatType* af = my_af_bf_fft_mul_pool + (0U * n_fft);
       InternalFloatType* bf = my_af_bf_fft_mul_pool + (1U * n_fft);
@@ -2174,7 +2170,8 @@
       }
 
       // De-allocate the dynamic memory for the FFT result arrays.
-      // This was previously done with delete [] af_bf;
+      // This was previously given by:
+      //   delete [] af_bf;
     }
 
     template<const std::int32_t ElemsForFftThreshold>
