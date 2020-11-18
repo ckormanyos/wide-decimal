@@ -40,8 +40,8 @@
   #include <math/wide_decimal/decwide_t_detail_helper.h>
   #include <math/wide_decimal/decwide_t_detail_karatsuba.h>
 
-  #include <util/utility/util_dynamic_array.h>
   #include <util/utility/util_baselexical_cast.h>
+  #include <util/utility/util_dynamic_array.h>
 
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
   #include <util/utility/util_numeric_cast.h>
@@ -1430,10 +1430,10 @@
 
       const std::int32_t original_prec_elem = my_prec_elem;
 
-      *this = decwide_t(sqd, static_cast<std::int64_t>(ne / static_cast<std::int64_t>(2)));
+      *this = decwide_t(sqd, static_cast<std::int64_t>(ne / 2));
 
       // Estimate 1.0 / (2.0 * x0) using simple manipulations.
-      decwide_t vi(InternalFloatType(0.5F) / sqd, static_cast<std::int64_t>(-ne / static_cast<std::int64_t>(2)));
+      decwide_t vi(detail::fft::template_half<InternalFloatType>() / sqd, -static_cast<std::int64_t>(ne / 2));
 
       // Compute the square root of x. Coupled Newton iteration
       // as described in "Pi Unleashed" is used. During the

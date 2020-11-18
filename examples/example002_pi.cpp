@@ -16,6 +16,11 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 
+void calculate_pi_digits10_callback(const std::uint32_t d10)
+{
+  std::cout << d10 << std::endl;
+}
+
 bool math::wide_decimal::example002_pi()
 {
   using local_limb_type = std::uint32_t;
@@ -30,7 +35,7 @@ bool math::wide_decimal::example002_pi()
   const std::clock_t start = std::clock();
 
   math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
-    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
+    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>(calculate_pi_digits10_callback);
 
   const std::clock_t stop = std::clock();
 
