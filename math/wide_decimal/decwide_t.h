@@ -41,9 +41,8 @@
   #include <math/wide_decimal/decwide_t_detail_karatsuba.h>
 
   #include <util/utility/util_dynamic_array.h>
-  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  #include <util/utility/util_lexical_cast.h>
-  #endif
+  #include <util/utility/util_baselexical_cast.h>
+
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
   #include <util/utility/util_numeric_cast.h>
   #endif
@@ -142,7 +141,7 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> one ();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> two ();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> half();
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi  ();
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi  (void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> unsigned_long_long_max();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> signed_long_long_min  ();
@@ -2547,7 +2546,10 @@
                                                         static_cast<std::size_t>(decwide_t_elem_number));
 
       // Extract the remaining digits from decwide_t after the decimal point.
-      str = Util::lexical_cast(my_data[0]);
+      char p_str[10U] = { 0 };
+      char* p_end = util::baselexical_cast(my_data[0], p_str);
+
+      str = std::string(p_str, p_end);
 
       // Extract all of the digits from decwide_t, beginning with the first data element.
       for(std::size_t i = static_cast<std::size_t>(1U); i < number_of_elements; i++)
@@ -2800,7 +2802,10 @@
       str += (my_uppercase ? "E" : "e");
       str += (b_exp_is_neg ? "-" : "+");
 
-      std::string str_exp = Util::lexical_cast(static_cast<std::int64_t>(u_exp));
+      char p_str[20U] = { 0 };
+      char* p_end = util::baselexical_cast(u_exp, p_str);
+
+      std::string str_exp = std::string(p_str, p_end);
 
       // Format the exponent string to have a width that is an even multiple of three.
       const std::size_t str_exp_len      = str_exp.length();
@@ -3003,7 +3008,7 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> half() { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_mask / 2) }, -decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_digits10 ); }
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> two () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(2U) } ); }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi()
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t))
   {
     // Description : Compute pi using the quadratically convergent Gauss AGM,
     //               in particular the Schoenhage variant.
@@ -3018,6 +3023,11 @@
     //               Digits of pi available for test at:
     //               http://www.hepl.phys.nagoya-u.ac.jp/~mitsuru/pi-e.html
     //               http://www.cecm.sfu.ca/projects/ISC/data/pi.html
+
+    if(pfn_callback_to_report_digits10 != nullptr)
+    {
+      pfn_callback_to_report_digits10((std::uint32_t) 0U);
+    }
 
     decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> val_pi;
 
@@ -3072,6 +3082,11 @@
         // If it is there are enough precise digits, then the calculation
         // is finished.
         approximate_digits10_of_iteration_term = -ilogb(iterate_term);
+
+        if(pfn_callback_to_report_digits10 != nullptr)
+        {
+          pfn_callback_to_report_digits10((std::uint32_t) approximate_digits10_of_iteration_term);
+        }
       }
 
       // Estimate the approximate decimal digits of this iteration term.
@@ -3093,6 +3108,11 @@
 
     val_pi += bB;
     val_pi /= s;
+
+    if(pfn_callback_to_report_digits10 != nullptr)
+    {
+      pfn_callback_to_report_digits10((std::uint32_t) std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10);
+    }
 
     return val_pi;
   }
