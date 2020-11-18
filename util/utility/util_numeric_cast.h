@@ -5,10 +5,6 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-// This work is also based on an earlier work:
-// "Algorithm 910: A Portable C++ Multiple-Precision System for Special-Function Calculations",
-// in ACM TOMS, {VOL 37, ISSUE 4, (February 2011)} (C) ACM, 2011. http://doi.acm.org/10.1145/1916461.1916469
-
 #ifndef UTIL_NUMERIC_CAST_2009_11_24_H_
   #define UTIL_NUMERIC_CAST_2009_11_24_H_
 
@@ -20,18 +16,9 @@
     template<typename T>
     inline T numeric_cast(const std::string& str)
     {
+      // This could be done with a variation of "baselexical_cast".
       std::stringstream ss;
       ss << str;
-      T t;
-      ss >> t;
-      return t;
-    }
-
-    template<typename T>
-    inline T numeric_cast(const char* const s)
-    {
-      std::stringstream ss;
-      ss << s;
       T t;
       ss >> t;
       return t;

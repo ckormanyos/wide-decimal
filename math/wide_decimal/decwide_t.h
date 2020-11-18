@@ -40,10 +40,9 @@
   #include <math/wide_decimal/decwide_t_detail_helper.h>
   #include <math/wide_decimal/decwide_t_detail_karatsuba.h>
 
+  #include <util/utility/util_baselexical_cast.h>
   #include <util/utility/util_dynamic_array.h>
-  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  #include <util/utility/util_lexical_cast.h>
-  #endif
+
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
   #include <util/utility/util_numeric_cast.h>
   #endif
@@ -142,7 +141,7 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> one ();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> two ();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> half();
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi  ();
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi  (void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> unsigned_long_long_max();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> signed_long_long_min  ();
@@ -345,7 +344,7 @@
     // Rebind the specific allocator to the granularity of LimbType.
     using allocator_type = typename AllocatorType::template rebind<LimbType>::other;
 
-    // Here array_type is the internal representation of the data field of an decwide_t.
+    // Here array_type is the internal representation of the data field of a decwide_t.
     using array_type = detail::dynamic_array<typename allocator_type::value_type,
                                              static_cast<std::size_t>(decwide_t_elem_number),
                                              allocator_type>;
@@ -580,7 +579,7 @@
                                            my_fpclass  (decwide_t_finite),
                                            my_prec_elem(decwide_t_elem_number)
     {
-      // Create an decwide_t from mantissa and exponent.
+      // Create a decwide_t from mantissa and exponent.
 
       // This constructor is intended to maintain the
       // full precision of the InternalFloatType.
@@ -1431,10 +1430,10 @@
 
       const std::int32_t original_prec_elem = my_prec_elem;
 
-      *this = decwide_t(sqd, static_cast<std::int64_t>(ne / static_cast<std::int64_t>(2)));
+      *this = decwide_t(sqd, static_cast<std::int64_t>(ne / 2));
 
       // Estimate 1.0 / (2.0 * x0) using simple manipulations.
-      decwide_t vi(InternalFloatType(0.5F) / sqd, static_cast<std::int64_t>(-ne / static_cast<std::int64_t>(2)));
+      decwide_t vi(detail::fft::template_half<InternalFloatType>() / sqd, -static_cast<std::int64_t>(ne / 2));
 
       // Compute the square root of x. Coupled Newton iteration
       // as described in "Pi Unleashed" is used. During the
@@ -1905,7 +1904,7 @@
 
       const native_float_parts<long double> ld_parts(my_ld);
 
-      // Create an decwide_t from the fractional part of the
+      // Create a decwide_t from the fractional part of the
       // mantissa expressed as an unsigned long long.
       from_unsigned_long_long(ld_parts.get_mantissa());
 
@@ -2066,34 +2065,53 @@
 
     static void mul_loop_fft(limb_type* const u, const limb_type* const v, const std::int32_t p)
     {
-      // Determine the required FFT size,
-      // where n_fft is constrained to be a power of two.
-      std::uint32_t n_fft = 1U;
+      // Determine the required FFT size n_fft,
+      // where n_fft must be a power of two.
 
-      for(unsigned i = 1U; i < 31U; ++i)
-      {
-        n_fft <<= 1U;
-
-        // We now have the needed size (doubled).
-        // The size is doubled in order to contain the multiplication result.
-        // This is because we are performing (n * n -> 2n) multiplication.
-        if(n_fft >= static_cast<std::uint32_t>(p * 2))
-        {
-          break;
-        }
-      }
-
-      // Again, InternalFloatType the FFT size because only half-limbs
-      // are used as points in the FFT arrays. Splitting
-      // into half-limbs follows below. We use half-limbs
-      // in order to reduce the point size of the FFTs
-      // and thereby preserve precision to very large
+      // We use half-limbs in the FFT in order to reduce
+      // the size of the data points in the FFTs.
+      // This helps preserve precision for large
       // array lengths.
 
-      n_fft <<= 1U;
+      // The size is doubled in order to contain the multiplication
+      // result. This is because we are performing (n * n -> 2n)
+      // multiplication. Furthermore, the FFT size is doubled again
+      // since half-limbs are used.
+
+      std::uint32_t n_fft;
+
+      {
+        std::uint32_t p_fft = (std::uint32_t) ((p * 2L) * 2L);
+
+        if     (p_fft > UINT32_C(0x00FFFFFF)) { n_fft = 24U; p_fft >>= 24U; }
+        else if(p_fft > UINT32_C(0x0000FFFF)) { n_fft = 16U; p_fft >>= 16U; }
+        else if(p_fft > UINT32_C(0x000000FF)) { n_fft =  8U; p_fft >>=  8U; }
+        else                                  { n_fft =  0U; p_fft >>=  0U; }
+
+        if(p_fft > UINT32_C(0x0000000F))
+        {
+          n_fft  += 4U;
+
+          p_fft >>= 4U;
+        }
+
+        constexpr std::uint_fast8_t p_fft_data[16U] =
+        {
+          0U, 1U, 2U, 2U,
+          3U, 3U, 3U, 3U,
+          4U, 4U, 4U, 4U,
+          4U, 4U, 4U, 4U
+        };
+
+        n_fft += p_fft_data[p_fft];
+      }
+
+      // We now have the needed FFT size doubled (and doubled again).
+      n_fft = (std::uint32_t) (1UL << n_fft);
 
       // Use pre-allocated static memory for the FFT result arrays.
-      // (Previously) InternalFloatType* af_bf = new InternalFloatType[n_fft * 2U];
+      // This was previously given by:
+      //   InternalFloatType* af_bf = new InternalFloatType[n_fft * 2U];
 
       InternalFloatType* af = my_af_bf_fft_mul_pool + (0U * n_fft);
       InternalFloatType* bf = my_af_bf_fft_mul_pool + (1U * n_fft);
@@ -2135,23 +2153,24 @@
       // to the result of multiplication.
       double_limb_type carry = static_cast<double_limb_type>(0U);
 
-      for(std::uint32_t j = static_cast<std::uint32_t>((p * 2) - 2); static_cast<std::int32_t>(j) >= 0; j -= 2U)
+      for(std::uint32_t j = static_cast<std::uint32_t>((p * 2L) - 2L); static_cast<std::int32_t>(j) >= 0; j -= 2U)
       {
-        InternalFloatType                 xaj = af[j] / (n_fft / 2);
+        InternalFloatType      xaj = af[j] / (n_fft / 2U);
         const double_limb_type xlo = static_cast<double_limb_type>(xaj + detail::fft::template_half<InternalFloatType>()) + carry;
         carry                      = static_cast<double_limb_type>(xlo / static_cast<limb_type>(decwide_t_elem_mask_half));
-        const limb_type        nlo = static_cast<limb_type>(xlo - static_cast<std::uint64_t>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
+        const limb_type        nlo = static_cast<limb_type>       (xlo - static_cast<double_limb_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
 
-                               xaj = ((j != static_cast<std::int32_t>(0)) ? (af[j - 1U] / (n_fft / 2)) : InternalFloatType(0.0F));
+                               xaj = ((j != 0) ? (af[j - 1U] / (n_fft / 2U)) : InternalFloatType(0.0F));
         const double_limb_type xhi = static_cast<double_limb_type>(xaj + detail::fft::template_half<InternalFloatType>()) + carry;
         carry                      = static_cast<double_limb_type>(xhi / static_cast<limb_type>(decwide_t_elem_mask_half));
-        const limb_type        nhi = static_cast<limb_type>(xhi - static_cast<double_limb_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
+        const limb_type        nhi = static_cast<limb_type>       (xhi - static_cast<double_limb_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
 
         u[(j / 2U)] = static_cast<limb_type>(static_cast<limb_type>(nhi * static_cast<limb_type>(decwide_t_elem_mask_half)) + nlo);
       }
 
       // De-allocate the dynamic memory for the FFT result arrays.
-      // (Previously) delete [] af_bf;
+      // This was previously given by:
+      //   delete [] af_bf;
     }
 
     template<const std::int32_t ElemsForFftThreshold>
@@ -2230,17 +2249,26 @@
 
     std::int64_t get_order_fast() const
     {
-      if((!isfinite()) || (my_data[0] == static_cast<limb_type>(0U)))
+      if(isfinite() == false)
       {
         return static_cast<std::int64_t>(0);
       }
       else
       {
-        using std::log10;
+        std::int_fast16_t n10 = INT16_C(-1);
 
-        const double dx = log10(static_cast<double>(my_data[0])) + (std::numeric_limits<double>::epsilon() * 0.9);
+        limb_type p10 = (limb_type) 1U;
 
-        return static_cast<std::int64_t>(my_exp + static_cast<std::int64_t>(static_cast<std::int32_t>(dx)));
+        const limb_type limit_aligned_with_10 = my_data[0U] + (limb_type) (10U - (my_data[0U] % 10U));
+
+        while(p10 < limit_aligned_with_10)
+        {
+          p10 *= 10U;
+
+          ++n10;
+        }
+
+        return static_cast<std::int64_t>(my_exp + n10);
       }
     }
 
@@ -2518,7 +2546,10 @@
                                                         static_cast<std::size_t>(decwide_t_elem_number));
 
       // Extract the remaining digits from decwide_t after the decimal point.
-      str = Util::lexical_cast(my_data[0]);
+      char p_str[10U] = { 0 };
+      char* p_end = util::baselexical_cast(my_data[0], p_str);
+
+      str = std::string(p_str, p_end);
 
       // Extract all of the digits from decwide_t, beginning with the first data element.
       for(std::size_t i = static_cast<std::size_t>(1U); i < number_of_elements; i++)
@@ -2771,7 +2802,10 @@
       str += (my_uppercase ? "E" : "e");
       str += (b_exp_is_neg ? "-" : "+");
 
-      std::string str_exp = Util::lexical_cast(static_cast<std::int64_t>(u_exp));
+      char p_str[20U] = { 0 };
+      char* p_end = util::baselexical_cast(u_exp, p_str);
+
+      std::string str_exp = std::string(p_str, p_end);
 
       // Format the exponent string to have a width that is an even multiple of three.
       const std::size_t str_exp_len      = str_exp.length();
@@ -2974,7 +3008,7 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> half() { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_mask / 2) }, -decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_digits10 ); }
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> two () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(2U) } ); }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi()
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t))
   {
     // Description : Compute pi using the quadratically convergent Gauss AGM,
     //               in particular the Schoenhage variant.
@@ -2989,6 +3023,11 @@
     //               Digits of pi available for test at:
     //               http://www.hepl.phys.nagoya-u.ac.jp/~mitsuru/pi-e.html
     //               http://www.cecm.sfu.ca/projects/ISC/data/pi.html
+
+    if(pfn_callback_to_report_digits10 != nullptr)
+    {
+      pfn_callback_to_report_digits10((std::uint32_t) 0U);
+    }
 
     decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> val_pi;
 
@@ -3043,6 +3082,11 @@
         // If it is there are enough precise digits, then the calculation
         // is finished.
         approximate_digits10_of_iteration_term = -ilogb(iterate_term);
+
+        if(pfn_callback_to_report_digits10 != nullptr)
+        {
+          pfn_callback_to_report_digits10((std::uint32_t) approximate_digits10_of_iteration_term);
+        }
       }
 
       // Estimate the approximate decimal digits of this iteration term.
@@ -3064,6 +3108,11 @@
 
     val_pi += bB;
     val_pi /= s;
+
+    if(pfn_callback_to_report_digits10 != nullptr)
+    {
+      pfn_callback_to_report_digits10((std::uint32_t) std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10);
+    }
 
     return val_pi;
   }
@@ -3556,14 +3605,14 @@
       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.5474735088646411895751953125e-13"),
       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.094947017729282379150390625e-13"),
       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.818989403545856475830078125e-12"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.637978807091712951660156250e-12"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.275957614183425903320312500e-12"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.455191522836685180664062500e-11"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.910383045673370361328125000e-11"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.820766091346740722656250000e-11"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.164153218269348144531250000e-10"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.328306436538696289062500000e-10"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.656612873077392578125000000e-10"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.63797880709171295166015625e-12"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.2759576141834259033203125e-12"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.4551915228366851806640625e-11"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.910383045673370361328125e-11"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.82076609134674072265625e-11"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.16415321826934814453125e-10"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.3283064365386962890625e-10"),
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.656612873077392578125e-10"),
       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.31322574615478515625e-10"),
       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.86264514923095703125e-9"),
       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.7252902984619140625e-9"),

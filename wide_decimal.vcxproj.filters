@@ -84,6 +84,9 @@
     <ClInclude Include="test\test_decwide_t_examples.h">
       <Filter>test</Filter>
     </ClInclude>
+    <ClInclude Include="util\utility\util_baselexical_cast.h">
+      <Filter>util\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\test.cpp">
