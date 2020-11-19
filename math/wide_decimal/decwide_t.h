@@ -72,7 +72,7 @@
     using base_class_type = util::dynamic_array<MyType, MyAlloc>;
 
   public:
-    constexpr dynamic_array()
+    constexpr dynamic_array() noexcept
       : base_class_type(MySize) { }
 
     constexpr dynamic_array(const typename base_class_type::size_type my_size)
@@ -101,7 +101,7 @@
                 base_class_type::begin());
     }
 
-    dynamic_array(dynamic_array&& other_array)
+    dynamic_array(dynamic_array&& other_array) noexcept
       : base_class_type(static_cast<base_class_type&&>(other_array)) { }
 
     dynamic_array& operator=(const dynamic_array& other_array)
@@ -111,7 +111,7 @@
       return *this;
     }
 
-    dynamic_array& operator=(dynamic_array&& other_array)
+    dynamic_array& operator=(dynamic_array&& other_array) noexcept
     {
       base_class_type::operator=(static_cast<base_class_type&&>(other_array));
 

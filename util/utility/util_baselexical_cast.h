@@ -31,7 +31,7 @@
     {
       for(std::ptrdiff_t j = index; j >= 0; --j)
       {
-        OutFirst[j + 1] = OutFirst[j];
+        *(OutFirst + (j + 1)) = *(OutFirst + j);
       }
 
       ++index;
@@ -40,21 +40,21 @@
 
       x /= BaseRepresentation;
 
-      if(c <= output_value_type(9))
+      if(c <= (output_value_type) 9)
       {
-        c = c + output_value_type('0');
+        c = c + (output_value_type) '0';
       }
-      else if((c >= output_value_type(0xAU)) && (c <= output_value_type(0xFU)))
+      else if((c >= (output_value_type) 0xAU) && (c <= (output_value_type) 0xFU))
       {
-        c =   (UpperCase ? output_value_type('A') : output_value_type('a'))
-            + output_value_type(c - output_value_type(0xA));
+        c =   (UpperCase ? (output_value_type) 'A' : (output_value_type) 'a')
+            + (output_value_type) (c - (output_value_type) 0xA);
       }
 
       *OutFirst = c;
     }
     while(x != 0U);
 
-    return OutputIterator(OutFirst + index);
+    return (OutputIterator) (OutFirst + index);
   }
 
   } // namespace util
