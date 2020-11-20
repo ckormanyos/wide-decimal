@@ -81,6 +81,11 @@
 
           p = (pointer) slot_array_memory[i].data();
 
+          if(i > slot_max_index)
+          {
+            slot_max_index = i;
+          }
+
           break;
         }
       }
@@ -106,8 +111,9 @@
     }
 
   private:
-    static slot_array_type slot_array_memory[slot_count];
+    static slot_array_type                      slot_array_memory[slot_count];
     static std::array<std::uint8_t, slot_count> slot_flags;
+    static std::size_t                          slot_max_index;
   };
 
   template<typename T,
@@ -121,6 +127,11 @@
            const std::size_t SlotCount>
   std::array<std::uint8_t, n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_count>
   n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_flags;
+
+  template<typename T,
+           const std::uint_fast32_t SlotWidth,
+           const std::size_t SlotCount>
+  std::size_t n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_max_index;
 
   // Global comparison operators (required by the standard).
   template<typename T,

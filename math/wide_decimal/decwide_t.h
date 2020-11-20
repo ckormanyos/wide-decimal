@@ -325,19 +325,20 @@
   public:
     static constexpr std::int32_t decwide_t_elems_for_fft     = 64;
 
+    // Obtain the decwide_t digits characteristics from a helper meta-template.
+
     static constexpr std::int32_t decwide_t_digits10          = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
     static constexpr std::int32_t decwide_t_digits            = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
     static constexpr std::int32_t decwide_t_max_digits10      = detail::decwide_t_helper<MyDigits10, LimbType>::max_digits10;
     static constexpr std::int32_t decwide_t_radix             = detail::decwide_t_helper<MyDigits10, LimbType>::radix;
 
-    // TBD: Can we obtain decwide_t_elem_digits10 from a meta-template?
     static constexpr std::int32_t decwide_t_elem_digits10     = detail::decwide_t_helper<MyDigits10, LimbType>::elem_digits10;
     static constexpr std::int32_t decwide_t_elem_number       = detail::decwide_t_helper<MyDigits10, LimbType>::elem_number;
     static constexpr std::int32_t decwide_t_elem_mask         = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask;
     static constexpr std::int32_t decwide_t_elem_mask_half    = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask_half;
 
-    static constexpr std::int64_t decwide_t_max_exp10         = static_cast<std::int64_t>(9223372036854775795LL - (9223372036854775795LL % decwide_t_elem_digits10));
-    static constexpr std::int64_t decwide_t_min_exp10         = static_cast<std::int64_t>(-static_cast<std::int64_t>(decwide_t_max_exp10));
+    static constexpr std::int64_t decwide_t_max_exp10         =  static_cast<std::int64_t>((std::numeric_limits<std::int64_t>::max)() / decwide_t_elem_digits10) * decwide_t_elem_digits10;
+    static constexpr std::int64_t decwide_t_min_exp10         = -static_cast<std::int64_t>(decwide_t_max_exp10);
     static constexpr std::int64_t decwide_t_max_exp           = decwide_t_max_exp10;
     static constexpr std::int64_t decwide_t_min_exp           = decwide_t_min_exp10;
 
