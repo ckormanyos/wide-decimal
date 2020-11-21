@@ -1417,7 +1417,7 @@
       extract_parts(dd, ne);
 
       // Force the exponent to be an even multiple of two.
-      if((ne % static_cast<std::int64_t>(2)) != static_cast<std::int64_t>(0))
+      if((ne % 2) != static_cast<std::int64_t>(0))
       {
         ++ne;
         dd /= InternalFloatType(10.0F);
