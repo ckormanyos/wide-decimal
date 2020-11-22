@@ -26,6 +26,7 @@
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   #include <iomanip>
   #include <iostream>
+  #include <sstream>
   #endif
   #include <memory>
   #if !defined(WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS)
@@ -337,7 +338,7 @@
     static constexpr std::int32_t decwide_t_elem_mask         = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask;
     static constexpr std::int32_t decwide_t_elem_mask_half    = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask_half;
 
-    static constexpr std::int64_t decwide_t_max_exp10         =  static_cast<std::int64_t>((std::numeric_limits<std::int64_t>::max)() / decwide_t_elem_digits10) * decwide_t_elem_digits10;
+    static constexpr std::int64_t decwide_t_max_exp10         =  static_cast<std::int64_t>(INT64_C(0x7FFFFFFFFFFFFFFF) / decwide_t_elem_digits10) * decwide_t_elem_digits10;
     static constexpr std::int64_t decwide_t_min_exp10         = -static_cast<std::int64_t>(decwide_t_max_exp10);
     static constexpr std::int64_t decwide_t_max_exp           = decwide_t_max_exp10;
     static constexpr std::int64_t decwide_t_min_exp           = decwide_t_min_exp10;
@@ -587,7 +588,7 @@
 
       using std::fabs;
 
-      const bool mantissa_is_iszero = (fabs(mantissa) < ((std::numeric_limits<InternalFloatType>::min)() * (InternalFloatType(1.0F) + std::numeric_limits<InternalFloatType>::epsilon())));
+      const bool mantissa_is_iszero = (fabs(mantissa) < ((std::numeric_limits<InternalFloatType>::min)() * (InternalFloatType(1) + std::numeric_limits<InternalFloatType>::epsilon())));
 
       if(mantissa_is_iszero)
       {
@@ -596,19 +597,21 @@
         return;
       }
 
-      const bool b_neg = (mantissa < InternalFloatType(0.0F));
+      const bool b_neg = (mantissa < InternalFloatType(0));
 
       InternalFloatType d = ((!b_neg) ? mantissa : -mantissa);
       std::int64_t  e = exponent;
 
-      while(d > InternalFloatType(10.0F)) { d /= InternalFloatType(10.0F); ++e; }
-      while(d < InternalFloatType( 1.0F)) { d *= InternalFloatType(10.0F); --e; }
+      const InternalFloatType f10(10);
+
+      while(d > f10)                  { d /= f10; ++e; }
+      while(d < InternalFloatType(1)) { d *= f10; --e; }
 
       std::int32_t shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
 
       while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(0))
       {
-        d *= InternalFloatType(10.0F);
+        d *= f10;
         --e;
         --shift;
       }
@@ -837,8 +840,8 @@
       else
       {
         const std::int32_t elems =
-          static_cast<std::int32_t>(  static_cast<std::int32_t>( (prec_digits + (decwide_t_elem_digits10 / 2)) / decwide_t_elem_digits10)
-                                    + static_cast<std::int32_t>(((prec_digits %  decwide_t_elem_digits10) != 0) ? 1 : 0));
+          static_cast<std::int32_t>(    static_cast<std::int32_t>(prec_digits / decwide_t_elem_digits10)
+                                    +                          (((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0));
 
         my_prec_elem = (std::min)(decwide_t_elem_number, (std::max)(elems, static_cast<std::int32_t>(2)));
       }
@@ -1366,7 +1369,7 @@
       const std::int32_t original_prec_elem = my_prec_elem;
 
       // Do the inverse estimate using InternalFloatType precision estimates of mantissa and exponent.
-      operator=(decwide_t(InternalFloatType(1.0F) / dd, -ne));
+      operator=(decwide_t(InternalFloatType(1) / dd, -ne));
 
       // Compute the inverse of *this. Quadratically convergent Newton-Raphson iteration
       // is used. During the iterative steps, the precision of the calculation is limited
@@ -1375,10 +1378,12 @@
       for(std::int32_t digits = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1); digits < decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_max_digits10; digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
-        const std::int32_t new_prec = static_cast<std::int32_t>(digits * 2) + 8;
+        const std::int32_t new_prec_as_digits10 =
+                       static_cast<std::int32_t>(digits * 2)
+          + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10 * 2), static_cast<std::int32_t>(16));
 
-          precision(new_prec);
-        x.precision(new_prec);
+          precision(new_prec_as_digits10);
+        x.precision(new_prec_as_digits10);
 
         // Next iteration.
         operator=(*this * (two<MyDigits10, LimbType, AllocatorType, InternalFloatType>() - (*this * x)));
@@ -1420,7 +1425,7 @@
       if((ne % 2) != static_cast<std::int64_t>(0))
       {
         ++ne;
-        dd /= InternalFloatType(10.0F);
+        dd /= InternalFloatType(10);
       }
 
       using std::sqrt;
@@ -1449,11 +1454,13 @@
       for(std::int32_t digits = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1); digits < decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_max_digits10; digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
-        const std::int32_t new_prec = static_cast<std::int32_t>(digits * 2) + 8;
+        const std::int32_t new_prec_as_digits10 =
+                       static_cast<std::int32_t>(digits * 2)
+          + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10 * 2), static_cast<std::int32_t>(16));
 
-           precision(new_prec);
-        vi.precision(new_prec);
-         x.precision(new_prec);
+           precision(new_prec_as_digits10);
+        vi.precision(new_prec_as_digits10);
+         x.precision(new_prec_as_digits10);
 
         // Next iteration of vi
         vi += vi * (-((*this * vi) * static_cast<std::int32_t>(2)) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>());
@@ -1598,7 +1605,7 @@
 
       mantissa = static_cast<InternalFloatType>(my_data[0]) / static_cast<InternalFloatType>(p10);
 
-      InternalFloatType scale = (InternalFloatType(1.0F) / static_cast<InternalFloatType>(decwide_t_elem_mask)) / static_cast<InternalFloatType>(p10);
+      InternalFloatType scale = (InternalFloatType(1) / static_cast<InternalFloatType>(decwide_t_elem_mask)) / static_cast<InternalFloatType>(p10);
 
       std::int_fast16_t scale_order = -((std::int_fast16_t) decwide_t_elem_digits10);
 
@@ -2126,8 +2133,8 @@
         bf[(i * 2U) + 1U] = InternalFloatType(v[i] % decwide_t_elem_mask_half);
       }
 
-      std::fill(af + (p * 2), af + n_fft, InternalFloatType(0.0F));
-      std::fill(bf + (p * 2), bf + n_fft, InternalFloatType(0.0F));
+      std::fill(af + (p * 2), af + n_fft, InternalFloatType(0));
+      std::fill(bf + (p * 2), bf + n_fft, InternalFloatType(0));
 
       // Perform forward FFTs on the data arrays a and b.
       detail::fft::rfft_lanczos_rfft<InternalFloatType, true>(n_fft, af);
@@ -2161,7 +2168,7 @@
         carry                      = static_cast<double_limb_type>(xlo / static_cast<limb_type>(decwide_t_elem_mask_half));
         const limb_type        nlo = static_cast<limb_type>       (xlo - static_cast<double_limb_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
 
-                               xaj = ((j != 0) ? (af[j - 1U] / (n_fft / 2U)) : InternalFloatType(0.0F));
+                               xaj = ((j != 0) ? (af[j - 1U] / (n_fft / 2U)) : InternalFloatType(0));
         const double_limb_type xhi = static_cast<double_limb_type>(xaj + detail::fft::template_half<InternalFloatType>()) + carry;
         carry                      = static_cast<double_limb_type>(xhi / static_cast<limb_type>(decwide_t_elem_mask_half));
         const limb_type        nhi = static_cast<limb_type>       (xhi - static_cast<double_limb_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
@@ -3828,7 +3835,7 @@
       using std::pow;
 
       // Estimate the one over the root using simple manipulations.
-      const InternalFloatType one_over_rtn_d = pow(dd, InternalFloatType(-1.0F) / static_cast<InternalFloatType>(p));
+      const InternalFloatType one_over_rtn_d = pow(dd, InternalFloatType(-1) / static_cast<InternalFloatType>(p));
 
       // Set the result equal to the initial guess.
       math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result(one_over_rtn_d, static_cast<std::int64_t>(-ne / p));
@@ -3998,6 +4005,7 @@
   bool example001_sqrt          ();
   bool example002_pi            ();
   bool example002a_pi_small_limb();
+  bool example002b_pi_100k      ();
   bool example003_zeta          ();
 
   } } // namespace math::wide_decimal

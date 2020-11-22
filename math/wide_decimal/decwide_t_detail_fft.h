@@ -21,13 +21,13 @@
   constexpr float_type template_half();
 
   template<>
-  constexpr float template_half<float>() { return float(0.5F); }
+  constexpr float template_half<float>() { return float(0.5L); }
 
   template<>
-  constexpr double template_half<double>() { return double(0.5F); }
+  constexpr double template_half<double>() { return double(0.5L); }
 
   template<>
-  constexpr long double template_half<long double>() { return (long double) (0.5F); }
+  constexpr long double template_half<long double>() { return (long double) (0.5L); }
 
   template<typename float_type>
   float_type template_fast_div_by_two(float_type a);
@@ -129,8 +129,8 @@
 
   template<typename float_type,
            const bool is_forward_fft>
-  float_type const_unique_wp_real(const std::uint32_t N) { return float_type(float_type(-2.0F) * (  const_unique_wp_real_init<float_type, is_forward_fft>(N)
-                                                                                                  * const_unique_wp_real_init<float_type, is_forward_fft>(N))); }
+  float_type const_unique_wp_real(const std::uint32_t N) { return float_type(float_type(-2) * (  const_unique_wp_real_init<float_type, is_forward_fft>(N)
+                                                                                               * const_unique_wp_real_init<float_type, is_forward_fft>(N))); }
 
   template<typename float_type,
            const bool is_forward_fft>
@@ -152,8 +152,8 @@
       danielson_lanczos_apply<float_type, is_forward_fft>(N / 2U, data + N);
     }
 
-    float_type real_part = float_type(1.0F);
-    float_type imag_part = float_type(0.0F);
+    float_type real_part = float_type(1);
+    float_type imag_part = float_type(0);
 
     for(std::uint32_t i = static_cast<std::uint32_t>(0U); i < N; i += 2U)
     {
@@ -202,7 +202,7 @@
     data[0U] += tmp_real;
     data[1U] += tmp_imag;
 
-    const float_type real_part(const_unique_wp_real<float_type, is_forward_fft>(4U) + float_type(1.0F));
+    const float_type real_part(const_unique_wp_real<float_type, is_forward_fft>(4U) + float_type(1));
     const float_type imag_part(const_unique_wp_imag<float_type, is_forward_fft>(4U));
 
     tmp_real = (real_part * data[6U]) - (imag_part * data[7U]);
@@ -253,8 +253,8 @@
   {
     fft_lanczos_fft<float_type, true>(N / 2U, data);
 
-    float_type real_part(float_type(1.0F) + const_unique_wp_real<float_type, true>(N));
-    float_type imag_part(                   const_unique_wp_imag<float_type, true>(N));
+    float_type real_part(float_type(1) + const_unique_wp_real<float_type, true>(N));
+    float_type imag_part(                const_unique_wp_imag<float_type, true>(N));
 
     for(std::uint32_t i = static_cast<std::uint32_t>(1U); i < static_cast<std::uint32_t>(N >> 2U); ++i)
     {
@@ -296,8 +296,8 @@
                          const bool = is_forward_fft,
                          const typename std::enable_if<(is_forward_fft == false)>::type* = nullptr)
   {
-    float_type real_part(float_type(1.0F) + const_unique_wp_real<float_type, false>(N));
-    float_type imag_part(                   const_unique_wp_imag<float_type, false>(N));
+    float_type real_part(float_type(1) + const_unique_wp_real<float_type, false>(N));
+    float_type imag_part(                const_unique_wp_imag<float_type, false>(N));
 
     for(std::uint32_t i = static_cast<std::uint32_t>(1U); i < static_cast<std::uint32_t>(N >> 2U); ++i)
     {

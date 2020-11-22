@@ -14,15 +14,17 @@
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
 
 #include <math/wide_decimal/decwide_t.h>
+#include <mcal_lcd/mcal_lcd_console.h>
 #include <util/memory/util_n_slot_array_allocator.h>
+#include <util/utility/util_baselexical_cast.h>
 
 #include "example002x_pi_control.h"
 
-bool math::wide_decimal::example002a_pi_small_limb()
+bool math::wide_decimal::example002b_pi_100k()
 {
-  using local_limb_type = std::uint16_t;
+  using local_limb_type = std::uint32_t;
 
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1000001);
+  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(100001);
 
   constexpr std::int32_t local_elem_number =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
@@ -30,7 +32,7 @@ bool math::wide_decimal::example002a_pi_small_limb()
   constexpr std::int32_t local_elem_digits10 =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>;
 
   const std::clock_t start = std::clock();
 
@@ -39,9 +41,9 @@ bool math::wide_decimal::example002a_pi_small_limb()
 
   const std::clock_t stop = std::clock();
 
-  std::cout << "Time example002a_pi_small_limb(): "
-    << float(stop - start) / float(CLOCKS_PER_SEC)
-    << std::endl;
+  std::cout << "Time example002b_pi_100k(): "
+            << (float) (stop - start) / (float) CLOCKS_PER_SEC
+            << std::endl;
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
                                      my_pi.crepresentation().cbegin() + const_pi_control_head<local_limb_type>().size(),
@@ -64,7 +66,7 @@ bool math::wide_decimal::example002a_pi_small_limb()
 
 int main()
 {
-  const bool result_is_ok = math::wide_decimal::example002a_pi_small_limb();
+  const bool result_is_ok = math::wide_decimal::example002b_pi_100k();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
