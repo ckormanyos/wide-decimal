@@ -20,7 +20,7 @@ The wide-decimal float back end is used to compute
 <img src="https://render.githubusercontent.com/render/math?math=1,000,000">
 decimal digits of the mathematical constant
 <img src="https://render.githubusercontent.com/render/math?math=\pi">
-on bere-metal OS-less microcontroller systems in
+on bare-metal OS-less microcontroller systems in
 [pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 
 # Details
