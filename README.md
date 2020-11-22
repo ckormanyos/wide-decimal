@@ -15,6 +15,14 @@ Wide-decimal is written in header-only C++11.
   - seamless portability to any modern C++11 compiler,
   - scalability with small memory footprint appropriate for _bare-metal_ embedded systems.
 
+# 1,000,000 Digits of pi on bare metal
+The wide-decimal float back end is used to compute
+<img src="https://render.githubusercontent.com/render/math?math=1,000,000">
+decimal digits of the mathematical constant
+<img src="https://render.githubusercontent.com/render/math?math=\pi">
+on bere-metal OS-less microcontroller systems in
+[pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
+
 # Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
