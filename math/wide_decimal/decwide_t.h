@@ -2086,36 +2086,28 @@
       // multiplication. Furthermore, the FFT size is doubled again
       // since half-limbs are used.
 
-      std::uint32_t n_fft;
+      std::uint32_t n_fft = 0U;
 
       {
         std::uint32_t p_fft = (std::uint32_t) ((p * 2L) * 2L);
 
-        if     (p_fft > UINT32_C(0x00FFFFFF)) { n_fft = 24U; p_fft >>= 24U; }
-        else if(p_fft > UINT32_C(0x0000FFFF)) { n_fft = 16U; p_fft >>= 16U; }
-        else if(p_fft > UINT32_C(0x000000FF)) { n_fft =  8U; p_fft >>=  8U; }
-        else                                  { n_fft =  0U; p_fft >>=  0U; }
+        // Use O(log2[N]) binary-halving in an unrolled loop to find the msb.
+        if((p_fft & UINT32_C(0xFFFF0000)) != UINT32_C(0)) { p_fft >>= 16U; n_fft |= UINT8_C(16); }
+        if((p_fft & UINT32_C(0x0000FF00)) != UINT32_C(0)) { p_fft >>=  8U; n_fft |= UINT8_C( 8); }
+        if((p_fft & UINT32_C(0x000000F0)) != UINT32_C(0)) { p_fft >>=  4U; n_fft |= UINT8_C( 4); }
+        if((p_fft & UINT32_C(0x0000000C)) != UINT32_C(0)) { p_fft >>=  2U; n_fft |= UINT8_C( 2); }
+        if((p_fft & UINT32_C(0x00000002)) != UINT32_C(0)) { p_fft >>=  1U; n_fft |= UINT8_C( 1); }
 
-        if(p_fft > UINT32_C(0x0000000F))
+        // We now have the needed FFT size doubled (and doubled again).
+        n_fft = (std::uint32_t) (1UL << n_fft);
+
+        if(n_fft < (std::uint32_t) ((p * 2L) * 2L))
         {
-          n_fft  += 4U;
-
-          p_fft >>= 4U;
+          n_fft <<= 1U;
         }
-
-        constexpr std::uint_fast8_t p_fft_data[16U] =
-        {
-          0U, 1U, 2U, 2U,
-          3U, 3U, 3U, 3U,
-          4U, 4U, 4U, 4U,
-          4U, 4U, 4U, 4U
-        };
-
-        n_fft += p_fft_data[p_fft];
       }
 
       // We now have the needed FFT size doubled (and doubled again).
-      n_fft = (std::uint32_t) (1UL << n_fft);
 
       // Use pre-allocated static memory for the FFT result arrays.
       // This was previously given by:
