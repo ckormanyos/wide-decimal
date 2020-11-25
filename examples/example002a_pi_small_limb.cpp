@@ -16,6 +16,8 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 
+#include "example002x_pi_control.h"
+
 bool math::wide_decimal::example002a_pi_small_limb()
 {
   using local_limb_type = std::uint16_t;
@@ -24,6 +26,9 @@ bool math::wide_decimal::example002a_pi_small_limb()
 
   constexpr std::int32_t local_elem_number =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+
+  constexpr std::int32_t local_elem_digits10 =
+    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
 
@@ -38,37 +43,13 @@ bool math::wide_decimal::example002a_pi_small_limb()
     << float(stop - start) / float(CLOCKS_PER_SEC)
     << std::endl;
 
-  constexpr std::array<local_limb_type, 15U> control_head =
-  {{
-    local_limb_type(3ULL),
-    local_limb_type(1415ULL), local_limb_type(9265ULL),
-    local_limb_type(3589ULL), local_limb_type(7932ULL),
-    local_limb_type(3846ULL), local_limb_type(2643ULL),
-    local_limb_type(3832ULL), local_limb_type(7950ULL),
-    local_limb_type(2884ULL), local_limb_type(1971ULL),
-    local_limb_type(6939ULL), local_limb_type(9375ULL),
-    local_limb_type(1058ULL), local_limb_type(2097ULL)
-  }};
-
-  constexpr std::array<local_limb_type, 16U> control_tail =
-  {{
-    local_limb_type(2087ULL), local_limb_type(5424ULL),
-    local_limb_type(5059ULL), local_limb_type(8956ULL),
-    local_limb_type(7879ULL), local_limb_type(6130ULL),
-    local_limb_type(3311ULL), local_limb_type(6462ULL),
-    local_limb_type(8399ULL), local_limb_type(6346ULL),
-    local_limb_type(4604ULL), local_limb_type(2209ULL),
-    local_limb_type( 106ULL), local_limb_type(1057ULL),
-    local_limb_type(7945ULL), local_limb_type(8151ULL)
-  }};
-
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + control_head.size(),
-                                     control_head.cbegin());
+                                     my_pi.crepresentation().cbegin() + const_pi_control_head<local_limb_type>().size(),
+                                     const_pi_control_head<local_limb_type>().begin());
 
-  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + 250001UL - control_tail.size(),
-                                     my_pi.crepresentation().cbegin() + 250001UL,
-                                     control_tail.cbegin());
+  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
+                                     my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)),
+                                     const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 

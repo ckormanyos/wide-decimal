@@ -87,6 +87,9 @@
     <ClInclude Include="util\utility\util_baselexical_cast.h">
       <Filter>util\utility</Filter>
     </ClInclude>
+    <ClInclude Include="examples\example002x_pi_control.h">
+      <Filter>examples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\test.cpp">
@@ -108,6 +111,12 @@
       <Filter>examples</Filter>
     </ClCompile>
     <ClCompile Include="examples\example002a_pi_small_limb.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002b_pi_100k.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example004_bessel_recur.cpp">
       <Filter>examples</Filter>
     </ClCompile>
   </ItemGroup>

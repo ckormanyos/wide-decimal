@@ -9,9 +9,10 @@
 // "Algorithm 910: A Portable C++ Multiple-Precision System for Special-Function Calculations",
 // in ACM TOMS, {VOL 37, ISSUE 4, (February 2011)} (C) ACM, 2011. http://doi.acm.org/10.1145/1916461.1916469
 
-
 // cd C:\Users\User\Documents\Ks\PC_Software\NumericalPrograms\ExtendedNumberTypes\wide_decimal
-// g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -pedantic -Wno-cast-function-type -std=c++11 -I. -IC:/boost/boost_1_73_0 test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_sqrt.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example003_zeta.cpp -o wide_decimal.exe
+// g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -pedantic -Wno-cast-function-type -std=c++11 -I. -IC:/boost/boost_1_73_0 test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_sqrt.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp -o wide_decimal.exe
+
+// C:\Strawberry\c\bin\g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -pedantic -Wno-cast-function-type -std=c++11 -I. -ID:/boost/boost_1_73_0 test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_sqrt.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp -o wide_decimal.exe
 
 #include <iomanip>
 #include <iostream>

@@ -20,30 +20,11 @@
 
 #include "example002x_pi_control.h"
 
-namespace mcal { namespace lcd {
-
-mcal::lcd::lcd_base& lcd0()
-{
-  static mcal::lcd::lcd_console lc0;
-
-  return lc0;
-}
-
-} } // namespace mcal::lcd
-
-void example002_pi_digits10_callback(const std::uint32_t d10)
-{
-  char p_str[10U] = { 0 };
-  char* p_end = util::baselexical_cast(d10, p_str);
-
-  mcal::lcd::lcd0().write_n(p_str, (std::uint_fast8_t) (p_end - p_str), 0U);
-}
-
-bool math::wide_decimal::example002_pi()
+bool math::wide_decimal::example002b_pi_100k()
 {
   using local_limb_type = std::uint32_t;
 
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1000001);
+  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(100001);
 
   constexpr std::int32_t local_elem_number =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
@@ -56,11 +37,11 @@ bool math::wide_decimal::example002_pi()
   const std::clock_t start = std::clock();
 
   math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
-    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>(example002_pi_digits10_callback);
+    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
 
   const std::clock_t stop = std::clock();
 
-  std::cout << "Time example002_pi(): "
+  std::cout << "Time example002b_pi_100k(): "
             << (float) (stop - start) / (float) CLOCKS_PER_SEC
             << std::endl;
 
@@ -85,7 +66,7 @@ bool math::wide_decimal::example002_pi()
 
 int main()
 {
-  const bool result_is_ok = math::wide_decimal::example002_pi();
+  const bool result_is_ok = math::wide_decimal::example002b_pi_100k();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

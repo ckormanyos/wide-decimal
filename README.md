@@ -3,7 +3,7 @@ Wide-decimal implements a generic C++ template for extended precision decimal fl
 
 This C++ template header-only library implements drop-in big decimal float types such as `dec101_t`, `dec10001_t`, `dec1000001_t`, etc., that can be used essentially like regular built-in floating-point types. Wide-decimal supports decimal float types having digit counts ranging from about <img src="https://render.githubusercontent.com/render/math?math=30{\ldots}2,000,000">.
 
-Wide-decimal features realizations of a few `<cmath>`-like anc C++-like functions and features such as `fabs`, `sqrt` and `std::numeric_limits>`.
+Wide-decimal implements both common algebraic operations as well as a few `<cmath>` and C++-like functions such as `fabs`, `sqrt` and also includes full support for `std::numeric_limits`.
 
 Wide-decimal is written in header-only C++11.
 
@@ -14,6 +14,14 @@ Wide-decimal is written in header-only C++11.
   - clean header-only C++11 design.
   - seamless portability to any modern C++11 compiler,
   - scalability with small memory footprint appropriate for _bare-metal_ embedded systems.
+
+# 1,000,000 Digits of pi on bare metal
+The wide-decimal float back end is used to compute
+<img src="https://render.githubusercontent.com/render/math?math=1,000,000">
+decimal digits of the mathematical constant
+<img src="https://render.githubusercontent.com/render/math?math=\pi">
+on bare-metal OS-less microcontroller systems in
+[pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 
 # Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
