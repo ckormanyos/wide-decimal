@@ -1843,6 +1843,42 @@
 
       return val;
     }
+
+    explicit operator long double() const
+    {
+      return extract_long_double();
+    }
+
+    explicit operator double() const
+    {
+      return extract_double();
+    }
+
+    explicit operator float() const
+    {
+      return (float) extract_double();
+    }
+
+    explicit operator signed long long() const
+    {
+      return extract_signed_long_long();
+    }
+
+    explicit operator unsigned long long() const
+    {
+      return extract_unsigned_long_long();
+    }
+
+    explicit operator signed int() const
+    {
+      return (int) extract_signed_long_long();
+    }
+
+    explicit operator unsigned int() const
+    {
+      return (unsigned int) extract_unsigned_long_long();
+    }
+
     #endif // !WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
 
   private:
@@ -3981,9 +4017,15 @@
     return v1 - (n * v2);
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> double to_double(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)              { return x.extract_double(); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> double to_double(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
+  {
+    return x.extract_double();
+  }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::int64_t to_int64(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)              { return static_cast<std::int64_t>(x.extract_signed_long_long()); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::int64_t to_int64(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
+  {
+    return static_cast<std::int64_t>(x.extract_signed_long_long());
+  }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::int32_t to_int32(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
   {
