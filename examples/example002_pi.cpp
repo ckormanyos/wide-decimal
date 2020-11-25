@@ -22,7 +22,7 @@
 
 namespace mcal { namespace lcd {
 
-mcal::lcd::lcd_base& lcd0() noexcept
+mcal::lcd::lcd_base& lcd0()
 {
   static mcal::lcd::lcd_console lc0;
 

@@ -50,9 +50,9 @@
     using reference       = value_type&;
     using const_reference = const value_type&;
 
-    n_slot_array_allocator() noexcept = default;
+    n_slot_array_allocator() = default;
 
-    n_slot_array_allocator(const n_slot_array_allocator&) noexcept = default;
+    n_slot_array_allocator(const n_slot_array_allocator&) = default;
 
     template<typename U>
     struct rebind
@@ -60,7 +60,7 @@
       using other = n_slot_array_allocator<U, SlotWidth, SlotCount>;
     };
 
-    size_type max_size() const noexcept
+    size_type max_size() const
     {
       return slot_array_memory.size();
     }
@@ -93,11 +93,11 @@
       return p;
     }
 
-    void construct(pointer p, const value_type& x) noexcept { }
+    void construct(pointer p, const value_type& x) { }
 
-    void destroy(pointer p) noexcept { }
+    void destroy(pointer p) { }
 
-    void deallocate(pointer p_slot, size_type) noexcept
+    void deallocate(pointer p_slot, size_type)
     {
       for(std::size_t i = 0U; i < slot_count; ++i)
       {
@@ -138,7 +138,7 @@
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
   bool operator==(const n_slot_array_allocator<T, SlotWidth, SlotCount>&,
-                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&) noexcept
+                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&)
   {
     return true;
   }
@@ -147,7 +147,7 @@
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
   bool operator!=(const n_slot_array_allocator<T, SlotWidth, SlotCount>&,
-                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&) noexcept
+                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&)
   {
     return false;
   }

@@ -73,7 +73,7 @@
     using base_class_type = util::dynamic_array<MyType, MyAlloc>;
 
   public:
-    constexpr dynamic_array() noexcept
+    constexpr dynamic_array()
       : base_class_type(MySize) { }
 
     constexpr dynamic_array(const typename base_class_type::size_type my_size)
@@ -102,7 +102,7 @@
                 base_class_type::begin());
     }
 
-    dynamic_array(dynamic_array&& other_array) noexcept
+    dynamic_array(dynamic_array&& other_array)
       : base_class_type(static_cast<base_class_type&&>(other_array)) { }
 
     dynamic_array& operator=(const dynamic_array& other_array)
@@ -112,7 +112,7 @@
       return *this;
     }
 
-    dynamic_array& operator=(dynamic_array&& other_array) noexcept
+    dynamic_array& operator=(dynamic_array&& other_array)
     {
       base_class_type::operator=(static_cast<base_class_type&&>(other_array));
 
@@ -440,11 +440,11 @@
 
   public:
     // Default constructor.
-    decwide_t() noexcept : my_data     (),
-                           my_exp      (static_cast<std::int64_t>(0)),
-                           my_neg      (false),
-                           my_fpclass  (decwide_t_finite),
-                           my_prec_elem(decwide_t_elem_number) { }
+    decwide_t() : my_data     (),
+                  my_exp      (static_cast<std::int64_t>(0)),
+                  my_neg      (false),
+                  my_fpclass  (decwide_t_finite),
+                  my_prec_elem(decwide_t_elem_number) { }
 
     // Constructors from built-in unsigned integral types.
     template<typename UnsignedIntegralType,
@@ -548,11 +548,11 @@
                                     my_prec_elem(f.my_prec_elem) { }
 
     // Move constructor.
-    decwide_t(decwide_t&& f) noexcept : my_data     (static_cast<array_type&&>(f.my_data)),
-                                        my_exp      (f.my_exp),
-                                        my_neg      (f.my_neg),
-                                        my_fpclass  (f.my_fpclass),
-                                        my_prec_elem(f.my_prec_elem) { }
+    decwide_t(decwide_t&& f) : my_data     (static_cast<array_type&&>(f.my_data)),
+                               my_exp      (f.my_exp),
+                               my_neg      (f.my_neg),
+                               my_fpclass  (f.my_fpclass),
+                               my_prec_elem(f.my_prec_elem) { }
 
     // Constructor from floating-point class.
     explicit decwide_t(const fpclass_type fpc) : my_data     (),
@@ -2098,7 +2098,8 @@
         if((p_fft & UINT32_C(0x0000000C)) != UINT32_C(0)) { p_fft >>=  2U; n_fft |= UINT8_C( 2); }
         if((p_fft & UINT32_C(0x00000002)) != UINT32_C(0)) { p_fft >>=  1U; n_fft |= UINT8_C( 1); }
 
-        // We now have the needed FFT size doubled (and doubled again).
+        // We now obtain the needed FFT size doubled (and doubled again),
+        // with the added condition of needing to be a power of 2.
         n_fft = (std::uint32_t) (1UL << n_fft);
 
         if(n_fft < (std::uint32_t) ((p * 2L) * 2L))
@@ -3401,15 +3402,15 @@
       static const bool                    traps             = false;
       static const bool                    tinyness_before   = false;
 
-      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> (min)        () noexcept { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_min(); }
-      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> (max)        () noexcept { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_max(); }
-      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> lowest       () noexcept { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>(); }
-      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> epsilon      () noexcept { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_eps(); }
-      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> round_error  () noexcept { return math::wide_decimal::half<MyDigits10, LimbType, AllocatorType, InternalFloatType>(); }
-      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> infinity     () noexcept { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_inf(); }
-      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> quiet_NaN    () noexcept { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_nan(); }
-      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> signaling_NaN() noexcept { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>(); }
-      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> denorm_min   () noexcept { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>(); }
+      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> (min)        () { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_min(); }
+      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> (max)        () { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_max(); }
+      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> lowest       () { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>(); }
+      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> epsilon      () { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_eps(); }
+      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> round_error  () { return math::wide_decimal::half<MyDigits10, LimbType, AllocatorType, InternalFloatType>(); }
+      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> infinity     () { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_inf(); }
+      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> quiet_NaN    () { return math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_nan(); }
+      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> signaling_NaN() { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>(); }
+      static math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> denorm_min   () { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>(); }
     };
   } // namespace std
 
@@ -3999,6 +4000,7 @@
   bool example002a_pi_small_limb();
   bool example002b_pi_100k      ();
   bool example003_zeta          ();
+  bool example004_bessel_recur  ();
 
   } } // namespace math::wide_decimal
 
