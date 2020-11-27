@@ -11,6 +11,7 @@ bool test_decwide_t_examples____()
   result_is_ok &= math::wide_decimal::example002b_pi_100k      ();
   result_is_ok &= math::wide_decimal::example003_zeta          ();
   result_is_ok &= math::wide_decimal::example004_bessel_recur  ();
+  result_is_ok &= math::wide_decimal::example005_polylog_series();
 
   return result_is_ok;
 }
