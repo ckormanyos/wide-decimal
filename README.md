@@ -17,13 +17,13 @@ Wide-decimal is written in header-only C++11.
 
 # The examples
 
-  - ![`example001_sqrt`](./exampless/example001_sqrt.cpp) computes a square root.
-  - ![`example002_pi`](./exampless/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
-  - ![`example002a_pi_small_limb`](./exampless/example002a_pi_small_limb.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
-  - ![`example002b_pi_100k`](./exampless/example002b_pi_100k.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
-  - ![`example003_zeta`](./exampless/example003_zeta.cpp) computes a Riemann zeta function value.
-  - ![`example004_bessel_recur`](./exampless/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
-  - ![`example005_polylog_series`](./exampless/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
+  - ![`example001_sqrt`](./examples/example001_sqrt.cpp) computes a square root.
+  - ![`example002_pi`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
+  - ![`example002a_pi_small_limb`](./examples/example002a_pi_small_limb.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
+  - ![`example002b_pi_100k`](./examples/example002b_pi_100k.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
+  - ![`example003_zeta`](./examples/example003_zeta.cpp) computes a Riemann zeta function value.
+  - ![`example004_bessel_recur`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
+  - ![`example005_polylog_series`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
 
 # 1,000,000 digits of pi on bare metal
 
