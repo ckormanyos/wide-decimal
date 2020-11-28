@@ -52,6 +52,9 @@ namespace
     }
     else
     {
+      // Implement the unsigned integral power function
+      // using the so-called ladder method.
+
       result = floating_point_type(std::uint8_t(1U));
 
       floating_point_type        y      (b);
@@ -59,14 +62,14 @@ namespace
 
       while((p_local == zero) == false)
       {
-        if(std::uint_fast8_t(p_local) & 1U)
+        if((std::uint_fast8_t(p_local) & 1U) != 0U)
         {
           result *= y;
         }
 
         y *= y;
 
-        p_local >>= 1;
+        p_local >>= 1U;
       }
     }
 
@@ -111,11 +114,12 @@ bool math::wide_decimal::example005_polylog_series()
 
   using std::fabs;
 
-  const dec101_t poly = local::polylog(11U, dec101_t(11U) / 43U);
+  // N[PolyLog[7, 17/71], 101]
+  const dec101_t poly = local::polylog(7U, dec101_t(17U) / 71U);
 
   const dec101_t control
   {
-    "0.25584600253945924288028310602168822264990330270024155848581891916373108833725493865909907405565367741"
+    "0.23989099751201076665599565769828454152030927256642802570721839696637617308754054721620440634024352282"
   };
 
   // Check the closeness of the result.
