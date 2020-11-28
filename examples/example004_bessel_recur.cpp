@@ -5,6 +5,8 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
 
 #include <math/wide_decimal/decwide_t.h>
@@ -12,14 +14,14 @@
 namespace
 {
   template<typename FloatingPointType>
-  static FloatingPointType bisect(FloatingPointType (*const func)(const FloatingPointType),
-                                  const FloatingPointType x_lo,
-                                  const FloatingPointType x_hi)
+  FloatingPointType bisect(FloatingPointType (*pfn)(const FloatingPointType),
+                           const FloatingPointType x_lo,
+                           const FloatingPointType x_hi)
   {
     using floating_point_type = FloatingPointType;
 
-    const floating_point_type f_lo = func(x_lo);
-    const floating_point_type f_hi = func(x_hi);
+    const floating_point_type f_lo = pfn(x_lo);
+    const floating_point_type f_hi = pfn(x_hi);
 
     const bool f_lo_is_neg = (f_lo < floating_point_type(0.0L));
     const bool f_hi_is_neg = (f_hi < floating_point_type(0.0L));
@@ -27,7 +29,7 @@ namespace
     // Make sure that there is at least one root in the interval.
     if(f_lo_is_neg == f_hi_is_neg)
     {
-      std::cerr << "Error: Bisection interval has no root or it has multiple roots!" << std::endl;
+      // Bisection interval has no root or it has multiple roots!
 
       return floating_point_type(0);
     }
@@ -53,7 +55,7 @@ namespace
       dx /= 2;
 
       const floating_point_type xmid = rtb + dx;
-      const floating_point_type fmid = func(xmid);
+      const floating_point_type fmid = pfn(xmid);
 
       if(fmid <= floating_point_type(0.0L))
       {
@@ -72,21 +74,19 @@ namespace
     }
 
     // Bisection iteration did not converge.
-    std::cerr << "Error: Bisection iteration did not converge!" << std::endl;
-
     return floating_point_type(0);
   }
 
   struct Jn_algo
   {
-    static constexpr double e_half() { return double(1.359140914229522617680143735676331248879L); }
-    static constexpr double two_pi() { return double(6.283185307179586476925286766559005768394L); }
+    static constexpr float e_half() { return float(1.359140914229522617680143735676331248879L); }
+    static constexpr float two_pi() { return float(6.283185307179586476925286766559005768394L); }
 
-    static double       m_z;
-    static double       m_n;
+    static float        m_z;
+    static float        m_n;
     static std::int32_t m_p;
 
-    static double fn_mstart1(const double m)
+    static float fn_mstart1(const float m)
     {
       // This equation corresponds to | Jm(z) | = 10^(-p)
 
@@ -97,12 +97,14 @@ namespace
       // The resulting root equation is:
       // p + log10(Jnu asymptotic) = 0
 
-      return   static_cast<double>(m_p)
-             - (0.5 * std::log10(two_pi() * m))
-             + (  m * std::log10(e_half() * m_z / m));
+      using std::log10;
+
+      return   static_cast<float>(m_p)
+             - (0.5F * log10(two_pi() * m))
+             + (  m  * log10(e_half() * m_z / m));
     }
 
-    static double fn_mstart2(const double m)
+    static float fn_mstart2(const float m)
     {
       // This equation corresponds to | Jm(z) | = 10^(-p / 2) * | Jn(z)|
 
@@ -113,34 +115,36 @@ namespace
       // The resulting root equation is:
       // p + log10(Jnu asymptotic) = 0
 
-      return   (static_cast<double>(m_p) / 2.0)
-             - (0.5 * std::log10(two_pi() * m))
-             + (  m * std::log10(e_half() * m_z / m))
-             + (0.5 * std::log10(two_pi() * m_n))
-             - (m_n * std::log10(e_half() * m_z / m_n));
+      using std::log10;
+
+      return   (static_cast<float>(m_p) / 2.0F)
+             - (0.5F * log10(two_pi() * m))
+             + (  m  * log10(e_half() * m_z / m))
+             + (0.5F * log10(two_pi() * m_n))
+             - (m_n  * log10(e_half() * m_z / m_n));
     }
 
-    static std::uint32_t mstart1(const double x, const std::uint32_t digits)
+    static std::uint32_t mstart1(const float x, const std::uint32_t digits)
     {
-      m_z = ((x < 0.1) ? 0.1 : x);
+      m_z = (std::max)(x, 0.1F);
       m_p = digits;
 
       // Get the starting order for recursion.
-      const double        d_order = bisect(fn_mstart1, 0.1, x + 100000.0);
+      const float         d_order = bisect(fn_mstart1, 0.1F, x + 100000.0F);
       const std::uint32_t n_order = static_cast<std::uint32_t>(d_order);
 
       // Make sure the return value is an odd integer.
       return ((((n_order % 2) == 0U) && (n_order > 0U)) ? n_order - 1U : n_order);
     }
 
-    static std::uint32_t mstart2(const double x, const double dn, const std::uint32_t digits)
+    static std::uint32_t mstart2(const float x, const float dn, const std::uint32_t digits)
     {
-      m_z = ((x < 0.1) ? 0.1 : x);
+      m_z = (std::max)(x, 0.1F);
       m_n = dn;
       m_p = digits;
 
       // Get the starting order for recursion.
-      const double        d_order = bisect(fn_mstart2, 0.1, x + 100000.0);
+      const float         d_order = bisect(fn_mstart2, 0.1F, x + 100000.0F);
       const std::uint32_t n_order = static_cast<std::uint32_t>(d_order);
 
       // Make sure the return value is an odd integer.
@@ -148,11 +152,13 @@ namespace
     }
   };
 
-  double        Jn_algo::m_z;
-  double        Jn_algo::m_n;
-
+  float         Jn_algo::m_z;
+  float         Jn_algo::m_n;
   std::int32_t  Jn_algo::m_p;
+}
 
+namespace local
+{
   template<typename FloatingPointType>
   FloatingPointType cyl_bessel_j(const std::int32_t n, const FloatingPointType x)
   {
@@ -164,35 +170,35 @@ namespace
 
     // Start recursion using two J's, Jn+2 and Jn+1.
     // Arbitrarily set Jn+2 = 0 and Jn+1 = 1.
-    floating_point_type jn_p2        (0U);
-    floating_point_type jn_p1        (1U);
-    floating_point_type normalization(2U);
+    floating_point_type jn_p2    (0U);
+    floating_point_type jn_p1    (1U);
+    floating_point_type norm_half(1U);
 
     const std::uint32_t d10 = static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10);
 
     // Get the starting order for recursive calculations.
-    const std::int32_t n_start1 = Jn_algo::mstart1((double) x,        d10);
-    const std::int32_t n_start2 = Jn_algo::mstart2((double) x, n - 1, d10);
+    const std::int32_t n_start1 = Jn_algo::mstart1((float) x,                  d10);
+    const std::int32_t n_start2 = Jn_algo::mstart2((float) x, (float) (n - 1), d10);
 
-    const std::int32_t n_start = ((n_start2 > n_start1) ? n_start2 : n_start1);
+    const std::int32_t n_start = (std::max)(n_start2, n_start1);
 
     // Do the recursion. The direction of the recursion is downward.
     for(std::int32_t m = n_start; m >= 0; --m)
     {
       //                                 Jn+1(x)
       // Downward recursion is:  Jn(x) = ------- * [2 * (m + 1)] - Jn+2(x)
-      //                                    x 
-      const floating_point_type jn = ((jn_p1 * one_over_x) * (2 * (m + 1))) - jn_p2;
+      //                                    x
+      const floating_point_type jn = ((jn_p1 * one_over_x) * (2L * (m + 1L))) - jn_p2;
 
       jn_p2 = jn_p1;
       jn_p1 = jn;
 
-      // Normalization.
-      // Here we are using the Neumann expansion which is:
+      // For Normalization use a Neumann expansion of the form
       // 1 = J_0(x) + 2 * J_2(x) + 2 * J_4(x) + 2 * J_6(x) + ...
+
       if((m % 2) == 0)
       {
-        normalization += ((m == 0) ? jn : jn * 2);
+        norm_half += ((m == 0) ? jn / 2 : jn);
       }
 
       // Store the requested value of jn in the result.
@@ -203,9 +209,8 @@ namespace
     }
 
     // Divide by the normalization in order to get the scaled result.
-    my_jn_result /= normalization;
 
-    return my_jn_result;
+    return my_jn_result / (norm_half * 2);
   }
 }
 
@@ -214,15 +219,13 @@ bool math::wide_decimal::example004_bessel_recur()
   // Calculate 1,001 decimal digits of the value
   // of BesselJ[11, 123456 / 10000].
 
-  using local_limb_type = std::uint32_t;
-
-  using dec1001_t = math::wide_decimal::decwide_t<1001U, local_limb_type>;
+  using dec1001_t = math::wide_decimal::decwide_t<1001U>;
 
   // Downward recursion and simultaneous summation of
   // the normalization factor.
   const dec1001_t x(dec1001_t(123456UL) / 10000UL);
 
-  const dec1001_t j11 = cyl_bessel_j(11, x);
+  const dec1001_t j11 = local::cyl_bessel_j(11, x);
 
   // N[BesselJ[11, 123456/10000], 1001]
   const dec1001_t control
@@ -241,8 +244,6 @@ bool math::wide_decimal::example004_bessel_recur()
   };
 
   const dec1001_t delta_relative = fabs(1 - (j11 / control));
-
-  std::cout << delta_relative << std::endl;
 
   const bool result_is_ok = delta_relative < (std::numeric_limits<dec1001_t>::epsilon() * 100);
 
