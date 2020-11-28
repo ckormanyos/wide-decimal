@@ -86,7 +86,7 @@ namespace local
     floating_point_type x_pow_k(x);
     floating_point_type sum    (x);
 
-    for(std::uint_fast32_t k = 2U; k < UINT32_C(100000); ++k)
+    for(std::uint_fast32_t k = UINT32_C(2); k < UINT32_C(100000); ++k)
     {
       x_pow_k *= x;
 
