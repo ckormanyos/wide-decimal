@@ -15,7 +15,18 @@ Wide-decimal is written in header-only C++11.
   - seamless portability to any modern C++11 compiler,
   - scalability with small memory footprint appropriate for _bare-metal_ embedded systems.
 
-# 1,000,000 Digits of pi on bare metal
+# The examples
+
+  - `example001_sqrt` computes a square root.
+  - `example002_pi` calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
+  - `example002a_pi_small_limb` calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
+  - `example002b_pi_100k` calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
+  - `example003_zeta` computes a Riemann zeta function value.
+  - `example004_bessel_recur` implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
+  - `example005_polylog_series` performs a small-argument polylogarithm series calculation.
+
+# 1,000,000 digits of pi on bare metal
+
 The wide-decimal float back end is used to compute
 <img src="https://render.githubusercontent.com/render/math?math=1,000,000">
 decimal digits of the mathematical constant
