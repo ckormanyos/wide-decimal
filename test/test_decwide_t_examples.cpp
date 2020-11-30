@@ -12,6 +12,7 @@ bool test_decwide_t_examples____()
   result_is_ok &= math::wide_decimal::example003_zeta          ();
   result_is_ok &= math::wide_decimal::example004_bessel_recur  ();
   result_is_ok &= math::wide_decimal::example005_polylog_series();
+  result_is_ok &= math::wide_decimal::example006_logarithm     ();
 
   return result_is_ok;
 }

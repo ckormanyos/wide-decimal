@@ -130,11 +130,11 @@ namespace
       m_p = digits;
 
       // Get the starting order for recursion.
-      const float         d_order = bisect(fn_mstart1, 0.1F, x + 100000.0F);
-      const std::uint32_t n_order = static_cast<std::uint32_t>(d_order);
+      const float         f_order = bisect(fn_mstart1, 0.1F, x + 100000.0F);
+      const std::uint32_t n_order = static_cast<std::uint32_t>(f_order);
 
       // Make sure the return value is an odd integer.
-      return ((((n_order % 2) == 0U) && (n_order > 0U)) ? n_order - 1U : n_order);
+      return ((((n_order % 2U) == 0U) && (n_order > 0U)) ? n_order - 1U : n_order);
     }
 
     static std::uint32_t mstart2(const float x, const float dn, const std::uint32_t digits)
@@ -144,8 +144,8 @@ namespace
       m_p = digits;
 
       // Get the starting order for recursion.
-      const float         d_order = bisect(fn_mstart2, 0.1F, x + 100000.0F);
-      const std::uint32_t n_order = static_cast<std::uint32_t>(d_order);
+      const float         f_order = bisect(fn_mstart2, 0.1F, x + 100000.0F);
+      const std::uint32_t n_order = static_cast<std::uint32_t>(f_order);
 
       // Make sure the return value is an odd integer.
       return ((((n_order % 2U) == 0U) && (n_order > 0U)) ? n_order - 1U : n_order);
@@ -244,9 +244,9 @@ bool math::wide_decimal::example004_bessel_recur()
     "5"
   };
 
-  const dec1001_t delta_relative = fabs(1 - (j11 / control));
+  const dec1001_t closeness = fabs(1 - (j11 / control));
 
-  const bool result_is_ok = delta_relative < (std::numeric_limits<dec1001_t>::epsilon() * 100);
+  const bool result_is_ok = closeness < (std::numeric_limits<dec1001_t>::epsilon() * 100);
 
   return result_is_ok;
 }
