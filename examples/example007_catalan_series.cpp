@@ -30,22 +30,22 @@ namespace local
   {
     using floating_point_type = FloatingPointType;
 
-    // Taken partly from Boost.Math.Constants (see file calculate_constants.hpp).
+    // Adapted from Boost.Math.Constants (see file calculate_constants.hpp).
     // See also http://www.mpfr.org/algorithms.pdf
 
-    floating_point_type k_fact = 1;
-    floating_point_type tk_fact = 1;
-    floating_point_type sum = 1;
+    floating_point_type k_fact (1U);
+    floating_point_type tk_fact(1U);
+    floating_point_type sum    (1U);
 
-    floating_point_type lim =std::numeric_limits<floating_point_type>::epsilon();
+    const floating_point_type lim = std::numeric_limits<floating_point_type>::epsilon();
 
-    for(unsigned k = 1;; ++k)
+    for(std::uint_fast32_t k = UINT32_C(1); k < UINT32_C(10000000); ++k)
     {
       const std::uint32_t tk = 2U * k;
       const std::uint64_t tk_plus_one_squared = (std::uint64_t) (tk + 1U) * (tk + 1U);
 
       k_fact  *= k;
-      tk_fact *= (std::uint64_t) tk * (tk - 1);
+      tk_fact *= (std::uint64_t) tk * (tk - 1U);
 
       floating_point_type term = (k_fact * k_fact) / (tk_fact * tk_plus_one_squared);
 
@@ -61,7 +61,10 @@ namespace local
     using std::log;
     using std::sqrt;
 
-    return (pi<floating_point_type>() * log(2U + sqrt(floating_point_type(3U))) / 8U) + ((sum * 3U) / 8U);
+    const floating_point_type result =
+      ((pi<floating_point_type>() * log(2U + sqrt(floating_point_type(3U)))) + (sum * 3U)) / 8U;
+
+    return result;
   }
 }
 
