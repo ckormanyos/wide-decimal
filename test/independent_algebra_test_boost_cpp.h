@@ -89,6 +89,13 @@
     result.my_cpp_bin_float = sqrt(a.my_cpp_bin_float);
   }
 
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  void eval_log(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& result,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a)
+  {
+    result.my_cpp_bin_float = log(a.my_cpp_bin_float);
+  }
+
   } }
 
 #endif // INDEPENDENT_ALGEBRA_TEST_BOOST_CPP_2020_10_17_H_

@@ -142,8 +142,18 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> one   ();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> two   ();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> half  ();
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi    (void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ln_two();
+
+  template<const std::int32_t MyDigits10,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double>
+  decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
+
+  template<const std::int32_t MyDigits10,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double>
+  decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ln_two();
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> unsigned_long_long_max();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> signed_long_long_min  ();
@@ -3182,39 +3192,33 @@
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ln_two()
   {
-    // Use an AGM method to compute the logarithm of x.
-
     using floating_point_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
 
-    // For values less than 1 invert the argument and
-    // remember (in this case) to negate the result below.
+    // Use an AGM method to compute the logarithm of x.
+
     // Set a0 = 1
-    // Set b0 = 1 / (2^(m-1))
+    // Set b0 = 1 / (2^(m-2))
 
     floating_point_type ak(1U);
 
     using std::log;
 
-    const float n_times_factor = static_cast<float>(static_cast<float>(std::numeric_limits<floating_point_type>::digits10) * 1.67F);
-
-    std::int32_t m = static_cast<std::int32_t>(n_times_factor);
+    const float n_times_factor =
+      static_cast<float>(static_cast<float>(std::numeric_limits<floating_point_type>::digits10) * 1.67F);
 
     // Ensure that the resulting power is non-negative.
     // Also enforce that m >= 8.
-    m = (std::max)(m, static_cast<std::int32_t>(8));
+    const std::int32_t m = (std::max)((std::int32_t) n_times_factor, (std::int32_t) 8);
 
     floating_point_type bk = 1 / pow(floating_point_type(2U), m - 2);
 
-    floating_point_type ak_tmp(0U);
-
-    using std::sqrt;
-
-    // Determine the requested precision of the upcoming iteration in units of digits10.
-    const floating_point_type target_tolerance = sqrt(std::numeric_limits<floating_point_type>::epsilon()) / 100;
+    const std::int32_t digits10_iteration_goal =
+      static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
 
     for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
     {
-      using std::fabs;
+      using std::ilogb;
+      using std::sqrt;
 
       // Check for the number of significant digits to be
       // at least half of the requested digits. If at least
@@ -3223,11 +3227,10 @@
 
       const std::int32_t approximate_digits10_of_iteration_term = -ilogb(ak - bk);
 
-      ak_tmp  = ak;
-      ak     += bk;
-      ak     /= 2;
+      const floating_point_type ak_tmp(ak);
 
-      const std::int32_t digits10_iteration_goal = static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
+      ak += bk;
+      ak /= 2;
 
       if(approximate_digits10_of_iteration_term > digits10_iteration_goal)
       {
@@ -3239,11 +3242,9 @@
     }
 
     // We are now finished with the AGM iteration for log(x).
-
-    // Compute log(x) = {pi / [2 * AGM(1, 4 / 2^m)]} - (m * ln2)
     // Note at this time that (ak = bk) = AGM(...)
+    // Retrieve the value of pi and divide by (a * (2 * m)).
 
-    // Retrieve the value of pi, divide by (2 * a) and subtract (m * ln2).
     const floating_point_type result =
          pi<MyDigits10, LimbType, AllocatorType, InternalFloatType>() / (ak * (2 * m));
 
@@ -3955,8 +3956,6 @@
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> log(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
   {
-    // Use an AGM method to compute the logarithm of x.
-
     using floating_point_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
 
     // For values less than 1 invert the argument and
@@ -3965,37 +3964,43 @@
 
     const floating_point_type xx = ((b_negate == false) ? x : 1 / x);
 
+    // Use an AGM method to compute the logarithm of x.
     // Set a0 = 1
-    // Set b0 = 4 / (x * 2^m) = 1 / (x * 2^(m - 2))
+    // Set b0 = 4 / (x * 2^m)
+    //        = 1 / (x * 2^(m - 2))
 
     floating_point_type ak(1U);
 
     using std::log;
 
-    const float n_times_factor = static_cast<float>(static_cast<float>(std::numeric_limits<floating_point_type>::digits10) * 1.67F);
-    const float lgx_over_lg2   = std::log(static_cast<float>(xx)) / log(2.0F);
+    const float n_times_factor =
+      static_cast<float>(static_cast<float>(std::numeric_limits<floating_point_type>::digits10) * 1.67F);
 
-    std::int32_t m = static_cast<std::int32_t>(n_times_factor - lgx_over_lg2);
+    InternalFloatType dd;
+    std::int64_t      ne;
+
+    xx.extract_parts(dd, ne);
+
+    using std::log;
+
+    const float lgx = (float) (log((float) dd) + ((float) ne * log(10.0F)));
+
+    const float lgx_over_lg2   = lgx / log(2.0F);
 
     // Ensure that the resulting power is non-negative.
     // Also enforce that m >= 8.
-    m = (std::max)(m, static_cast<std::int32_t>(8));
+    const std::int32_t m = (std::max)((std::int32_t) (n_times_factor - lgx_over_lg2), (std::int32_t) 8);
 
-    floating_point_type bk = pow(floating_point_type(2U), m);
+    floating_point_type bk = 1 / (xx * pow(floating_point_type(2U), m - 2));
 
-    bk *= xx;
-    bk  = 4 / bk;
-
-    floating_point_type ak_tmp(0U);
-
-    using std::sqrt;
-
-    // Determine the requested precision of the upcoming iteration in units of digits10.
-    const floating_point_type target_tolerance = sqrt(std::numeric_limits<floating_point_type>::epsilon()) / 100;
+    // TBD: Tolerance should have the log of the argument added to it (usually negligible).
+    const std::int32_t digits10_iteration_goal =
+      static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
 
     for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
     {
-      using std::fabs;
+      using std::ilogb;
+      using std::sqrt;
 
       // Check for the number of significant digits to be
       // at least half of the requested digits. If at least
@@ -4003,12 +4008,10 @@
       // then break after the upcoming iteration.
       const std::int32_t approximate_digits10_of_iteration_term = -ilogb(ak - bk);
 
-      ak_tmp  = ak;
-      ak     += bk;
-      ak     /= 2;
+      const floating_point_type ak_tmp(ak);
 
-      // TBD: Tolerance should have the log of the argument added to it (usually negligible).
-      const std::int32_t digits10_iteration_goal = static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
+      ak += bk;
+      ak /= 2;
 
       if(approximate_digits10_of_iteration_term > digits10_iteration_goal)
       {
@@ -4020,11 +4023,10 @@
     }
 
     // We are now finished with the AGM iteration for log(x).
-
     // Compute log(x) = {pi / [2 * AGM(1, 4 / 2^m)]} - (m * ln2)
     // Note at this time that (ak = bk) = AGM(...)
-
     // Retrieve the value of pi, divide by (2 * a) and subtract (m * ln2).
+
     const floating_point_type result =
              pi<MyDigits10, LimbType, AllocatorType, InternalFloatType>() / (ak * 2)
       - (ln_two<MyDigits10, LimbType, AllocatorType, InternalFloatType>() * m);
@@ -4237,6 +4239,7 @@
   bool example004_bessel_recur  ();
   bool example005_polylog_series();
   bool example006_logarithm     ();
+  bool example007_catalan_series();
 
   } } // namespace math::wide_decimal
 

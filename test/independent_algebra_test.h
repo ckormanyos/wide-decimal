@@ -410,6 +410,59 @@
     return result_is_ok;
   }
 
+  template<const std::int32_t MyDigits10,
+           typename LimbType,
+           typename AllocatorType,
+           typename InternalFloatType,
+           const std::uint32_t CountN,
+           const std::uint32_t RoundN,
+           typename IndependentAlgebraTestControlType>
+  bool independent_algebra_test_log_()
+  {
+    using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
+
+    constexpr std::uint32_t count = CountN;
+    constexpr std::uint32_t round = RoundN;
+
+    bool result_is_ok = true;
+
+    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
+
+    for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
+    {
+      my_concurrency::parallel_for
+      (
+        std::size_t(0U),
+        std::size_t(count),
+        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        {
+          std::string str_a;
+
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U, true);
+          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+
+          independent_algebra_test_control_type                                                                                 result_ctrl;
+          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
+
+          eval_log(result_ctrl, a_ctrl);
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          eval_log(result_ef, a_ef);
+          operation_iteration_lock.clear();
+
+          while(operation_iteration_lock.test_and_set()) { ; }
+          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          operation_iteration_lock.clear();
+
+          result_is_ok &= b;
+        }
+      );
+    }
+
+    return result_is_ok;
+  }
+
   } }
 
 #endif // INDEPENDENT_ALGEBRA_TEST_2020_10_17_H_

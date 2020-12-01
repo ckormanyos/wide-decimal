@@ -84,6 +84,13 @@
     result.my_decwide_t = sqrt(a.my_decwide_t);
   }
 
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  void eval_log(      independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& result,
+                const independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a)
+  {
+    result.my_decwide_t = log(a.my_decwide_t);
+  }
+
   } }
 
 #endif // INDEPENDENT_ALGEBRA_TEST_WIDE_DECIMAL_2020_10_17_H_
