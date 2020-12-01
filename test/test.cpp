@@ -10,9 +10,9 @@
 // in ACM TOMS, {VOL 37, ISSUE 4, (February 2011)} (C) ACM, 2011. http://doi.acm.org/10.1145/1916461.1916469
 
 // cd C:\Users\User\Documents\Ks\PC_Software\NumericalPrograms\ExtendedNumberTypes\wide_decimal
-// g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -pedantic -Wno-cast-function-type -std=c++11 -I. -IC:/boost/boost_1_73_0 test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_sqrt.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp -o wide_decimal.exe
+// g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -pedantic -Wno-cast-function-type -std=c++11 -I. -IC:/boost/boost_1_73_0 test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_sqrt.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp examples/example006_logarithm.cpp examples/example007_catalan_series.cpp -o wide_decimal.exe
 
-// C:\Strawberry\c\bin\g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -pedantic -Wno-cast-function-type -std=c++11 -I. -ID:/boost/boost_1_73_0 test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_sqrt.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp -o wide_decimal.exe
+// C:\Strawberry\c\bin\g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -pedantic -Wno-cast-function-type -std=c++11 -I. -ID:/boost/boost_1_73_0 test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_sqrt.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp examples/example006_logarithm.cpp examples/example007_catalan_series.cpp -o wide_decimal.exe
 
 #include <iomanip>
 #include <iostream>
@@ -79,5 +79,13 @@ BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_sqrt_tag)
   std::cout << "running: test_decwide_t_algebra_sqrt()" << std::endl;
   const bool result_test_decwide_t_algebra_sqrt_is_ok = test_decwide_t_algebra_sqrt();
   BOOST_CHECK(result_test_decwide_t_algebra_sqrt_is_ok);
+  (void) test_log_level();
+}
+
+BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_log__tag)
+{
+  std::cout << "running: test_decwide_t_algebra_log_()" << std::endl;
+  const bool result_test_decwide_t_algebra_log__is_ok = test_decwide_t_algebra_log_();
+  BOOST_CHECK(result_test_decwide_t_algebra_log__is_ok);
   (void) test_log_level();
 }

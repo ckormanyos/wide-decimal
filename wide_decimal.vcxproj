@@ -333,6 +333,8 @@
     <ClCompile Include="examples\example003_zeta.cpp" />
     <ClCompile Include="examples\example004_bessel_recur.cpp" />
     <ClCompile Include="examples\example005_polylog_series.cpp" />
+    <ClCompile Include="examples\example006_logarithm.cpp" />
+    <ClCompile Include="examples\example007_catalan_series.cpp" />
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
     <ClCompile Include="test\test_decwide_t_examples.cpp" />

@@ -11,69 +11,6 @@
 
 #include <math/wide_decimal/decwide_t.h>
 
-namespace
-{
-  template<typename FloatingPointType,
-           typename OtherUnsignedIntegralTypeP>
-  FloatingPointType pow(const FloatingPointType& b, OtherUnsignedIntegralTypeP p)
-  {
-    using floating_point_type = FloatingPointType;
-
-    // Calculate (b ^ p).
-
-    floating_point_type result;
-
-    const OtherUnsignedIntegralTypeP zero(std::uint8_t(0U));
-
-    if(p == zero)
-    {
-      result = floating_point_type(std::uint8_t(1U));
-    }
-    else if(p == 1U)
-    {
-      result = b;
-    }
-    else if(p == 2U)
-    {
-      result  = b;
-      result *= b;
-    }
-    else if(p == 3U)
-    {
-      result  = b;
-      result *= b;
-      result *= b;
-    }
-    else if(p == 4U)
-    {
-      result  = b;
-      result *= b;
-      result *= result;
-    }
-    else
-    {
-      result = floating_point_type(std::uint8_t(1U));
-
-      floating_point_type        y      (b);
-      OtherUnsignedIntegralTypeP p_local(p);
-
-      while((p_local == zero) == false)
-      {
-        if(std::uint_fast8_t(p_local) & 1U)
-        {
-          result *= y;
-        }
-
-        y *= y;
-
-        p_local >>= 1;
-      }
-    }
-
-    return result;
-  }
-}
-
 namespace local
 {
   template<typename FloatingPointType>
@@ -86,7 +23,7 @@ namespace local
     floating_point_type x_pow_k(x);
     floating_point_type sum    (x);
 
-    for(std::uint_fast32_t k = 2U; k < UINT32_C(100000); ++k)
+    for(std::uint_fast32_t k = UINT32_C(2); k < UINT32_C(100000); ++k)
     {
       x_pow_k *= x;
 
@@ -111,11 +48,12 @@ bool math::wide_decimal::example005_polylog_series()
 
   using std::fabs;
 
-  const dec101_t poly = local::polylog(11U, dec101_t(11U) / 43U);
+  // N[PolyLog[7, 17/71], 101]
+  const dec101_t poly = local::polylog(7U, dec101_t(17U) / 71U);
 
   const dec101_t control
   {
-    "0.25584600253945924288028310602168822264990330270024155848581891916373108833725493865909907405565367741"
+    "0.23989099751201076665599565769828454152030927256642802570721839696637617308754054721620440634024352282"
   };
 
   // Check the closeness of the result.

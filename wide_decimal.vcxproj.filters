@@ -122,5 +122,11 @@
     <ClCompile Include="examples\example005_polylog_series.cpp">
       <Filter>examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example006_logarithm.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example007_catalan_series.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

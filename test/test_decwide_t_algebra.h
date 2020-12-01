@@ -13,6 +13,7 @@
   bool test_decwide_t_algebra_mul_();
   bool test_decwide_t_algebra_div_();
   bool test_decwide_t_algebra_sqrt();
+  bool test_decwide_t_algebra_log_();
   bool test_decwide_t_examples____();
 
 #endif // TEST_DECWIDE_T_ALGEBRA_2020_11_05_H_

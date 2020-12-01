@@ -56,12 +56,7 @@ namespace
 
     for(auto i = 1U; i < primes.size(); ++i)
     {
-      float_type p16(primes.at(i));
-
-      p16 *= p16;
-      p16 *= p16;
-      p16 *= p16;
-      p16 *= p16;
+      float_type p16 = pow(float_type(primes.at(i)), 16);
 
       const float_type term = 1 / (1 - (1 / p16));
 
@@ -94,7 +89,12 @@ bool math::wide_decimal::example003_zeta()
   using std::fabs;
 
   // Check the closeness of the result.
-  const dec51_t closeness = fabs(1 - (r16 / dec51_t("1.000015282259408651871732571487636722023237388990471531")));
+  const dec51_t control
+  {
+    "1.000015282259408651871732571487636722023237388990471531"
+  };
+
+  const dec51_t closeness = fabs(1 - (r16 / control));
 
   const bool result_is_ok = (closeness < (std::numeric_limits<dec51_t>::epsilon() * 10));
 
