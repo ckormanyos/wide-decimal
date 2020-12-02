@@ -184,7 +184,7 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::int32_t                                                      ilogb(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> sqrt (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> cbrt (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pow  (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x, const std::int32_t n);
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pow  (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x, const std::int64_t n);
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> log  (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool isnan   (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
@@ -3184,7 +3184,7 @@
   {
     using floating_point_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
 
-    // Use an AGM method to compute the logarithm of x.
+    // Use an AGM method to compute log(2).
 
     // Set a0 = 1
     // Set b0 = 1 / (2^(m-2))
@@ -3231,7 +3231,7 @@
       bk  = sqrt(bk);
     }
 
-    // We are now finished with the AGM iteration for log(x).
+    // We are now finished with the AGM iteration for log(2).
     // Note at this time that (ak = bk) = AGM(...)
     // Retrieve the value of pi and divide by (a * (2 * m)).
 
@@ -3539,61 +3539,6 @@
 
   namespace math { namespace wide_decimal {
 
-  namespace detail {
-
-  // *****************************************************************************
-  // Function    : template<typename T> T pown_template(const T& d, const std::int64_t p)
-  // 
-  // Description : Template function for computing an object d of typename T
-  //               raised to the power of std::int64_t p, for p positive or negative.
-  //               Binary splitting of the power is used. The resulting
-  //               computational complexity scales with O[log2(|p|)].
-  // 
-  // *****************************************************************************
-  template<typename T>
-  T pown_template(const T& t, const std::int64_t p)
-  {
-    // Compute the pure power of typename T t^p. Binary splitting of the power is
-    // used. The resulting computational complexity is proportional to O[log2(|p|)].
-
-    if     (p <  static_cast<std::int64_t>(0)) { return T(1) / pown_template(t, -p); }
-    else if(p == static_cast<std::int64_t>(0)) { return T(1); }
-    else if(p == static_cast<std::int64_t>(1)) { return t; }
-    else if(p == static_cast<std::int64_t>(2)) { return (t * t); }
-    else if(p == static_cast<std::int64_t>(3)) { return (t * t) * t; }
-    else if(p == static_cast<std::int64_t>(4)) { const T t2(t * t); return (t2 * t2); }
-    else if(p == static_cast<std::int64_t>(5)) { const T t2(t * t); return (t2 * t2) * t; }
-    else
-    {
-      bool has_binary_power = (static_cast<std::int64_t>(p % 2) != static_cast<std::int64_t>(0));
-
-      // The variable tn stores the binary powers of t.
-      T result(has_binary_power ? t : T(1U));
-      T tn    (t);
-
-      std::int64_t p2 = p;
-
-      while((p2 /= 2) != static_cast<std::int64_t>(0))
-      {
-        // Square tn for each binary power.
-        // TBD: Is it faster (or better) to use the ladder method?
-        tn *= tn;
-
-        has_binary_power = (static_cast<std::int64_t>(p2 % 2) != static_cast<std::int64_t>(0));
-
-        if(has_binary_power)
-        {
-          // Multiply the result with each binary power contained in the exponent.
-          result *= tn;
-        }
-      }
-
-      return result;
-    }
-  }
-
-  } // namespace math::wide_decimal::detail
-
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> int32_min             () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>((std::numeric_limits<std::int32_t>::min)()); }
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> int32_max             () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>((std::numeric_limits<std::int32_t>::max)()); }
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> int64_min             () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>((std::numeric_limits<std::int64_t>::min)()); }
@@ -3895,7 +3840,7 @@
     }
     else
     {
-      return detail::pown_template(two<MyDigits10, LimbType, AllocatorType, InternalFloatType>(), p);
+      return pow(two<MyDigits10, LimbType, AllocatorType, InternalFloatType>(), p);
     }
   }
   #endif // !WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
@@ -3910,7 +3855,7 @@
     return rootn(x, static_cast<std::int32_t>(3));
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pow(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& b, const std::int32_t p)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pow(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& b, const std::int64_t p)
   {
     // Calculate (b ^ p).
 
@@ -3930,7 +3875,7 @@
 
       floating_point_type y(b);
 
-      for(std::uint32_t p_local = (std::uint32_t) p; p_local != 0U; p_local >>= 1U)
+      for(std::uint64_t p_local = (std::uint64_t) p; p_local != 0U; p_local >>= 1U)
       {
         if((p_local & 1U) != 0U)
         {
@@ -4061,7 +4006,8 @@
         result.precision(new_prec);
 
         // Perform the next iteration.
-        math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> term = (((-math::wide_decimal::detail::pown_template(result, p) * x) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>()) / p) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>();
+        decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> term =
+          (((-pow(result, p) * x) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>()) / p) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>();
 
         term.precision(new_prec);
 
@@ -4114,7 +4060,7 @@
 
     if(p < static_cast<std::int32_t>(0))
     {
-      return detail::pown_template(x, static_cast<std::int32_t>(-p));
+      return pow(x, -p);
     }
 
     if((p == static_cast<std::int32_t>(0)) || isneg(x))
