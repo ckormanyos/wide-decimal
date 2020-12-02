@@ -166,16 +166,9 @@
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
           eval_add(result_ctrl, a_ctrl, b_ctrl);
-
-          while(operation_iteration_lock.test_and_set()) { ; }
           eval_add(result_ef, a_ef, b_ef);
-          operation_iteration_lock.clear();
 
-          while(operation_iteration_lock.test_and_set()) { ; }
-          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-          operation_iteration_lock.clear();
-
-          result_is_ok &= b;
+          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
         }
       );
     }
@@ -224,16 +217,9 @@
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
           eval_sub(result_ctrl, a_ctrl, b_ctrl);
-
-          while(operation_iteration_lock.test_and_set()) { ; }
           eval_sub(result_ef, a_ef, b_ef);
-          operation_iteration_lock.clear();
 
-          while(operation_iteration_lock.test_and_set()) { ; }
-          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-          operation_iteration_lock.clear();
-
-          result_is_ok &= b;
+          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
         }
       );
     }
@@ -282,16 +268,9 @@
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
           eval_mul(result_ctrl, a_ctrl, b_ctrl);
-
-          while(operation_iteration_lock.test_and_set()) { ; }
           eval_mul(result_ef, a_ef, b_ef);
-          operation_iteration_lock.clear();
 
-          while(operation_iteration_lock.test_and_set()) { ; }
-          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-          operation_iteration_lock.clear();
-
-          result_is_ok &= b;
+          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
         }
       );
     }
@@ -340,16 +319,9 @@
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
           eval_div(result_ctrl, a_ctrl, b_ctrl);
-
-          while(operation_iteration_lock.test_and_set()) { ; }
           eval_div(result_ef, a_ef, b_ef);
-          operation_iteration_lock.clear();
 
-          while(operation_iteration_lock.test_and_set()) { ; }
-          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-          operation_iteration_lock.clear();
-
-          result_is_ok &= b;
+          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
         }
       );
     }
@@ -393,16 +365,9 @@
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
           eval_sqrt(result_ctrl, a_ctrl);
-
-          while(operation_iteration_lock.test_and_set()) { ; }
           eval_sqrt(result_ef, a_ef);
-          operation_iteration_lock.clear();
 
-          while(operation_iteration_lock.test_and_set()) { ; }
-          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-          operation_iteration_lock.clear();
-
-          result_is_ok &= b;
+          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
         }
       );
     }
@@ -446,16 +411,9 @@
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
           eval_log(result_ctrl, a_ctrl);
-
-          while(operation_iteration_lock.test_and_set()) { ; }
           eval_log(result_ef, a_ef);
-          operation_iteration_lock.clear();
 
-          while(operation_iteration_lock.test_and_set()) { ; }
-          const bool b = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
-          operation_iteration_lock.clear();
-
-          result_is_ok &= b;
+          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
         }
       );
     }

@@ -13,6 +13,7 @@
   #define DECWIDE_T_2004_06_01_H_
 
   //#define WIDE_DECIMAL_DISABLE_IOSTREAM
+  //#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
   //#define WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
   //#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
   //#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
@@ -67,31 +68,31 @@
   template <typename MyType,
             const std::size_t MySize,
             typename MyAlloc>
-  class dynamic_array final : public util::dynamic_array<MyType, MyAlloc>
+  class fixed_dynamic_array final : public util::dynamic_array<MyType, MyAlloc>
   {
   private:
     using base_class_type = util::dynamic_array<MyType, MyAlloc>;
 
   public:
-    constexpr dynamic_array()
+    constexpr fixed_dynamic_array()
       : base_class_type(MySize) { }
 
-    constexpr dynamic_array(const typename base_class_type::size_type my_size)
+    constexpr fixed_dynamic_array(const typename base_class_type::size_type my_size)
       : base_class_type(my_size) { }
 
-    constexpr dynamic_array(const typename base_class_type::size_type   my_size,
-                            const typename base_class_type::value_type& my_value)
+    constexpr fixed_dynamic_array(const typename base_class_type::size_type   my_size,
+                                  const typename base_class_type::value_type& my_value)
       : base_class_type(my_size, my_value) { }
 
-    constexpr dynamic_array(const typename base_class_type::size_type       my_size,
-                            const typename base_class_type::value_type&     my_value,
-                            const typename base_class_type::allocator_type& my_alloc)
+    constexpr fixed_dynamic_array(const typename base_class_type::size_type       my_size,
+                                  const typename base_class_type::value_type&     my_value,
+                                  const typename base_class_type::allocator_type& my_alloc)
       : base_class_type(my_size, my_value, my_alloc) { }
 
-    dynamic_array(const dynamic_array& other_array)
+    fixed_dynamic_array(const fixed_dynamic_array& other_array)
       : base_class_type(static_cast<const base_class_type&>(other_array)) { }
 
-    dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
+    fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
     {
       base_class_type::fill(typename base_class_type::value_type(0U));
@@ -102,24 +103,24 @@
                 base_class_type::begin());
     }
 
-    dynamic_array(dynamic_array&& other_array)
+    fixed_dynamic_array(fixed_dynamic_array&& other_array)
       : base_class_type(static_cast<base_class_type&&>(other_array)) { }
 
-    dynamic_array& operator=(const dynamic_array& other_array)
+    fixed_dynamic_array& operator=(const fixed_dynamic_array& other_array)
     {
       base_class_type::operator=(static_cast<const base_class_type&>(other_array));
 
       return *this;
     }
 
-    dynamic_array& operator=(dynamic_array&& other_array)
+    fixed_dynamic_array& operator=(fixed_dynamic_array&& other_array)
     {
       base_class_type::operator=(static_cast<base_class_type&&>(other_array));
 
       return *this;
     }
 
-    virtual ~dynamic_array() = default;
+    virtual ~fixed_dynamic_array() = default;
 
     static constexpr typename base_class_type::size_type static_size() { return MySize; }
 
@@ -360,9 +361,9 @@
   class decwide_t
   {
   public:
-    static constexpr std::int32_t decwide_t_elems_for_fft     = 64;
+    // Define the decwide_t digits characteristics.
 
-    // Obtain the decwide_t digits characteristics from a helper meta-template.
+    static constexpr std::int32_t decwide_t_elems_for_fft     = 64;
 
     static constexpr std::int32_t decwide_t_digits10          = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
     static constexpr std::int32_t decwide_t_digits            = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
@@ -379,15 +380,17 @@
     static constexpr std::int64_t decwide_t_max_exp           = decwide_t_max_exp10;
     static constexpr std::int64_t decwide_t_min_exp           = decwide_t_min_exp10;
 
-    // Rebind the specific allocator to the granularity of LimbType.
+    // Rebind the decwide_t allocator to the granularity of the LimbType.
     using allocator_type = typename AllocatorType::template rebind<LimbType>::other;
 
-    // Here array_type is the internal representation of the data field of a decwide_t.
-    using array_type = detail::dynamic_array<typename allocator_type::value_type,
-                                             static_cast<std::size_t>(decwide_t_elem_number),
-                                             allocator_type>;
+    // Define the array type, which is the internal
+    // representation of the data field of a decwide_t.
+    using array_type = detail::fixed_dynamic_array<typename allocator_type::value_type,
+                                                   static_cast<std::size_t>(decwide_t_elem_number),
+                                                   allocator_type>;
 
-    // Obtain the limb_type and the double_limb_type from templates.
+    // Obtain the limb type, double limb type and signed limb type
+    // from meta-templates.
     using limb_type        = typename array_type::value_type;
     using double_limb_type = typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
                                                         std::uint64_t,
@@ -396,6 +399,7 @@
                                                         std::int32_t,
                                                         std::int16_t>::type;
 
+    // Check thw width of the limb type.
     static_assert((   (std::is_same<std::uint16_t, limb_type>::value == true)
                    || (std::is_same<std::uint32_t, limb_type>::value == true)),
                    "Error: limb_type (determined via the template parameter LimbType) must be either uint16_t or uint32_t.");
@@ -577,18 +581,18 @@
     #endif // !WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
 
     // Copy constructor.
-    decwide_t(const decwide_t& f) : my_data     (f.my_data),
-                                    my_exp      (f.my_exp),
-                                    my_neg      (f.my_neg),
-                                    my_fpclass  (f.my_fpclass),
-                                    my_prec_elem(f.my_prec_elem) { }
+    decwide_t(const decwide_t& other) : my_data     (other.my_data),
+                                        my_exp      (other.my_exp),
+                                        my_neg      (other.my_neg),
+                                        my_fpclass  (other.my_fpclass),
+                                        my_prec_elem(other.my_prec_elem) { }
 
     // Move constructor.
-    decwide_t(decwide_t&& f) : my_data     (static_cast<array_type&&>(f.my_data)),
-                               my_exp      (f.my_exp),
-                               my_neg      (f.my_neg),
-                               my_fpclass  (f.my_fpclass),
-                               my_prec_elem(f.my_prec_elem) { }
+    decwide_t(decwide_t&& other) : my_data     ((array_type&&) other.my_data),
+                                   my_exp      (other.my_exp),
+                                   my_neg      (other.my_neg),
+                                   my_fpclass  (other.my_fpclass),
+                                   my_prec_elem(other.my_prec_elem) { }
 
     // Constructor from floating-point class.
     explicit decwide_t(const fpclass_type fpc) : my_data     (),
@@ -674,15 +678,15 @@
     ~decwide_t() = default;
 
     // Assignment operator.
-    decwide_t& operator=(const decwide_t& v)
+    decwide_t& operator=(const decwide_t& other)
     {
-      if(this != &v)
+      if(this != &other)
       {
-        my_data      = v.my_data;
-        my_exp       = v.my_exp;
-        my_neg       = v.my_neg;
-        my_fpclass   = v.my_fpclass;
-        my_prec_elem = v.my_prec_elem;
+        my_data      = other.my_data;
+        my_exp       = other.my_exp;
+        my_neg       = other.my_neg;
+        my_fpclass   = other.my_fpclass;
+        my_prec_elem = other.my_prec_elem;
       }
 
       return *this;
@@ -691,7 +695,7 @@
     // Move assignment operator.
     decwide_t& operator=(decwide_t&& other)
     {
-      my_data      = static_cast<array_type&&>(other.my_data);
+      my_data      = (array_type&&) other.my_data;
       my_exp       = other.my_exp;
       my_neg       = other.my_neg;
       my_fpclass   = other.my_fpclass;
@@ -935,6 +939,13 @@
       bool                                b_copy = false;
       const std::int32_t                  ofs    = static_cast<std::int32_t>(static_cast<std::int32_t>(ofs_exp) / decwide_t_elem_digits10);
 
+      #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+      detail::fixed_dynamic_array<limb_type,
+                                  static_cast<std::size_t>(decwide_t_elem_number),
+                                  std::allocator<limb_type>>
+      my_n_data_for_add_sub;
+      #endif
+
       if(my_neg == v.my_neg)
       {
         // Add v to *this, where the data array of either *this or v
@@ -972,10 +983,10 @@
 
         if(b_copy)
         {
-          my_data = my_n_data_for_add_sub;
+          std::copy(my_n_data_for_add_sub.cbegin(), my_n_data_for_add_sub.cend(), my_data.begin());
           my_exp  = v.my_exp;
         }
-    
+
         // There needs to be a carry into the element -1 of the array data
         if(carry != static_cast<limb_type>(0U))
         {
@@ -1029,7 +1040,7 @@
           // Set the u-pointer p_u to point to m_n and the
           // operand pointer p_v to point to the shifted
           // data m_data.
-          my_n_data_for_add_sub = v.my_data;
+          std::copy(v.my_data.cbegin(), v.my_data.cend(), my_n_data_for_add_sub.begin());
           p_u    = my_n_data_for_add_sub.begin();
           p_v    = my_data.begin();
           b_copy = true;
@@ -1042,7 +1053,7 @@
 
         if(b_copy)
         {
-          my_data = my_n_data_for_add_sub;
+          std::copy(my_n_data_for_add_sub.cbegin(), my_n_data_for_add_sub.cend(), my_data.begin());
           my_exp  = v.my_exp;
           my_neg  = v.my_neg;
         }
@@ -1107,43 +1118,17 @@
       // Handle multiplication by zero.
       if(iszero() || v.iszero())
       {
-        return (*this = zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>());
+        *this = zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>();
       }
-
-      // Check for overflow or underflow.
-      const bool u_exp_is_neg = (  my_exp < static_cast<std::int64_t>(0));
-      const bool v_exp_is_neg = (v.my_exp < static_cast<std::int64_t>(0));
-
-      if(u_exp_is_neg == v_exp_is_neg)
+      else
       {
-        // Get the unsigned base-10 exponents of *this and v and...
-        const std::int64_t u_exp = ((!u_exp_is_neg) ?   my_exp : static_cast<std::int64_t>(  -my_exp));
-        const std::int64_t v_exp = ((!v_exp_is_neg) ? v.my_exp : static_cast<std::int64_t>(-v.my_exp));
+        // Set the exponent of the result.
+        my_exp += v.my_exp;
 
-        // Check the range of the upcoming multiplication.
-        const bool b_result_is_out_of_range = (v_exp >= static_cast<std::int64_t>(decwide_t_max_exp10 - u_exp));
+        const std::int32_t prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
-        if(b_result_is_out_of_range)
-        {
-          if(u_exp_is_neg)
-          {
-            *this = zero<MyDigits10, LimbType, AllocatorType, InternalFloatType>();
-          }
-          else
-          {
-            *this = ((!b_result_is_neg) ?  my_value_inf() : -my_value_inf());
-          }
-
-          return *this;
-        }
+        eval_mul_dispatch_multiplication_method<decwide_t_elem_number>(v, prec_elems_for_multiply);
       }
-
-      // Set the exponent of the result.
-      my_exp += v.my_exp;
-
-      const std::int32_t prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
-
-      eval_mul_dispatch_multiplication_method<decwide_t_elem_number>(v, prec_elems_for_multiply);
 
       // Set the sign of the result.
       my_neg = b_result_is_neg;
@@ -1167,8 +1152,6 @@
         {
           negate();
         }
-
-        return *this;
       }
       else
       {
@@ -1918,8 +1901,11 @@
     #endif // !WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
 
   private:
+    #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+    #else
     static InternalFloatType my_af_bf_fft_mul_pool[detail::decwide_t_helper<MyDigits10, LimbType>::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
     static array_type        my_n_data_for_add_sub;
+    #endif
 
     array_type   my_data;
     std::int64_t my_exp;
@@ -2182,9 +2168,9 @@
 
       // We now have the needed FFT size doubled (and doubled again).
 
-      // Use pre-allocated static memory for the FFT result arrays.
-      // This was previously given by:
-      //   InternalFloatType* af_bf = new InternalFloatType[n_fft * 2U];
+      #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+      InternalFloatType* my_af_bf_fft_mul_pool = new InternalFloatType[n_fft * 2U];
+      #endif
 
       InternalFloatType* af = my_af_bf_fft_mul_pool + (0U * n_fft);
       InternalFloatType* bf = my_af_bf_fft_mul_pool + (1U * n_fft);
@@ -2241,9 +2227,10 @@
         u[(j / 2U)] = static_cast<limb_type>(static_cast<limb_type>(nhi * static_cast<limb_type>(decwide_t_elem_mask_half)) + nlo);
       }
 
+      #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       // De-allocate the dynamic memory for the FFT result arrays.
-      // This was previously given by:
-      //   delete [] af_bf;
+      delete [] my_af_bf_fft_mul_pool;
+      #endif
     }
 
     template<const std::int32_t ElemsForFftThreshold>
@@ -3070,11 +3057,14 @@
     friend decwide_t two <>();
   };
 
+  #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+  #else
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
   InternalFloatType decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_af_bf_fft_mul_pool[detail::decwide_t_helper<MyDigits10, LimbType>::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
   typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::array_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_n_data_for_add_sub;
+  #endif
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> zero() { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(0U) } ); }
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> one () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(1U) } ); }
