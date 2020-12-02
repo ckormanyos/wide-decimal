@@ -56,10 +56,16 @@ can optionally be disabled with the compiler switches:
 
 ```
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
+#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
 ```
+
+Note: Activating the option `WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
+simultaneously disallows using `decwide_t` in a multithreaded application.
+So if PC-based multithreading is needed, then dynamic memory
+allocation needs to be used.
 
 See the examples directory as more use cases are being created.
 
