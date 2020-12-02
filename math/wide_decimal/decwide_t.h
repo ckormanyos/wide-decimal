@@ -90,7 +90,7 @@
       : base_class_type(my_size, my_value, my_alloc) { }
 
     fixed_dynamic_array(const fixed_dynamic_array& other_array)
-      : base_class_type(static_cast<const base_class_type&>(other_array)) { }
+      : base_class_type((const base_class_type&) other_array) { }
 
     fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
@@ -104,18 +104,18 @@
     }
 
     fixed_dynamic_array(fixed_dynamic_array&& other_array)
-      : base_class_type(static_cast<base_class_type&&>(other_array)) { }
+      : base_class_type((base_class_type&&) other_array) { }
 
     fixed_dynamic_array& operator=(const fixed_dynamic_array& other_array)
     {
-      base_class_type::operator=(static_cast<const base_class_type&>(other_array));
+      base_class_type::operator=((const base_class_type&) other_array);
 
       return *this;
     }
 
     fixed_dynamic_array& operator=(fixed_dynamic_array&& other_array)
     {
-      base_class_type::operator=(static_cast<base_class_type&&>(other_array));
+      base_class_type::operator=((base_class_type&&) other_array);
 
       return *this;
     }
@@ -123,9 +123,6 @@
     virtual ~fixed_dynamic_array() = default;
 
     static constexpr typename base_class_type::size_type static_size() { return MySize; }
-
-    typename base_class_type::pointer       data()       { return &(*this->begin()); }
-    typename base_class_type::const_pointer data() const { return &(*this->cbegin()); }
   };
 
   typedef enum enum_os_float_field_type
