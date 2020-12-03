@@ -30,7 +30,7 @@
       using const_iterator         = const value_type*;
       using pointer                =       value_type*;
       using const_pointer          = const value_type*;
-      using size_type              =       std::size_t;
+      using size_type              =       std::uint_fast32_t;
       using difference_type        =       std::ptrdiff_t;
       using reverse_iterator       =       std::reverse_iterator<iterator>;
       using const_reverse_iterator =       std::reverse_iterator<const_iterator>;

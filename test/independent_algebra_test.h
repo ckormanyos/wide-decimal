@@ -141,15 +141,13 @@
 
     bool result_is_ok = true;
 
-    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
-
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        [&i, &result_is_ok](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
@@ -192,15 +190,13 @@
 
     bool result_is_ok = true;
 
-    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
-
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        [&i, &result_is_ok](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
@@ -243,15 +239,13 @@
 
     bool result_is_ok = true;
 
-    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
-
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        [&i, &result_is_ok](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
@@ -294,15 +288,13 @@
 
     bool result_is_ok = true;
 
-    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
-
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        [&i, &result_is_ok](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
@@ -345,15 +337,13 @@
 
     bool result_is_ok = true;
 
-    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
-
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        [&i, &result_is_ok](std::size_t j)
         {
           std::string str_a;
 
@@ -391,15 +381,13 @@
 
     bool result_is_ok = true;
 
-    std::atomic_flag operation_iteration_lock = ATOMIC_FLAG_INIT;
-
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok, &operation_iteration_lock](std::size_t j)
+        [&i, &result_is_ok](std::size_t j)
         {
           std::string str_a;
 
