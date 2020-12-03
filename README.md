@@ -19,9 +19,10 @@ Wide-decimal is written in header-only C++11.
 
   - ![`example001_roots_sqrt`](./examples/example001_roots_sqrt.cpp) computes a square root.
   - ![`example001a_roots_seventh`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
-  - ![`example002_pi`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
+  - ![`example002_pi`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Gauss AGM iteration.
   - ![`example002a_pi_small_limb`](./examples/example002a_pi_small_limb.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
   - ![`example002b_pi_100k`](./examples/example002b_pi_100k.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
+  - ![`example002c_pi_1meg_quint`](./examples/example002c_pi_1meg_quint.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Borwein quintic iteration.
   - ![`example003_zeta`](./examples/example003_zeta.cpp) computes a Riemann zeta function value.
   - ![`example004_bessel_recur`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
   - ![`example005_polylog_series`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
