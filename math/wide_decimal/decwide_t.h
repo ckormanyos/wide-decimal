@@ -1774,13 +1774,13 @@
       const decwide_t xx(fabs(*this));
 
       // Check for zero decwide_t.
-      if(iszero() || (xx < math::wide_decimal::double_min<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
+      if(iszero() || (xx < double_min<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
       {
         return 0.0;
       }
 
       // Check if decwide_t exceeds the maximum of double.
-      if(xx > math::wide_decimal::double_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
+      if(xx > double_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
       {
         return ((!my_neg) ?  std::numeric_limits<double>::infinity()
                           : -std::numeric_limits<double>::infinity());
@@ -1820,13 +1820,13 @@
       const decwide_t xx(fabs(*this));
 
       // Check for zero decwide_t.
-      if(iszero() || (xx < math::wide_decimal::long_double_min<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
+      if(iszero() || (xx < long_double_min<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
       {
         return 0.0L;
       }
 
       // Check if decwide_t exceeds the maximum of double.
-      if(xx > math::wide_decimal::long_double_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
+      if(xx > long_double_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
       {
         return ((!my_neg) ?  std::numeric_limits<long double>::infinity()
                           : -std::numeric_limits<long double>::infinity());
@@ -1860,7 +1860,7 @@
 
       unsigned long long val;
 
-      if((!b_neg) && (*this > math::wide_decimal::signed_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
+      if((!b_neg) && (*this > signed_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
       {
         return (std::numeric_limits<signed long long>::max)();
       }
@@ -1909,7 +1909,7 @@
 
       unsigned long long val;
 
-      if(xn > math::wide_decimal::unsigned_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
+      if(xn > unsigned_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
       {
         return (std::numeric_limits<unsigned long long>::max)();
       }
@@ -3897,7 +3897,7 @@
     }
     else if(p <= static_cast<std::int64_t>(-128))
     {
-      return math::wide_decimal::pow2<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::int64_t>(-p)).calculate_inv();
+      return pow2<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::int64_t>(-p)).calculate_inv();
     }
     else
     {
@@ -4034,7 +4034,7 @@
   {
     if(!isfinite(x))
     {
-      return std::numeric_limits<math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::quiet_NaN();
+      return std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::quiet_NaN();
     }
 
     if(p < static_cast<std::int32_t>(0))
