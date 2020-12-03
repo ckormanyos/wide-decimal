@@ -17,7 +17,8 @@ Wide-decimal is written in header-only C++11.
 
 # The examples
 
-  - ![`example001_sqrt`](./examples/example001_sqrt.cpp) computes a square root.
+  - ![`example001_roots_sqrt`](./examples/example001_roots_sqrt.cpp) computes a square root.
+  - ![`example001a_roots_seventh`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
   - ![`example002_pi`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
   - ![`example002a_pi_small_limb`](./examples/example002a_pi_small_limb.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
   - ![`example002b_pi_100k`](./examples/example002b_pi_100k.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
