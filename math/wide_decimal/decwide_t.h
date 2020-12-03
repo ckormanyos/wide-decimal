@@ -4131,6 +4131,7 @@
   bool example002_pi            ();
   bool example002a_pi_small_limb();
   bool example002b_pi_100k      ();
+  bool example002c_pi_1meg_quint();
   bool example003_zeta          ();
   bool example004_bessel_recur  ();
   bool example005_polylog_series();
