@@ -17,13 +17,17 @@ Wide-decimal is written in header-only C++11.
 
 # The examples
 
-  - ![`example001_sqrt`](./examples/example001_sqrt.cpp) computes a square root.
-  - ![`example002_pi`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
+  - ![`example001_roots_sqrt`](./examples/example001_roots_sqrt.cpp) computes a square root.
+  - ![`example001a_roots_seventh`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
+  - ![`example002_pi`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Gauss AGM iteration.
   - ![`example002a_pi_small_limb`](./examples/example002a_pi_small_limb.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
   - ![`example002b_pi_100k`](./examples/example002b_pi_100k.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
+  - ![`example002c_pi_1meg_quint`](./examples/example002c_pi_1meg_quint.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Borwein quintic iteration.
   - ![`example003_zeta`](./examples/example003_zeta.cpp) computes a Riemann zeta function value.
   - ![`example004_bessel_recur`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
   - ![`example005_polylog_series`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
+  - ![`example006_logarithm`](./examples/example006_logarithm.cpp) calculates the value of a logarithm (internally using a Gauss AGM method).
+  - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) compuste <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
 
 # 1,000,000 digits of pi on bare metal
 
@@ -56,10 +60,16 @@ can optionally be disabled with the compiler switches:
 
 ```
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
+#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
 ```
+
+Note: Activating the option `WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
+simultaneously disallows using `decwide_t` in a multithreaded application.
+So if PC-based multithreading is needed, then dynamic memory
+allocation needs to be used.
 
 See the examples directory as more use cases are being created.
 
@@ -115,33 +125,21 @@ the result of which is approximately
 
 int main()
 {
-  using dec101_t = math::wide_decimal::decwide_t<101U>;
+  using local_limb_type = std::uint16_t;
 
-  const dec101_t a(1234U);
-  const dec101_t b(dec101_t(56U) / 100U);
+  using dec101_t = math::wide_decimal::decwide_t<101U, local_limb_type>;
 
-  const dec101_t s = sqrt(a + b);
+  const dec101_t s = sqrt(dec101_t(123456U) / 100);
 
-  constexpr std::array<typename dec101_t::limb_type, 13U> control =
+  // N[Sqrt[123456/100], 101]
+  const dec101_t control
   {
-    35,
-    13630600,
-    95963986,
-    63933384,
-    64041805,
-    57597515,
-    18287169,
-    31452816,
-    59761647,
-    17710895,
-    45289092,
-    86350312,
-    19132220
+    "35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220978"
   };
 
-  const bool result_is_ok = std::equal(s.crepresentation().cbegin(),
-                                       s.crepresentation().cbegin() + control.size(),
-                                       control.cbegin());
+  const dec101_t closeness = fabs(1 - (s / control));
+
+  const bool result_is_ok = closeness < (std::numeric_limits<dec101_t>::epsilon() * 10);
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
@@ -166,6 +164,7 @@ of a certain number of temporary storages of mega-digit numbers
 #include <iostream>
 
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
+#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
@@ -182,44 +181,29 @@ int main()
   constexpr std::int32_t local_elem_number =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
+  constexpr std::int32_t local_elem_digits10 =
+    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
 
-  // Calculate pi.
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>;
+
+  const std::clock_t start = std::clock();
+
   math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
-    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
+    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>(nullptr);
 
-  constexpr std::array<local_limb_type, 8U> control_head =
-  {{
-    local_limb_type(3ULL),
-    local_limb_type(14159265ULL),
-    local_limb_type(35897932ULL),
-    local_limb_type(38462643ULL),
-    local_limb_type(38327950ULL),
-    local_limb_type(28841971ULL),
-    local_limb_type(69399375ULL),
-    local_limb_type(10582097ULL)
-  }};
+  const std::clock_t stop = std::clock();
 
-  constexpr std::array<local_limb_type, 8U> control_tail =
-  {{
-    local_limb_type(20875424ULL),
-    local_limb_type(50598956ULL),
-    local_limb_type(78796130ULL),
-    local_limb_type(33116462ULL),
-    local_limb_type(83996346ULL),
-    local_limb_type(46042209ULL),
-    local_limb_type( 1061057ULL),
-    local_limb_type(79458151ULL)
-  }};
+  std::cout << "Time example002_pi(): "
+            << (float) (stop - start) / (float) CLOCKS_PER_SEC
+            << std::endl;
 
-  // Verify the pi result at the front and back.
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + control_head.size(),
-                                     control_head.cbegin());
+                                     my_pi.crepresentation().cbegin() + const_pi_control_head<local_limb_type>().size(),
+                                     const_pi_control_head<local_limb_type>().begin());
 
-  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + 125001UL - 8UL,
-                                     my_pi.crepresentation().cbegin() + 125001UL,
-                                     control_tail.cbegin());
+  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
+                                     my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)),
+                                     const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 

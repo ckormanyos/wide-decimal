@@ -5,10 +5,12 @@ bool test_decwide_t_examples____()
 {
   bool result_is_ok = true;
 
-  result_is_ok &= math::wide_decimal::example001_sqrt          ();
+  result_is_ok &= math::wide_decimal::example001_roots_sqrt    ();
+  result_is_ok &= math::wide_decimal::example001a_roots_seventh();
   result_is_ok &= math::wide_decimal::example002_pi            ();
   result_is_ok &= math::wide_decimal::example002a_pi_small_limb();
   result_is_ok &= math::wide_decimal::example002b_pi_100k      ();
+  result_is_ok &= math::wide_decimal::example002c_pi_1meg_quint();
   result_is_ok &= math::wide_decimal::example003_zeta          ();
   result_is_ok &= math::wide_decimal::example004_bessel_recur  ();
   result_is_ok &= math::wide_decimal::example005_polylog_series();

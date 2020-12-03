@@ -104,9 +104,6 @@
     <ClCompile Include="test\test_decwide_t_algebra.cpp">
       <Filter>test</Filter>
     </ClCompile>
-    <ClCompile Include="examples\example001_sqrt.cpp">
-      <Filter>examples</Filter>
-    </ClCompile>
     <ClCompile Include="examples\example003_zeta.cpp">
       <Filter>examples</Filter>
     </ClCompile>
@@ -126,6 +123,15 @@
       <Filter>examples</Filter>
     </ClCompile>
     <ClCompile Include="examples\example007_catalan_series.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example001_roots_sqrt.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example001a_roots_seventh.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002c_pi_1meg_quint.cpp">
       <Filter>examples</Filter>
     </ClCompile>
   </ItemGroup>

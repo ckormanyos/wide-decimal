@@ -326,9 +326,11 @@
     </CustomBuildStep>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\example001_sqrt.cpp" />
+    <ClCompile Include="examples\example001a_roots_seventh.cpp" />
+    <ClCompile Include="examples\example001_roots_sqrt.cpp" />
     <ClCompile Include="examples\example002a_pi_small_limb.cpp" />
     <ClCompile Include="examples\example002b_pi_100k.cpp" />
+    <ClCompile Include="examples\example002c_pi_1meg_quint.cpp" />
     <ClCompile Include="examples\example002_pi.cpp" />
     <ClCompile Include="examples\example003_zeta.cpp" />
     <ClCompile Include="examples\example004_bessel_recur.cpp" />
