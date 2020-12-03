@@ -125,33 +125,21 @@ the result of which is approximately
 
 int main()
 {
-  using dec101_t = math::wide_decimal::decwide_t<101U>;
+  using local_limb_type = std::uint16_t;
 
-  const dec101_t a(1234U);
-  const dec101_t b(dec101_t(56U) / 100U);
+  using dec101_t = math::wide_decimal::decwide_t<101U, local_limb_type>;
 
-  const dec101_t s = sqrt(a + b);
+  const dec101_t s = sqrt(dec101_t(123456U) / 100);
 
-  constexpr std::array<typename dec101_t::limb_type, 13U> control =
+  // N[Sqrt[123456/100], 101]
+  const dec101_t control
   {
-    35,
-    13630600,
-    95963986,
-    63933384,
-    64041805,
-    57597515,
-    18287169,
-    31452816,
-    59761647,
-    17710895,
-    45289092,
-    86350312,
-    19132220
+    "35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220978"
   };
 
-  const bool result_is_ok = std::equal(s.crepresentation().cbegin(),
-                                       s.crepresentation().cbegin() + control.size(),
-                                       control.cbegin());
+  const dec101_t closeness = fabs(1 - (s / control));
+
+  const bool result_is_ok = closeness < (std::numeric_limits<dec101_t>::epsilon() * 10);
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
