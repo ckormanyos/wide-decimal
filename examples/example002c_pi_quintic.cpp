@@ -34,10 +34,10 @@ namespace
 
     if(p_ostream != nullptr)
     {
-      *p_ostream << "Calculating pi with Borwein quintic.\n";
+      *p_ostream << 0 << std::endl;
     }
 
-    std::int64_t five_pow_k = 1;
+    std::uint64_t five_pow_k = 1U;
 
     const floating_point_type local_one (1U);
     const floating_point_type local_five(5U);
@@ -56,7 +56,7 @@ namespace
 
       const floating_point_type x         = (local_five / sk) - local_one;
       const floating_point_type x_squared = x * x;
-      const floating_point_type y         = x_squared - (floating_point_type(x) * 2U) + floating_point_type(8U);
+      const floating_point_type y         = x_squared - (x * 2U) + floating_point_type(8U);
       const floating_point_type z         = rootn((x * (y + sqrt((y * y) - ((x_squared * x) * 4U)))) / 2U, 5);
 
       const floating_point_type term = (z + (x / z) + local_one);
@@ -70,43 +70,38 @@ namespace
       - (  ((sk_squared - local_five) / 2U)
           +  sqrt(sk * (sk_squared - (sk * 2U) + local_five))) * five_pow_k;
 
-      sk = floating_point_type(25U) / (sk * (term * term));
-
-      std::int32_t approximate_digits10 = -ilogb(val_pi - previous_ak);
+      std::int32_t approximate_digits10_of_iteration = -ilogb(val_pi - previous_ak);
 
       if(p_ostream != nullptr)
       {
-        *p_ostream << "Digits of pi: " << approximate_digits10 << '\n';
+        *p_ostream << approximate_digits10_of_iteration << '\n';
       }
 
       // Test the significant digits of the last iteration change.
       // If there are enough significant digits, then the calculation
       // is finished.
-      if(approximate_digits10 >= required_precision_fifth)
+      if(approximate_digits10_of_iteration >= required_precision_fifth)
       {
         break;
       }
+
+      sk = floating_point_type(25U) / (sk * (term * term));
 
       five_pow_k *= 5U;
     }
 
     if(p_ostream != nullptr)
     {
-      *p_ostream << "The iteration loop is done.\nCompute the inverse.\n";
+      *p_ostream << std::numeric_limits<floating_point_type>::digits10 << std::endl;
     }
 
-    val_pi = 1 / val_pi;
-
-    if(p_ostream != nullptr)
-    {
-      *p_ostream << "Pi calculation is done." << std::endl;
-    }
+    val_pi = local_one / val_pi;
 
     return val_pi;
   }
 }
 
-bool math::wide_decimal::example002c_pi_1meg_quint()
+bool math::wide_decimal::example002c_pi_quintic()
 {
   using local_limb_type = std::uint32_t;
 
@@ -123,7 +118,7 @@ bool math::wide_decimal::example002c_pi_1meg_quint()
 
   const std::clock_t stop = std::clock();
 
-  std::cout << "Time example002c_pi_1meg_quint(): "
+  std::cout << "Time example002c_pi_quintic(): "
             << (float) (stop - start) / (float) CLOCKS_PER_SEC
             << std::endl;
 
@@ -148,7 +143,7 @@ bool math::wide_decimal::example002c_pi_1meg_quint()
 
 int main()
 {
-  const bool result_is_ok = math::wide_decimal::example002c_pi_1meg_quint();
+  const bool result_is_ok = math::wide_decimal::example002c_pi_quintic();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

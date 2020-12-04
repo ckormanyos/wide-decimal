@@ -131,7 +131,7 @@
     <ClCompile Include="examples\example001a_roots_seventh.cpp">
       <Filter>examples</Filter>
     </ClCompile>
-    <ClCompile Include="examples\example002c_pi_1meg_quint.cpp">
+    <ClCompile Include="examples\example002c_pi_quintic.cpp">
       <Filter>examples</Filter>
     </ClCompile>
   </ItemGroup>

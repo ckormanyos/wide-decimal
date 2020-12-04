@@ -3200,7 +3200,7 @@
       bB     -= t;
       bB     *= 2U;
 
-      std::int32_t approximate_digits10_of_iteration_term;
+      std::int32_t approximate_digits10_of_iteration;
 
       {
         decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> iterate_term(bB);
@@ -3213,11 +3213,11 @@
         // Test the number of precise digits from this iteration.
         // If it is there are enough precise digits, then the calculation
         // is finished.
-        approximate_digits10_of_iteration_term = -ilogb(iterate_term);
+        approximate_digits10_of_iteration = -ilogb(iterate_term);
 
         if(pfn_callback_to_report_digits10 != nullptr)
         {
-          pfn_callback_to_report_digits10((std::uint32_t) approximate_digits10_of_iteration_term);
+          pfn_callback_to_report_digits10((std::uint32_t) approximate_digits10_of_iteration);
         }
       }
 
@@ -3228,7 +3228,7 @@
       // insignificantly small.
       const std::int32_t digits10_iteration_goal = static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
 
-      if(approximate_digits10_of_iteration_term > digits10_iteration_goal)
+      if(approximate_digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
@@ -3284,14 +3284,14 @@
       // half of the requested digits have been achieved,
       // then break after the upcoming iteration.
 
-      const std::int32_t approximate_digits10_of_iteration_term = -ilogb(ak - bk);
+      const std::int32_t approximate_digits10_of_iteration = -ilogb(ak - bk);
 
       const floating_point_type ak_tmp(ak);
 
       ak += bk;
       ak /= 2;
 
-      if(approximate_digits10_of_iteration_term > digits10_iteration_goal)
+      if(approximate_digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
@@ -4002,14 +4002,14 @@
       // at least half of the requested digits. If at least
       // half of the requested digits have been achieved,
       // then break after the upcoming iteration.
-      const std::int32_t approximate_digits10_of_iteration_term = -ilogb(ak - bk);
+      const std::int32_t approximate_digits10_of_iteration = -ilogb(ak - bk);
 
       const floating_point_type ak_tmp(ak);
 
       ak += bk;
       ak /= 2;
 
-      if(approximate_digits10_of_iteration_term > digits10_iteration_goal)
+      if(approximate_digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
@@ -4131,7 +4131,7 @@
   bool example002_pi            ();
   bool example002a_pi_small_limb();
   bool example002b_pi_100k      ();
-  bool example002c_pi_1meg_quint();
+  bool example002c_pi_quintic   ();
   bool example003_zeta          ();
   bool example004_bessel_recur  ();
   bool example005_polylog_series();
