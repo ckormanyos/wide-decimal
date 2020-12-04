@@ -12,7 +12,7 @@
 
 #include <math/wide_decimal/decwide_t.h>
 
-#include "example002x_pi_control.h"
+#include <math/constants/constants_pi_control_for_decwide_t.h>
 
 namespace
 {
@@ -22,7 +22,7 @@ namespace
   // Description : Compute pi using a quintically convergent iteration scheme.
   //               See the book "Pi Unleashed", algorithm 16.153, page 237.
   //               If the input b_trace = true, then the calculation progress
-  //               will be output to the output stream os.
+  //               will be written to the (optional) output stream p_ostream.
   // 
   // *****************************************************************************
   template<typename FloatingPointType>
@@ -74,7 +74,7 @@ namespace
 
       if(p_ostream != nullptr)
       {
-        *p_ostream << approximate_digits10_of_iteration << '\n';
+        *p_ostream << approximate_digits10_of_iteration << std::endl;
       }
 
       // Test the significant digits of the last iteration change.
@@ -123,12 +123,12 @@ bool math::wide_decimal::example002c_pi_quintic()
             << std::endl;
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + const_pi_control_head<local_limb_type>().size(),
-                                     const_pi_control_head<local_limb_type>().begin());
+                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head<local_limb_type>().size(),
+                                     math::constants::const_pi_control_head<local_limb_type>().begin());
 
-  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
+  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
                                      my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)),
-                                     const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
+                                     math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 

@@ -19,7 +19,7 @@
 #include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_baselexical_cast.h>
 
-#include "example002x_pi_control.h"
+#include <math/constants/constants_pi_control_for_decwide_t.h>
 
 bool math::wide_decimal::example002b_pi_100k()
 {
@@ -47,12 +47,12 @@ bool math::wide_decimal::example002b_pi_100k()
             << std::endl;
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + const_pi_control_head<local_limb_type>().size(),
-                                     const_pi_control_head<local_limb_type>().begin());
+                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head<local_limb_type>().size(),
+                                     math::constants::const_pi_control_head<local_limb_type>().begin());
 
-  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
+  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
                                      my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)),
-                                     const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
+                                     math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 

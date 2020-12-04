@@ -27,15 +27,16 @@ Wide-decimal is written in header-only C++11.
   - ![`example004_bessel_recur`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
   - ![`example005_polylog_series`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
   - ![`example006_logarithm`](./examples/example006_logarithm.cpp) calculates the value of a logarithm (internally using a Gauss AGM method).
-  - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) compuste <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
+  - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) compute <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
+  - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using an Stirling's asymptotic expansion in Bernoulli numbers.
 
-# 1,000,000 digits of pi on bare metal
+# 1,000,001 digits of pi on a bare metal microcontroller
 
 The wide-decimal float back end is used to compute
-<img src="https://render.githubusercontent.com/render/math?math=1,000,000">
+<img src="https://render.githubusercontent.com/render/math?math=1,000,001">
 decimal digits of the mathematical constant
 <img src="https://render.githubusercontent.com/render/math?math=\pi">
-on bare-metal OS-less microcontroller systems in
+on selected bare-metal OS-less microcontroller systems in
 [pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 
 # Details

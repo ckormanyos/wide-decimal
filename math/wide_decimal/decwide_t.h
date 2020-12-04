@@ -4126,17 +4126,18 @@
     return v1 - (n * v2);
   }
 
-  bool example001_roots_sqrt    ();
-  bool example001a_roots_seventh();
-  bool example002_pi            ();
-  bool example002a_pi_small_limb();
-  bool example002b_pi_100k      ();
-  bool example002c_pi_quintic   ();
-  bool example003_zeta          ();
-  bool example004_bessel_recur  ();
-  bool example005_polylog_series();
-  bool example006_logarithm     ();
-  bool example007_catalan_series();
+  bool example001_roots_sqrt      ();
+  bool example001a_roots_seventh  ();
+  bool example002_pi              ();
+  bool example002a_pi_small_limb  ();
+  bool example002b_pi_100k        ();
+  bool example002c_pi_quintic     ();
+  bool example003_zeta            ();
+  bool example004_bessel_recur    ();
+  bool example005_polylog_series  ();
+  bool example006_logarithm       ();
+  bool example007_catalan_series  ();
+  bool example008_bernoulli_tgamma();
 
   } } // namespace math::wide_decimal
 
