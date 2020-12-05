@@ -69,10 +69,13 @@ can optionally be disabled with the compiler switches:
 
 Note: Activating the option `WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
 simultaneously disallows using `decwide_t` in a multithreaded application.
-So if PC-based multithreading is needed, then dynamic memory
-allocation needs to be used. In other words, disable
-`//#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
-for multithreaded PC work.
+So if PC-based or other kinds of multithreading are used, then dynamic memory
+allocation is needed and can not be disabled. In other words,
+
+```
+// Deactivate the disabling of dynamic memory for multithreaded PC work.
+//#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
+```
 
 See the examples directory as more use cases are being created.
 
