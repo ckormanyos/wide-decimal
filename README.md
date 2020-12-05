@@ -28,7 +28,7 @@ Wide-decimal is written in header-only C++11.
   - ![`example005_polylog_series`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
   - ![`example006_logarithm`](./examples/example006_logarithm.cpp) calculates the value of a logarithm (internally using a Gauss AGM method).
   - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) compute <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
-  - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using an Stirling's asymptotic expansion in Bernoulli numbers.
+  - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers.
 
 # 1,000,001 digits of pi on a bare metal microcontroller
 
@@ -70,7 +70,9 @@ can optionally be disabled with the compiler switches:
 Note: Activating the option `WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
 simultaneously disallows using `decwide_t` in a multithreaded application.
 So if PC-based multithreading is needed, then dynamic memory
-allocation needs to be used.
+allocation needs to be used. In other words, disable
+`//#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
+for multithreaded PC work.
 
 See the examples directory as more use cases are being created.
 
