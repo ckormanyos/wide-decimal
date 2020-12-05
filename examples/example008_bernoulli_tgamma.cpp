@@ -10,9 +10,9 @@
 
 namespace
 {
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(2001);
+  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
-  using dec2001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  using wide_decimal_type = math::wide_decimal::decwide_t<wide_decimal_digits10>;
 
   template<typename FloatingPointType>
   FloatingPointType pi()
@@ -21,7 +21,7 @@ namespace
   }
 
   template<>
-  dec2001_t pi()
+  wide_decimal_type pi()
   {
     return math::wide_decimal::pi<wide_decimal_digits10>();
   }
@@ -33,7 +33,7 @@ namespace
   }
 
   template<>
-  dec2001_t ln_two()
+  wide_decimal_type ln_two()
   {
     return math::wide_decimal::ln_two<wide_decimal_digits10>();
   }
@@ -41,7 +41,7 @@ namespace
 
 namespace local
 {
-  util::dynamic_array<dec2001_t> bernoulli_table((std::uint_fast32_t) (std::numeric_limits<dec2001_t>::digits10 * 2));
+  util::dynamic_array<wide_decimal_type> bernoulli_table((std::uint_fast32_t) ((float) std::numeric_limits<wide_decimal_type>::digits10 * 0.95F));
 
   template<typename FloatingPointType>
   FloatingPointType hypergeometric_0f0(const FloatingPointType& x)
@@ -165,7 +165,7 @@ namespace local
     using floating_point_type = FloatingPointType;
 
     // Check if the argument should be scaled up for the Bernoulli series expansion.
-    static const std::int32_t        min_arg_n = (std::int32_t) ((float) std::numeric_limits<floating_point_type>::digits10 * 1.2F);
+    static const std::int32_t        min_arg_n = (std::int32_t) ((float) std::numeric_limits<floating_point_type>::digits10 * 0.8F);
     static const floating_point_type min_arg_x = floating_point_type(min_arg_n);
 
     const std::uint32_t n_recur = ((x < min_arg_x) ? ((std::uint32_t) (min_arg_n - (std::int32_t) x) + 1U)
@@ -202,6 +202,7 @@ namespace local
       sum += term;
     }
 
+    using ::pi;
     using std::exp;
     using std::log;
     using local::exp;
@@ -225,39 +226,17 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 {
   local::bernoulli_b(local::bernoulli_table.data(), (std::uint32_t) local::bernoulli_table.size());
 
-  const dec2001_t x = dec2001_t(UINT32_C(3456789)) / UINT32_C(10000000);
+  const wide_decimal_type x = wide_decimal_type(1U) / 2U;
 
-  const dec2001_t g = local::tgamma(x);
+  const wide_decimal_type g = local::tgamma(x);
 
-  const dec2001_t control
-  {
-    "2."
-    "5792700634274853567721602504331378637312507250684265769670260445405759391178961482604996184815668756"
-    "8564835035250596999345597383446265698132918512614930473325677638107714332958497710269501613725680170"
-    "1207048419926349028508375947826766602670824973689466309567097968544545120863295426820157846797078515"
-    "3270391593695595325553888998094781117812031903577065059426744317478442627293643562162041133861245545"
-    "5622513499502887983759697964339712827017626583067849940594815336039108197564304048170285864914193574"
-    "6539534364270304865358361035034470710717568758018266952541409607892517276719473986066043431889561930"
-    "8498759039273502823878797301370230697817002245345723860335617187810904209611008643313142837894123581"
-    "0204380574243088642193313463490316847304828800342739459922573993969796137360290127111519031294685185"
-    "9575424942209577154958875121359025277213900704605966325137247902172904181666603495550337045837078098"
-    "1329255339338726902394775356991039595635478839349494883276914599356815269202887419270730947712224664"
-    "7888442059790271553237358069313114134629535464499707521391186165968003771536204017063643231157170766"
-    "8291701165834588803112562500090912977321345304404117143667755019219481548316844274771883223505023185"
-    "3631032476704714230052339785840973254493785151096015134568292497070208911510784135111072326062599629"
-    "0103592503677463193939775497227282066710574467640321248364765696246509069511492844211634243810535836"
-    "5311972991569881526779378074785470211815077380872663865343267793938165382770375550089387910008444300"
-    "7163511872811923369230296749404458568568082061722141777675316484557243668607391204807898599085869169"
-    "2386504735470941454860546852532571178734682694320676502312195342261737739866443753806397564819099859"
-    "9331942989031725874448974291474222201619146464227954923392563442264787739545126615102594999536948124"
-    "9427322986728395061509242760072540343037058966311125074550704404179652896588450427799200629988929136"
-    "7684199362266522666617830565032059371026662203130872993471499160234189035693750089708150749100353631"
-    "8"
-  };
+  using ::pi;
 
-  const dec2001_t closeness = fabs(1 - (g / control));
+  const wide_decimal_type control = sqrt(pi<wide_decimal_type>());
 
-  const bool result_is_ok = (closeness < (std::numeric_limits<dec2001_t>::epsilon() * UINT32_C(1000000)));
+  const wide_decimal_type closeness = fabs(1 - (g / control));
+
+  const bool result_is_ok = (closeness < (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(1000000)));
 
   return result_is_ok;
 }
