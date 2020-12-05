@@ -7,10 +7,6 @@
 
 #include <math/wide_decimal/decwide_t.h>
 
-namespace
-{
-}
-
 bool math::wide_decimal::example006_logarithm()
 {
   using dec1001_t = math::wide_decimal::decwide_t<1001U>;

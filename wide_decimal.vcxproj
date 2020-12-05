@@ -277,7 +277,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="examples\example002x_pi_control.h" />
+    <ClInclude Include="math\constants\constants_pi_control_for_decwide_t.h" />
     <ClInclude Include="math\wide_decimal\decwide_t.h" />
     <ClInclude Include="math\wide_decimal\decwide_t_detail_fft.h" />
     <ClInclude Include="math\wide_decimal\decwide_t_detail_helper.h" />
@@ -330,13 +330,14 @@
     <ClCompile Include="examples\example001_roots_sqrt.cpp" />
     <ClCompile Include="examples\example002a_pi_small_limb.cpp" />
     <ClCompile Include="examples\example002b_pi_100k.cpp" />
-    <ClCompile Include="examples\example002c_pi_1meg_quint.cpp" />
+    <ClCompile Include="examples\example002c_pi_quintic.cpp" />
     <ClCompile Include="examples\example002_pi.cpp" />
     <ClCompile Include="examples\example003_zeta.cpp" />
     <ClCompile Include="examples\example004_bessel_recur.cpp" />
     <ClCompile Include="examples\example005_polylog_series.cpp" />
     <ClCompile Include="examples\example006_logarithm.cpp" />
     <ClCompile Include="examples\example007_catalan_series.cpp" />
+    <ClCompile Include="examples\example008_bernoulli_tgamma.cpp" />
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
     <ClCompile Include="test\test_decwide_t_examples.cpp" />

@@ -22,20 +22,21 @@ Wide-decimal is written in header-only C++11.
   - ![`example002_pi`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Gauss AGM iteration.
   - ![`example002a_pi_small_limb`](./examples/example002a_pi_small_limb.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
   - ![`example002b_pi_100k`](./examples/example002b_pi_100k.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
-  - ![`example002c_pi_1meg_quint`](./examples/example002c_pi_1meg_quint.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Borwein quintic iteration.
+  - ![`example002c_pi_quintic`](./examples/example002c_pi_quintic.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Borwein quintic iteration.
   - ![`example003_zeta`](./examples/example003_zeta.cpp) computes a Riemann zeta function value.
   - ![`example004_bessel_recur`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
   - ![`example005_polylog_series`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
   - ![`example006_logarithm`](./examples/example006_logarithm.cpp) calculates the value of a logarithm (internally using a Gauss AGM method).
-  - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) compuste <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
+  - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) compute <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
+  - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers.
 
-# 1,000,000 digits of pi on bare metal
+# 1,000,001 digits of pi on a bare metal microcontroller
 
 The wide-decimal float back end is used to compute
-<img src="https://render.githubusercontent.com/render/math?math=1,000,000">
+<img src="https://render.githubusercontent.com/render/math?math=1,000,001">
 decimal digits of the mathematical constant
 <img src="https://render.githubusercontent.com/render/math?math=\pi">
-on bare-metal OS-less microcontroller systems in
+on selected bare-metal OS-less microcontroller systems in
 [pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 
 # Details
@@ -68,8 +69,13 @@ can optionally be disabled with the compiler switches:
 
 Note: Activating the option `WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
 simultaneously disallows using `decwide_t` in a multithreaded application.
-So if PC-based multithreading is needed, then dynamic memory
-allocation needs to be used.
+So if PC-based or other kinds of multithreading are used, then dynamic memory
+allocation is needed and can not be disabled. In other words,
+
+```
+// Deactivate the disabling of dynamic memory for multithreaded PC work.
+//#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
+```
 
 See the examples directory as more use cases are being created.
 

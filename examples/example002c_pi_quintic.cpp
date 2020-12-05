@@ -12,7 +12,7 @@
 
 #include <math/wide_decimal/decwide_t.h>
 
-#include "example002x_pi_control.h"
+#include <math/constants/constants_pi_control_for_decwide_t.h>
 
 namespace
 {
@@ -22,7 +22,7 @@ namespace
   // Description : Compute pi using a quintically convergent iteration scheme.
   //               See the book "Pi Unleashed", algorithm 16.153, page 237.
   //               If the input b_trace = true, then the calculation progress
-  //               will be output to the output stream os.
+  //               will be written to the (optional) output stream p_ostream.
   // 
   // *****************************************************************************
   template<typename FloatingPointType>
@@ -34,10 +34,10 @@ namespace
 
     if(p_ostream != nullptr)
     {
-      *p_ostream << "Calculating pi with Borwein quintic.\n";
+      *p_ostream << 0 << std::endl;
     }
 
-    std::int64_t five_pow_k = 1;
+    std::uint64_t five_pow_k = 1U;
 
     const floating_point_type local_one (1U);
     const floating_point_type local_five(5U);
@@ -56,7 +56,7 @@ namespace
 
       const floating_point_type x         = (local_five / sk) - local_one;
       const floating_point_type x_squared = x * x;
-      const floating_point_type y         = x_squared - (floating_point_type(x) * 2U) + floating_point_type(8U);
+      const floating_point_type y         = x_squared - (x * 2U) + floating_point_type(8U);
       const floating_point_type z         = rootn((x * (y + sqrt((y * y) - ((x_squared * x) * 4U)))) / 2U, 5);
 
       const floating_point_type term = (z + (x / z) + local_one);
@@ -70,43 +70,38 @@ namespace
       - (  ((sk_squared - local_five) / 2U)
           +  sqrt(sk * (sk_squared - (sk * 2U) + local_five))) * five_pow_k;
 
-      sk = floating_point_type(25U) / (sk * (term * term));
-
-      std::int32_t approximate_digits10 = -ilogb(val_pi - previous_ak);
+      std::int32_t approximate_digits10_of_iteration = -ilogb(val_pi - previous_ak);
 
       if(p_ostream != nullptr)
       {
-        *p_ostream << "Digits of pi: " << approximate_digits10 << '\n';
+        *p_ostream << approximate_digits10_of_iteration << std::endl;
       }
 
       // Test the significant digits of the last iteration change.
       // If there are enough significant digits, then the calculation
       // is finished.
-      if(approximate_digits10 >= required_precision_fifth)
+      if(approximate_digits10_of_iteration >= required_precision_fifth)
       {
         break;
       }
+
+      sk = floating_point_type(25U) / (sk * (term * term));
 
       five_pow_k *= 5U;
     }
 
     if(p_ostream != nullptr)
     {
-      *p_ostream << "The iteration loop is done.\nCompute the inverse.\n";
+      *p_ostream << std::numeric_limits<floating_point_type>::digits10 << std::endl;
     }
 
-    val_pi = 1 / val_pi;
-
-    if(p_ostream != nullptr)
-    {
-      *p_ostream << "Pi calculation is done." << std::endl;
-    }
+    val_pi = local_one / val_pi;
 
     return val_pi;
   }
 }
 
-bool math::wide_decimal::example002c_pi_1meg_quint()
+bool math::wide_decimal::example002c_pi_quintic()
 {
   using local_limb_type = std::uint32_t;
 
@@ -123,17 +118,17 @@ bool math::wide_decimal::example002c_pi_1meg_quint()
 
   const std::clock_t stop = std::clock();
 
-  std::cout << "Time example002c_pi_1meg_quint(): "
+  std::cout << "Time example002c_pi_quintic(): "
             << (float) (stop - start) / (float) CLOCKS_PER_SEC
             << std::endl;
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + const_pi_control_head<local_limb_type>().size(),
-                                     const_pi_control_head<local_limb_type>().begin());
+                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head<local_limb_type>().size(),
+                                     math::constants::const_pi_control_head<local_limb_type>().begin());
 
-  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
+  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
                                      my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)),
-                                     const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
+                                     math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 
@@ -148,7 +143,7 @@ bool math::wide_decimal::example002c_pi_1meg_quint()
 
 int main()
 {
-  const bool result_is_ok = math::wide_decimal::example002c_pi_1meg_quint();
+  const bool result_is_ok = math::wide_decimal::example002c_pi_quintic();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

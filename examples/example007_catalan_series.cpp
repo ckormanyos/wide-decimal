@@ -7,7 +7,7 @@
 
 #include <math/wide_decimal/decwide_t.h>
 
-namespace local
+namespace
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
@@ -24,7 +24,10 @@ namespace local
   {
     return math::wide_decimal::pi<wide_decimal_digits10>();
   }
+}
 
+namespace local
+{
   template<typename FloatingPointType>
   FloatingPointType catalan()
   {
@@ -57,7 +60,6 @@ namespace local
       }
     }
 
-    using local::pi;
     using std::log;
     using std::sqrt;
 
@@ -70,9 +72,9 @@ namespace local
 
 bool math::wide_decimal::example007_catalan_series()
 {
-  const local::dec1001_t c = local::catalan<local::dec1001_t>();
+  const dec1001_t c = local::catalan<dec1001_t>();
 
-  const local::dec1001_t control
+  const dec1001_t control
   {
     "0."
     "9159655941772190150546035149323841107741493742816721342664981196217630197762547694793565129261151062"
@@ -88,9 +90,9 @@ bool math::wide_decimal::example007_catalan_series()
     "5"
   };
 
-  const local::dec1001_t closeness = fabs(1 - (c / control));
+  const dec1001_t closeness = fabs(1 - (c / control));
 
-  const bool result_is_ok = (closeness < (std::numeric_limits<local::dec1001_t>::epsilon() * 10));
+  const bool result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10));
 
   return result_is_ok;
 }

@@ -1774,13 +1774,13 @@
       const decwide_t xx(fabs(*this));
 
       // Check for zero decwide_t.
-      if(iszero() || (xx < math::wide_decimal::double_min<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
+      if(iszero() || (xx < double_min<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
       {
         return 0.0;
       }
 
       // Check if decwide_t exceeds the maximum of double.
-      if(xx > math::wide_decimal::double_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
+      if(xx > double_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
       {
         return ((!my_neg) ?  std::numeric_limits<double>::infinity()
                           : -std::numeric_limits<double>::infinity());
@@ -1820,13 +1820,13 @@
       const decwide_t xx(fabs(*this));
 
       // Check for zero decwide_t.
-      if(iszero() || (xx < math::wide_decimal::long_double_min<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
+      if(iszero() || (xx < long_double_min<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
       {
         return 0.0L;
       }
 
       // Check if decwide_t exceeds the maximum of double.
-      if(xx > math::wide_decimal::long_double_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
+      if(xx > long_double_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
       {
         return ((!my_neg) ?  std::numeric_limits<long double>::infinity()
                           : -std::numeric_limits<long double>::infinity());
@@ -1860,7 +1860,7 @@
 
       unsigned long long val;
 
-      if((!b_neg) && (*this > math::wide_decimal::signed_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
+      if((!b_neg) && (*this > signed_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>()))
       {
         return (std::numeric_limits<signed long long>::max)();
       }
@@ -1909,7 +1909,7 @@
 
       unsigned long long val;
 
-      if(xn > math::wide_decimal::unsigned_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
+      if(xn > unsigned_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
       {
         return (std::numeric_limits<unsigned long long>::max)();
       }
@@ -3200,7 +3200,7 @@
       bB     -= t;
       bB     *= 2U;
 
-      std::int32_t approximate_digits10_of_iteration_term;
+      std::int32_t approximate_digits10_of_iteration;
 
       {
         decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> iterate_term(bB);
@@ -3213,11 +3213,11 @@
         // Test the number of precise digits from this iteration.
         // If it is there are enough precise digits, then the calculation
         // is finished.
-        approximate_digits10_of_iteration_term = -ilogb(iterate_term);
+        approximate_digits10_of_iteration = -ilogb(iterate_term);
 
         if(pfn_callback_to_report_digits10 != nullptr)
         {
-          pfn_callback_to_report_digits10((std::uint32_t) approximate_digits10_of_iteration_term);
+          pfn_callback_to_report_digits10((std::uint32_t) approximate_digits10_of_iteration);
         }
       }
 
@@ -3228,7 +3228,7 @@
       // insignificantly small.
       const std::int32_t digits10_iteration_goal = static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
 
-      if(approximate_digits10_of_iteration_term > digits10_iteration_goal)
+      if(approximate_digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
@@ -3284,14 +3284,14 @@
       // half of the requested digits have been achieved,
       // then break after the upcoming iteration.
 
-      const std::int32_t approximate_digits10_of_iteration_term = -ilogb(ak - bk);
+      const std::int32_t approximate_digits10_of_iteration = -ilogb(ak - bk);
 
       const floating_point_type ak_tmp(ak);
 
       ak += bk;
       ak /= 2;
 
-      if(approximate_digits10_of_iteration_term > digits10_iteration_goal)
+      if(approximate_digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
@@ -3897,7 +3897,7 @@
     }
     else if(p <= static_cast<std::int64_t>(-128))
     {
-      return math::wide_decimal::pow2<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::int64_t>(-p)).calculate_inv();
+      return pow2<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::int64_t>(-p)).calculate_inv();
     }
     else
     {
@@ -4002,14 +4002,14 @@
       // at least half of the requested digits. If at least
       // half of the requested digits have been achieved,
       // then break after the upcoming iteration.
-      const std::int32_t approximate_digits10_of_iteration_term = -ilogb(ak - bk);
+      const std::int32_t approximate_digits10_of_iteration = -ilogb(ak - bk);
 
       const floating_point_type ak_tmp(ak);
 
       ak += bk;
       ak /= 2;
 
-      if(approximate_digits10_of_iteration_term > digits10_iteration_goal)
+      if(approximate_digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
@@ -4034,7 +4034,7 @@
   {
     if(!isfinite(x))
     {
-      return std::numeric_limits<math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::quiet_NaN();
+      return std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::quiet_NaN();
     }
 
     if(p < static_cast<std::int32_t>(0))
@@ -4126,17 +4126,18 @@
     return v1 - (n * v2);
   }
 
-  bool example001_roots_sqrt    ();
-  bool example001a_roots_seventh();
-  bool example002_pi            ();
-  bool example002a_pi_small_limb();
-  bool example002b_pi_100k      ();
-  bool example002c_pi_1meg_quint();
-  bool example003_zeta          ();
-  bool example004_bessel_recur  ();
-  bool example005_polylog_series();
-  bool example006_logarithm     ();
-  bool example007_catalan_series();
+  bool example001_roots_sqrt      ();
+  bool example001a_roots_seventh  ();
+  bool example002_pi              ();
+  bool example002a_pi_small_limb  ();
+  bool example002b_pi_100k        ();
+  bool example002c_pi_quintic     ();
+  bool example003_zeta            ();
+  bool example004_bessel_recur    ();
+  bool example005_polylog_series  ();
+  bool example006_logarithm       ();
+  bool example007_catalan_series  ();
+  bool example008_bernoulli_tgamma();
 
   } } // namespace math::wide_decimal
 
