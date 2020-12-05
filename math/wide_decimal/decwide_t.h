@@ -69,19 +69,9 @@
     using base_class_type = util::dynamic_array<MyType, MyAlloc>;
 
   public:
-    constexpr fixed_dynamic_array()
-      : base_class_type(MySize) { }
-
-    constexpr fixed_dynamic_array(const typename base_class_type::size_type my_size)
-      : base_class_type(my_size) { }
-
-    constexpr fixed_dynamic_array(const typename base_class_type::size_type   my_size,
-                                  const typename base_class_type::value_type& my_value)
-      : base_class_type(my_size, my_value) { }
-
-    constexpr fixed_dynamic_array(const typename base_class_type::size_type       my_size,
-                                  const typename base_class_type::value_type&     my_value,
-                                  const typename base_class_type::allocator_type& my_alloc)
+    constexpr fixed_dynamic_array(const typename base_class_type::size_type       my_size  = MySize,
+                                  const typename base_class_type::value_type&     my_value = typename base_class_type::value_type(),
+                                  const typename base_class_type::allocator_type& my_alloc = typename base_class_type::allocator_type())
       : base_class_type(my_size, my_value, my_alloc) { }
 
     fixed_dynamic_array(const fixed_dynamic_array& other_array)

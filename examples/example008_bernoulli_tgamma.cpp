@@ -5,9 +5,8 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#include <vector>
-
 #include <math/wide_decimal/decwide_t.h>
+#include <util/utility/util_dynamic_array.h>
 
 namespace
 {
@@ -42,7 +41,7 @@ namespace
 
 namespace local
 {
-  std::vector<dec2001_t> bernoulli_table((std::uint_fast32_t) (std::numeric_limits<dec2001_t>::digits10 * 2));
+  util::dynamic_array<dec2001_t> bernoulli_table((std::uint_fast32_t) (std::numeric_limits<dec2001_t>::digits10 * 2));
 
   template<typename FloatingPointType>
   FloatingPointType hypergeometric_0f0(const FloatingPointType& x)
@@ -56,7 +55,7 @@ namespace local
     // There are no checks on input range or parameter boundaries.
 
     floating_point_type x_pow_n_div_n_fact(x);
-  
+
     floating_point_type h0f0 = 1 + x_pow_n_div_n_fact;
 
     const floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
@@ -121,7 +120,7 @@ namespace local
 
     const std::uint32_t m = n / 2U;
 
-    std::vector<floating_point_type> tangent_numbers(m + 1U);
+    util::dynamic_array<floating_point_type> tangent_numbers(m + 1U);
 
     tangent_numbers[0U] = 0U;
     tangent_numbers[1U] = 1U;

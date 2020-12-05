@@ -93,7 +93,11 @@
       return p;
     }
 
-    void construct(pointer p, const value_type& x) { }
+    void construct(pointer p, const value_type& x)
+    {
+      (void) p;
+      (void) x;
+    }
 
     void destroy(pointer p) { }
 
