@@ -344,7 +344,7 @@
   public:
     // Define the decwide_t digits characteristics.
 
-    static constexpr std::int32_t decwide_t_elems_for_fft     = 64;
+    static constexpr std::int32_t decwide_t_elems_for_fft     = 128;
 
     static constexpr std::int32_t decwide_t_digits10          = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
     static constexpr std::int32_t decwide_t_digits            = detail::decwide_t_helper<MyDigits10, LimbType>::digits;

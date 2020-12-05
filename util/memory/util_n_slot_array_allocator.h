@@ -62,7 +62,7 @@
 
     size_type max_size() const
     {
-      return slot_array_memory.size();
+      return sizeof(slot_array_type) * slot_count;
     }
 
           pointer address(      reference x) const { return &x; }
