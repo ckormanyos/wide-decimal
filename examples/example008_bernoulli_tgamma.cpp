@@ -11,9 +11,9 @@
 
 namespace
 {
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
+  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(2001);
 
-  using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  using dec2001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
 
   template<typename FloatingPointType>
   FloatingPointType pi()
@@ -22,7 +22,7 @@ namespace
   }
 
   template<>
-  dec1001_t pi()
+  dec2001_t pi()
   {
     return math::wide_decimal::pi<wide_decimal_digits10>();
   }
@@ -34,7 +34,7 @@ namespace
   }
 
   template<>
-  dec1001_t ln_two()
+  dec2001_t ln_two()
   {
     return math::wide_decimal::ln_two<wide_decimal_digits10>();
   }
@@ -42,7 +42,7 @@ namespace
 
 namespace local
 {
-  std::vector<dec1001_t> bernoulli_table((std::uint_fast32_t) (std::numeric_limits<dec1001_t>::digits10 * 2));
+  std::vector<dec2001_t> bernoulli_table((std::uint_fast32_t) (std::numeric_limits<dec2001_t>::digits10 * 2));
 
   template<typename FloatingPointType>
   FloatingPointType hypergeometric_0f0(const FloatingPointType& x)
@@ -91,7 +91,7 @@ namespace local
     // t_prime = t - n*ln2, with n chosen to minimize the absolute
     // value of t_prime. In the resulting Taylor series, which is
     // implemented as a hypergeometric function, |r| is bounded by
-    // ln2 / p2. For small arguments, no scaling is done.
+    // ln2 / p2.
 
     // Compute the exponential series of the (possibly) scaled argument.
     floating_point_type exp_series;
@@ -119,39 +119,41 @@ namespace local
     // See also the book Richard P. Brent and Paul Zimmermann, "Modern Computer Arithmetic",
     // Cambridge University Press, 2010, 237 pp.
 
-    const std::int32_t m = n / 2;
+    const std::uint32_t m = n / 2U;
 
-    std::vector<floating_point_type> tangent_numbers((std::uint_fast32_t) (m + 1));
+    std::vector<floating_point_type> tangent_numbers(m + 1U);
 
     tangent_numbers[0U] = 0U;
     tangent_numbers[1U] = 1U;
 
-    for(std::int32_t k = 2; k <= m; ++k)
+    for(std::uint32_t k = 1U; k < m; ++k)
     {
-      tangent_numbers[k] = (k - 1) * tangent_numbers[k - 1];
+      tangent_numbers[k + 1U] = tangent_numbers[k] * k;
     }
 
-    for(std::int32_t k = 2; k <= m; ++k)
+    for(std::uint32_t k = 2U; k <= m; ++k)
     {
-      for(std::int32_t j = k; j <= m; ++j)
+      for(std::uint32_t j = k; j <= m; ++j)
       {
-        tangent_numbers[j] = (tangent_numbers[j - 1] * (j - k)) + (tangent_numbers[j] * (j - k + 2));
+        const std::uint32_t j_minus_k = j - k;
+
+        tangent_numbers[j] = (tangent_numbers[j - 1] * j_minus_k) + (tangent_numbers[j] * (j_minus_k + 2U));
       }
     }
 
     floating_point_type two_pow_two_m(4U);
 
-    for(std::int32_t i = 1; i < static_cast<std::int32_t>(n / 2U); ++i)
+    for(std::uint32_t i = 1U; i < static_cast<std::uint32_t>(n / 2U); ++i)
     {
-      const std::int32_t two_i = static_cast<std::int32_t>(static_cast<std::int32_t>(2) * i);
+      const std::uint32_t two_i = 2U * i;
 
       const floating_point_type b = (tangent_numbers[i] * two_i) / (two_pow_two_m * (two_pow_two_m - 1));
 
-      const bool  b_neg = (static_cast<std::int32_t>(two_i % static_cast<std::int32_t>(4)) == static_cast<std::int32_t>(0));
+      const bool  b_neg = ((two_i % 4U) == 0U);
 
-      bn[2 * i] = ((!b_neg) ? b : -b);
+      bn[two_i] = ((!b_neg) ? b : -b);
 
-      two_pow_two_m *= 4;
+      two_pow_two_m *= 4U;
     }
 
     bn[0U] =  1U;
@@ -167,13 +169,13 @@ namespace local
     static const std::int32_t        min_arg_n = (std::int32_t) ((float) std::numeric_limits<floating_point_type>::digits10 * 1.2F);
     static const floating_point_type min_arg_x = floating_point_type(min_arg_n);
 
-    const std::int32_t n_recur = ((x < min_arg_x) ? ((std::int32_t) (min_arg_n - (std::int32_t) x) + 1)
-                                                  :  (std::int32_t) 0);
+    const std::uint32_t n_recur = ((x < min_arg_x) ? ((std::uint32_t) (min_arg_n - (std::int32_t) x) + 1U)
+                                                  :   (std::uint32_t) 0U);
 
     floating_point_type xx(x);
 
     // Scale the argument up and use downward recursion later for the final result.
-    if(n_recur != 0)
+    if(n_recur != 0U)
     {
       xx += n_recur;
     }
@@ -185,15 +187,15 @@ namespace local
     const floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
 
     // Perform the Bernoulli series expansion.
-    for(std::int32_t n2 = 4; n2 < (std::int32_t) bernoulli_table.size(); n2 += 2)
+    for(std::uint32_t n2 = 4U; n2 < (std::uint32_t) bernoulli_table.size(); n2 += 2U)
     {
       one_over_x_pow_two_n_minus_one *= one_over_x2;
 
       const floating_point_type term =
-          (bernoulli_table[(std::uint32_t) n2] * one_over_x_pow_two_n_minus_one)
-        / (std::int64_t) (n2 * (std::int64_t) (n2 - 1));
+          (bernoulli_table[n2] * one_over_x_pow_two_n_minus_one)
+        / (std::uint64_t) (n2 * (std::uint64_t) (n2 - 1U));
 
-      if((n2 > 4) && (fabs(term) < tol))
+      if((n2 > 4U) && (fabs(term) < tol))
       {
         break;
       }
@@ -211,7 +213,7 @@ namespace local
     floating_point_type g = exp(((((xx - half) * log(xx)) - xx) + half_ln_two_pi) + sum);
 
     // Rescale the result using downward recursion if necessary.
-    for(std::int32_t k = 0; k < n_recur; ++k)
+    for(std::uint32_t k = 0U; k < n_recur; ++k)
     {
       g /= --xx;
     }
@@ -224,27 +226,39 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 {
   local::bernoulli_b(local::bernoulli_table.data(), (std::uint32_t) local::bernoulli_table.size());
 
-  const dec1001_t g = local::tgamma(dec1001_t(1U) / 3U);
+  const dec2001_t x = dec2001_t(UINT32_C(3456789)) / UINT32_C(10000000);
 
-  const dec1001_t control
+  const dec2001_t g = local::tgamma(x);
+
+  const dec2001_t control
   {
     "2."
-    "6789385347077476336556929409746776441286893779573011009504283275904176101677438195409828890411887894"
-    "1915904920007226333571908456950447225997771336770846976816728982305000321834255032224715694181755544"
-    "9952728784394779441305765828401612319141596466526033727584020580635513943241032015839415382700855240"
-    "5210323387989550693638926386839167072816915423096273318811864774965222910556444090780096341646353274"
-    "0195630152839860021250692996870571006864544754497067121216435474129286262442530553451675106636988879"
-    "5702949499999822904875405769873494540359448646618127601125501081007135774850918287888928269081113039"
-    "6508300618399030183890284867938695239815650034312097356725343620921104097360814928866903299993919976"
-    "3507245847443710428535667893467156890589821447841213999549940936167692556916329004659357582947195283"
-    "6892596342706528426029714811514667312340900520399929293380822039330227609582331037109976015726326523"
-    "2911178632250866419355137129992106494762157882417423665957383788601329658550316559885453066009697291"
-    "0"
+    "5792700634274853567721602504331378637312507250684265769670260445405759391178961482604996184815668756"
+    "8564835035250596999345597383446265698132918512614930473325677638107714332958497710269501613725680170"
+    "1207048419926349028508375947826766602670824973689466309567097968544545120863295426820157846797078515"
+    "3270391593695595325553888998094781117812031903577065059426744317478442627293643562162041133861245545"
+    "5622513499502887983759697964339712827017626583067849940594815336039108197564304048170285864914193574"
+    "6539534364270304865358361035034470710717568758018266952541409607892517276719473986066043431889561930"
+    "8498759039273502823878797301370230697817002245345723860335617187810904209611008643313142837894123581"
+    "0204380574243088642193313463490316847304828800342739459922573993969796137360290127111519031294685185"
+    "9575424942209577154958875121359025277213900704605966325137247902172904181666603495550337045837078098"
+    "1329255339338726902394775356991039595635478839349494883276914599356815269202887419270730947712224664"
+    "7888442059790271553237358069313114134629535464499707521391186165968003771536204017063643231157170766"
+    "8291701165834588803112562500090912977321345304404117143667755019219481548316844274771883223505023185"
+    "3631032476704714230052339785840973254493785151096015134568292497070208911510784135111072326062599629"
+    "0103592503677463193939775497227282066710574467640321248364765696246509069511492844211634243810535836"
+    "5311972991569881526779378074785470211815077380872663865343267793938165382770375550089387910008444300"
+    "7163511872811923369230296749404458568568082061722141777675316484557243668607391204807898599085869169"
+    "2386504735470941454860546852532571178734682694320676502312195342261737739866443753806397564819099859"
+    "9331942989031725874448974291474222201619146464227954923392563442264787739545126615102594999536948124"
+    "9427322986728395061509242760072540343037058966311125074550704404179652896588450427799200629988929136"
+    "7684199362266522666617830565032059371026662203130872993471499160234189035693750089708150749100353631"
+    "8"
   };
 
-  const dec1001_t closeness = fabs(1 - (g / control));
+  const dec2001_t closeness = fabs(1 - (g / control));
 
-  const bool result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000)));
+  const bool result_is_ok = (closeness < (std::numeric_limits<dec2001_t>::epsilon() * UINT32_C(1000000)));
 
   return result_is_ok;
 }
