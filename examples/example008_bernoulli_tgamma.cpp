@@ -183,7 +183,28 @@ namespace local
     const floating_point_type one_over_x2                    = one_over_x_pow_two_n_minus_one * one_over_x_pow_two_n_minus_one;
           floating_point_type sum                            = (bernoulli_table[2U] / 2U) * one_over_x_pow_two_n_minus_one;
 
-    const floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
+    floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
+
+    if(xx > 8U)
+    {
+      // In the following code sequence, we extract the approximate logarithm
+      // of the argument x and use the leading term of Stirling's approximation,
+      // which is Log[Gamma[x]] aprox. (x (Log[x] - 1)) in order to scale
+      // the tolerance. In order to do this, we find the built-in floating point
+      // approximation of (x (Log[x] - 1)).
+
+      using std::ilogb;
+      using std::log;
+      using std::pow;
+
+      const std::int64_t ne = ilogb(xx);
+      const float        ff = (float) (xx / pow(floating_point_type(std::numeric_limits<floating_point_type>::radix), ne));
+
+      const float lgx =    (float) log(ff)
+                        + ((float) ne * log((float) std::numeric_limits<floating_point_type>::radix));
+
+      tol *= (xx * floating_point_type(lgx - 1.0F));
+    }
 
     // Perform the Bernoulli series expansion.
     for(std::uint32_t n2 = 4U; n2 < (std::uint32_t) bernoulli_table.size(); n2 += 2U)
@@ -226,13 +247,19 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 {
   local::bernoulli_b(local::bernoulli_table.data(), (std::uint32_t) local::bernoulli_table.size());
 
-  const wide_decimal_type x = wide_decimal_type(1U) / 2U;
+  // Set x to 1/2 + 10, where the intent is to calculate Gamma[n + 1/2] with n=10.
+
+  const wide_decimal_type x = wide_decimal_type(21U) / 2U;
 
   const wide_decimal_type g = local::tgamma(x);
 
+  // Consider the control value.
+  // Use the relation Gamma[1/2 + n] = { (2n)!/[4^n n!] } Sqrt[Pi].
+  // This results in (654729075/1024) Sqrt[Pi] for n=10.
+
   using ::pi;
 
-  const wide_decimal_type control = sqrt(pi<wide_decimal_type>());
+  const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * UINT32_C(654729075)) / 1024U;
 
   const wide_decimal_type closeness = fabs(1 - (g / control));
 
