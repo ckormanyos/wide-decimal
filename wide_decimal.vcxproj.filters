@@ -98,22 +98,31 @@
     <ClCompile Include="test\test.cpp">
       <Filter>test</Filter>
     </ClCompile>
-    <ClCompile Include="examples\example002_pi.cpp">
-      <Filter>examples</Filter>
-    </ClCompile>
     <ClCompile Include="test\test_decwide_t_examples.cpp">
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="test\test_decwide_t_algebra.cpp">
       <Filter>test</Filter>
     </ClCompile>
-    <ClCompile Include="examples\example003_zeta.cpp">
+    <ClCompile Include="examples\example001_roots_sqrt.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example001a_roots_seventh.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002_pi.cpp">
       <Filter>examples</Filter>
     </ClCompile>
     <ClCompile Include="examples\example002a_pi_small_limb.cpp">
       <Filter>examples</Filter>
     </ClCompile>
     <ClCompile Include="examples\example002b_pi_100k.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002c_pi_quintic.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example003_zeta.cpp">
       <Filter>examples</Filter>
     </ClCompile>
     <ClCompile Include="examples\example004_bessel_recur.cpp">
@@ -126,15 +135,6 @@
       <Filter>examples</Filter>
     </ClCompile>
     <ClCompile Include="examples\example007_catalan_series.cpp">
-      <Filter>examples</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\example001_roots_sqrt.cpp">
-      <Filter>examples</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\example001a_roots_seventh.cpp">
-      <Filter>examples</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\example002c_pi_quintic.cpp">
       <Filter>examples</Filter>
     </ClCompile>
     <ClCompile Include="examples\example008_bernoulli_tgamma.cpp">

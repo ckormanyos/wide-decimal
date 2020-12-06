@@ -62,7 +62,7 @@
 
     size_type max_size() const
     {
-      return slot_array_memory.size();
+      return sizeof(slot_array_type) * slot_count;
     }
 
           pointer address(      reference x) const { return &x; }
@@ -93,7 +93,11 @@
       return p;
     }
 
-    void construct(pointer p, const value_type& x) { }
+    void construct(pointer p, const value_type& x)
+    {
+      (void) p;
+      (void) x;
+    }
 
     void destroy(pointer p) { }
 

@@ -1,19 +1,19 @@
 # Wide-decimal
 Wide-decimal implements a generic C++ template for extended precision decimal float types.
 
-This C++ template header-only library implements drop-in big decimal float types such as `dec101_t`, `dec10001_t`, `dec1000001_t`, etc., that can be used essentially like regular built-in floating-point types. Wide-decimal supports decimal float types having digit counts ranging from about <img src="https://render.githubusercontent.com/render/math?math=30{\ldots}1,000,000">.
+This C++ template header-only library implements drop-in big decimal float types such as `dec101_t`, `dec10001_t`, `dec1000001_t`, etc., that can be used essentially like regular built-in floating-point types. Wide-decimal supports decimal float types having digit counts ranging from about <img src="https://render.githubusercontent.com/render/math?math=\sim\,30{\ldots}3,000,000">.
 
-Wide-decimal implements both common algebraic operations as well as a few common `<cmath>` functions such as `fabs`, `sqrt` and `log`, and also includes full support for `std::numeric_limits`.
+Wide-decimal implements both common algebraic operations as well as a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`, and also includes full support for `std::numeric_limits`.
 
 Wide-decimal is written in header-only C++11.
 
 # Implementation goals
 
-  - wide precision range up to one million decimal digits,
-  - moderately good efficiency over the entire wide precision range,
-  - clean header-only C++11 design.
-  - seamless portability to any modern C++11 compiler,
-  - scalability with small memory footprint appropriate for _bare-metal_ embedded systems.
+  - Wide precision range up to one million decimal digits
+  - Moderately good efficiency over the entire wide precision range
+  - Clean header-only C++11 design
+  - Seamless portability to any modern C++11 compiler
+  - Scalability with small memory footprint and efficiency suitable for _bare-metal_ embedded systems
 
 # The examples
 
@@ -27,8 +27,10 @@ Wide-decimal is written in header-only C++11.
   - ![`example004_bessel_recur`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
   - ![`example005_polylog_series`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
   - ![`example006_logarithm`](./examples/example006_logarithm.cpp) calculates the value of a logarithm (internally using a Gauss AGM method).
-  - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) compute <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
-  - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers.
+  - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) computes <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
+  - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers
+and subsequently calculates <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits
+of <img src="https://render.githubusercontent.com/render/math?math=\Gamma(21/2)">.
 
 # 1,000,001 digits of pi on a bare metal microcontroller
 
@@ -162,7 +164,7 @@ this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit 
 In this example, note how a specialized custom allocator called
 `util::n_slot_array_allocator` is utilized for exact memory management
 of a certain number of temporary storages of mega-digit numbers
-(tuned to 18 in this particular example).
+(tuned to 16 in this particular example).
 
 ```
 #include <array>

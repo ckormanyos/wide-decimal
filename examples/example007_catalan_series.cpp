@@ -60,6 +60,7 @@ namespace local
       }
     }
 
+    using ::pi;
     using std::log;
     using std::sqrt;
 

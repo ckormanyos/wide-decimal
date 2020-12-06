@@ -39,9 +39,15 @@
       constexpr dynamic_array() : elem_count(0U),
                                   elems     (nullptr) { }
 
-      constexpr dynamic_array(size_type count)
+      dynamic_array(size_type count)
         : elem_count(count),
-          elems     (elem_count > 0U ? allocator_type().allocate(elem_count) : nullptr) { }
+          elems     (elem_count > 0U ? allocator_type().allocate(elem_count) : nullptr)
+      {
+        for(size_type i = 0U; i < elem_count; i++)
+        {
+          allocator_type().construct(&elems[i], value_type());
+        }
+      }
 
       dynamic_array(size_type count,
                     const value_type& v,

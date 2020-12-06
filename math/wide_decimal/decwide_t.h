@@ -69,20 +69,10 @@
     using base_class_type = util::dynamic_array<MyType, MyAlloc>;
 
   public:
-    constexpr fixed_dynamic_array()
-      : base_class_type(MySize) { }
-
-    constexpr fixed_dynamic_array(const typename base_class_type::size_type my_size)
-      : base_class_type(my_size) { }
-
-    constexpr fixed_dynamic_array(const typename base_class_type::size_type   my_size,
-                                  const typename base_class_type::value_type& my_value)
-      : base_class_type(my_size, my_value) { }
-
-    constexpr fixed_dynamic_array(const typename base_class_type::size_type       my_size,
-                                  const typename base_class_type::value_type&     my_value,
-                                  const typename base_class_type::allocator_type& my_alloc)
-      : base_class_type(my_size, my_value, my_alloc) { }
+    constexpr fixed_dynamic_array(const typename base_class_type::size_type       s  = MySize,
+                                  const typename base_class_type::value_type&     v = typename base_class_type::value_type(),
+                                  const typename base_class_type::allocator_type& a = typename base_class_type::allocator_type())
+      : base_class_type((std::min)(MySize, (std::uint_fast32_t) s), v, a) { }
 
     fixed_dynamic_array(const fixed_dynamic_array& other_array)
       : base_class_type((const base_class_type&) other_array) { }
@@ -90,12 +80,22 @@
     fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
     {
-      base_class_type::fill(typename base_class_type::value_type(0U));
+      if((std::uint_fast32_t) lst.size() < MySize)
+      {
+        std::copy(lst.begin(),
+                  lst.begin() + lst.size(),
+                  base_class_type::begin());
 
-      std::copy(lst.begin(),
-                lst.begin() + (std::min)((typename base_class_type::size_type) lst.size(),
-                                         (typename base_class_type::size_type) MySize),
-                base_class_type::begin());
+        std::fill(base_class_type::begin() + lst.size(),
+                  base_class_type::end(),
+                  typename base_class_type::value_type());
+      }
+      else
+      {
+        std::copy(lst.begin(),
+                  lst.begin() + MySize,
+                  base_class_type::begin());
+      }
     }
 
     fixed_dynamic_array(fixed_dynamic_array&& other_array)
@@ -117,7 +117,10 @@
 
     virtual ~fixed_dynamic_array() = default;
 
-    static constexpr typename base_class_type::size_type static_size() { return MySize; }
+    static constexpr typename base_class_type::size_type static_size()
+    {
+      return MySize;
+    }
   };
 
   typedef enum enum_os_float_field_type
@@ -354,7 +357,7 @@
   public:
     // Define the decwide_t digits characteristics.
 
-    static constexpr std::int32_t decwide_t_elems_for_fft     = 64;
+    static constexpr std::int32_t decwide_t_elems_for_fft     = 128;
 
     static constexpr std::int32_t decwide_t_digits10          = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
     static constexpr std::int32_t decwide_t_digits            = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
@@ -3190,8 +3193,17 @@
     // than about 25 or 30. After about 20 iterations, the precision
     // is about one million decimal digits.
 
+    const std::int32_t digits10_iteration_goal =
+      static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
+
+    using std::log;
+
+    const std::uint32_t digits10_scale = (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::radix)) / log(10.0F));
+
     for(unsigned k = 0U; k < 48U; ++k)
     {
+      using std::sqrt;
+
       a      += sqrt(bB);
       a      /= 2U;
       val_pi  = a;
@@ -3200,25 +3212,24 @@
       bB     -= t;
       bB     *= 2U;
 
-      std::int32_t approximate_digits10_of_iteration;
+      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> iterate_term(bB);
 
+      iterate_term -= val_pi;
+      iterate_term *= (unsigned long long) (1ULL << (k + 1U));
+
+      s += iterate_term;
+
+      // Test the number of precise digits from this iteration.
+      // If it is there are enough precise digits, then the calculation
+      // is finished.
+      const std::int32_t ib = (std::max)(0, -ilogb(iterate_term));
+
+      const std::uint32_t digits10_of_iteration =
+        (std::uint32_t) ((std::uint64_t) ((std::uint64_t) ib * digits10_scale) / 1000U);
+
+      if(pfn_callback_to_report_digits10 != nullptr)
       {
-        decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> iterate_term(bB);
-
-        iterate_term -= val_pi;
-        iterate_term *= (unsigned long long) (1ULL << (k + 1U));
-
-        s += iterate_term;
-
-        // Test the number of precise digits from this iteration.
-        // If it is there are enough precise digits, then the calculation
-        // is finished.
-        approximate_digits10_of_iteration = -ilogb(iterate_term);
-
-        if(pfn_callback_to_report_digits10 != nullptr)
-        {
-          pfn_callback_to_report_digits10((std::uint32_t) approximate_digits10_of_iteration);
-        }
+        pfn_callback_to_report_digits10(digits10_of_iteration);
       }
 
       // Estimate the approximate decimal digits of this iteration term.
@@ -3226,9 +3237,8 @@
       // with this iteration term, then the calculation is finished
       // because the change from the next iteration will be
       // insignificantly small.
-      const std::int32_t digits10_iteration_goal = static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
 
-      if(approximate_digits10_of_iteration > digits10_iteration_goal)
+      if(digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
@@ -3262,17 +3272,20 @@
 
     using std::log;
 
-    const float n_times_factor =
-      static_cast<float>(static_cast<float>(std::numeric_limits<floating_point_type>::digits10) * 1.67F);
+    const float n_times_factor = ((float) std::numeric_limits<floating_point_type>::digits10) * 1.67F;
 
     // Ensure that the resulting power is non-negative.
-    // Also enforce that m >= 8.
-    const std::int32_t m = (std::max)((std::int32_t) n_times_factor, (std::int32_t) 8);
+    // Also enforce that m >= 3.
+    const std::int32_t m = (std::max)((std::int32_t) n_times_factor, (std::int32_t) 3);
 
     floating_point_type bk = 1 / pow(floating_point_type(2U), m - 2);
 
     const std::int32_t digits10_iteration_goal =
       static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
+
+    using std::log;
+
+    const std::uint32_t digits10_scale = (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
 
     for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
     {
@@ -3284,14 +3297,17 @@
       // half of the requested digits have been achieved,
       // then break after the upcoming iteration.
 
-      const std::int32_t approximate_digits10_of_iteration = -ilogb(ak - bk);
+      const std::int32_t ib = (std::max)(0, -ilogb(ak - bk));
+
+      const std::uint32_t digits10_of_iteration =
+        (std::uint32_t) ((std::uint64_t) ((std::uint64_t) ib * digits10_scale) / 1000U);
 
       const floating_point_type ak_tmp(ak);
 
       ak += bk;
       ak /= 2;
 
-      if(approximate_digits10_of_iteration > digits10_iteration_goal)
+      if(digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
@@ -3969,29 +3985,36 @@
 
     using std::log;
 
-    const float n_times_factor =
-      static_cast<float>(static_cast<float>(std::numeric_limits<floating_point_type>::digits10) * 1.67F);
+    const float n_times_factor = ((float) std::numeric_limits<floating_point_type>::digits10) * 1.67F;
 
-    InternalFloatType dd;
-    std::int64_t      ne;
+    // Extract lg_xx = Log[mantissa * radix^ib]
+    //               = Log[mantissa] + ib * Log[radix]
 
-    xx.extract_parts(dd, ne);
+    InternalFloatType mantissa;
+    std::int64_t      ib;
+
+    xx.extract_parts(mantissa, ib);
 
     using std::log;
 
-    const float lgx = (float) (log((float) dd) + ((float) ne * log(10.0F)));
+    const float lg_xx =   log((float) mantissa)
+                        + ((float) ib * log((float) std::numeric_limits<floating_point_type>::radix));
 
-    const float lgx_over_lg2   = lgx / log(2.0F);
+    const float lg_xx_over_lg2 = lg_xx / log(2.0F);
 
     // Ensure that the resulting power is non-negative.
-    // Also enforce that m >= 8.
-    const std::int32_t m = (std::max)((std::int32_t) (n_times_factor - lgx_over_lg2), (std::int32_t) 8);
+    // Also enforce that m >= 3.
+    const std::int32_t m = (std::max)((std::int32_t) (n_times_factor - lg_xx_over_lg2), (std::int32_t) 3);
 
     floating_point_type bk = 1 / (xx * pow(floating_point_type(2U), m - 2));
 
     // TBD: Tolerance should have the log of the argument added to it (usually negligible).
-    const std::int32_t digits10_iteration_goal =
-      static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
+    const std::uint32_t digits10_iteration_goal =
+      static_cast<std::uint32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
+
+    using std::log;
+
+    const std::uint32_t digits10_scale = (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
 
     for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
     {
@@ -4002,14 +4025,18 @@
       // at least half of the requested digits. If at least
       // half of the requested digits have been achieved,
       // then break after the upcoming iteration.
-      const std::int32_t approximate_digits10_of_iteration = -ilogb(ak - bk);
+
+      const std::int32_t ib = (std::max)(0, -ilogb(ak - bk));
+
+      const std::uint32_t digits10_of_iteration =
+        (std::uint32_t) ((std::uint64_t) ((std::uint64_t) ib * digits10_scale) / 1000U);
 
       const floating_point_type ak_tmp(ak);
 
       ak += bk;
       ak /= 2;
 
-      if(approximate_digits10_of_iteration > digits10_iteration_goal)
+      if(digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
