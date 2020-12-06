@@ -30,7 +30,7 @@ Wide-decimal is written in header-only C++11.
   - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) computes <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
   - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers
 and subsequently calculates <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits
-of <img src="https://render.githubusercontent.com/render/math?math=\Gamma(10 + 1/2)">.
+of <img src="https://render.githubusercontent.com/render/math?math=\Gamma(21/2)">.
 
 # 1,000,001 digits of pi on a bare metal microcontroller
 
