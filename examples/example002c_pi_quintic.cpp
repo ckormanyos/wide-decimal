@@ -45,9 +45,13 @@ namespace
     floating_point_type sk = (sqrt(local_five) - floating_point_type(2U)) * 5U;
 
     // Determine the requested precision of the upcoming iteration in units of digits10.
-    const std::int32_t required_precision_fifth =
-        static_cast<std::int32_t>(static_cast<std::int32_t>(std::numeric_limits<floating_point_type>::max_digits10 * 2) + static_cast<std::int32_t>(5))
-      / static_cast<std::int32_t>(10);
+    const std::uint32_t required_precision_fifth =
+        static_cast<std::uint32_t>(static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::max_digits10 * 2) + static_cast<std::uint32_t>(5U))
+      / static_cast<std::uint32_t>(10U);
+
+    using std::log;
+
+    const std::uint32_t digits10_scale = (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
 
     for(std::int32_t k = static_cast<std::int32_t>(1); k < static_cast<std::int32_t>(30); ++k)
     {
@@ -70,17 +74,20 @@ namespace
       - (  ((sk_squared - local_five) / 2U)
           +  sqrt(sk * (sk_squared - (sk * 2U) + local_five))) * five_pow_k;
 
-      std::int32_t approximate_digits10_of_iteration = -ilogb(val_pi - previous_ak);
+      const std::int32_t ib = (std::max)(0, -ilogb(val_pi - previous_ak));
+
+      const std::uint32_t digits10_of_iteration =
+        (std::uint32_t) ((std::uint64_t) ((std::uint64_t) ib * digits10_scale) / 1000U);
 
       if(p_ostream != nullptr)
       {
-        *p_ostream << approximate_digits10_of_iteration << std::endl;
+        *p_ostream << digits10_of_iteration << std::endl;
       }
 
       // Test the significant digits of the last iteration change.
       // If there are enough significant digits, then the calculation
       // is finished.
-      if(approximate_digits10_of_iteration >= required_precision_fifth)
+      if(digits10_of_iteration >= required_precision_fifth)
       {
         break;
       }

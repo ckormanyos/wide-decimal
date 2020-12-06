@@ -197,13 +197,16 @@ namespace local
       using std::log;
       using std::pow;
 
-      const std::int64_t ne = ilogb(xx);
-      const float        ff = (float) (xx / pow(floating_point_type(std::numeric_limits<floating_point_type>::radix), ne));
+      // Extract lgx = Log[mantissa * radix^ib]
+      //             = Log[mantissa] + ib * Log[radix]
 
-      const float lgx =    (float) log(ff)
-                        + ((float) ne * log((float) std::numeric_limits<floating_point_type>::radix));
+      const std::int32_t ib       = (std::int32_t) ilogb(xx);
+      const float        mantissa = (float) (xx / pow(floating_point_type(std::numeric_limits<floating_point_type>::radix), ib));
 
-      tol *= (xx * floating_point_type(lgx - 1.0F));
+      const float lg_xx =   log(mantissa)
+                          + ((float) ib * log((float) std::numeric_limits<floating_point_type>::radix));
+
+      tol *= (xx * floating_point_type(lg_xx - 1.0F));
     }
 
     // Perform the Bernoulli series expansion.
@@ -224,9 +227,9 @@ namespace local
     }
 
     using ::pi;
+    using local::exp;
     using std::exp;
     using std::log;
-    using local::exp;
 
     static const floating_point_type half           = floating_point_type(1U) / 2U;
     static const floating_point_type half_ln_two_pi = log(pi<floating_point_type>() * 2U) / 2U;
@@ -247,23 +250,29 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 {
   local::bernoulli_b(local::bernoulli_table.data(), (std::uint32_t) local::bernoulli_table.size());
 
-  // Set x to 1/2 + 10, where the intent is to calculate Gamma[n + 1/2] with n=10.
+  // Set x to 23/2, where the intent is to calculate
+  // Gamma[n + 1/2] with n=11.
 
-  const wide_decimal_type x = wide_decimal_type(21U) / 2U;
+  const wide_decimal_type x = wide_decimal_type(23U) / 2U;
 
   const wide_decimal_type g = local::tgamma(x);
 
   // Consider the control value.
-  // Use the relation Gamma[1/2 + n] = { (2n)!/[4^n n!] } Sqrt[Pi].
-  // This results in (654729075/1024) Sqrt[Pi] for n=10.
+  //                                    (2n)!
+  // Use the relation Gamma[1/2 + n] = -------- * Sqrt[Pi].
+  //                                   (4^n) n!
+  //
+  //                  13749310575
+  // This results in ------------ * Sqrt[Pi] for n=11.
+  //                     2048
 
   using ::pi;
 
-  const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * UINT32_C(654729075)) / 1024U;
+  const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * UINT64_C(13749310575)) / 2048U;
 
   const wide_decimal_type closeness = fabs(1 - (g / control));
 
-  const bool result_is_ok = (closeness < (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(1000000)));
+  const bool result_is_ok = (closeness < (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(100000)));
 
   return result_is_ok;
 }
