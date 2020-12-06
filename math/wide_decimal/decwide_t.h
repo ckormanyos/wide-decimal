@@ -69,10 +69,10 @@
     using base_class_type = util::dynamic_array<MyType, MyAlloc>;
 
   public:
-    constexpr fixed_dynamic_array(const typename base_class_type::size_type       my_size  = MySize,
-                                  const typename base_class_type::value_type&     my_value = typename base_class_type::value_type(),
-                                  const typename base_class_type::allocator_type& my_alloc = typename base_class_type::allocator_type())
-      : base_class_type(my_size, my_value, my_alloc) { }
+    constexpr fixed_dynamic_array(const typename base_class_type::size_type       s  = MySize,
+                                  const typename base_class_type::value_type&     v = typename base_class_type::value_type(),
+                                  const typename base_class_type::allocator_type& a = typename base_class_type::allocator_type())
+      : base_class_type((std::min)(MySize, (std::uint_fast32_t) s), v, a) { }
 
     fixed_dynamic_array(const fixed_dynamic_array& other_array)
       : base_class_type((const base_class_type&) other_array) { }
@@ -80,12 +80,22 @@
     fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
     {
-      base_class_type::fill(typename base_class_type::value_type(0U));
+      if((std::uint_fast32_t) lst.size() < MySize)
+      {
+        std::copy(lst.begin(),
+                  lst.begin() + lst.size(),
+                  base_class_type::begin());
 
-      std::copy(lst.begin(),
-                lst.begin() + (std::min)((typename base_class_type::size_type) lst.size(),
-                                         (typename base_class_type::size_type) MySize),
-                base_class_type::begin());
+        std::fill(base_class_type::begin() + lst.size(),
+                  base_class_type::end(),
+                  typename base_class_type::value_type());
+      }
+      else
+      {
+        std::copy(lst.begin(),
+                  lst.begin() + MySize,
+                  base_class_type::begin());
+      }
     }
 
     fixed_dynamic_array(fixed_dynamic_array&& other_array)
@@ -107,7 +117,10 @@
 
     virtual ~fixed_dynamic_array() = default;
 
-    static constexpr typename base_class_type::size_type static_size() { return MySize; }
+    static constexpr typename base_class_type::size_type static_size()
+    {
+      return MySize;
+    }
   };
 
   typedef enum enum_os_float_field_type
