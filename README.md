@@ -164,7 +164,7 @@ this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit 
 In this example, note how a specialized custom allocator called
 `util::n_slot_array_allocator` is utilized for exact memory management
 of a certain number of temporary storages of mega-digit numbers
-(tuned to 18 in this particular example).
+(tuned to 16 in this particular example).
 
 ```
 #include <array>
