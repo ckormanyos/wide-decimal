@@ -702,188 +702,6 @@
     const array_type&  representation() const { return my_data; }
     const array_type& crepresentation() const { return my_data; }
 
-    // Arithmetic operators with signed long long.
-    decwide_t& add_signed_long_long(const signed long long n)
-    {
-      if(n < static_cast<signed long long>(0))
-      {
-        negate();
-        add_unsigned_long_long(static_cast<unsigned long long>(-n));
-        negate();
-      }
-      else
-      {
-        add_unsigned_long_long(static_cast<unsigned long long>(n));
-      }
-
-      return static_cast<decwide_t&>(*this);
-    }
-
-    decwide_t& sub_signed_long_long(const signed long long n)
-    {
-      return add_signed_long_long(static_cast<signed long long>(-n));
-    }
-
-    decwide_t& mul_signed_long_long(const signed long long n)
-    {
-      const bool b_neg = (n < static_cast<signed long long>(0));
-
-      mul_unsigned_long_long((!b_neg) ? static_cast<unsigned long long>(n) : static_cast<unsigned long long>(-n));
-
-      if(b_neg)
-      {
-        negate();
-      }
-
-      return static_cast<decwide_t&>(*this);
-    }
-
-    decwide_t& div_signed_long_long(const signed long long n)
-    {
-      const bool b_neg = (n < static_cast<signed long long>(0));
-
-      div_unsigned_long_long((!b_neg) ? static_cast<unsigned long long>(n) : static_cast<unsigned long long>(-n));
-
-      if(b_neg)
-      {
-        negate();
-      }
-
-      return static_cast<decwide_t&>(*this);
-    }
-
-    int compare(const decwide_t& v) const
-    {
-      const std::int32_t this_compare_result = cmp(v);
-
-      return static_cast<int>(this_compare_result);
-    }
-
-    // Fast order-10 range check.
-    std::int64_t order() const { return get_order_fast(); }
-
-    friend inline decwide_t fabs(const decwide_t& x)
-    {
-      return (x.isneg() ? decwide_t(x).negate() : x);
-    }
-
-    std::int32_t cmp(const decwide_t& v) const
-    {
-      // Compare v with *this.
-      //         Return +1 for *this > v
-      //                 0 for *this = v
-      //                -1 for *this < v
-
-      // Handle all non-finite cases.
-      if((!isfinite()) || (!v.isfinite()))
-      {
-        // NaN can never equal NaN. Return an implementation-dependent
-        // signed result. Also note that comparison of NaN with NaN
-        // using operators greater-than or less-than is undefined.
-        if(isnan() || v.isnan())
-        {
-          return (isnan() ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1));
-        }
-
-        if(isinf() && v.isinf())
-        {
-          // Both *this and v are infinite. They are equal if they have the same sign.
-          // Otherwise, *this is less than v if and only if *this is negative.
-          return ((my_neg == v.my_neg)
-                   ? static_cast<std::int32_t>(0)
-                   : (my_neg ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1)));
-        }
-
-        if(isinf())
-        {
-          // *this is infinite, but v is finite.
-          // So negative infinite *this is less than any finite v.
-          // Whereas positive infinite *this is greater than any finite v.
-          return (isneg() ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1));
-        }
-        else
-        {
-          // *this is finite, and v is infinite.
-          // So any finite *this is greater than negative infinite v.
-          // Whereas any finite *this is less than positive infinite v.
-          return (v.my_neg ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1));
-        }
-      }
-
-      // And now handle all *finite* cases.
-      if(iszero())
-      {
-        // The value of *this is zero and v is either zero or non-zero.
-        return (v.iszero() ? static_cast<std::int32_t>(0)
-                           : (v.my_neg ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1)));
-      }
-      else if(v.iszero())
-      {
-        // The value of v is zero and *this is non-zero.
-        return (my_neg ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1));
-      }
-      else
-      {
-        // Both *this and v are non-zero.
-
-        if(my_neg != v.my_neg)
-        {
-          // The signs are different.
-          return (my_neg ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1));
-        }
-        else if(my_exp != v.my_exp)
-        {
-          // The signs are the same and the exponents are different.
-          const std::int32_t val_cmp_exp = ((my_exp < v.my_exp) ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1));
-
-          return (my_neg ? val_cmp_exp : static_cast<std::int32_t>(-val_cmp_exp));
-        }
-        else
-        {
-          // The signs are the same and the exponents are the same.
-          // Compare the data.
-          const std::int32_t val_cmp_data = cmp_data(v.my_data);
-
-          return ((!my_neg) ? val_cmp_data : static_cast<std::int32_t>(-val_cmp_data));
-        }
-      }
-    }
-
-    // Specific special values.
-    static decwide_t my_value_inf() { return decwide_t(decwide_t_inf); }
-    static decwide_t my_value_nan() { return decwide_t(decwide_t_NaN); }
-    static decwide_t my_value_max() { return decwide_t( { limb_type(9U) }, decwide_t_max_exp10 ); }
-    static decwide_t my_value_min() { return decwide_t( { limb_type(1U) }, decwide_t_min_exp10 ); }
-    static decwide_t my_value_eps()
-    {
-      constexpr std::int32_t decwide_t_digits10_aligned =
-        -static_cast<std::int32_t>(((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10);
-
-      return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>
-      (
-        {
-          limb_type(detail::decwide_t_helper<MyDigits10, LimbType>::pow10_maker(static_cast<std::uint32_t>(static_cast<std::int32_t>(-decwide_t_digits10_aligned + 1) - decwide_t_digits10)))
-        },
-        static_cast<std::int64_t>(decwide_t_digits10_aligned)
-      );
-    }
-
-    void precision(const std::int32_t prec_digits)
-    {
-      if(prec_digits >= decwide_t_digits10)
-      {
-        my_prec_elem = decwide_t_elem_number;
-      }
-      else
-      {
-        const std::int32_t elems =
-          static_cast<std::int32_t>(    static_cast<std::int32_t>(prec_digits / decwide_t_elem_digits10)
-                                    +                          (((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0));
-
-        my_prec_elem = (std::min)(decwide_t_elem_number, (std::max)(elems, static_cast<std::int32_t>(2)));
-      }
-    }
-
     // Binary arithmetic operators.
     decwide_t& operator+=(const decwide_t& v)
     {
@@ -1324,6 +1142,219 @@
       my_neg = b_neg;
 
       return *this; 
+    }
+
+    // Arithmetic operators with signed long long.
+    decwide_t& add_signed_long_long(const signed long long n)
+    {
+      if(n < static_cast<signed long long>(0))
+      {
+        negate();
+        add_unsigned_long_long(static_cast<unsigned long long>(-n));
+        negate();
+      }
+      else
+      {
+        add_unsigned_long_long(static_cast<unsigned long long>(n));
+      }
+
+      return static_cast<decwide_t&>(*this);
+    }
+
+    decwide_t& sub_signed_long_long(const signed long long n)
+    {
+      return add_signed_long_long(static_cast<signed long long>(-n));
+    }
+
+    decwide_t& mul_signed_long_long(const signed long long n)
+    {
+      const bool b_neg = (n < static_cast<signed long long>(0));
+
+      mul_unsigned_long_long((!b_neg) ? static_cast<unsigned long long>(n) : static_cast<unsigned long long>(-n));
+
+      if(b_neg)
+      {
+        negate();
+      }
+
+      return static_cast<decwide_t&>(*this);
+    }
+
+    decwide_t& div_signed_long_long(const signed long long n)
+    {
+      const bool b_neg = (n < static_cast<signed long long>(0));
+
+      div_unsigned_long_long((!b_neg) ? static_cast<unsigned long long>(n) : static_cast<unsigned long long>(-n));
+
+      if(b_neg)
+      {
+        negate();
+      }
+
+      return static_cast<decwide_t&>(*this);
+    }
+
+    int compare(const decwide_t& v) const
+    {
+      const std::int32_t this_compare_result = cmp(v);
+
+      return static_cast<int>(this_compare_result);
+    }
+
+    friend inline std::int32_t ilogb(const decwide_t& x)
+    {
+      std::int64_t e10;
+
+      if(x.isfinite() == false)
+      {
+        e10 = static_cast<std::int64_t>(0);
+      }
+      else
+      {
+        std::int_fast16_t n10 = INT16_C(-1);
+
+        limb_type p10 = (limb_type) 1U;
+
+        const limb_type limit_aligned_with_10 = x.my_data[0U] + (limb_type) (10U - (x.my_data[0U] % 10U));
+
+        while(p10 < limit_aligned_with_10)
+        {
+          p10 *= 10U;
+
+          ++n10;
+        }
+
+        e10 = static_cast<std::int64_t>(x.my_exp + n10);
+      }
+
+      const std::int32_t e10_as_int32 =
+          (e10 > (std::numeric_limits<std::int32_t>::max)()) ? (std::numeric_limits<std::int32_t>::max)()
+        : (e10 < (std::numeric_limits<std::int32_t>::min)()) ? (std::numeric_limits<std::int32_t>::min)()
+        : static_cast<std::int32_t>(e10);
+
+      return e10_as_int32;
+    }
+
+    friend inline decwide_t fabs(const decwide_t& x)
+    {
+      return (x.isneg() ? decwide_t(x).negate() : x);
+    }
+
+    std::int32_t cmp(const decwide_t& v) const
+    {
+      // Compare v with *this.
+      //         Return +1 for *this > v
+      //                 0 for *this = v
+      //                -1 for *this < v
+
+      // Handle all non-finite cases.
+      if((!isfinite()) || (!v.isfinite()))
+      {
+        // NaN can never equal NaN. Return an implementation-dependent
+        // signed result. Also note that comparison of NaN with NaN
+        // using operators greater-than or less-than is undefined.
+        if(isnan() || v.isnan())
+        {
+          return (isnan() ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1));
+        }
+
+        if(isinf() && v.isinf())
+        {
+          // Both *this and v are infinite. They are equal if they have the same sign.
+          // Otherwise, *this is less than v if and only if *this is negative.
+          return ((my_neg == v.my_neg)
+                   ? static_cast<std::int32_t>(0)
+                   : (my_neg ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1)));
+        }
+
+        if(isinf())
+        {
+          // *this is infinite, but v is finite.
+          // So negative infinite *this is less than any finite v.
+          // Whereas positive infinite *this is greater than any finite v.
+          return (isneg() ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1));
+        }
+        else
+        {
+          // *this is finite, and v is infinite.
+          // So any finite *this is greater than negative infinite v.
+          // Whereas any finite *this is less than positive infinite v.
+          return (v.my_neg ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1));
+        }
+      }
+
+      // And now handle all *finite* cases.
+      if(iszero())
+      {
+        // The value of *this is zero and v is either zero or non-zero.
+        return (v.iszero() ? static_cast<std::int32_t>(0)
+                           : (v.my_neg ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1)));
+      }
+      else if(v.iszero())
+      {
+        // The value of v is zero and *this is non-zero.
+        return (my_neg ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1));
+      }
+      else
+      {
+        // Both *this and v are non-zero.
+
+        if(my_neg != v.my_neg)
+        {
+          // The signs are different.
+          return (my_neg ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1));
+        }
+        else if(my_exp != v.my_exp)
+        {
+          // The signs are the same and the exponents are different.
+          const std::int32_t val_cmp_exp = ((my_exp < v.my_exp) ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1));
+
+          return (my_neg ? val_cmp_exp : static_cast<std::int32_t>(-val_cmp_exp));
+        }
+        else
+        {
+          // The signs are the same and the exponents are the same.
+          // Compare the data.
+          const std::int32_t val_cmp_data = cmp_data(v.my_data);
+
+          return ((!my_neg) ? val_cmp_data : static_cast<std::int32_t>(-val_cmp_data));
+        }
+      }
+    }
+
+    // Specific special values.
+    static decwide_t my_value_inf() { return decwide_t(decwide_t_inf); }
+    static decwide_t my_value_nan() { return decwide_t(decwide_t_NaN); }
+    static decwide_t my_value_max() { return decwide_t( { limb_type(9U) }, decwide_t_max_exp10 ); }
+    static decwide_t my_value_min() { return decwide_t( { limb_type(1U) }, decwide_t_min_exp10 ); }
+    static decwide_t my_value_eps()
+    {
+      constexpr std::int32_t decwide_t_digits10_aligned =
+        -static_cast<std::int32_t>(((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10);
+
+      return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>
+      (
+        {
+          limb_type(detail::decwide_t_helper<MyDigits10, LimbType>::pow10_maker(static_cast<std::uint32_t>(static_cast<std::int32_t>(-decwide_t_digits10_aligned + 1) - decwide_t_digits10)))
+        },
+        static_cast<std::int64_t>(decwide_t_digits10_aligned)
+      );
+    }
+
+    void precision(const std::int32_t prec_digits)
+    {
+      if(prec_digits >= decwide_t_digits10)
+      {
+        my_prec_elem = decwide_t_elem_number;
+      }
+      else
+      {
+        const std::int32_t elems =
+          static_cast<std::int32_t>(    static_cast<std::int32_t>(prec_digits / decwide_t_elem_digits10)
+                                    +                          (((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0));
+
+        my_prec_elem = (std::min)(decwide_t_elem_number, (std::max)(elems, static_cast<std::int32_t>(2)));
+      }
     }
 
     void swap(decwide_t& other_decwide_t)
@@ -2376,33 +2407,6 @@
       }
     }
 
-    std::int64_t get_order_exact() const { return get_order_fast(); }
-
-    std::int64_t get_order_fast() const
-    {
-      if(isfinite() == false)
-      {
-        return static_cast<std::int64_t>(0);
-      }
-      else
-      {
-        std::int_fast16_t n10 = INT16_C(-1);
-
-        limb_type p10 = (limb_type) 1U;
-
-        const limb_type limit_aligned_with_10 = my_data[0U] + (limb_type) (10U - (my_data[0U] % 10U));
-
-        while(p10 < limit_aligned_with_10)
-        {
-          p10 *= 10U;
-
-          ++n10;
-        }
-
-        return static_cast<std::int64_t>(my_exp + n10);
-      }
-    }
-
     #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
     bool rd_string(const char* const s)
     {
@@ -2751,7 +2755,7 @@
       if(!isfinite()) { special_handle_string_not_finite(str, static_cast<const decwide_t&>(*this), my_showpos, my_uppercase); return; }
 
       // Get the base-10 exponent.
-      std::int64_t the_exp = get_order_exact();
+      std::int64_t the_exp = (std::int64_t) ilogb(*this);
 
       // Get the output stream's precision and limit it to max_digits10.
       // Erroneous zero or negative precision (theoretically impossible)
@@ -4133,18 +4137,6 @@
     return v * pow2<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::int64_t>(-i));
   }
   #endif // !WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
-
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::int32_t ilogb(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
-  {
-    std::int64_t e10 = x.order();
-
-    const std::int32_t e10_as_int32 =
-        (e10 > (std::numeric_limits<std::int32_t>::max)()) ? (std::numeric_limits<std::int32_t>::max)()
-      : (e10 < (std::numeric_limits<std::int32_t>::min)()) ? (std::numeric_limits<std::int32_t>::min)()
-      : static_cast<std::int32_t>(e10);
-
-    return e10_as_int32;
-  }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> fmod(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& v1, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& v2)
   {
