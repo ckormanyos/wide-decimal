@@ -159,10 +159,6 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> long_double_min       ();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> long_double_max       ();
 
-  #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT)
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pow2(const std::int64_t p);
-  #endif // !WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
-
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> fabs (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> floor(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ceil (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x);
@@ -1422,12 +1418,14 @@
       // is used. During the iterative steps, the precision of the calculation is limited
       // to the minimum required in order to minimize the run-time.
 
-      for(std::int32_t digits = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1); digits < decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_max_digits10; digits *= static_cast<std::int32_t>(2))
+      for(std::int32_t digits  = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1);
+                       digits  < (std::int32_t) (original_prec_elem * decwide_t_elem_digits10);
+                       digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
         const std::int32_t new_prec_as_digits10 =
-                       static_cast<std::int32_t>(digits * 2)
-          + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10 * 2), static_cast<std::int32_t>(16));
+            (std::int32_t) (digits * 2)
+          + (std::max)((std::int32_t) (decwide_t_elem_digits10  + 1), (std::int32_t) 9);
 
           precision(new_prec_as_digits10);
         x.precision(new_prec_as_digits10);
@@ -1498,12 +1496,14 @@
       // http://www.jjj.de/pibook/pibook.html
       // http://www.amazon.com/exec/obidos/tg/detail/-/3540665722/qid=1035535482/sr=8-7/ref=sr_8_7/104-3357872-6059916?v=glance&n=507846
 
-      for(std::int32_t digits = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1); digits < decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_max_digits10; digits *= static_cast<std::int32_t>(2))
+      for(std::int32_t digits  = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1);
+                       digits  < (std::int32_t) (original_prec_elem * decwide_t_elem_digits10);
+                       digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
         const std::int32_t new_prec_as_digits10 =
-                       static_cast<std::int32_t>(digits * 2)
-          + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10 * 2), static_cast<std::int32_t>(16));
+            (std::int32_t) (digits * 2)
+          + (std::max)((std::int32_t) (decwide_t_elem_digits10  + 1), (std::int32_t) 9);
 
            precision(new_prec_as_digits10);
         vi.precision(new_prec_as_digits10);
@@ -1574,6 +1574,8 @@
           dd /= 10.0;
         }
 
+        const std::int32_t original_prec_elem = x.my_prec_elem;
+
         using std::pow;
 
         // Estimate the one over the root using simple manipulations.
@@ -1582,18 +1584,23 @@
         // Set the result equal to the initial guess.
         result = decwide_t(one_over_rtn_d, static_cast<std::int64_t>(-ne / p));
 
-        for(std::int32_t digits = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1); digits < decwide_t::decwide_t_max_digits10; digits *= static_cast<std::int32_t>(2))
+        for(std::int32_t digits  = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1);
+                         digits  < (std::int32_t) (original_prec_elem * decwide_t_elem_digits10);
+                         digits *= static_cast<std::int32_t>(2))
         {
           // Adjust precision of the terms.
-          const std::int32_t new_prec = static_cast<std::int32_t>(digits * 2) + 10;
+          const std::int32_t new_prec_as_digits10 =
+              (std::int32_t) (digits * 2)
+            + (std::max)((std::int32_t) (decwide_t_elem_digits10  + 1), (std::int32_t) 9);
 
-          result.precision(new_prec);
+          result.precision(new_prec_as_digits10);
 
           // Perform the next iteration.
-          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> term =
-            (((-pow(result, p) * x) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>()) / p) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>();
+          decwide_t term =
+              (((-pow(result, p) * x) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>()) / p)
+            + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>();
 
-          term.precision(new_prec);
+          term.precision(new_prec_as_digits10);
 
           result *= term;
 
@@ -2082,7 +2089,7 @@
 
       if(p2 != 0)
       {
-        operator*=(pow2<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::int64_t>(p2)));
+        operator*=(pow<MyDigits10, LimbType, AllocatorType, InternalFloatType>(two<MyDigits10, LimbType, AllocatorType, InternalFloatType>(), p2));
       }
 
       my_neg = b_neg;
@@ -2096,21 +2103,22 @@
       //                 0 for *this = v
       //                -1 for *this < v
 
-      const std::pair<typename array_type::const_iterator,
-                      typename array_type::const_iterator> mismatch_pair =
+      using const_iterator_type = typename array_type::const_iterator;
+
+      using mismatch_pair_type = std::pair<const_iterator_type, const_iterator_type>;
+
+      const mismatch_pair_type mismatch_pair =
         std::mismatch(my_data.cbegin(), my_data.cend(), vd.cbegin());
 
       const bool is_equal = (   (mismatch_pair.first  == my_data.cend())
                              && (mismatch_pair.second == vd.cend()));
 
-      if(is_equal)
-      {
-        return static_cast<std::int32_t>(0);
-      }
-      else
-      {
-        return ((*mismatch_pair.first > *mismatch_pair.second) ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1));
-      }
+      const std::int32_t n_return =
+        (is_equal ? static_cast<std::int32_t>(0)
+                  : ((*mismatch_pair.first > *mismatch_pair.second) ? static_cast<std::int32_t>(1)
+                                                                    : static_cast<std::int32_t>(-1)));
+
+      return n_return;
     }
 
     static limb_type add_loop_uv(limb_type* const u, const limb_type* const v, const std::int32_t p)
@@ -3126,11 +3134,6 @@
       return is;
     }
     #endif // !WIDE_DECIMAL_DISABLE_IOSTREAM
-
-    friend decwide_t zero<>();
-    friend decwide_t one <>();
-    friend decwide_t half<>();
-    friend decwide_t two <>();
   };
 
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
@@ -3142,10 +3145,43 @@
   typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::array_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_n_data_for_add_sub;
   #endif
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> zero() { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(0U) } ); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> one () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(1U) } ); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> half() { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_mask / 2) }, -decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_digits10 ); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> two () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>( { typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type(2U) } ); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> zero()
+  {
+    using floating_point_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
+
+    return floating_point_type( { typename floating_point_type::limb_type(0U) } );
+  }
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> one()
+  {
+    using floating_point_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
+
+    return floating_point_type( { typename floating_point_type::limb_type(1U) } );
+  }
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> two()
+  {
+    using floating_point_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
+
+    return floating_point_type( { typename floating_point_type::limb_type(2U) } );
+  }
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> half()
+  {
+    using floating_point_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
+
+    return floating_point_type
+           (
+             {
+               typename floating_point_type::limb_type(floating_point_type::decwide_t_elem_mask / 2)
+             },
+             -floating_point_type::decwide_t_elem_digits10
+           );
+  }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t))
   {
@@ -3168,41 +3204,45 @@
       pfn_callback_to_report_digits10((std::uint32_t) 0U);
     }
 
-    decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> val_pi;
+    using floating_point_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
 
-    decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a((typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type) 1U);
+    floating_point_type val_pi;
+
+    floating_point_type a((typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type) 1U);
 
     // Initialize bB to 0.5.
-    decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> bB
+    floating_point_type bB
     (
       {
-        (typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type) (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_mask / 2)
+        (typename floating_point_type::limb_type) (floating_point_type::decwide_t_elem_mask / 2)
       },
-      static_cast<std::int64_t>(-decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_digits10)
+      -floating_point_type::decwide_t_elem_digits10
     );
 
     // Initialize t to 0.375.
-    decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> t
+    floating_point_type t
     (
       {
-        (typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::limb_type) ((((typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::double_limb_type) decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_mask) * 3) / 8)
+        (typename floating_point_type::limb_type) ((floating_point_type::decwide_t_elem_mask * 3LL) / 8L)
       },
-      static_cast<std::int64_t>(-decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::decwide_t_elem_digits10)
+      -floating_point_type::decwide_t_elem_digits10
     );
 
-    decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> s(bB);
+    floating_point_type s(bB);
 
     // This loop is designed for a maximum of several million
     // decimal digits of pi. The index k should reach no higher
     // than about 25 or 30. After about 20 iterations, the precision
     // is about one million decimal digits.
 
-    const std::int32_t digits10_iteration_goal =
-      static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
+    const std::uint32_t digits10_iteration_goal =
+        (std::uint32_t) (std::numeric_limits<floating_point_type>::digits10 / 2)
+      + (std::max)((std::uint32_t) (floating_point_type::decwide_t_elem_digits10  + 1), (std::uint32_t) 9U);
 
     using std::log;
 
-    const std::uint32_t digits10_scale = (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::radix)) / log(10.0F));
+    const std::uint32_t digits10_scale =
+      (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
 
     for(unsigned k = 0U; k < 48U; ++k)
     {
@@ -3216,7 +3256,7 @@
       bB     -= t;
       bB     *= 2U;
 
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> iterate_term(bB);
+      floating_point_type iterate_term(bB);
 
       iterate_term -= val_pi;
       iterate_term *= (unsigned long long) (1ULL << (k + 1U));
@@ -3257,7 +3297,7 @@
 
     if(pfn_callback_to_report_digits10 != nullptr)
     {
-      pfn_callback_to_report_digits10((std::uint32_t) std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10);
+      pfn_callback_to_report_digits10((std::uint32_t) std::numeric_limits<floating_point_type>::digits10);
     }
 
     return val_pi;
@@ -3282,14 +3322,17 @@
     // Also enforce that m >= 3.
     const std::int32_t m = (std::max)((std::int32_t) n_times_factor, (std::int32_t) 3);
 
-    floating_point_type bk = 1 / pow(floating_point_type(2U), m - 2);
+    floating_point_type bk =
+      pow(half<MyDigits10, LimbType, AllocatorType, InternalFloatType>(), (std::int32_t) (m - 2));
 
-    const std::int32_t digits10_iteration_goal =
-      static_cast<std::int32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
+    const std::uint32_t digits10_iteration_goal =
+        (std::uint32_t) (std::numeric_limits<floating_point_type>::digits10 / 2)
+      + (std::max)((std::uint32_t) (floating_point_type::decwide_t_elem_digits10  + 1), (std::uint32_t) 9U);
 
     using std::log;
 
-    const std::uint32_t digits10_scale = (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
+    const std::uint32_t digits10_scale =
+      (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
 
     for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
     {
@@ -3646,285 +3689,28 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool isone   (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x) { return x.isone(); }
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool iszero  (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x) { return x.iszero(); }
 
-  #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT)
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pow2(const std::int64_t p)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::int32_t sgn(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
   {
-    // Create a static const table of p^2 for -128 < p < +128.
-    // Note: The size of this table must be odd-numbered and
-    // symmetric about 0.
-    static const std::array<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>, 255U> p2_data =
-    {{
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.8774717541114375398436826861112283890933277838604376075437585313920862972736358642578125e-39"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.1754943508222875079687365372222456778186655567720875215087517062784172594547271728515625e-38"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.350988701644575015937473074444491355637331113544175043017503412556834518909454345703125e-38"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.70197740328915003187494614888898271127466222708835008603500682511366903781890869140625e-38"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.4039548065783000637498922977779654225493244541767001720700136502273380756378173828125e-38"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.8807909613156600127499784595555930845098648908353400344140027300454676151275634765625e-37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.761581922631320025499956919111186169019729781670680068828005460090935230255126953125e-37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.52316384526264005099991383822237233803945956334136013765601092018187046051025390625e-37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.50463276905252801019998276764447446760789191266827202753120218403637409210205078125e-36"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.0092655381050560203999655352889489352157838253365440550624043680727481842041015625e-36"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.018531076210112040799931070577897870431567650673088110124808736145496368408203125e-36"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.203706215242022408159986214115579574086313530134617622024961747229099273681640625e-35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.40741243048404481631997242823115914817262706026923524404992349445819854736328125e-35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.8148248609680896326399448564623182963452541205384704880998469889163970947265625e-35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.629649721936179265279889712924636592690508241076940976199693977832794189453125e-35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.925929944387235853055977942584927318538101648215388195239938795566558837890625e-34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.85185988877447170611195588516985463707620329643077639047987759113311767578125e-34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.7037197775489434122239117703397092741524065928615527809597551822662353515625e-34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.5407439555097886824447823540679418548304813185723105561919510364532470703125e-33"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.081487911019577364889564708135883709660962637144621112383902072906494140625e-33"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.16297582203915472977912941627176741932192527428924222476780414581298828125e-33"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.23259516440783094595582588325435348386438505485784844495356082916259765625e-32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.4651903288156618919116517665087069677287701097156968899071216583251953125e-32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.930380657631323783823303533017413935457540219431393779814243316650390625e-32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.86076131526264756764660706603482787091508043886278755962848663330078125e-32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.97215226305252951352932141320696557418301608777255751192569732666015625e-31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.9443045261050590270586428264139311483660321755451150238513946533203125e-31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.888609052210118054117285652827862296732064351090230047702789306640625e-31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.577721810442023610823457130565572459346412870218046009540557861328125e-30"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.15544362088404722164691426113114491869282574043609201908111572265625e-30"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.3108872417680944432938285222622898373856514808721840381622314453125e-30"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.2621774483536188886587657044524579674771302961744368076324462890625e-29"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.524354896707237777317531408904915934954260592348873615264892578125e-29"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.04870979341447555463506281780983186990852118469774723052978515625e-29"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.00974195868289511092701256356196637398170423693954944610595703125e-28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.0194839173657902218540251271239327479634084738790988922119140625e-28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.038967834731580443708050254247865495926816947758197784423828125e-28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.07793566946316088741610050849573099185363389551639556884765625e-28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.61558713389263217748322010169914619837072677910327911376953125e-27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.2311742677852643549664402033982923967414535582065582275390625e-27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.462348535570528709932880406796584793482907116413116455078125e-27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.292469707114105741986576081359316958696581423282623291015625e-26"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.58493941422821148397315216271863391739316284656524658203125e-26"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.1698788284564229679463043254372678347863256931304931640625e-26"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.0339757656912845935892608650874535669572651386260986328125e-25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.067951531382569187178521730174907133914530277252197265625e-25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.13590306276513837435704346034981426782906055450439453125e-25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.2718061255302767487140869206996285356581211090087890625e-25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.6543612251060553497428173841399257071316242218017578125e-24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.308722450212110699485634768279851414263248443603515625e-24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.61744490042422139897126953655970282852649688720703125e-24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.32348898008484427979425390731194056570529937744140625e-23"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.6469779601696885595885078146238811314105987548828125e-23"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.293955920339377119177015629247762262821197509765625e-23"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.058791184067875423835403125849552452564239501953125e-22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.11758236813575084767080625169910490512847900390625e-22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.2351647362715016953416125033982098102569580078125e-22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.470329472543003390683225006796419620513916015625e-22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.694065894508600678136645001359283924102783203125e-21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.38813178901720135627329000271856784820556640625e-21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.7762635780344027125465800054371356964111328125e-21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.3552527156068805425093160010874271392822265625e-20"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.710505431213761085018632002174854278564453125e-20"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.42101086242752217003726400434970855712890625e-20"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.08420217248550443400745280086994171142578125e-19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.1684043449710088680149056017398834228515625e-19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.336808689942017736029811203479766845703125e-19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.67361737988403547205962240695953369140625e-19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.73472347597680709441192448139190673828125e-18"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.4694469519536141888238489627838134765625e-18"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.938893903907228377647697925567626953125e-18"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.387778780781445675529539585113525390625e-17"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.77555756156289135105907917022705078125e-17"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.5511151231257827021181583404541015625e-17"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.1102230246251565404236316680908203125e-16"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.220446049250313080847263336181640625e-16"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.44089209850062616169452667236328125e-16"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.8817841970012523233890533447265625e-16"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.7763568394002504646778106689453125e-15"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.552713678800500929355621337890625e-15"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.10542735760100185871124267578125e-15"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.42108547152020037174224853515625e-14"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.8421709430404007434844970703125e-14"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.684341886080801486968994140625e-14"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.136868377216160297393798828125e-13"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.27373675443232059478759765625e-13"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.5474735088646411895751953125e-13"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.094947017729282379150390625e-13"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.818989403545856475830078125e-12"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.63797880709171295166015625e-12"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.2759576141834259033203125e-12"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.4551915228366851806640625e-11"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.910383045673370361328125e-11"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.82076609134674072265625e-11"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.16415321826934814453125e-10"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.3283064365386962890625e-10"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.656612873077392578125e-10"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.31322574615478515625e-10"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.86264514923095703125e-9"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.7252902984619140625e-9"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.450580596923828125e-9"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.490116119384765625e-8"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.98023223876953125e-8"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.9604644775390625e-8"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.1920928955078125e-7"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.384185791015625e-7"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.76837158203125e-7"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.5367431640625e-7"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.9073486328125e-6"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.814697265625e-6"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.62939453125e-6"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.0000152587890625"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.000030517578125"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.00006103515625"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.0001220703125"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.000244140625"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.00048828125"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.0009765625"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.001953125"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.00390625"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.0078125"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.015625"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.03125"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.0625"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.0125"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("0.5"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(1U),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(2U),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(4U),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(8U),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(16),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(32),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(64),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(128),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(256),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(512),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(1024),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(2048),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(4096),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(8192),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(16384),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(32768),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(65536),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(131072),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(262144),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(524288),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 20U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 21U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 22U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 23U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 24U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 25U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 26U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 27U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 28U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 29U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 30U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint32_t>(1UL << 31U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 32U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 33U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 34U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 35U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 36U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 37U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 38U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 39U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 40U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 41U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 42U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 43U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 44U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 45U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 46U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 47U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 48U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 49U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 50U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 51U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 52U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 53U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 54U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 55U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 56U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 57U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 58U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 59U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 60U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 61U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 62U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::uint64_t>(1ULL << 63U)),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.8446744073709551616e19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.6893488147419103232e19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.3786976294838206464e19"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.47573952589676412928e20"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.95147905179352825856e20"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.90295810358705651712e20"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.180591620717411303424e21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.361183241434822606848e21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.722366482869645213696e21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.444732965739290427392e21"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.8889465931478580854784e22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.7778931862957161709568e22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.5557863725914323419136e22"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.51115727451828646838272e23"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.02231454903657293676544e23"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.04462909807314587353088e23"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.208925819614629174706176e24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.417851639229258349412352e24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.835703278458516698824704e24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.671406556917033397649408e24"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.9342813113834066795298816e25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.8685626227668133590597632e25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.7371252455336267181195264e25"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.54742504910672534362390528e26"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.09485009821345068724781056e26"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.18970019642690137449562112e26"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.237940039285380274899124224e27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.475880078570760549798248448e27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.951760157141521099596496896e27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("9.903520314283042199192993792e27"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.9807040628566084398385987584e28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.9614081257132168796771975168e28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("7.9228162514264337593543950336e28"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.58456325028528675187087900672e29"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.16912650057057350374175801344e29"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.33825300114114700748351602688e29"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.267650600228229401496703205376e30"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.535301200456458802993406410752e30"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.070602400912917605986812821504e30"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.0141204801825835211973625643008e31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.0282409603651670423947251286016e31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.0564819207303340847894502572032e31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.1129638414606681695789005144064e31"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.62259276829213363391578010288128e32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.24518553658426726783156020576256e32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.49037107316853453566312041152512e32"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.298074214633706907132624082305024e33"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.596148429267413814265248164610048e33"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.192296858534827628530496329220096e33"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.0384593717069655257060992658440192e34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.0769187434139310514121985316880384e34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.1538374868278621028243970633760768e34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.3076749736557242056487941267521536e34"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.66153499473114484112975882535043072e35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("3.32306998946228968225951765070086144e35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("6.64613997892457936451903530140172288e35"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.329227995784915872903807060280344576e36"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.658455991569831745807614120560689152e36"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("5.316911983139663491615228241121378304e36"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.0633823966279326983230456482242756608e37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("2.1267647932558653966460912964485513216e37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("4.2535295865117307932921825928971026432e37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("8.5070591730234615865843651857942052864e37"),
-      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>("1.70141183460469231731687303715884105728e38")
-    }};
-
-    if((p > static_cast<std::int64_t>(-128)) && (p < static_cast<std::int64_t>(+128)))
-    {
-      return p2_data[static_cast<std::uint_fast32_t>(p + ((p2_data.size() - 1U) / 2U))];
-    }
-    else if(p <= static_cast<std::int64_t>(-128))
-    {
-      return pow2<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::int64_t>(-p)).calculate_inv();
-    }
-    else
-    {
-      return pow(two<MyDigits10, LimbType, AllocatorType, InternalFloatType>(), p);
-    }
+    return (iszero(x) ? static_cast<std::int32_t>(0)
+                      : (isneg(x) ? static_cast<std::int32_t>(-1)
+                                  : static_cast<std::int32_t>(1)));
   }
-  #endif // !WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> floor(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
+  {
+    return (((isfinite(x) == false) || isint(x))
+             ? x
+             : (isneg(x) ? integer_part(x - one<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
+                         : integer_part(x)));
+  }
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ceil(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
+  {
+    return (((isfinite(x) == false) || isint(x))
+             ? x
+             : (isneg(x) ? integer_part(x)
+                         : integer_part(x + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>())));
+  }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> sqrt(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
   {
@@ -3987,8 +3773,6 @@
 
     floating_point_type ak(1U);
 
-    using std::log;
-
     const float n_times_factor = ((float) std::numeric_limits<floating_point_type>::digits10) * 1.67F;
 
     // Extract lg_xx = Log[mantissa * radix^ib]
@@ -4010,15 +3794,18 @@
     // Also enforce that m >= 3.
     const std::int32_t m = (std::max)((std::int32_t) (n_times_factor - lg_xx_over_lg2), (std::int32_t) 3);
 
-    floating_point_type bk = 1 / (xx * pow(floating_point_type(2U), m - 2));
+    floating_point_type bk =
+      pow(half<MyDigits10, LimbType, AllocatorType, InternalFloatType>(), (std::int32_t) (m - 2)) / xx;
 
     // TBD: Tolerance should have the log of the argument added to it (usually negligible).
     const std::uint32_t digits10_iteration_goal =
-      static_cast<std::uint32_t>((std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10 / 2) + 16);
+        (std::uint32_t) (std::numeric_limits<floating_point_type>::digits10 / 2)
+      + (std::max)((std::uint32_t) (floating_point_type::decwide_t_elem_digits10  + 1), (std::uint32_t) 9U);
 
     using std::log;
 
-    const std::uint32_t digits10_scale = (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
+    const std::uint32_t digits10_scale =
+      (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
 
     for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
     {
@@ -4063,66 +3850,40 @@
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> rootn(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x, const std::int32_t p)
   {
+    decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> rtn;
+
     if(!isfinite(x))
     {
-      return std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::quiet_NaN();
+      rtn = std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::quiet_NaN();
     }
-
-    if(p < static_cast<std::int32_t>(0))
+    else if(p < static_cast<std::int32_t>(0))
     {
-      return rootn(one<MyDigits10, LimbType, AllocatorType, InternalFloatType>() / x, static_cast<std::int32_t>(-p));
+      rtn = rootn(one<MyDigits10, LimbType, AllocatorType, InternalFloatType>() / x, static_cast<std::int32_t>(-p));
     }
-
-    if((p == static_cast<std::int32_t>(0)) || isneg(x))
+    else if((p == static_cast<std::int32_t>(0)) || isneg(x))
     {
-      return std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::quiet_NaN();
+      rtn = std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::quiet_NaN();
     }
     else if(p == static_cast<std::int32_t>(1))
     {
-      return x;
+      rtn = x;
     }
     else if(p == static_cast<std::int32_t>(2))
     {
-      return sqrt(x);
-    }
-
-    const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> rtn = 1 / rootn_inverse(x, p);
-
-    return rtn;
-  }
-
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> floor(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
-  {
-    if(!isfinite(x) || isint(x)) { return x; }
-
-    return (isneg(x) ? integer_part(x - one<MyDigits10, LimbType, AllocatorType, InternalFloatType>())
-                     : integer_part(x));
-  }
-
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ceil(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
-  {
-    if(!isfinite(x) || isint(x)) { return x; }
-
-    return (isneg(x) ? integer_part(x)
-                     : integer_part(x + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>()));
-  }
-
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::int32_t sgn(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& x)
-  {
-    if(iszero(x))
-    {
-      return static_cast<std::int32_t>(0);
+      rtn = sqrt(x);
     }
     else
     {
-      return (isneg(x) ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1));
+      rtn = 1 / rootn_inverse(x, p);
     }
+
+    return rtn;
   }
 
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT)
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ldexp(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& v, int e)
   {
-    return v * pow2<MyDigits10, LimbType, AllocatorType, InternalFloatType>(e);
+    return v * pow(two<MyDigits10, LimbType, AllocatorType, InternalFloatType>(), e);
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> frexp(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& v, int* expon)
@@ -4134,7 +3895,7 @@
 
     *expon = static_cast<int>(i);
 
-    return v * pow2<MyDigits10, LimbType, AllocatorType, InternalFloatType>(static_cast<std::int64_t>(-i));
+    return v * pow(two<MyDigits10, LimbType, AllocatorType, InternalFloatType>(), -i);
   }
   #endif // !WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
 
