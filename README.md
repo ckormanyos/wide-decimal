@@ -57,7 +57,7 @@ for various test cases.
 
 When working with even the most tiny microcontroller systems,
 various _heavy-wieght_ features such as I/O streaming,
-conversion to and from built-in floating-point types
+conversion to built-in floating-point types
 and construction from character string
 can optionally be disabled with the compiler switches:
 
