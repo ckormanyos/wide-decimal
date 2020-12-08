@@ -80,6 +80,8 @@ namespace local
   template<typename FloatingPointType>
   FloatingPointType exp(const FloatingPointType& x)
   {
+    // This function is intended for positive arguments only.
+
     using floating_point_type = FloatingPointType;
 
     using std::pow;
@@ -93,18 +95,18 @@ namespace local
     // ln2 / p2.
 
     // Compute the exponential series of the (possibly) scaled argument.
-    floating_point_type exp_series;
 
-    // Compute 1 / ln2 as a warm-cached constant value.
+    // Compute ln2 as a cached constant value.
     static const floating_point_type ln2 = ln_two<floating_point_type>();
 
-    const std::int32_t nf = (std::int32_t) (x / ln2);
+    const std::uint32_t nf = (std::uint32_t) (x / ln2);
 
     // The scaling is 2^11 = 2048.
-    const std::int32_t p2 = static_cast<std::int32_t>(std::uint32_t(1U) << 11);
+    const std::uint32_t p2 = (std::uint32_t) (1ULL << 11U);
 
-    exp_series =   pow(local::hypergeometric_0f0((x - (nf * ln2)) / p2), p2)
-                 * pow(floating_point_type(2U), nf);
+    const floating_point_type exp_series =
+        pow(local::hypergeometric_0f0((x - (nf * ln2)) / p2), p2)
+      * pow(floating_point_type(2U), nf);
 
     return exp_series;
   }
