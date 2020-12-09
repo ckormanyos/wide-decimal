@@ -25,91 +25,11 @@ namespace
   {
     return math::wide_decimal::pi<wide_decimal_digits10>();
   }
-
-  template<typename FloatingPointType>
-  FloatingPointType ln_two()
-  {
-    return FloatingPointType(0.69314718055994530941723212145817657L);
-  }
-
-  template<>
-  wide_decimal_type ln_two()
-  {
-    return math::wide_decimal::ln_two<wide_decimal_digits10>();
-  }
 }
 
 namespace local
 {
   util::dynamic_array<wide_decimal_type> bernoulli_table((std::uint_fast32_t) ((float) std::numeric_limits<wide_decimal_type>::digits10 * 0.95F));
-
-  template<typename FloatingPointType>
-  FloatingPointType hypergeometric_0f0(const FloatingPointType& x)
-  {
-    using floating_point_type = FloatingPointType;
-
-    using std::fabs;
-
-    // Compute the series representation of Hypergeometric0F0 taken from
-    // http://functions.wolfram.com/HypergeometricFunctions/Hypergeometric0F0/06/01/
-    // There are no checks on input range or parameter boundaries.
-
-    floating_point_type x_pow_n_div_n_fact(x);
-
-    floating_point_type h0f0 = 1 + x_pow_n_div_n_fact;
-
-    const floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
-
-    // Series expansion of hypergeometric_0f0(; ; x).
-    for(std::uint32_t n = 2U; n < UINT32_C(10000000); ++n)
-    {
-      x_pow_n_div_n_fact *= x;
-      x_pow_n_div_n_fact /= n;
-
-      if((n > 4U) && (fabs(x_pow_n_div_n_fact) < tol))
-      {
-        break;
-      }
-
-      h0f0 += x_pow_n_div_n_fact;
-    }
-
-    return h0f0;
-  }
-
-  template<typename FloatingPointType>
-  FloatingPointType exp(const FloatingPointType& x)
-  {
-    // This function is intended for positive arguments only.
-
-    using floating_point_type = FloatingPointType;
-
-    using std::pow;
-
-    // The algorithm for exp has been taken from MPFUN.
-    // exp(t) = [ (1 + r + r^2/2! + r^3/3! + r^4/4! ...)^p2 ] * 2^n
-    // where p2 is a power of 2 such as 2048, r = t_prime / p2, and
-    // t_prime = t - n*ln2, with n chosen to minimize the absolute
-    // value of t_prime. In the resulting Taylor series, which is
-    // implemented as a hypergeometric function, |r| is bounded by
-    // ln2 / p2.
-
-    // Compute the exponential series of the (possibly) scaled argument.
-
-    // Compute ln2 as a cached constant value.
-    static const floating_point_type ln2 = ln_two<floating_point_type>();
-
-    const std::uint32_t nf = (std::uint32_t) (x / ln2);
-
-    // The scaling is 2^11 = 2048.
-    const std::uint32_t p2 = (std::uint32_t) (1ULL << 11U);
-
-    const floating_point_type exp_series =
-        pow(local::hypergeometric_0f0((x - (nf * ln2)) / p2), p2)
-      * pow(floating_point_type(2U), nf);
-
-    return exp_series;
-  }
 
   template<typename FloatingPointType>
   void bernoulli_b(FloatingPointType* bn, const std::uint32_t n)
@@ -138,7 +58,8 @@ namespace local
       {
         const std::uint32_t j_minus_k = j - k;
 
-        tangent_numbers[j] = (tangent_numbers[j - 1] * j_minus_k) + (tangent_numbers[j] * (j_minus_k + 2U));
+        tangent_numbers[j] =   (tangent_numbers[j - 1] *  j_minus_k)
+                             + (tangent_numbers[j]     * (j_minus_k + 2U));
       }
     }
 
@@ -152,7 +73,7 @@ namespace local
 
       const bool  b_neg = ((two_i % 4U) == 0U);
 
-      bn[two_i] = ((!b_neg) ? b : -b);
+      bn[two_i] = ((b_neg == false) ? b : -b);
 
       two_pow_two_m *= 4U;
     }
@@ -229,7 +150,6 @@ namespace local
     }
 
     using ::pi;
-    using local::exp;
     using std::exp;
     using std::log;
 
