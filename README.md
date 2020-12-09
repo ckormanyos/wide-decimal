@@ -170,8 +170,6 @@ of a certain number of temporary storages of mega-digit numbers
 
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
-#define WIDE_DECIMAL_DISABLE_CONVERSION_TO_BUILTINS
-#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_BUILTIN_FLOAT
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
 
 #include <math/wide_decimal/decwide_t.h>
