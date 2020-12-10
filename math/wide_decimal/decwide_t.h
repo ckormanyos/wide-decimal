@@ -487,6 +487,7 @@
       int                my_exponent_part;
     };
 
+    #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
     // Static data initializer:
     struct initializer
     {
@@ -500,6 +501,7 @@
     };
 
     static initializer init;
+    #endif
 
   public:
     // Default constructor.
@@ -1329,6 +1331,7 @@
       );
     }
 
+    #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
     static const decwide_t& my_value_pi()
     {
       init.do_nothing();
@@ -1342,6 +1345,7 @@
       static const decwide_t val(calc_ln_two<MyDigits10, LimbType, AllocatorType, InternalFloatType>());
       return val;
     }
+    #endif
 
     void precision(const std::int32_t prec_digits)
     {
