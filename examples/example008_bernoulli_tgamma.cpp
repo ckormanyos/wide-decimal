@@ -5,6 +5,10 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#include <array>
+#include <ctime>
+#include <utility>
+
 #include <math/wide_decimal/decwide_t.h>
 #include <util/utility/util_dynamic_array.h>
 
@@ -172,29 +176,61 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 {
   local::bernoulli_b(local::bernoulli_table.data(), (std::uint32_t) local::bernoulli_table.size());
 
-  // Set x to 23/2, where the intent is to calculate
-  // Gamma[n + 1/2] with n=11.
+  // Table[Factorial[2 n]/((4^n) Factorial[n]), {n, 0, 17, 1}]
+  constexpr std::array<std::pair<std::uint64_t, std::uint32_t>, 18U> ratios =
+  {{
+    { UINT64_C(                  1), UINT32_C(     1) },
+    { UINT64_C(                  1), UINT32_C(     2) },
+    { UINT64_C(                  3), UINT32_C(     4) },
+    { UINT64_C(                 15), UINT32_C(     8) },
+    { UINT64_C(                105), UINT32_C(    16) },
+    { UINT64_C(                945), UINT32_C(    32) },
+    { UINT64_C(              10395), UINT32_C(    64) },
+    { UINT64_C(             135135), UINT32_C(   128) },
+    { UINT64_C(            2027025), UINT32_C(   256) },
+    { UINT64_C(           34459425), UINT32_C(   512) },
+    { UINT64_C(          654729075), UINT32_C(  1024) },
+    { UINT64_C(        13749310575), UINT32_C(  2048) },
+    { UINT64_C(       316234143225), UINT32_C(  4096) },
+    { UINT64_C(      7905853580625), UINT32_C(  8192) },
+    { UINT64_C(    213458046676875), UINT32_C( 16384) },
+    { UINT64_C(   6190283353629375), UINT32_C( 32768) },
+    { UINT64_C( 191898783962510625), UINT32_C( 65536) },
+    { UINT64_C(6332659870762850625), UINT32_C(131072) }
+  }};
 
-  const wide_decimal_type x = wide_decimal_type(23U) / 2U;
+  bool result_is_ok = true;
 
-  const wide_decimal_type g = local::tgamma(x);
+  const std::clock_t start = std::clock();
 
-  // Consider the control value.
-  //                                    (2n)!
-  // Use the relation Gamma[1/2 + n] = -------- * Sqrt[Pi].
-  //                                   (4^n) n!
-  //
-  //                  13749310575
-  // This results in ------------ * Sqrt[Pi] for n=11.
-  //                     2048
+  for(auto i = 0U; i < ratios.size(); ++i)
+  {
+    // Set the argument x to i + 1/2, where the intent
+    // is to calculate Gamma[i + 1/2]
 
-  using ::pi;
+    const wide_decimal_type x = wide_decimal_type(0.5F) + i;
 
-  const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * UINT64_C(13749310575)) / 2048U;
+    const wide_decimal_type g = local::tgamma(x);
 
-  const wide_decimal_type closeness = fabs(1 - (g / control));
+    // Consider the control value.
+    //                                    (2n)!
+    // Use the relation Gamma[1/2 + n] = -------- * Sqrt[Pi].
+    //                                   (4^n) n!
 
-  const bool result_is_ok = (closeness < (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(100000)));
+    using ::pi;
+
+    const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * ratios[i].first) / ratios[i].second;
+
+    const wide_decimal_type closeness = fabs(1 - (g / control));
+
+    result_is_ok &= (closeness < (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(100000)));
+  }
+
+  const std::clock_t stop = std::clock();
+
+  std::cout << "Time example008_bernoulli_tgamma(): "
+            << (float) (stop - start) / (float) CLOCKS_PER_SEC
+            << std::endl;
 
   return result_is_ok;
 }
