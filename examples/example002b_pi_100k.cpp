@@ -11,6 +11,7 @@
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
+#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 
 #include <math/wide_decimal/decwide_t.h>
 #include <mcal_lcd/mcal_lcd_console.h>
