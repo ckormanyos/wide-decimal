@@ -56,14 +56,19 @@ for various test cases.
 
 When working with even the most tiny microcontroller systems,
 various _heavy-wieght_ features such as I/O streaming,
-dynamic memory allocation
-and construction from character string
+dynamic memory allocation,
+construction from character string
+and caching constant values such as
+<img src="https://render.githubusercontent.com/render/math?math=\pi">
+and
+<img src="https://render.githubusercontent.com/render/math?math=\log(2)">
 can optionally be disabled with the compiler switches:
 
 ```
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
+#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 ```
 
 Note: Activating the option `WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
