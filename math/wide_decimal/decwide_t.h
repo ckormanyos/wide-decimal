@@ -15,6 +15,7 @@
   //#define WIDE_DECIMAL_DISABLE_IOSTREAM
   //#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
   //#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
+  //#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 
   #include <algorithm>
   #include <cmath>
@@ -134,17 +135,45 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> two   ();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> half  ();
 
+  #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
+  template<const std::int32_t MyDigits10,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double>
+  const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
+  #else
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
+  #endif
 
+  #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
+  template<const std::int32_t MyDigits10,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double>
+  const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& ln_two();
+  #else
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ln_two();
+  #endif
+
+  template<const std::int32_t MyDigits10,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double>
+  decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
+
+  template<const std::int32_t MyDigits10,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double>
+  decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> calc_ln_two();
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> unsigned_long_long_max();
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> signed_long_long_min  ();
@@ -457,6 +486,20 @@
       unsigned long long my_mantissa_part;
       int                my_exponent_part;
     };
+
+    // Static data initializer:
+    struct initializer
+    {
+      initializer()
+      {
+        decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_pi    ();
+        decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_ln_two();
+      }
+
+      void do_nothing() { }
+    };
+
+    static initializer init;
 
   public:
     // Default constructor.
@@ -1185,73 +1228,6 @@
       return static_cast<int>(this_compare_result);
     }
 
-    friend inline std::int32_t ilogb(const decwide_t& x)
-    {
-      std::int64_t e10;
-
-      if(x.isfinite() == false)
-      {
-        e10 = static_cast<std::int64_t>(0);
-      }
-      else
-      {
-        std::int_fast16_t n10 = INT16_C(-1);
-
-        limb_type p10 = (limb_type) 1U;
-
-        const limb_type limit_aligned_with_10 = x.my_data[0U] + (limb_type) (10U - (x.my_data[0U] % 10U));
-
-        while(p10 < limit_aligned_with_10)
-        {
-          p10 *= 10U;
-
-          ++n10;
-        }
-
-        e10 = static_cast<std::int64_t>(x.my_exp + n10);
-      }
-
-      const std::int32_t e10_as_int32 =
-          (e10 > (std::numeric_limits<std::int32_t>::max)()) ? (std::numeric_limits<std::int32_t>::max)()
-        : (e10 < (std::numeric_limits<std::int32_t>::min)()) ? (std::numeric_limits<std::int32_t>::min)()
-        : static_cast<std::int32_t>(e10);
-
-      return e10_as_int32;
-    }
-
-    friend inline decwide_t fabs(const decwide_t& x)
-    {
-      return (x.isneg() ? decwide_t(x).negate() : x);
-    }
-
-    friend inline decwide_t abs(const decwide_t& x)
-    {
-      return fabs(x);
-    }
-
-    friend inline std::int32_t sgn(const decwide_t& x)
-    {
-      return (x.iszero() ? static_cast<std::int32_t>(0)
-                         : (x.isneg() ? static_cast<std::int32_t>(-1)
-                                      : static_cast<std::int32_t>(1)));
-    }
-
-    friend inline decwide_t floor(const decwide_t& x)
-    {
-      return (((x.isfinite() == false) || x.isint())
-               ?  x
-               : (x.isneg() ? (x - one<MyDigits10, LimbType, AllocatorType, InternalFloatType>()).extract_integer_part()
-                            :  x.extract_integer_part()));
-    }
-
-    friend inline decwide_t ceil(const decwide_t& x)
-    {
-      return (((x.isfinite() == false) || x.isint())
-               ?  x
-               : (x.isneg() ?  x.extract_integer_part()
-                            : (x + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>()).extract_integer_part()));
-    }
-
     std::int32_t cmp(const decwide_t& v) const
     {
       // Compare v with *this.
@@ -1351,6 +1327,20 @@
         },
         static_cast<std::int64_t>(decwide_t_digits10_aligned)
       );
+    }
+
+    static const decwide_t& my_value_pi()
+    {
+      init.do_nothing();
+      static const decwide_t val(calc_pi<MyDigits10, LimbType, AllocatorType, InternalFloatType>());
+      return val;
+    }
+
+    static const decwide_t& my_value_ln_two()
+    {
+      init.do_nothing();
+      static const decwide_t val(calc_ln_two<MyDigits10, LimbType, AllocatorType, InternalFloatType>());
+      return val;
     }
 
     void precision(const std::int32_t prec_digits)
@@ -2307,8 +2297,8 @@
 
         // Shift the result of the multiplication one element to the right.
         std::copy_backward(my_data.cbegin(),
-                            my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
-                            my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
+                           my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
+                           my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
 
         my_data.front() = static_cast<limb_type>(carry);
       }
@@ -3082,7 +3072,93 @@
       return is;
     }
     #endif // !WIDE_DECIMAL_DISABLE_IOSTREAM
+
+    friend inline decwide_t fabs(const decwide_t& x)
+    {
+      return (x.isneg() ? decwide_t(x).negate() : x);
+    }
+
+    friend inline decwide_t abs(const decwide_t& x)
+    {
+      return fabs(x);
+    }
+
+    friend inline std::int32_t sgn(const decwide_t& x)
+    {
+      return (x.iszero() ? static_cast<std::int32_t>(0)
+                         : (x.isneg() ? static_cast<std::int32_t>(-1)
+                                      : static_cast<std::int32_t>(1)));
+    }
+
+    friend inline decwide_t floor(const decwide_t& x)
+    {
+      return (((x.isfinite() == false) || x.isint())
+               ?  x
+               : (x.isneg() ? (x - one<MyDigits10, LimbType, AllocatorType, InternalFloatType>()).extract_integer_part()
+                            :  x.extract_integer_part()));
+    }
+
+    friend inline decwide_t ceil(const decwide_t& x)
+    {
+      return (((x.isfinite() == false) || x.isint())
+               ?  x
+               : (x.isneg() ?  x.extract_integer_part()
+                            : (x + one<MyDigits10, LimbType, AllocatorType, InternalFloatType>()).extract_integer_part()));
+    }
+
+    friend inline std::int32_t ilogb(const decwide_t& x)
+    {
+      std::int64_t e10;
+
+      if(x.isfinite() == false)
+      {
+        e10 = static_cast<std::int64_t>(0);
+      }
+      else
+      {
+        std::int_fast16_t n10 = INT16_C(-1);
+
+        limb_type p10 = (limb_type) 1U;
+
+        const limb_type limit_aligned_with_10 = x.my_data[0U] + (limb_type) (10U - (x.my_data[0U] % 10U));
+
+        while(p10 < limit_aligned_with_10)
+        {
+          p10 *= 10U;
+
+          ++n10;
+        }
+
+        e10 = static_cast<std::int64_t>(x.my_exp + n10);
+      }
+
+      const std::int32_t e10_as_int32 =
+          (e10 > (std::numeric_limits<std::int32_t>::max)()) ? (std::numeric_limits<std::int32_t>::max)()
+        : (e10 < (std::numeric_limits<std::int32_t>::min)()) ? (std::numeric_limits<std::int32_t>::min)()
+        : static_cast<std::int32_t>(e10);
+
+      return e10_as_int32;
+    }
+
+    #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
+    template<const std::int32_t OtherDigits10,
+             typename OtherLimbType,
+             typename OtherAllocatorType,
+             typename OtherInternalFloatType>
+    friend const decwide_t<OtherDigits10, OtherLimbType, OtherAllocatorType, OtherInternalFloatType>& pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t));
+
+    template<const std::int32_t OtherDigits10,
+             typename OtherLimbType,
+             typename OtherAllocatorType,
+             typename OtherInternalFloatType>
+    friend const decwide_t<OtherDigits10, OtherLimbType, OtherAllocatorType, OtherInternalFloatType>& ln_two();
+    #endif
   };
+
+  #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::initializer decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::init;
+  #endif
 
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
@@ -3131,7 +3207,7 @@
            );
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t))
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t))
   {
     // Description : Compute pi using the quadratically convergent Gauss AGM,
     //               in particular the Schoenhage variant.
@@ -3251,7 +3327,7 @@
     return val_pi;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ln_two()
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> calc_ln_two()
   {
     using floating_point_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
 
@@ -3320,6 +3396,32 @@
 
     return result;
   }
+
+  #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t))
+  {
+    (void) pfn_callback_to_report_digits10;
+
+    return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_pi();
+  }
+  #else
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t))
+  {
+    return calc_pi<MyDigits10, LimbType, AllocatorType, InternalFloatType>(pfn_callback_to_report_digits10);
+  }
+  #endif
+
+  #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& ln_two()
+  {
+    return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_value_ln_two();
+  }
+  #else
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ln_two()
+  {
+    return calc_ln_two<MyDigits10, LimbType, AllocatorType, InternalFloatType>();
+  }
+  #endif
 
   // Global unary operators of decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> reference.
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> operator+(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& self) { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>(self); }
