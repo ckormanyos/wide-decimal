@@ -9,6 +9,9 @@
 
 bool math::wide_decimal::example006_logarithm()
 {
+  // Compute 1,000 values of Log[(123456789/1000000) * (3^n)],
+  // the result of which is Log[(123456789/1000000)] + (n Log[3])
+
   using dec1001_t = math::wide_decimal::decwide_t<1001U>;
 
   const dec1001_t control_base

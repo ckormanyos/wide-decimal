@@ -94,6 +94,15 @@
       // Destructor.
       virtual ~dynamic_array()
       {
+        pointer p = elems;
+
+        while(p != elems + elem_count)
+        {
+          allocator_type().destroy(p);
+
+          ++p;
+        }
+
         // Destroy the elements and deallocate the range.
         allocator_type().deallocate(elems, elem_count);
       }
@@ -114,6 +123,15 @@
       // Move assignment operator.
       dynamic_array& operator=(dynamic_array&& other)
       {
+        pointer p = elems;
+
+        while(p != elems + elem_count)
+        {
+          allocator_type().destroy(p);
+
+          ++p;
+        }
+
         // Deallocate the elements and deallocate the range.
         allocator_type().deallocate(elems, elem_count);
 

@@ -176,6 +176,13 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 {
   local::bernoulli_b(local::bernoulli_table.data(), (std::uint32_t) local::bernoulli_table.size());
 
+  // In this example, we compute values of Gamma[1/2 + n].
+
+  // We will make use of the relation
+  //                     (2n)!
+  //   Gamma[1/2 + n] = -------- * Sqrt[Pi].
+  //                    (4^n) n!
+
   // Table[Factorial[2 n]/((4^n) Factorial[n]), {n, 0, 17, 1}]
   constexpr std::array<std::pair<std::uint64_t, std::uint32_t>, 18U> ratios =
   {{
@@ -201,21 +208,18 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 
   bool result_is_ok = true;
 
+  const wide_decimal_type tol (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(100000));
+  const wide_decimal_type half(0.5F);
+
   const std::clock_t start = std::clock();
 
   for(auto i = 0U; i < ratios.size(); ++i)
   {
-    // Set the argument x to i + 1/2, where the intent
-    // is to calculate Gamma[i + 1/2]
+    // Calculate Gamma[i + 1/2]
 
-    const wide_decimal_type x = wide_decimal_type(0.5F) + i;
-
-    const wide_decimal_type g = local::tgamma(x);
+    const wide_decimal_type g = local::tgamma(half + i);
 
     // Consider the control value.
-    //                                    (2n)!
-    // Use the relation Gamma[1/2 + n] = -------- * Sqrt[Pi].
-    //                                   (4^n) n!
 
     using ::pi;
 
@@ -223,7 +227,7 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 
     const wide_decimal_type closeness = fabs(1 - (g / control));
 
-    result_is_ok &= (closeness < (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(100000)));
+    result_is_ok &= (closeness < tol);
   }
 
   const std::clock_t stop = std::clock();
