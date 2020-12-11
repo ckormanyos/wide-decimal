@@ -5,6 +5,10 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#include <array>
+#include <ctime>
+#include <utility>
+
 #include <math/wide_decimal/decwide_t.h>
 #include <util/utility/util_dynamic_array.h>
 
@@ -25,89 +29,11 @@ namespace
   {
     return math::wide_decimal::pi<wide_decimal_digits10>();
   }
-
-  template<typename FloatingPointType>
-  FloatingPointType ln_two()
-  {
-    return FloatingPointType(0.69314718055994530941723212145817657L);
-  }
-
-  template<>
-  wide_decimal_type ln_two()
-  {
-    return math::wide_decimal::ln_two<wide_decimal_digits10>();
-  }
 }
 
 namespace local
 {
   util::dynamic_array<wide_decimal_type> bernoulli_table((std::uint_fast32_t) ((float) std::numeric_limits<wide_decimal_type>::digits10 * 0.95F));
-
-  template<typename FloatingPointType>
-  FloatingPointType hypergeometric_0f0(const FloatingPointType& x)
-  {
-    using floating_point_type = FloatingPointType;
-
-    using std::fabs;
-
-    // Compute the series representation of Hypergeometric0F0 taken from
-    // http://functions.wolfram.com/HypergeometricFunctions/Hypergeometric0F0/06/01/
-    // There are no checks on input range or parameter boundaries.
-
-    floating_point_type x_pow_n_div_n_fact(x);
-
-    floating_point_type h0f0 = 1 + x_pow_n_div_n_fact;
-
-    const floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
-
-    // Series expansion of hypergeometric_0f0(; ; x).
-    for(std::uint32_t n = 2U; n < UINT32_C(10000000); ++n)
-    {
-      x_pow_n_div_n_fact *= x;
-      x_pow_n_div_n_fact /= n;
-
-      if((n > 4U) && (fabs(x_pow_n_div_n_fact) < tol))
-      {
-        break;
-      }
-
-      h0f0 += x_pow_n_div_n_fact;
-    }
-
-    return h0f0;
-  }
-
-  template<typename FloatingPointType>
-  FloatingPointType exp(const FloatingPointType& x)
-  {
-    using floating_point_type = FloatingPointType;
-
-    using std::pow;
-
-    // The algorithm for exp has been taken from MPFUN.
-    // exp(t) = [ (1 + r + r^2/2! + r^3/3! + r^4/4! ...)^p2 ] * 2^n
-    // where p2 is a power of 2 such as 2048, r = t_prime / p2, and
-    // t_prime = t - n*ln2, with n chosen to minimize the absolute
-    // value of t_prime. In the resulting Taylor series, which is
-    // implemented as a hypergeometric function, |r| is bounded by
-    // ln2 / p2.
-
-    // Compute the exponential series of the (possibly) scaled argument.
-    floating_point_type exp_series;
-
-    // Compute 1 / ln2 as a warm-cached constant value.
-    static const floating_point_type ln2 = ln_two<floating_point_type>();
-
-    const std::int32_t nf = (std::int32_t) (x / ln2);
-
-    // The scaling is 2^11 = 2048.
-    const std::int32_t p2 = static_cast<std::int32_t>(std::uint32_t(1U) << 11);
-
-    exp_series =   pow(local::hypergeometric_0f0((x - (nf * ln2)) / p2), p2)
-                 * pow(floating_point_type(2U), nf);
-
-    return exp_series;
-  }
 
   template<typename FloatingPointType>
   void bernoulli_b(FloatingPointType* bn, const std::uint32_t n)
@@ -136,7 +62,8 @@ namespace local
       {
         const std::uint32_t j_minus_k = j - k;
 
-        tangent_numbers[j] = (tangent_numbers[j - 1] * j_minus_k) + (tangent_numbers[j] * (j_minus_k + 2U));
+        tangent_numbers[j] =   (tangent_numbers[j - 1] *  j_minus_k)
+                             + (tangent_numbers[j]     * (j_minus_k + 2U));
       }
     }
 
@@ -150,7 +77,7 @@ namespace local
 
       const bool  b_neg = ((two_i % 4U) == 0U);
 
-      bn[two_i] = ((!b_neg) ? b : -b);
+      bn[two_i] = ((b_neg == false) ? b : -b);
 
       two_pow_two_m *= 4U;
     }
@@ -227,7 +154,6 @@ namespace local
     }
 
     using ::pi;
-    using local::exp;
     using std::exp;
     using std::log;
 
@@ -250,29 +176,65 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 {
   local::bernoulli_b(local::bernoulli_table.data(), (std::uint32_t) local::bernoulli_table.size());
 
-  // Set x to 23/2, where the intent is to calculate
-  // Gamma[n + 1/2] with n=11.
+  // In this example, we compute values of Gamma[1/2 + n].
 
-  const wide_decimal_type x = wide_decimal_type(23U) / 2U;
+  // We will make use of the relation
+  //                     (2n)!
+  //   Gamma[1/2 + n] = -------- * Sqrt[Pi].
+  //                    (4^n) n!
 
-  const wide_decimal_type g = local::tgamma(x);
+  // Table[Factorial[2 n]/((4^n) Factorial[n]), {n, 0, 17, 1}]
+  constexpr std::array<std::pair<std::uint64_t, std::uint32_t>, 18U> ratios =
+  {{
+    { UINT64_C(                  1), UINT32_C(     1) },
+    { UINT64_C(                  1), UINT32_C(     2) },
+    { UINT64_C(                  3), UINT32_C(     4) },
+    { UINT64_C(                 15), UINT32_C(     8) },
+    { UINT64_C(                105), UINT32_C(    16) },
+    { UINT64_C(                945), UINT32_C(    32) },
+    { UINT64_C(              10395), UINT32_C(    64) },
+    { UINT64_C(             135135), UINT32_C(   128) },
+    { UINT64_C(            2027025), UINT32_C(   256) },
+    { UINT64_C(           34459425), UINT32_C(   512) },
+    { UINT64_C(          654729075), UINT32_C(  1024) },
+    { UINT64_C(        13749310575), UINT32_C(  2048) },
+    { UINT64_C(       316234143225), UINT32_C(  4096) },
+    { UINT64_C(      7905853580625), UINT32_C(  8192) },
+    { UINT64_C(    213458046676875), UINT32_C( 16384) },
+    { UINT64_C(   6190283353629375), UINT32_C( 32768) },
+    { UINT64_C( 191898783962510625), UINT32_C( 65536) },
+    { UINT64_C(6332659870762850625), UINT32_C(131072) }
+  }};
 
-  // Consider the control value.
-  //                                    (2n)!
-  // Use the relation Gamma[1/2 + n] = -------- * Sqrt[Pi].
-  //                                   (4^n) n!
-  //
-  //                  13749310575
-  // This results in ------------ * Sqrt[Pi] for n=11.
-  //                     2048
+  bool result_is_ok = true;
 
-  using ::pi;
+  const wide_decimal_type tol (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(100000));
+  const wide_decimal_type half(0.5F);
 
-  const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * UINT64_C(13749310575)) / 2048U;
+  const std::clock_t start = std::clock();
 
-  const wide_decimal_type closeness = fabs(1 - (g / control));
+  for(auto i = 0U; i < ratios.size(); ++i)
+  {
+    // Calculate Gamma[i + 1/2]
 
-  const bool result_is_ok = (closeness < (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(100000)));
+    const wide_decimal_type g = local::tgamma(half + i);
+
+    // Consider the control value.
+
+    using ::pi;
+
+    const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * ratios[i].first) / ratios[i].second;
+
+    const wide_decimal_type closeness = fabs(1 - (g / control));
+
+    result_is_ok &= (closeness < tol);
+  }
+
+  const std::clock_t stop = std::clock();
+
+  std::cout << "Time example008_bernoulli_tgamma(): "
+            << (float) (stop - start) / (float) CLOCKS_PER_SEC
+            << std::endl;
 
   return result_is_ok;
 }

@@ -99,7 +99,10 @@
       (void) x;
     }
 
-    void destroy(pointer p) { }
+    void destroy(pointer p)
+    {
+      (void) p;
+    }
 
     void deallocate(pointer p_slot, size_type)
     {

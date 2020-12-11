@@ -1,3 +1,12 @@
+///////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2020.                        //
+//  Distributed under the Boost Software License,                //
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
+//  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
+///////////////////////////////////////////////////////////////////
+
+#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
+
 #include <math/wide_decimal/decwide_t.h>
 #include <test/independent_algebra_test.h>
 #include <test/test_decwide_t_algebra.h>

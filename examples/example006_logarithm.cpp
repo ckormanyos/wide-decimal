@@ -9,13 +9,12 @@
 
 bool math::wide_decimal::example006_logarithm()
 {
+  // Compute 1,000 values of Log[(123456789/1000000) * (3^n)],
+  // the result of which is Log[(123456789/1000000)] + (n Log[3])
+
   using dec1001_t = math::wide_decimal::decwide_t<1001U>;
 
-  const dec1001_t x = dec1001_t(UINT32_C(123456789)) / UINT32_C(1000000);
-
-  const dec1001_t lg = log(x);
-
-  const dec1001_t control
+  const dec1001_t control_base
   {
     "4."
     "8158912082037439290859846198570189641070729092477641189851225392867818091922368962401331896527129054"
@@ -31,9 +30,33 @@ bool math::wide_decimal::example006_logarithm()
     "9"
   };
 
-  const dec1001_t closeness = fabs(1 - (lg / control));
+  dec1001_t x = dec1001_t(UINT32_C(123456789)) / UINT32_C(1000000);
 
-  const bool result_is_ok = closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10);
+  const dec1001_t ln3 = log(dec1001_t(3U));
+  const dec1001_t tol = dec1001_t(std::numeric_limits<dec1001_t>::epsilon() * 10);
+
+  bool result_is_ok = true;
+
+  const std::clock_t start = std::clock();
+
+  for(unsigned i = 0U; i < 1000U; ++i)
+  {
+    const dec1001_t lg = log(x);
+
+    const dec1001_t control = control_base + (ln3 * i);
+
+    const dec1001_t closeness = fabs(1 - (lg / control));
+
+    result_is_ok &= (closeness < tol);
+
+    x *= 3U;
+  }
+
+  const std::clock_t stop = std::clock();
+
+  std::cout << "Time example006_logarithm(): "
+            << (float) (stop - start) / (float) CLOCKS_PER_SEC
+            << std::endl;
 
   return result_is_ok;
 }

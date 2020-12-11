@@ -37,12 +37,12 @@ namespace local
     // See also http://www.mpfr.org/algorithms.pdf
 
     floating_point_type k_fact (1U);
-    floating_point_type tk_fact(1U);
-    floating_point_type sum    (1U);
+    floating_point_type tk_fact(2U);
+    floating_point_type sum    (floating_point_type(19U) / 18U);
 
     const floating_point_type lim = std::numeric_limits<floating_point_type>::epsilon();
 
-    for(std::uint_fast32_t k = UINT32_C(1); k < UINT32_C(10000000); ++k)
+    for(std::uint_fast32_t k = UINT32_C(2); k < UINT32_C(10000000); ++k)
     {
       const std::uint32_t tk = 2U * k;
       const std::uint64_t tk_plus_one_squared = (std::uint64_t) (tk + 1U) * (tk + 1U);
