@@ -488,7 +488,7 @@
     };
 
     #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
-    // Static data initializer:
+    // Static data initializer
     struct initializer
     {
       initializer()
@@ -1319,15 +1319,18 @@
     static decwide_t my_value_min() { return decwide_t( { limb_type(1U) }, decwide_t_min_exp10 ); }
     static decwide_t my_value_eps()
     {
-      constexpr std::int32_t decwide_t_digits10_aligned =
+      constexpr std::int32_t decwide_t_digits10_aligned_and_negated =
         -static_cast<std::int32_t>(((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10);
+
+      constexpr std::uint32_t limb0 =
+        detail::decwide_t_helper<MyDigits10, LimbType>::pow10_maker((std::uint32_t) ((std::int32_t) (INT32_C(1) - decwide_t_digits10_aligned_and_negated) - decwide_t_digits10));
 
       return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>
       (
         {
-          limb_type(detail::decwide_t_helper<MyDigits10, LimbType>::pow10_maker(static_cast<std::uint32_t>(static_cast<std::int32_t>(-decwide_t_digits10_aligned + 1) - decwide_t_digits10)))
+          (limb_type) limb0
         },
-        static_cast<std::int64_t>(decwide_t_digits10_aligned)
+        (std::int64_t) decwide_t_digits10_aligned_and_negated
       );
     }
 
@@ -3136,27 +3139,9 @@
         e10 = static_cast<std::int64_t>(x.my_exp + n10);
       }
 
-      const std::int32_t e10_as_int32 =
-          (e10 > (std::numeric_limits<std::int32_t>::max)()) ? (std::numeric_limits<std::int32_t>::max)()
-        : (e10 < (std::numeric_limits<std::int32_t>::min)()) ? (std::numeric_limits<std::int32_t>::min)()
-        : static_cast<std::int32_t>(e10);
-
-      return e10_as_int32;
+      return (std::max)(           (std::numeric_limits<std::int32_t>::min)(),
+                        (std::min)((std::numeric_limits<std::int32_t>::max)(), (std::int32_t) e10));
     }
-
-    #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
-    template<const std::int32_t OtherDigits10,
-             typename OtherLimbType,
-             typename OtherAllocatorType,
-             typename OtherInternalFloatType>
-    friend const decwide_t<OtherDigits10, OtherLimbType, OtherAllocatorType, OtherInternalFloatType>& pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t));
-
-    template<const std::int32_t OtherDigits10,
-             typename OtherLimbType,
-             typename OtherAllocatorType,
-             typename OtherInternalFloatType>
-    friend const decwide_t<OtherDigits10, OtherLimbType, OtherAllocatorType, OtherInternalFloatType>& ln_two();
-    #endif
   };
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
