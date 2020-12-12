@@ -7,6 +7,7 @@
 
 
 #include <algorithm>
+#include <cstdint>
 #include <ctime>
 #include <iostream>
 

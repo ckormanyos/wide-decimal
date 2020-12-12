@@ -84,6 +84,8 @@
           if(i > slot_max_index)
           {
             slot_max_index = i;
+
+            (void) slot_max_index;
           }
 
           break;
