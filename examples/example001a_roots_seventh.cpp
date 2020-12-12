@@ -5,6 +5,8 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#include <cstdint>
+
 #include <math/wide_decimal/decwide_t.h>
 
 bool math::wide_decimal::example001a_roots_seventh()

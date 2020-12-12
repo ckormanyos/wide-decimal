@@ -132,7 +132,7 @@
           ++p;
         }
 
-        // Deallocate the elements and deallocate the range.
+        // Destroy the elements and deallocate the range.
         allocator_type().deallocate(elems, elem_count);
 
         elem_count = other.elem_count;
@@ -187,6 +187,18 @@
       }
 
       void swap(dynamic_array& other)
+      {
+        const size_type tmp_elem_count = elem_count;
+        const pointer   tmp_elems      = elems;
+
+        elem_count = other.elem_count;
+        elems      = other.elems;
+
+        other.elem_count = tmp_elem_count;
+        other.elems      = tmp_elems;
+      }
+
+      void swap(dynamic_array&& other)
       {
         const size_type tmp_elem_count = elem_count;
         const pointer   tmp_elems      = elems;
