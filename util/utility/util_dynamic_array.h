@@ -123,6 +123,7 @@
       // Move assignment operator.
       dynamic_array& operator=(dynamic_array&& other)
       {
+        // Destroy the elements and deallocate the range.
         pointer p = elems;
 
         while(p != elems + elem_count)
@@ -132,7 +133,6 @@
           ++p;
         }
 
-        // Destroy the elements and deallocate the range.
         allocator_type().deallocate(elems, elem_count);
 
         elem_count = other.elem_count;

@@ -75,7 +75,7 @@
                 v);
     }
 
-    fixed_dynamic_array(const fixed_dynamic_array& other_array)
+    constexpr fixed_dynamic_array(const fixed_dynamic_array& other_array)
       : base_class_type((const base_class_type&) other_array) { }
 
     fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
@@ -99,7 +99,7 @@
       }
     }
 
-    fixed_dynamic_array(fixed_dynamic_array&& other_array)
+    constexpr fixed_dynamic_array(fixed_dynamic_array&& other_array)
       : base_class_type((base_class_type&&) other_array) { }
 
     fixed_dynamic_array& operator=(const fixed_dynamic_array& other_array)
