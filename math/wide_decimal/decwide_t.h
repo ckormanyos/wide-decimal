@@ -81,22 +81,9 @@
     fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
     {
-      if((std::uint_fast32_t) lst.size() < MySize)
-      {
-        std::copy(lst.begin(),
-                  lst.begin() + lst.size(),
-                  base_class_type::begin());
-
-        std::fill(base_class_type::begin() + lst.size(),
-                  base_class_type::end(),
-                  typename base_class_type::value_type());
-      }
-      else
-      {
-        std::copy(lst.begin(),
-                  lst.begin() + MySize,
-                  base_class_type::begin());
-      }
+      std::copy(lst.begin(),
+                lst.begin() + (std::min)((std::uint_fast32_t) lst.size(), MySize),
+                base_class_type::begin());
     }
 
     constexpr fixed_dynamic_array(fixed_dynamic_array&& other_array)

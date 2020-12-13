@@ -97,8 +97,11 @@
 
     void construct(pointer p, const value_type& x)
     {
-      (void) p;
-      (void) x;
+      // The memory in the n-slot allocator already exists
+      // in an uninitialized form. Construction can safely
+      // simply set the value in the uninitialized memory.
+
+      *p = x;
     }
 
     void destroy(pointer p)
