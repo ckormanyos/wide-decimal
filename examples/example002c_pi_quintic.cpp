@@ -11,9 +11,14 @@
 #include <ctime>
 #include <iostream>
 
-#include <math/wide_decimal/decwide_t.h>
+// Disable heavyweight features via macros for this example.
+#define WIDE_DECIMAL_DISABLE_IOSTREAM
+#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
+#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
+#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 
 #include <math/constants/constants_pi_control_for_decwide_t.h>
+#include <math/wide_decimal/decwide_t.h>
 
 namespace
 {

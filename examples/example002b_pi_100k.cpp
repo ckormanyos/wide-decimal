@@ -9,17 +9,17 @@
 #include <ctime>
 #include <iostream>
 
+// Disable heavyweight features via macros for this example.
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
 #define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 
+#include <math/constants/constants_pi_control_for_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
 #include <mcal_lcd/mcal_lcd_console.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_baselexical_cast.h>
-
-#include <math/constants/constants_pi_control_for_decwide_t.h>
 
 bool math::wide_decimal::example002b_pi_100k()
 {
