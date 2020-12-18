@@ -40,7 +40,7 @@
                                   elems     (nullptr) { }
 
       dynamic_array(size_type count,
-                    const value_type& v = value_type(),
+                    const_reference v = value_type(),
                     const allocator_type& a = allocator_type())
         : elem_count(count),
           elems     (elem_count > 0U ? allocator_type(a).allocate(elem_count) : nullptr)

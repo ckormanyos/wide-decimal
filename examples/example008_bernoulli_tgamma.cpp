@@ -121,20 +121,13 @@ namespace local
       // the tolerance. In order to do this, we find the built-in floating point
       // approximation of (x (Log[x] - 1)).
 
-      using std::ilogb;
+      // Limit fx to the rangd 6 <= fx <= 10^10.
+      const float fx = (float) (std::min)((std::max)(floating_point_type(6U), xx),
+                                          floating_point_type(UINT64_C(10000000000)));
+
       using std::log;
-      using std::pow;
 
-      // Extract lgx = Log[mantissa * radix^ib]
-      //             = Log[mantissa] + ib * Log[radix]
-
-      const std::int32_t ib       = (std::int32_t) ilogb(xx);
-      const float        mantissa = (float) (xx / pow(floating_point_type(std::numeric_limits<floating_point_type>::radix), ib));
-
-      const float lg_xx =   log(mantissa)
-                          + ((float) ib * log((float) std::numeric_limits<floating_point_type>::radix));
-
-      tol *= (xx * floating_point_type(lg_xx - 1.0F));
+      tol *= (float) (fx * (log(fx) - 1.0F));
     }
 
     // Perform the Bernoulli series expansion.
