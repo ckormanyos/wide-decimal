@@ -8,6 +8,7 @@
 #ifndef TEST_DECWIDE_T_EXAMPLES_2020_11_05_H_
   #define TEST_DECWIDE_T_EXAMPLES_2020_11_05_H_
 
-  bool test_decwide_t_examples____();
+  bool test_decwide_t_examples_part1__();
+  bool test_decwide_t_examples_part2__();
 
 #endif // TEST_DECWIDE_T_EXAMPLES_2020_11_05_H_

@@ -121,8 +121,10 @@ namespace local
       // the tolerance. In order to do this, we find the built-in floating point
       // approximation of (x (Log[x] - 1)).
 
-      // Limit fx to the rangd 6 <= fx <= 10^10.
-      const float fx = (float) (std::min)((std::max)(floating_point_type(6U), xx),
+      // Limit fx to the range 8 <= fx <= 10^10, where 8 is chosen to
+      // ensure that (log(fx) - 1.0F) remains positive and 10^10 is
+      // selected arbitrarily, yet ensured to be rather large.
+      const float fx = (float) (std::min)((std::max)(floating_point_type(8U), xx),
                                           floating_point_type(UINT64_C(10000000000)));
 
       using std::log;
