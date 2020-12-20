@@ -38,7 +38,7 @@ template<>
 template<int N>
 inline dec1001_t constant_pi<dec1001_t>::compute(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC((boost::integral_constant<int, N>)))
 {
-  // This code has been taken and slightly adapted from Boost.Math.Constants.
+  // Adapted from Boost.Math.Constants (see file calculate_constants.hpp).
   BOOST_MATH_STD_USING
 
   dec1001_t result;
