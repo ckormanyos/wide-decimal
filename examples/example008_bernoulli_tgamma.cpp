@@ -43,7 +43,7 @@ namespace local
 
     // See reference "Computing Bernoulli and Tangent Numbers", Richard P. Brent.
     // See also the book Richard P. Brent and Paul Zimmermann, "Modern Computer Arithmetic",
-    // Cambridge University Press, 2010, 237 pp.
+    // Cambridge University Press, 2010, p. 237.
 
     const std::uint32_t m = n / 2U;
 
@@ -108,10 +108,12 @@ namespace local
     }
 
           floating_point_type one_over_x_pow_two_n_minus_one = 1 / xx;
-    const floating_point_type one_over_x2                    = one_over_x_pow_two_n_minus_one * one_over_x_pow_two_n_minus_one;
-          floating_point_type sum                            = (bernoulli_table[2U] / 2U) * one_over_x_pow_two_n_minus_one;
+    const floating_point_type one_over_x2                    =  one_over_x_pow_two_n_minus_one * one_over_x_pow_two_n_minus_one;
+          floating_point_type sum                            = (one_over_x_pow_two_n_minus_one * bernoulli_table[2U]) / 2U;
 
     floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
+
+    using std::log;
 
     if(xx > 8U)
     {
@@ -121,20 +123,13 @@ namespace local
       // the tolerance. In order to do this, we find the built-in floating point
       // approximation of (x (Log[x] - 1)).
 
-      using std::ilogb;
-      using std::log;
-      using std::pow;
+      // Limit fx to the range 8 <= fx <= 10^16, where 8 is chosen to
+      // ensure that (log(fx) - 1.0F) remains positive and 10^16 is
+      // selected arbitrarily, yet ensured to be rather large.
+      const float fx = (float) (std::min)((std::max)(floating_point_type(8U), xx),
+                                          floating_point_type(UINT64_C(10000000000000000)));
 
-      // Extract lgx = Log[mantissa * radix^ib]
-      //             = Log[mantissa] + ib * Log[radix]
-
-      const std::int32_t ib       = (std::int32_t) ilogb(xx);
-      const float        mantissa = (float) (xx / pow(floating_point_type(std::numeric_limits<floating_point_type>::radix), ib));
-
-      const float lg_xx =   log(mantissa)
-                          + ((float) ib * log((float) std::numeric_limits<floating_point_type>::radix));
-
-      tol *= (xx * floating_point_type(lg_xx - 1.0F));
+      tol *= (float) (fx * (log(fx) - 1.0F));
     }
 
     // Perform the Bernoulli series expansion.
@@ -143,10 +138,12 @@ namespace local
       one_over_x_pow_two_n_minus_one *= one_over_x2;
 
       const floating_point_type term =
-          (bernoulli_table[n2] * one_over_x_pow_two_n_minus_one)
-        / (std::uint64_t) (n2 * (std::uint64_t) (n2 - 1U));
+          (one_over_x_pow_two_n_minus_one * bernoulli_table[n2])
+        / (std::uint64_t) ((std::uint64_t) n2 * (n2 - 1U));
 
-      if((n2 > 4U) && (fabs(term) < tol))
+      using std::fabs;
+
+      if((n2 > 6U) && (fabs(term) < tol))
       {
         break;
       }
@@ -156,7 +153,6 @@ namespace local
 
     using ::pi;
     using std::exp;
-    using std::log;
 
     static const floating_point_type half           = floating_point_type(1U) / 2U;
     static const floating_point_type half_ln_two_pi = log(pi<floating_point_type>() * 2U) / 2U;
@@ -175,6 +171,7 @@ namespace local
 
 bool math::wide_decimal::example008_bernoulli_tgamma()
 {
+  // Initialize the table of Bernoulli numbers.
   local::bernoulli_b(local::bernoulli_table.data(), (std::uint32_t) local::bernoulli_table.size());
 
   // In this example, we compute values of Gamma[1/2 + n].
@@ -216,13 +213,15 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 
   for(auto i = 0U; i < ratios.size(); ++i)
   {
-    // Calculate Gamma[i + 1/2]
+    // Calculate Gamma[1/2 + i]
 
     const wide_decimal_type g = local::tgamma(half + i);
 
-    // Consider the control value.
+    // Calculate the control value.
 
     using ::pi;
+    using std::fabs;
+    using std::sqrt;
 
     const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * ratios[i].first) / ratios[i].second;
 

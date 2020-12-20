@@ -38,6 +38,7 @@ template<>
 template<int N>
 inline dec1001_t constant_pi<dec1001_t>::compute(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC((boost::integral_constant<int, N>)))
 {
+  // Adapted from Boost.Math.Constants (see file calculate_constants.hpp).
   BOOST_MATH_STD_USING
 
   dec1001_t result;
@@ -86,6 +87,9 @@ inline dec1001_t constant_pi<dec1001_t>::compute(BOOST_MATH_EXPLICIT_TEMPLATE_TY
 bool math::wide_decimal::example009_boost_math_standalone()
 {
   const dec1001_t x = dec1001_t(UINT32_C(123456789)) / 100U;
+
+  // Compare wide-decimal's cube root function with that of Boost.Math.
+  // Also exercise several different interpretations of the constant pi.
 
   const dec1001_t c       = cbrt(x / math::wide_decimal::pi<wide_decimal_digits10, typename dec1001_t::limb_type, std::allocator<void>, double>());
 
