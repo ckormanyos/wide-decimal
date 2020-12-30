@@ -94,16 +94,16 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='release-wide-decimal|x64'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release-wide-decimal|x64'">
-    <IncludePath>C:\boost\boost_1_73_0;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>C:\boost\boost_1_75_0;$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug-wide-decimal|x64'">
-    <IncludePath>C:\boost\boost_1_73_0;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>C:\boost\boost_1_75_0;$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release-wide-decimal|Win32'">
-    <IncludePath>C:\boost\boost_1_73_0;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>C:\boost\boost_1_75_0;$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug-wide-decimal|Win32'">
-    <IncludePath>C:\boost\boost_1_73_0;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>C:\boost\boost_1_75_0;$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release-wide-decimal|Win32'">
     <Midl>
