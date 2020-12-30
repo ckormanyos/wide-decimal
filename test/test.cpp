@@ -29,7 +29,7 @@ namespace
 {
   void set_log_level()
   {
-    const auto level = boost::unit_test::unit_test_log.set_threshold_level(boost::unit_test::log_level::log_test_units);
+    boost::unit_test::unit_test_log.set_threshold_level(boost::unit_test::log_level::log_test_units);
 
     (void) level;
   }
