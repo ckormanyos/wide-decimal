@@ -136,12 +136,12 @@ bool math::wide_decimal::example002c_pi_quintic()
             << std::endl;
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head<local_limb_type>().size(),
-                                     math::constants::const_pi_control_head<local_limb_type>().begin());
+                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head<local_limb_type, 8U>().size(),
+                                     math::constants::const_pi_control_head<local_limb_type, 8U>().begin());
 
-  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
+  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 8U>().size()),
                                      my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)),
-                                     math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
+                                     math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 8U>().begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 
