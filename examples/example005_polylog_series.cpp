@@ -48,9 +48,9 @@ bool math::wide_decimal::example005_polylog_series()
 
   using std::fabs;
 
-  // N[PolyLog[7, 17/71], 101]
   const dec101_t poly = local::polylog(7U, dec101_t(17U) / 71U);
 
+  // N[PolyLog[7, 17/71], 101]
   const dec101_t control
   {
     "0.23989099751201076665599565769828454152030927256642802570721839696637617308754054721620440634024352282"

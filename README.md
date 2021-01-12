@@ -19,7 +19,7 @@ Wide-decimal is written in header-only C++11.
 
   - ![`example001_roots_sqrt`](./examples/example001_roots_sqrt.cpp) computes a square root.
   - ![`example001a_roots_seventh`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
-  - ![`example001b_roots_almost_integer`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operatoins to compute <img src="https://render.githubusercontent.com/render/math?math=3,001"> decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
+  - ![`example001b_roots_almost_integer`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operations to compute <img src="https://render.githubusercontent.com/render/math?math=5,001"> decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
   - ![`example002_pi`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Gauss AGM iteration.
   - ![`example002a_pi_small_limb`](./examples/example002a_pi_small_limb.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
   - ![`example002b_pi_100k`](./examples/example002b_pi_100k.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
@@ -31,15 +31,6 @@ Wide-decimal is written in header-only C++11.
   - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) computes <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
   - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\Gamma(23/2)">.
   - ![`example009_boost_math_standalone`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
-
-## 1,000,001 digits of pi on a bare metal microcontroller
-
-The wide-decimal float back end is used to compute
-<img src="https://render.githubusercontent.com/render/math?math=1,000,001">
-decimal digits of the mathematical constant
-<img src="https://render.githubusercontent.com/render/math?math=\pi">
-on selected bare-metal OS-less microcontroller systems in
-[pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 
 ## Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
@@ -224,3 +215,12 @@ The million digit run is comparatively slow and requires approximately
 10 seconds on a modern PC. Considering, however, the design goals
 of header-only and capable of running on bare-metal, this is
 a very nice calculational result.
+
+## 1,000,001 digits of pi on a bare metal microcontroller
+
+The wide-decimal float back end is used to compute
+<img src="https://render.githubusercontent.com/render/math?math=1,000,001">
+decimal digits of the mathematical constant
+<img src="https://render.githubusercontent.com/render/math?math=\pi">
+on selected bare-metal OS-less microcontroller systems in
+[pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
