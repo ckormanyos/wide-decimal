@@ -326,6 +326,7 @@
     </CustomBuildStep>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="examples\example001b_roots_almost_integer.cpp" />
     <ClCompile Include="examples\example001a_roots_seventh.cpp" />
     <ClCompile Include="examples\example001_roots_sqrt.cpp" />
     <ClCompile Include="examples\example002a_pi_small_limb.cpp" />

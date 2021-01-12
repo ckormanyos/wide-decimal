@@ -4023,6 +4023,7 @@
 
   bool example001_roots_sqrt           ();
   bool example001a_roots_seventh       ();
+  bool example001b_roots_almost_integer();
   bool example002_pi                   ();
   bool example002a_pi_small_limb       ();
   bool example002b_pi_100k             ();

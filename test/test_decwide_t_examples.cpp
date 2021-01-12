@@ -14,6 +14,7 @@ bool test_decwide_t_examples_part1__()
 
   result_is_ok &= math::wide_decimal::example001_roots_sqrt           ();
   result_is_ok &= math::wide_decimal::example001a_roots_seventh       ();
+  result_is_ok &= math::wide_decimal::example001b_roots_almost_integer();
   result_is_ok &= math::wide_decimal::example002_pi                   ();
   result_is_ok &= math::wide_decimal::example002a_pi_small_limb       ();
   result_is_ok &= math::wide_decimal::example002b_pi_100k             ();

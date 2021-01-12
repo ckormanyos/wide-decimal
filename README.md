@@ -7,7 +7,7 @@ Wide-decimal implements both common algebraic operations as well as a few common
 
 Wide-decimal is written in header-only C++11.
 
-# Implementation goals
+## Implementation goals
 
   - Wide precision range up to one million decimal digits
   - Moderately good efficiency over the entire wide precision range
@@ -15,10 +15,11 @@ Wide-decimal is written in header-only C++11.
   - Seamless portability to any modern C++11 compiler
   - Scalability with small memory footprint and efficiency suitable for _bare-metal_ embedded systems
 
-# The examples
+## The examples
 
   - ![`example001_roots_sqrt`](./examples/example001_roots_sqrt.cpp) computes a square root.
   - ![`example001a_roots_seventh`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
+  - ![`example001b_roots_almost_integer`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operatoins to compute <img src="https://render.githubusercontent.com/render/math?math=3,001"> decimal digits of a fascinating [https://mathworld.wolfram.com/PisotNumber.html](Pisot number) that is [https://mathworld.wolfram.com/AlmostInteger.html](almost integer).
   - ![`example002_pi`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Gauss AGM iteration.
   - ![`example002a_pi_small_limb`](./examples/example002a_pi_small_limb.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
   - ![`example002b_pi_100k`](./examples/example002b_pi_100k.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
@@ -31,7 +32,7 @@ Wide-decimal is written in header-only C++11.
   - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\Gamma(23/2)">.
   - ![`example009_boost_math_standalone`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
 
-# 1,000,001 digits of pi on a bare metal microcontroller
+## 1,000,001 digits of pi on a bare metal microcontroller
 
 The wide-decimal float back end is used to compute
 <img src="https://render.githubusercontent.com/render/math?math=1,000,001">
@@ -40,7 +41,7 @@ decimal digits of the mathematical constant
 on selected bare-metal OS-less microcontroller systems in
 [pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 
-# Details
+## Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
 over the entire range of small to large digit counts.
@@ -83,7 +84,7 @@ allocation is needed and can not be disabled. In other words,
 
 See the examples directory as more use cases are being created.
 
-# Quick start
+## Quick start
 Easy application follows via a traditional C-style typedef or C++11 alias.
 The defined type can be used very much like a built-in floating-point type.
 
@@ -118,7 +119,7 @@ The subroutine `do_something()` initializes the variable `d`
 of type `dec101_t` with 1/3 and subsequently prints the 101 digit
 value of `d` to the console.
 
-# Detailed examples
+## Detailed examples
 
 The example below calculates the square root of the decimal representation of
 <img src="https://render.githubusercontent.com/render/math?math=\sqrt{1234.56}">,

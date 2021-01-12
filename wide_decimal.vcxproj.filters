@@ -143,5 +143,8 @@
     <ClCompile Include="examples\example009_boost_math_standalone.cpp">
       <Filter>examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
