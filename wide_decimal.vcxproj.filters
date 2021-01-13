@@ -146,5 +146,8 @@
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
       <Filter>examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example010_hypergeometric_2f1.cpp">
+      <Filter>examples</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
