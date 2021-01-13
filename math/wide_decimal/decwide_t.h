@@ -4035,6 +4035,7 @@
   bool example007_catalan_series       ();
   bool example008_bernoulli_tgamma     ();
   bool example009_boost_math_standalone();
+  bool example010_trapezoid_integration();
 
   } } // namespace math::wide_decimal
 
