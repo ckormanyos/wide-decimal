@@ -340,7 +340,6 @@
     <ClCompile Include="examples\example007_catalan_series.cpp" />
     <ClCompile Include="examples\example008_bernoulli_tgamma.cpp" />
     <ClCompile Include="examples\example009_boost_math_standalone.cpp" />
-    <ClCompile Include="examples\example010_trapezoid_integration.cpp" />
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
     <ClCompile Include="test\test_decwide_t_examples.cpp" />

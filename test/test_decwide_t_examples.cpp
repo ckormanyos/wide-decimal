@@ -34,7 +34,6 @@ bool test_decwide_t_examples_part2__()
   result_is_ok &= math::wide_decimal::example007_catalan_series       ();
   result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma     ();
   result_is_ok &= math::wide_decimal::example009_boost_math_standalone();
-  result_is_ok &= math::wide_decimal::example010_trapezoid_integration();
 
   return result_is_ok;
 }
