@@ -31,7 +31,7 @@ Wide-decimal is written in header-only C++11.
   - ![`example007_catalan_series`](./examples/example007_catalan_series.cpp) computes <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
   - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\Gamma(23/2)">.
   - ![`example009_boost_math_standalone`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
-  - ![`example010_trapezoid_integration`](./examples/example010_trapezoid_integration.cpp) performs a numeric integration using an iterative recursive trapezoid integration method.
+  - ![`example010_hypergeometric_2f1`](./examples/example010_hypergeometric_2f1.cpp) computes a hypergeometric function using a classic computation scheme.
 
 ## Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
