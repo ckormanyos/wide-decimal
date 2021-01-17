@@ -75,28 +75,28 @@ namespace local
 
     static const std::initializer_list<dec51_t> coef_sin_top
     {
-      dec51_t( { 57828UL, 92079564UL, 35639754UL, 99605577UL, 89652272UL, 18945166UL, 95040000UL }, 48U ),
-      dec51_t( {  9043UL, 39147227UL, 52697807UL, 14387149UL, 29637016UL, 98135463UL, 83360000UL }, 48U, true ),
-      dec51_t( {   385UL, 84634311UL, 40849087UL, 61955730UL, 26248684UL, 87944519UL, 53152000UL }, 48U ),
-      dec51_t( {     7UL,  1815238UL, 80556594UL, 89803429UL, 45057678UL, 41267236UL, 21632000UL }, 48U, true ),
-      dec51_t( {           6518670UL, 52853116UL,  1343595UL,  1345538UL, 36321980UL,   736000UL }, 40U ),
-      dec51_t( {             33531UL, 31107865UL, 11542878UL, 12668334UL, 47869597UL, 95547520UL }, 40U, true ),
-      dec51_t( {                97UL, 23858280UL, 35106690UL, 71700713UL, 45246530UL, 36979360UL }, 40U ),
-      dec51_t( {                      15026890UL, 94832213UL, 43593604UL, 60501216UL, 49006736UL }, 32U, true ),
-      dec51_t( {                          9754UL, 27620658UL,  9384882UL, 73091394UL, 14158497UL }, 32U )
+      dec51_t( {    57828UL, 92079564UL, 35639754UL, 99605577UL, 89652272UL, 18945166UL, 95040000UL }, 48U ),
+      dec51_t( {     9043UL, 39147227UL, 52697807UL, 14387149UL, 29637016UL, 98135463UL, 83360000UL }, 48U, true ),
+      dec51_t( {      385UL, 84634311UL, 40849087UL, 61955730UL, 26248684UL, 87944519UL, 53152000UL }, 48U ),
+      dec51_t( {        7UL,  1815238UL, 80556594UL, 89803429UL, 45057678UL, 41267236UL, 21632000UL }, 48U, true ),
+      dec51_t( {              6518670UL, 52853116UL,  1343595UL,  1345538UL, 36321980UL,   736000UL }, 40U ),
+      dec51_t( {                33531UL, 31107865UL, 11542878UL, 12668334UL, 47869597UL, 95547520UL }, 40U, true ),
+      dec51_t( {                   97UL, 23858280UL, 35106690UL, 71700713UL, 45246530UL, 36979360UL }, 40U ),
+      dec51_t( {                         15026890UL, 94832213UL, 43593604UL, 60501216UL, 49006736UL }, 32U, true ),
+      dec51_t( {                             9754UL, 27620658UL,  9384882UL, 73091394UL, 14158497UL }, 32U )
     };
 
     static const std::initializer_list<dec51_t> coef_sin_bot =
     {
-      dec51_t( { 377UL, 96680258UL, 59056468UL, 98690232UL, 53527139UL,  3391798UL, 47680000UL }, 48U ),
-      dec51_t( {   3UL, 88733329UL, 19302236UL, 28772639UL,  8727483UL, 84564414UL, 36160000UL }, 48U ),
-      dec51_t( {         2003705UL,  7272935UL, 39214561UL, 96408839UL, 35081781UL, 32480000UL }, 40U ),
-      dec51_t( {            6820UL,  5205041UL, 87115173UL, 83286233UL, 23898656UL,  8960000UL }, 40U ),
-      dec51_t( {              16UL, 93325680UL, 24472667UL, 78416104UL, 58477897UL, 31936000UL }, 40U ),
-      dec51_t( {                     3176263UL, 54038315UL, 11637764UL, 57072751UL, 32261760UL }, 32U ),
-      dec51_t( {                        4453UL, 50801787UL, 80537080UL, 55369475UL, 89710880UL }, 32U ),
-      dec51_t( {                           4UL, 33338433UL, 63845605UL, 88322462UL, 68252880UL }, 32U ),
-      dec51_t( {                                  228136UL, 24782316UL, 17485673UL,  3716089UL }, 24U ),
+      dec51_t( {      377UL, 96680258UL, 59056468UL, 98690232UL, 53527139UL,  3391798UL, 47680000UL }, 48U ),
+      dec51_t( {        3UL, 88733329UL, 19302236UL, 28772639UL,  8727483UL, 84564414UL, 36160000UL }, 48U ),
+      dec51_t( {              2003705UL,  7272935UL, 39214561UL, 96408839UL, 35081781UL, 32480000UL }, 40U ),
+      dec51_t( {                 6820UL,  5205041UL, 87115173UL, 83286233UL, 23898656UL,  8960000UL }, 40U ),
+      dec51_t( {                   16UL, 93325680UL, 24472667UL, 78416104UL, 58477897UL, 31936000UL }, 40U ),
+      dec51_t( {                          3176263UL, 54038315UL, 11637764UL, 57072751UL, 32261760UL }, 32U ),
+      dec51_t( {                             4453UL, 50801787UL, 80537080UL, 55369475UL, 89710880UL }, 32U ),
+      dec51_t( {                                4UL, 33338433UL, 63845605UL, 88322462UL, 68252880UL }, 32U ),
+      dec51_t( {                                       228136UL, 24782316UL, 17485673UL,  3716089UL }, 24U ),
     };
 
     const dec51_t x2(x * x);
@@ -151,14 +151,14 @@ namespace local
 
     static const std::initializer_list<dec51_t> coef_cos_top
     {
-      dec51_t( { 2864UL, 38669672UL, 11840381UL, 31507642UL, 71487124UL, 48256000UL }, 40U, true ),
-      dec51_t( {  206UL, 87239648UL, 61834717UL, 73770062UL, 47786513UL, 77280000UL }, 40U ),
-      dec51_t( {    5UL, 48253747UL, 39699401UL, 81389360UL, 41830924UL, 80684800UL }, 40U, true ),
-      dec51_t( {          6785676UL, 57127205UL, 41746346UL, 25361461UL, 89008000UL }, 32U ),
-      dec51_t( {            44141UL,  3805950UL, 49222158UL, 75817034UL, 39618320UL }, 32U, true ),
-      dec51_t( {              156UL, 18617697UL, 34058207UL, 29180580UL, 21733000UL }, 32U ),
-      dec51_t( {                     28694126UL, 54400268UL, 52693647UL, 86894162UL }, 24U, true ),
-      dec51_t( {                        21704UL, 72966090UL, 42898274UL, 92622415UL }, 24U )
+      dec51_t( {     2864UL, 38669672UL, 11840381UL, 31507642UL, 71487124UL, 48256000UL }, 40U, true ),
+      dec51_t( {      206UL, 87239648UL, 61834717UL, 73770062UL, 47786513UL, 77280000UL }, 40U ),
+      dec51_t( {        5UL, 48253747UL, 39699401UL, 81389360UL, 41830924UL, 80684800UL }, 40U, true ),
+      dec51_t( {              6785676UL, 57127205UL, 41746346UL, 25361461UL, 89008000UL }, 32U ),
+      dec51_t( {                44141UL,  3805950UL, 49222158UL, 75817034UL, 39618320UL }, 32U, true ),
+      dec51_t( {                  156UL, 18617697UL, 34058207UL, 29180580UL, 21733000UL }, 32U ),
+      dec51_t( {                         28694126UL, 54400268UL, 52693647UL, 86894162UL }, 24U, true ),
+      dec51_t( {                            21704UL, 72966090UL, 42898274UL, 92622415UL }, 24U )
     };
 
     static const std::initializer_list<dec51_t> coef_cos_bot =
@@ -423,17 +423,22 @@ bool math::wide_decimal::example011_trig_trapezoid_integral()
   using local::dec51_t;
 
   const dec51_t j2 = local::cyl_bessel_j(2U, dec51_t(123U) / 100U);
+  const dec51_t j3 = local::cyl_bessel_j(3U, dec51_t(456U) / 100U);
 
   using std::fabs;
 
   // N[BesselJ[2, 123/100], 60]
-  const dec51_t control = dec51_t("0.166369383786814073512678524315131594371033482453328555149562");
+  const dec51_t control2 = dec51_t("0.166369383786814073512678524315131594371033482453328555149562");
 
-  const dec51_t closeness = fabs(1 - (j2 / control));
+  // N[BesselJ[3, 456/100], 60]
+  const dec51_t control3 = dec51_t("0.420388204867652161626134623430784757427481712020578485761744");
+
+  const dec51_t closeness2 = fabs(1 - (j2 / control2));
+  const dec51_t closeness3 = fabs(1 - (j3 / control3));
 
   const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * 10;
 
-  const bool result_is_ok = (closeness < tol);
+  const bool result_is_ok = ((closeness2 < tol) && (closeness3 < tol));
 
   return result_is_ok;
 }

@@ -78,7 +78,7 @@
     constexpr fixed_dynamic_array(const fixed_dynamic_array& other_array)
       : base_class_type((const base_class_type&) other_array) { }
 
-    fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
+    explicit fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
     {
       std::copy(lst.begin(),
@@ -627,22 +627,23 @@
     // Constructor from initializer list of limbs,
     // exponent value (normed to limb granularity) 
     // and optional sign flag.
-    constexpr decwide_t(std::initializer_list<limb_type> limb_values,
-                        const std::int64_t e = 0,
-                        const bool is_neg = false) : my_data     (limb_values),
-                                                     my_exp      (e),
-                                                     my_neg      (is_neg),
-                                                     my_fpclass  (decwide_t_finite),
-                                                     my_prec_elem(decwide_t_elem_number) { }
+    explicit constexpr decwide_t(std::initializer_list<limb_type> limb_values,
+                                 const std::int64_t e = 0,
+                                 const bool is_neg = false)
+      : my_data     (limb_values),
+        my_exp      (e),
+        my_neg      (is_neg),
+        my_fpclass  (decwide_t_finite),
+        my_prec_elem(decwide_t_elem_number) { }
 
   private:
     // Constructor from mantissa and exponent.
-    decwide_t(const InternalFloatType mantissa,
-              const std::int64_t exponent) : my_data     (),
-                                             my_exp      (static_cast<std::int64_t>(0)),
-                                             my_neg      (false),
-                                             my_fpclass  (decwide_t_finite),
-                                             my_prec_elem(decwide_t_elem_number)
+    explicit decwide_t(const InternalFloatType mantissa,
+                       const std::int64_t exponent) : my_data     (),
+                                                      my_exp      (static_cast<std::int64_t>(0)),
+                                                      my_neg      (false),
+                                                      my_fpclass  (decwide_t_finite),
+                                                      my_prec_elem(decwide_t_elem_number)
     {
       // Create a decwide_t from mantissa and exponent.
 
