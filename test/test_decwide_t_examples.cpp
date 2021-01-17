@@ -27,14 +27,15 @@ bool test_decwide_t_examples_part2__()
 {
   bool result_is_ok = true;
 
-  result_is_ok &= math::wide_decimal::example003_zeta                 ();
-  result_is_ok &= math::wide_decimal::example004_bessel_recur         ();
-  result_is_ok &= math::wide_decimal::example005_polylog_series       ();
-  result_is_ok &= math::wide_decimal::example006_logarithm            ();
-  result_is_ok &= math::wide_decimal::example007_catalan_series       ();
-  result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma     ();
-  result_is_ok &= math::wide_decimal::example009_boost_math_standalone();
-  result_is_ok &= math::wide_decimal::example010_hypergeometric_2f1   ();
+  result_is_ok &= math::wide_decimal::example003_zeta                   ();
+  result_is_ok &= math::wide_decimal::example004_bessel_recur           ();
+  result_is_ok &= math::wide_decimal::example005_polylog_series         ();
+  result_is_ok &= math::wide_decimal::example006_logarithm              ();
+  result_is_ok &= math::wide_decimal::example007_catalan_series         ();
+  result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma       ();
+  result_is_ok &= math::wide_decimal::example009_boost_math_standalone  ();
+  result_is_ok &= math::wide_decimal::example010_hypergeometric_2f1     ();
+  result_is_ok &= math::wide_decimal::example011_trig_trapezoid_integral();
 
   return result_is_ok;
 }

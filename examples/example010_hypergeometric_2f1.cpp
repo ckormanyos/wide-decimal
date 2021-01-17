@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020.                        //
+//  Copyright Christopher Kormanyos 2018 - 2021.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -21,6 +21,11 @@ namespace local
     // This C++11 code uses a computational scheme similar to
     // one shown in Y.L. Luke, "Algorithms for the Comuptation
     // of Mathematical Functions", Academic Press, New York, 1977.
+
+    // The original Fortran77 source can be found in the subroutine
+    // R2F1() on pages 167-168. Slight corrections are made here
+    // in order to repair one or two type-setting errors in the
+    // original publication.
 
     // Luke's original Fortran77 and algorithmic work are fascinating
     // since they are generic and scalable --- decades ahead of their time.

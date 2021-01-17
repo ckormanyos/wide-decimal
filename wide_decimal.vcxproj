@@ -341,6 +341,7 @@
     <ClCompile Include="examples\example008_bernoulli_tgamma.cpp" />
     <ClCompile Include="examples\example009_boost_math_standalone.cpp" />
     <ClCompile Include="examples\example010_hypergeometric_2f1.cpp" />
+    <ClCompile Include="examples\example011_trig_trapezoid_integral.cpp" />
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
     <ClCompile Include="test\test_decwide_t_examples.cpp" />
