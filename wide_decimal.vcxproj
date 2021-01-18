@@ -340,6 +340,7 @@
     <ClCompile Include="examples\example007_catalan_series.cpp" />
     <ClCompile Include="examples\example008_bernoulli_tgamma.cpp" />
     <ClCompile Include="examples\example009_boost_math_standalone.cpp" />
+    <ClCompile Include="examples\example010a_hypergeometric_1f1.cpp" />
     <ClCompile Include="examples\example010_hypergeometric_2f1.cpp" />
     <ClCompile Include="examples\example011_trig_trapezoid_integral.cpp" />
     <ClCompile Include="test\test.cpp" />

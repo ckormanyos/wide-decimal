@@ -35,6 +35,7 @@ bool test_decwide_t_examples_part2__()
   result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma       ();
   result_is_ok &= math::wide_decimal::example009_boost_math_standalone  ();
   result_is_ok &= math::wide_decimal::example010_hypergeometric_2f1     ();
+  result_is_ok &= math::wide_decimal::example010a_hypergeometric_1f1    ();
   result_is_ok &= math::wide_decimal::example011_trig_trapezoid_integral();
 
   return result_is_ok;
