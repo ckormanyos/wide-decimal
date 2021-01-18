@@ -32,7 +32,7 @@ Wide-decimal is written in header-only C++11.
   - ![`example008_bernoulli_tgamma`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\Gamma(23/2)">.
   - ![`example009_boost_math_standalone`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
   - ![`example010_hypergeometric_2f1`](./examples/example010_hypergeometric_2f1.cpp) calculates a hypergeometric function value using an iterative ratoinal approximation scheme.
-  - ![`example011_trig_trapezoid_integral`](./examples/example011_trig_trapezoid_integral.cpp) performs a trapezoid integration method using trigonometric functions to compute several cylindrical Bessel function values.
+  - ![`example011_trig_trapezoid_integral`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving trigonometric functions to compute several cylindrical Bessel function values.
 
 ## Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
