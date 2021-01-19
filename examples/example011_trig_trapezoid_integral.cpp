@@ -424,6 +424,7 @@ bool math::wide_decimal::example011_trig_trapezoid_integral()
 
   const dec51_t j2 = local::cyl_bessel_j(2U, dec51_t(123U) / 100U);
   const dec51_t j3 = local::cyl_bessel_j(3U, dec51_t(456U) / 100U);
+  const dec51_t j4 = local::cyl_bessel_j(4U, dec51_t(789U) / 100U);
 
   using std::fabs;
 
@@ -433,12 +434,16 @@ bool math::wide_decimal::example011_trig_trapezoid_integral()
   // N[BesselJ[3, 456/100], 60]
   const dec51_t control3 = dec51_t("0.420388204867652161626134623430784757427481712020578485761744");
 
+  // N[BesselJ[4, 789/100], 60]
+  const dec51_t control4 = dec51_t("-0.0785068635721274384104855203288065696173271865920904171127153");
+
   const dec51_t closeness2 = fabs(1 - (j2 / control2));
   const dec51_t closeness3 = fabs(1 - (j3 / control3));
+  const dec51_t closeness4 = fabs(1 - (j4 / control4));
 
   const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * 10;
 
-  const bool result_is_ok = ((closeness2 < tol) && (closeness3 < tol));
+  const bool result_is_ok = ((closeness2 < tol) && (closeness3 < tol) && (closeness4 < tol));
 
   return result_is_ok;
 }

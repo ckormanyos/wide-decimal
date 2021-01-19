@@ -376,7 +376,7 @@
     static constexpr std::int32_t decwide_t_elem_mask         = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask;
     static constexpr std::int32_t decwide_t_elem_mask_half    = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask_half;
 
-    static constexpr std::int64_t decwide_t_max_exp10         =  static_cast<std::int64_t>(INT64_C(0x7FFFFFFFFFFFFFFF) / decwide_t_elem_digits10) * decwide_t_elem_digits10;
+    static constexpr std::int64_t decwide_t_max_exp10         =  static_cast<std::int64_t>((std::numeric_limits<std::int64_t>::max)() / decwide_t_elem_digits10) * decwide_t_elem_digits10;
     static constexpr std::int64_t decwide_t_min_exp10         = -static_cast<std::int64_t>(decwide_t_max_exp10);
     static constexpr std::int64_t decwide_t_max_exp           = decwide_t_max_exp10;
     static constexpr std::int64_t decwide_t_min_exp           = decwide_t_min_exp10;

@@ -21,7 +21,6 @@ namespace local
     // This C++11 code uses a computational scheme similar to
     // one shown in Y.L. Luke, "Algorithms for the Comuptation
     // of Mathematical Functions", Academic Press, New York, 1977.
-
     // The original Fortran77 source can be found in the subroutine
     // R2F1() on pages 167-168. Slight corrections are made here
     // in order to repair one or two type-setting errors in the
