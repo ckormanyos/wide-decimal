@@ -34,7 +34,7 @@ jobs:
       - name: build-msvc-release
         shell: cmd
         run: |
-          set INCLUDE=%BOOST_ROOT_1_72_0%;%INCLUDE%
+          set INCLUDE=.\;%BOOST_ROOT_1_72_0%;%INCLUDE%
           MSBuild -m wide_decimal.sln -p:useenv=true -p:Configuration=release-wide-decimal -p:Platform=x64
           dir ./x64-release-wide-decimal/wide_decimal.exe
           dir ./wide_decimal.exe
