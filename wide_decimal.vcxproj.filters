@@ -38,6 +38,9 @@
     <Filter Include=".github\workflows">
       <UniqueIdentifier>{7364754c-af08-40c2-a3ec-25fbaba8abc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_doc">
+      <UniqueIdentifier>{c84326e0-541e-4462-bd66-7f5086e5ce3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -170,6 +173,8 @@
     <None Include=".github\workflows\wide_decimal.yml">
       <Filter>.github\workflows</Filter>
     </None>
-    <None Include="README.md" />
+    <None Include="README.md">
+      <Filter>_doc</Filter>
+    </None>
   </ItemGroup>
 </Project>
