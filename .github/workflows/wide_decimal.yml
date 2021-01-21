@@ -35,9 +35,9 @@ jobs:
         shell: cmd
         working-directory: ./
         run: |
-          set INCLUDE=%cd%;%BOOST_ROOT_1_72_0%;%INCLUDE%
+          set INCLUDE=%cd%;%BOOST_ROOT_1_72_0%\include\boost-1_72;%INCLUDE%
           echo %INCLUDE%
-          dir %BOOST_ROOT_1_72_0%\include\boost-1_72
+          dir %BOOST_ROOT_1_72_0%\include\boost-1_72\boost
           MSBuild -m wide_decimal.sln -p:useenv=true -p:Configuration=Release -p:Platform=x64
           dir ./x64/Release/wide_decimal.exe
           dir ./x64/Release/wide_decimal.exe
