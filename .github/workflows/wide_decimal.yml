@@ -36,8 +36,6 @@ jobs:
         working-directory: ./
         run: |
           set INCLUDE=%cd%;%BOOST_ROOT_1_72_0%\include\boost-1_72;%INCLUDE%
-          echo %INCLUDE%
-          dir %BOOST_ROOT_1_72_0%\include\boost-1_72\boost
-          MSBuild -m wide_decimal.sln -p:useenv=true -p:Configuration=Release -p:Platform=x64
-          dir %cd%\x64\Release\wide_decimal.exe
-          %cd%\x64\Release\wide_decimal.exe
+          MSBuild -m wide_decimal.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
+          dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
+          %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
