@@ -171,6 +171,8 @@ namespace local
 
 bool math::wide_decimal::example008_bernoulli_tgamma()
 {
+  const std::clock_t start = std::clock();
+
   // Initialize the table of Bernoulli numbers.
   local::bernoulli_b(local::bernoulli_table.data(), (std::uint32_t) local::bernoulli_table.size());
 
@@ -208,8 +210,6 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
 
   const wide_decimal_type tol (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(100000));
   const wide_decimal_type half(0.5F);
-
-  const std::clock_t start = std::clock();
 
   for(auto i = 0U; i < ratios.size(); ++i)
   {

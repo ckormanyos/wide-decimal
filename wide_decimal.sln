@@ -4,6 +4,18 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wide_decimal", "wide_decimal.vcxproj", "{79DD124E-E120-40F3-B2F1-127419BDC295}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{014AE8ED-F4C5-42B9-ADDC-8DDBDABD6872}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{0D675BCC-40E8-4F84-AA4A-555770FB5D69}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\wide_decimal.yml = .github\workflows\wide_decimal.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1EC74F1-287F-445F-8C3D-BC9628C1BC3D}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		debug-wide-decimal|x64 = debug-wide-decimal|x64
@@ -23,6 +35,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0D675BCC-40E8-4F84-AA4A-555770FB5D69} = {014AE8ED-F4C5-42B9-ADDC-8DDBDABD6872}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {95A775EC-AC77-447F-878D-5A600D26682A}

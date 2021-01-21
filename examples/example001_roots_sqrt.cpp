@@ -8,12 +8,20 @@
 #include <cstdint>
 
 #include <math/wide_decimal/decwide_t.h>
+#include <util/memory/util_n_slot_array_allocator.h>
 
 bool math::wide_decimal::example001_roots_sqrt()
 {
   using local_limb_type = std::uint16_t;
 
-  using dec101_t = math::wide_decimal::decwide_t<101U, local_limb_type>;
+  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(101);
+
+  constexpr std::int32_t local_elem_number =
+    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>;
+
+  using dec101_t = math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, float>;
 
   const dec101_t s = sqrt(dec101_t(123456U) / 100);
 

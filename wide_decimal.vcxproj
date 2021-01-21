@@ -94,16 +94,16 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='release-wide-decimal|x64'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release-wide-decimal|x64'">
-    <IncludePath>C:\boost\boost_1_73_0;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>C:\boost\boost_1_75_0;$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug-wide-decimal|x64'">
-    <IncludePath>C:\boost\boost_1_73_0;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>C:\boost\boost_1_75_0;$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release-wide-decimal|Win32'">
-    <IncludePath>C:\boost\boost_1_73_0;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>C:\boost\boost_1_75_0;$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug-wide-decimal|Win32'">
-    <IncludePath>C:\boost\boost_1_73_0;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>C:\boost\boost_1_75_0;$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release-wide-decimal|Win32'">
     <Midl>
@@ -326,6 +326,7 @@
     </CustomBuildStep>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="examples\example001b_roots_almost_integer.cpp" />
     <ClCompile Include="examples\example001a_roots_seventh.cpp" />
     <ClCompile Include="examples\example001_roots_sqrt.cpp" />
     <ClCompile Include="examples\example002a_pi_small_limb.cpp" />
@@ -339,6 +340,9 @@
     <ClCompile Include="examples\example007_catalan_series.cpp" />
     <ClCompile Include="examples\example008_bernoulli_tgamma.cpp" />
     <ClCompile Include="examples\example009_boost_math_standalone.cpp" />
+    <ClCompile Include="examples\example010a_hypergeometric_1f1.cpp" />
+    <ClCompile Include="examples\example010_hypergeometric_2f1.cpp" />
+    <ClCompile Include="examples\example011_trig_trapezoid_integral.cpp" />
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
     <ClCompile Include="test\test_decwide_t_examples.cpp" />
