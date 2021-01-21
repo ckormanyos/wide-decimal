@@ -36,7 +36,7 @@ jobs:
         working-directory: ./
         run: |
           set INCLUDE=%cd%;%BOOST_ROOT_1_72_0%;%INCLUDE%
-          MSBuild -m wide_decimal.sln -p:useenv=true -p:Configuration=release-wide-decimal -p:Platform=x64
-          dir ./x64-release-wide-decimal/wide_decimal.exe
-          dir ./wide_decimal.exe
-          ./wide_decimal.exe
+          MSBuild -m wide_decimal.sln -p:useenv=true -p:Configuration=Release -p:Platform=x64
+          dir ./x64/Release/wide_decimal.exe
+          dir ./x64/Release/wide_decimal.exe
+          ./x64/Release/wide_decimal.exe
