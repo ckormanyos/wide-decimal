@@ -35,6 +35,7 @@ jobs:
         shell: cmd
         run: |
           set INCLUDE=%BOOST_ROOT_1_72_0%;%INCLUDE%
+          echo INCLUDE=%INCLUDE%
           MSBuild -m wide_decimal.sln -p:Configuration=release-wide-decimal -p:Platform=x64
           dir ./x64-release-wide-decimal/wide_decimal.exe
           dir ./wide_decimal.exe
