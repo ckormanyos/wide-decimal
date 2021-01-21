@@ -7,6 +7,7 @@
 
 #ifndef TEST_DECWIDE_T_ALGEBRA_2020_11_05_H_
   #define TEST_DECWIDE_T_ALGEBRA_2020_11_05_H_
+
   bool test_decwide_t_algebra_add_____();
   bool test_decwide_t_algebra_sub_____();
   bool test_decwide_t_algebra_mul_____();
