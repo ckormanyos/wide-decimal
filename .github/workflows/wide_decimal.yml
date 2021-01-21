@@ -29,15 +29,12 @@ jobs:
     runs-on: windows-latest
     if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: '0'
+      - uses: actions/checkout@v1
+      - uses: ilammy/msvc-dev-cmd@v1
       - name: build-msvc-release
-        shell: pwsh
-        env:
-          PATH: '${env:PATH};C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64'
-          INCLUDE: '${env:INCLUDE};%BOOST_ROOT_1_72_0%'
+        shell: cmd
         run: |
+          set INCLUDE=%BOOST_ROOT_1_72_0%;%INCLUDE%
           MSBuild -m wide_decimal.sln -p:Configuration=release-wide-decimal -p:Platform=x64
           dir ./x64-release-wide-decimal/wide_decimal.exe
           dir ./wide_decimal.exe
