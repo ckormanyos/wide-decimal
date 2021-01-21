@@ -11,9 +11,10 @@
   #include <iomanip>
   #include <sstream>
 
-  #include <boost/multiprecision/cpp_bin_float.hpp>
   #include <math/wide_decimal/decwide_t.h>
   #include <test/independent_algebra_test_base.h>
+
+  #include <boost/multiprecision/cpp_bin_float.hpp>
 
   namespace test { namespace independent_algebra {
 
@@ -23,11 +24,11 @@
   public:
     using other_decwide_t_type = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
 
-    using float_type =
+    using local_float_type =
       boost::multiprecision::number<boost::multiprecision::cpp_bin_float<std::numeric_limits<other_decwide_t_type>::digits10 + 3>,
                                     boost::multiprecision::et_off>;
 
-    float_type my_cpp_bin_float;
+    local_float_type my_cpp_bin_float;
 
     independent_algebra_test_boost_cpp() : my_cpp_bin_float() { }
 
@@ -43,7 +44,7 @@
 
       ss << std::scientific
          << std::uppercase
-         << std::setprecision(std::streamsize(std::numeric_limits<float_type>::digits10 + 1))
+         << std::setprecision(std::streamsize(std::numeric_limits<local_float_type>::digits10 + 1))
          << my_cpp_bin_float;
 
       str = ss.str();

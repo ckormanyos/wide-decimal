@@ -13,25 +13,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1EC74F1-287F-445F-8C3D-BC9628C1BC3D}"
 	ProjectSection(SolutionItems) = preProject
+		CMakeLists.txt = CMakeLists.txt
 		README.md = README.md
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		debug-wide-decimal|x64 = debug-wide-decimal|x64
-		debug-wide-decimal|x86 = debug-wide-decimal|x86
 		release-wide-decimal|x64 = release-wide-decimal|x64
-		release-wide-decimal|x86 = release-wide-decimal|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-wide-decimal|x64.ActiveCfg = debug-wide-decimal|x64
 		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-wide-decimal|x64.Build.0 = debug-wide-decimal|x64
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-wide-decimal|x86.ActiveCfg = debug-wide-decimal|Win32
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.debug-wide-decimal|x86.Build.0 = debug-wide-decimal|Win32
 		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-wide-decimal|x64.ActiveCfg = release-wide-decimal|x64
 		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-wide-decimal|x64.Build.0 = release-wide-decimal|x64
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-wide-decimal|x86.ActiveCfg = release-wide-decimal|Win32
-		{79DD124E-E120-40F3-B2F1-127419BDC295}.release-wide-decimal|x86.Build.0 = release-wide-decimal|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
