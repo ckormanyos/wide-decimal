@@ -147,6 +147,22 @@ bool math::wide_decimal::example002c_pi_quintic()
                                      ri + math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 8U>().size(),
                                           math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 8U>().crbegin());
 
+  std::cout << "tail reverse: ";
+  for(auto rt = ri; rt != ri + math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 8U>().size(); ++rt)
+  {
+    std::cout << *rt << ",";
+  }
+  std::cout << std::endl;
+
+  std::cout << "head forward: ";
+  for(auto ih  = my_pi.crepresentation().cbegin();
+           ih != my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head<local_limb_type, 8U>().size();
+           ++ih)
+  {
+    std::cout << *ih << ",";
+  }
+  std::cout << std::endl;
+
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 
   return result_is_ok;
