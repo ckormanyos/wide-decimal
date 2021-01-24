@@ -14,6 +14,7 @@
   #include <math/wide_decimal/decwide_t.h>
   #include <test/independent_algebra_test_base.h>
 
+  #include <boost/serialization/nvp.hpp>
   #include <boost/multiprecision/cpp_bin_float.hpp>
 
   namespace test { namespace independent_algebra {
