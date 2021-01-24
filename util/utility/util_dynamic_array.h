@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2012 - 2020.
+//  Copyright Christopher Kormanyos 2012 - 2021.
 //  Distributed under the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -52,7 +52,6 @@
           allocator_type my_a(a);
 
           std::allocator_traits<AllocatorType>::construct(my_a, it, v);
-          //allocator_type(a).construct(it, v);
 
           ++it;
         }
@@ -98,9 +97,9 @@
 
         while(p != elems + elem_count)
         {
-          AllocatorType a;
+          allocator_type a;
 
-          std::allocator_traits<AllocatorType>::destroy(a, p);
+          std::allocator_traits<allocator_type>::destroy(a, p);
 
           ++p;
         }

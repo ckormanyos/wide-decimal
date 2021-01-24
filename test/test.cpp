@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 1999 - 2020.                 //
+//  Copyright Christopher Kormanyos 1999 - 2021.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -25,9 +25,6 @@
 #include <iomanip>
 #include <iostream>
 
-#define BOOST_TEST_MODULE test_decwide_t
-#include <boost/test/included/unit_test.hpp>
-
 #include <test/test_decwide_t_algebra.h>
 #include <test/test_decwide_t_examples.h>
 
@@ -38,12 +35,36 @@ namespace
   auto wide_decimal_time_start = clock_type::now();
 }
 
-BOOST_AUTO_TEST_CASE(test_decwide_t_examples_part1___tag) { auto start = clock_type::now(); BOOST_CHECK(test_decwide_t_examples_part1__() == true); auto stop = clock_type::now(); std::cout << "time test_decwide_t_examples_part1___: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())                   / 1000.0F << "s" << std::endl; }
-BOOST_AUTO_TEST_CASE(test_decwide_t_examples_part2___tag) { auto start = clock_type::now(); BOOST_CHECK(test_decwide_t_examples_part2__() == true); auto stop = clock_type::now(); std::cout << "time test_decwide_t_examples_part2___: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())                   / 1000.0F << "s" << std::endl; }
-BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_add______tag) { auto start = clock_type::now(); BOOST_CHECK(test_decwide_t_algebra_add_____() == true); auto stop = clock_type::now(); std::cout << "time test_decwide_t_algebra_add______: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())                   / 1000.0F << "s" << std::endl; }
-BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_sub______tag) { auto start = clock_type::now(); BOOST_CHECK(test_decwide_t_algebra_sub_____() == true); auto stop = clock_type::now(); std::cout << "time test_decwide_t_algebra_sub______: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())                   / 1000.0F << "s" << std::endl; }
-BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_mul______tag) { auto start = clock_type::now(); BOOST_CHECK(test_decwide_t_algebra_mul_____() == true); auto stop = clock_type::now(); std::cout << "time test_decwide_t_algebra_mul______: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())                   / 1000.0F << "s" << std::endl; }
-BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_div______tag) { auto start = clock_type::now(); BOOST_CHECK(test_decwide_t_algebra_div_____() == true); auto stop = clock_type::now(); std::cout << "time test_decwide_t_algebra_div______: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())                   / 1000.0F << "s" << std::endl; }
-BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_sqrt_____tag) { auto start = clock_type::now(); BOOST_CHECK(test_decwide_t_algebra_sqrt____() == true); auto stop = clock_type::now(); std::cout << "time test_decwide_t_algebra_sqrt_____: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())                   / 1000.0F << "s" << std::endl; }
-BOOST_AUTO_TEST_CASE(test_decwide_t_algebra_log______tag) { auto start = clock_type::now(); BOOST_CHECK(test_decwide_t_algebra_log_____() == true); auto stop = clock_type::now(); std::cout << "time test_decwide_t_algebra_log______: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())                   / 1000.0F << "s" << std::endl;
-                                                                                                                                                                                   std::cout << "time total:                            " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - wide_decimal_time_start).count()) / 1000.0F << "s" << std::endl; }
+int main()
+{
+  using time_point_type = std::chrono::high_resolution_clock::time_point;
+
+  time_point_type start;
+  time_point_type stop;
+
+  start = clock_type::now(); const bool result_test_decwide_t_examples_part1_is_ok = (test_decwide_t_examples_part1__() == true); stop = clock_type::now(); std::cout << "result_test_decwide_t_examples_part1_is_ok: " << std::boolalpha << result_test_decwide_t_examples_part1_is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
+  start = clock_type::now(); const bool result_test_decwide_t_examples_part2_is_ok = (test_decwide_t_examples_part2__() == true); stop = clock_type::now(); std::cout << "result_test_decwide_t_examples_part2_is_ok: " << std::boolalpha << result_test_decwide_t_examples_part2_is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
+  start = clock_type::now(); const bool result_test_decwide_t_algebra_add____is_ok = (test_decwide_t_algebra_add_____() == true); stop = clock_type::now(); std::cout << "result_test_decwide_t_algebra_add____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_add____is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
+  start = clock_type::now(); const bool result_test_decwide_t_algebra_sub____is_ok = (test_decwide_t_algebra_sub_____() == true); stop = clock_type::now(); std::cout << "result_test_decwide_t_algebra_sub____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_sub____is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
+  start = clock_type::now(); const bool result_test_decwide_t_algebra_mul____is_ok = (test_decwide_t_algebra_mul_____() == true); stop = clock_type::now(); std::cout << "result_test_decwide_t_algebra_mul____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_mul____is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
+  start = clock_type::now(); const bool result_test_decwide_t_algebra_div____is_ok = (test_decwide_t_algebra_div_____() == true); stop = clock_type::now(); std::cout << "result_test_decwide_t_algebra_div____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_div____is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
+  start = clock_type::now(); const bool result_test_decwide_t_algebra_sqrt___is_ok = (test_decwide_t_algebra_sqrt____() == true); stop = clock_type::now(); std::cout << "result_test_decwide_t_algebra_sqrt___is_ok: " << std::boolalpha << result_test_decwide_t_algebra_sqrt___is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
+  start = clock_type::now(); const bool result_test_decwide_t_algebra_log____is_ok = (test_decwide_t_algebra_log_____() == true); stop = clock_type::now(); std::cout << "result_test_decwide_t_algebra_log____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_log____is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
+
+  const bool result_is_ok = (   result_test_decwide_t_examples_part1_is_ok
+                             && result_test_decwide_t_examples_part2_is_ok
+                             && result_test_decwide_t_algebra_add____is_ok
+                             && result_test_decwide_t_algebra_sub____is_ok
+                             && result_test_decwide_t_algebra_mul____is_ok
+                             && result_test_decwide_t_algebra_div____is_ok
+                             && result_test_decwide_t_algebra_sqrt___is_ok
+                             && result_test_decwide_t_algebra_log____is_ok);
+
+  std::cout << "result_os_ok:                             : "
+            << std::boolalpha
+            << result_is_ok
+            << ", time: "
+            << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - wide_decimal_time_start).count()) / 1000.0F << "s" << std::endl;
+
+  return (result_is_ok ? 0 : -1);
+}
