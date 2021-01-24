@@ -127,7 +127,7 @@ bool math::wide_decimal::example002c_pi_quintic()
 
   const std::clock_t start = std::clock();
 
-  dec1000001_t my_pi = pi_borwein_quintic<dec1000001_t>(&std::cout);
+  const dec1000001_t my_pi = pi_borwein_quintic<dec1000001_t>(&std::cout);
 
   const std::clock_t stop = std::clock();
 
@@ -137,11 +137,15 @@ bool math::wide_decimal::example002c_pi_quintic()
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
                                      my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head<local_limb_type, 8U>().size(),
-                                     math::constants::const_pi_control_head<local_limb_type, 8U>().begin());
+                                     math::constants::const_pi_control_head<local_limb_type, 8U>().cbegin());
 
-  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 8U>().size()),
-                                     my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)),
-                                     math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 8U>().begin());
+  using const_reverse_iterator_type = typename dec1000001_t::array_type::const_reverse_iterator;
+
+  const_reverse_iterator_type ri(my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)));
+
+  const bool tail_is_ok = std::equal(ri,
+                                     ri + math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 8U>().size(),
+                                          math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 8U>().crbegin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 
