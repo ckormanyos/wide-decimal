@@ -8,23 +8,21 @@
 #ifndef CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H_
   #define CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H_
 
-  #include <array>
   #include <cstddef>
   #include <cstdint>
+  #include <initializer_list>
 
   namespace math { namespace constants {
 
-  template<typename UnsignedIntegralType,
-           const std::size_t ElemCount>
-  constexpr std::array<UnsignedIntegralType, ElemCount> const_pi_control_head();
+  template<typename UnsignedIntegralType>
+  constexpr std::initializer_list<UnsignedIntegralType> const_pi_control_head();
 
   template<const std::uint32_t Digits10,
-           typename UnsignedIntegralType,
-           const std::size_t ElemCount>
-  constexpr std::array<UnsignedIntegralType, ElemCount> const_pi_control_tail();
+           typename UnsignedIntegralType>
+  constexpr std::initializer_list<UnsignedIntegralType> const_pi_control_tail();
 
   template<>
-  constexpr std::array<std::uint32_t, 8U> const_pi_control_head<std::uint32_t, 8U>()
+  constexpr std::initializer_list<std::uint32_t> const_pi_control_head<std::uint32_t>()
   {
     // head std::uint32_t
     return
@@ -41,7 +39,7 @@
   }
 
   template<>
-  constexpr std::array<std::uint16_t, 15U> const_pi_control_head<std::uint16_t, 15U>()
+  constexpr std::initializer_list<std::uint16_t> const_pi_control_head<std::uint16_t>()
   {
     // head std::uint16_t
     return
@@ -58,7 +56,7 @@
   }
 
   template<>
-  constexpr std::array<std::uint32_t, 8U> const_pi_control_tail<10001UL, std::uint32_t, 8U>()
+  constexpr std::initializer_list<std::uint32_t> const_pi_control_tail<10001UL, std::uint32_t>()
   {
     // tail 1 + 10^4 std::uint32_t
     return
@@ -75,7 +73,7 @@
   }
 
   template<>
-  constexpr std::array<std::uint32_t, 8U> const_pi_control_tail<100001UL, std::uint32_t, 8U>()
+  constexpr std::initializer_list<std::uint32_t> const_pi_control_tail<100001UL, std::uint32_t>()
   {
     // tail 1 + 10^5 std::uint32_t
     return
@@ -92,7 +90,7 @@
   }
 
   template<>
-  constexpr std::array<std::uint32_t, 8U> const_pi_control_tail<1000001UL, std::uint32_t, 8U>()
+  constexpr std::initializer_list<std::uint32_t> const_pi_control_tail<1000001UL, std::uint32_t>()
   {
     // tail 1 + 10^6 std::uint32_t
     return
@@ -109,7 +107,7 @@
   }
 
   template<>
-  constexpr std::array<std::uint16_t, 16U> const_pi_control_tail<10001UL, std::uint16_t, 16U>()
+  constexpr std::initializer_list<std::uint16_t> const_pi_control_tail<10001UL, std::uint16_t>()
   {
     // tail 1 + 10^4 std::uint16_t
     return
@@ -126,7 +124,7 @@
   }
 
   template<>
-  constexpr std::array<std::uint16_t, 16U> const_pi_control_tail<100001UL, std::uint16_t, 16U>()
+  constexpr std::initializer_list<std::uint16_t> const_pi_control_tail<100001UL, std::uint16_t>()
   {
     // tail 1 + 10^5 std::uint16_t
     return
@@ -143,7 +141,7 @@
   }
 
   template<>
-  constexpr std::array<std::uint16_t, 16U> const_pi_control_tail<1000001UL, std::uint16_t, 16U>()
+  constexpr std::initializer_list<std::uint16_t> const_pi_control_tail<1000001UL, std::uint16_t>()
   {
     // tail 1 + 10^6 std::uint16_t
     return
