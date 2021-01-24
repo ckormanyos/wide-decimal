@@ -56,7 +56,7 @@ bool math::wide_decimal::example002a_pi_small_limb()
 
   const std::clock_t start = std::clock();
 
-  math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
+  const math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
     math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>(example002a_pi_small_limb_digits10_callback);
 
   const std::clock_t stop = std::clock();
@@ -66,12 +66,17 @@ bool math::wide_decimal::example002a_pi_small_limb()
     << std::endl;
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head<local_limb_type, 15U>().size(),
-                                     math::constants::const_pi_control_head<local_limb_type, 15U>().begin());
+                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_16.size(),
+                                     math::constants::const_pi_control_head_16.begin());
 
-  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 16U>().size()),
-                                     my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)),
-                                     math::constants::const_pi_control_tail<wide_decimal_digits10, local_limb_type, 16U>().begin());
+  using const_iterator_type = typename math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double>::array_type::const_iterator;
+
+  const_iterator_type fi(my_pi.crepresentation().cbegin() + (std::uint32_t) (  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
+                                                                             - (std::uint32_t) math::constants::const_pi_control_tail_16_1000001.size()));
+
+  const bool tail_is_ok = std::equal(fi,
+                                     fi + math::constants::const_pi_control_tail_16_1000001.size(),
+                                          math::constants::const_pi_control_tail_16_1000001.begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 

@@ -5,6 +5,9 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#include <iomanip>
+#include <iostream>
+
 #include <math/wide_decimal/decwide_t.h>
 #include <test/test_decwide_t_examples.h>
 
@@ -12,13 +15,13 @@ bool test_decwide_t_examples_part1__()
 {
   bool result_is_ok = true;
 
-  result_is_ok &= math::wide_decimal::example001_roots_sqrt           ();
-  result_is_ok &= math::wide_decimal::example001a_roots_seventh       ();
-  result_is_ok &= math::wide_decimal::example001b_roots_almost_integer();
-  result_is_ok &= math::wide_decimal::example002_pi                   ();
-  result_is_ok &= math::wide_decimal::example002a_pi_small_limb       ();
-  result_is_ok &= math::wide_decimal::example002b_pi_100k             ();
-  result_is_ok &= math::wide_decimal::example002c_pi_quintic          ();
+  result_is_ok &= math::wide_decimal::example001_roots_sqrt           (); std::cout << "example001_roots_sqrt           : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example001a_roots_seventh       (); std::cout << "example001a_roots_seventh       : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example001b_roots_almost_integer(); std::cout << "example001b_roots_almost_integer: " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example002_pi                   (); std::cout << "example002_pi                   : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example002a_pi_small_limb       (); std::cout << "example002a_pi_small_limb       : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example002b_pi_100k             (); std::cout << "example002b_pi_100k             : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example002c_pi_quintic          (); std::cout << "example002c_pi_quintic          : " << std::boolalpha << result_is_ok << std::endl;
 
   return result_is_ok;
 }

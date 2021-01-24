@@ -69,18 +69,17 @@ namespace local
 
     const T Z2(Z / 2U);
 
-    std::array<T, 9U> D =
-    {{
-      (((T(7U) / 2U) - AB) * Z2) - SABZ,
-      ABZ1 / 4U,
-      D[1U] - (SABZ * 2U),
-      CP1 + my_one,
-      CP1 * D[3U],
-      CP  * D[4U],
-      T(3U) / 2U,
-      T(3U) / 4U,
-      D[7U] * Z
-    }};
+    std::array<T, 9U> D;
+
+    D[0U] = (((T(7U) / 2U) - AB) * Z2) - SABZ;
+    D[1U] = ABZ1 / 4U;
+    D[2U] = D[1U] - (SABZ * 2U);
+    D[3U] = CP1 + my_one;
+    D[4U] = CP1 * D[3U];
+    D[5U] = CP  * D[4U];
+    D[6U] = T(3U) / 2U;
+    D[7U] = T(3U) / 4U;
+    D[8U] = D[7U] * Z;
 
     std::array<T, 3U> G;
 

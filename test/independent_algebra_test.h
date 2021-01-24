@@ -147,7 +147,7 @@
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok](std::size_t j)
+        [&result_is_ok](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
@@ -196,7 +196,7 @@
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok](std::size_t j)
+        [&result_is_ok](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
@@ -245,7 +245,7 @@
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok](std::size_t j)
+        [&result_is_ok](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
@@ -294,7 +294,7 @@
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok](std::size_t j)
+        [&result_is_ok](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
@@ -343,7 +343,7 @@
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok](std::size_t j)
+        [&result_is_ok](std::size_t j)
         {
           std::string str_a;
 
@@ -387,7 +387,7 @@
       (
         std::size_t(0U),
         std::size_t(count),
-        [&i, &result_is_ok](std::size_t j)
+        [&result_is_ok](std::size_t j)
         {
           std::string str_a;
 
