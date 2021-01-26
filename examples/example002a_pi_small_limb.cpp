@@ -36,7 +36,7 @@ void example002a_pi_small_limb_digits10_callback(const std::uint32_t d10)
   char p_str[10U] = { 0 };
   char* p_end = util::baselexical_cast(d10, p_str);
 
-  lcd0().write_n(p_str, (std::uint_fast8_t) (p_end - p_str), 0U);
+  lcd0().write(p_str, (std::uint_fast8_t) (p_end - p_str), 0U);
 }
 
 

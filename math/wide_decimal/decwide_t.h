@@ -384,8 +384,6 @@
     // Rebind the decwide_t allocator to the granularity of the LimbType.
     using allocator_type = typename std::allocator_traits<AllocatorType>::template rebind_alloc<LimbType>;
 
-    //using allocator_type = typename AllocatorType::template rebind<LimbType>::other;
-
     // Define the array type, which is the internal
     // representation of the data field of a decwide_t.
     using array_type = detail::fixed_dynamic_array<typename allocator_type::value_type,
