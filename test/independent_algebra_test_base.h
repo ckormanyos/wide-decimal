@@ -21,8 +21,6 @@
 
   protected:
     independent_algebra_test_base() { }
-
-    independent_algebra_test_base(const char*) { }
   };
 
   } }
