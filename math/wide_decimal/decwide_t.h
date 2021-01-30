@@ -34,9 +34,6 @@
   #endif
   #include <type_traits>
 
-
-  #include <vector>
-
   #include <math/wide_decimal/decwide_t_detail_fft.h>
   #include <math/wide_decimal/decwide_t_detail_helper.h>
   #include <math/wide_decimal/decwide_t_detail_karatsuba.h>
@@ -62,10 +59,10 @@
   template <typename MyType,
             const std::uint_fast32_t MySize,
             typename MyAlloc>
-  class fixed_dynamic_array final : public std::vector<MyType, MyAlloc>
+  class fixed_dynamic_array final : public util::dynamic_array<MyType, MyAlloc>
   {
   private:
-    using base_class_type = std::vector<MyType, MyAlloc>;
+    using base_class_type = util::dynamic_array<MyType, MyAlloc>;
 
   public:
     fixed_dynamic_array(const typename base_class_type::size_type       s  = MySize,
@@ -1350,18 +1347,11 @@
 
     void precision(const std::int32_t prec_digits)
     {
-      if(prec_digits >= decwide_t_digits10)
-      {
-        my_prec_elem = decwide_t_elem_number;
-      }
-      else
-      {
-        const std::int32_t elems =
-          static_cast<std::int32_t>(    static_cast<std::int32_t>(prec_digits / decwide_t_elem_digits10)
-                                    +                          (((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0));
+      const std::int32_t elems =
+        static_cast<std::int32_t>(    static_cast<std::int32_t>(prec_digits / decwide_t_elem_digits10)
+                                  +                          (((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0));
 
-        my_prec_elem = (std::min)(decwide_t_elem_number, (std::max)(elems, static_cast<std::int32_t>(2)));
-      }
+      my_prec_elem = (std::min)(decwide_t_elem_number, (std::max)(elems, static_cast<std::int32_t>(2)));
     }
 
     void swap(decwide_t& other_decwide_t)
@@ -2178,11 +2168,11 @@
     {
     }
 
-    static void mul_loop_karatsuba(limb_type* const u, const limb_type* const v, const std::int32_t p)
+    static void mul_loop_karatsuba(limb_type* const u, const limb_type* const v, const std::int32_t prec_elems_for_multiply)
     {
     }
 
-    static void mul_loop_fft(limb_type* const u, const limb_type* const v, const std::int32_t p)
+    static void mul_loop_fft(limb_type* const u, const limb_type* const v, const std::int32_t prec_elems_for_multiply)
     {
       // Determine the required FFT size n_fft,
       // where n_fft must be a power of two.
@@ -2200,7 +2190,7 @@
       std::uint32_t n_fft = 0U;
 
       {
-        std::uint32_t p_fft = (std::uint32_t) ((p * 2L) * 2L);
+        std::uint32_t p_fft = (std::uint32_t) ((prec_elems_for_multiply * 2L) * 2L);
 
         // Use O(log2[N]) binary-halving in an unrolled loop to find the msb.
         if((p_fft & UINT32_C(0xFFFF0000)) != UINT32_C(0)) { p_fft >>= 16U; n_fft |= UINT8_C(16); }
@@ -2213,7 +2203,7 @@
         // with the added condition of needing to be a power of 2.
         n_fft = (std::uint32_t) (1UL << n_fft);
 
-        if(n_fft < (std::uint32_t) ((p * 2L) * 2L))
+        if(n_fft < (std::uint32_t) ((prec_elems_for_multiply * 2L) * 2L))
         {
           n_fft <<= 1U;
         }
@@ -2225,10 +2215,12 @@
       InternalFloatType* my_af_bf_fft_mul_pool = new InternalFloatType[n_fft * 2U];
       #endif
 
+      std::fill(my_af_bf_fft_mul_pool, my_af_bf_fft_mul_pool + (n_fft * 2U), InternalFloatType(0));
+
       InternalFloatType* af = my_af_bf_fft_mul_pool + (0U * n_fft);
       InternalFloatType* bf = my_af_bf_fft_mul_pool + (1U * n_fft);
 
-      for(std::uint32_t i = static_cast<std::uint32_t>(0U); i < static_cast<std::uint32_t>(p); ++i)
+      for(std::uint32_t i = static_cast<std::uint32_t>(0U); i < static_cast<std::uint32_t>(prec_elems_for_multiply); ++i)
       {
         af[(i * 2U)]      = InternalFloatType(u[i] / decwide_t_elem_mask_half);
         af[(i * 2U) + 1U] = InternalFloatType(u[i] % decwide_t_elem_mask_half);
@@ -2236,9 +2228,6 @@
         bf[(i * 2U)]      = InternalFloatType(v[i] / decwide_t_elem_mask_half);
         bf[(i * 2U) + 1U] = InternalFloatType(v[i] % decwide_t_elem_mask_half);
       }
-
-      std::fill(af + (p * 2), af + n_fft, InternalFloatType(0));
-      std::fill(bf + (p * 2), bf + n_fft, InternalFloatType(0));
 
       // Perform forward FFTs on the data arrays a and b.
       detail::fft::rfft_lanczos_rfft<InternalFloatType, true>(n_fft, af);
@@ -2265,7 +2254,7 @@
       // to the result of multiplication.
       double_limb_type carry = static_cast<double_limb_type>(0U);
 
-      for(std::uint32_t j = static_cast<std::uint32_t>((p * 2L) - 2L); static_cast<std::int32_t>(j) >= 0; j -= 2U)
+      for(std::uint32_t j = static_cast<std::uint32_t>((prec_elems_for_multiply * 2L) - 2L); static_cast<std::int32_t>(j) >= 0; j -= 2U)
       {
         InternalFloatType      xaj = af[j] / (n_fft / 2U);
         const double_limb_type xlo = static_cast<double_limb_type>(xaj + detail::fft::template_half<InternalFloatType>()) + carry;
@@ -2288,12 +2277,12 @@
 
     template<const std::int32_t ElemsForFftThreshold>
     void eval_mul_dispatch_multiplication_method(const decwide_t& v,
-                                                 const std::int32_t p,
+                                                 const std::int32_t prec_elems_for_multiply,
                                                  const std::int32_t = ElemsForFftThreshold,
                                                  const typename std::enable_if<(decwide_t_elems_for_fft >= ElemsForFftThreshold)>::type* = nullptr)
     {
       // Use school multiplication.
-      const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), p);
+      const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
       // Handle a potential carry.
       if(carry != static_cast<limb_type>(0U))
@@ -2311,17 +2300,17 @@
 
     template<const std::int32_t ElemsForFftThreshold>
     void eval_mul_dispatch_multiplication_method(const decwide_t& v,
-                                                 const std::int32_t p,
+                                                 const std::int32_t prec_elems_for_multiply,
                                                  const std::int32_t = ElemsForFftThreshold,
                                                  const typename std::enable_if<(ElemsForFftThreshold > decwide_t_elems_for_fft)>::type* = nullptr)
     {
       // Note: Karatsuba multiplication is not used for intermediate digit counts.
       // TBD: Implement Karatsuba multiplication for intermediate digit counts.
 
-      if(p < decwide_t_elems_for_fft)
+      if(prec_elems_for_multiply < decwide_t_elems_for_fft)
       {
         // Use school multiplication.
-        const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), p);
+        const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
         // Handle a potential carry.
         if(carry != static_cast<limb_type>(0U))
@@ -2339,7 +2328,7 @@
       else
       {
         // Use FFT-based multiplication.
-        mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(p));
+        mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(prec_elems_for_multiply));
 
         if(my_data.front() != static_cast<limb_type>(0U))
         {
