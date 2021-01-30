@@ -34,6 +34,9 @@
   #endif
   #include <type_traits>
 
+
+  #include <vector>
+
   #include <math/wide_decimal/decwide_t_detail_fft.h>
   #include <math/wide_decimal/decwide_t_detail_helper.h>
   #include <math/wide_decimal/decwide_t_detail_karatsuba.h>
@@ -59,10 +62,10 @@
   template <typename MyType,
             const std::uint_fast32_t MySize,
             typename MyAlloc>
-  class fixed_dynamic_array final : public util::dynamic_array<MyType, MyAlloc>
+  class fixed_dynamic_array final : public std::vector<MyType, MyAlloc>
   {
   private:
-    using base_class_type = util::dynamic_array<MyType, MyAlloc>;
+    using base_class_type = std::vector<MyType, MyAlloc>;
 
   public:
     fixed_dynamic_array(const typename base_class_type::size_type       s  = MySize,
@@ -779,8 +782,8 @@
 
       // Do the add/sub operation.
 
-      typename array_type::iterator       p_u    =   my_data.begin();
-      typename array_type::const_iterator p_v    = v.my_data.cbegin();
+      typename array_type::pointer        p_u    =   my_data.data();
+      typename array_type::const_pointer  p_v    = v.my_data.data();
       bool                                b_copy = false;
       const std::int32_t                  ofs    = static_cast<std::int32_t>(static_cast<std::int32_t>(ofs_exp) / decwide_t_elem_digits10);
 
@@ -807,7 +810,7 @@
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(ofs),
                     static_cast<limb_type>(0));
 
-          p_v = my_n_data_for_add_sub.begin();
+          p_v = my_n_data_for_add_sub.data();
         }
         else
         {
@@ -819,7 +822,7 @@
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(-ofs),
                     static_cast<limb_type>(0));
 
-          p_u = my_n_data_for_add_sub.begin();
+          p_u = my_n_data_for_add_sub.data();
           b_copy = true;
         }
 
@@ -864,7 +867,7 @@
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(ofs),
                     static_cast<limb_type>(0));
 
-          p_v = my_n_data_for_add_sub.begin();
+          p_v = my_n_data_for_add_sub.data();
         }
         else
         {
@@ -886,8 +889,8 @@
           // operand pointer p_v to point to the shifted
           // data m_data.
           std::copy(v.my_data.cbegin(), v.my_data.cend(), my_n_data_for_add_sub.begin());
-          p_u    = my_n_data_for_add_sub.begin();
-          p_v    = my_data.begin();
+          p_u    = my_n_data_for_add_sub.data();
+          p_v    = my_data.data();
           b_copy = true;
         }
 
