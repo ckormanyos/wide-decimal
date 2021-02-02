@@ -970,7 +970,7 @@
         // Set the exponent of the result.
         my_exp += v.my_exp;
 
-        const std::int32_t prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
+        const std::int32_t prec_elems_for_multiply = (std::min)(decwide_t_elem_number, (std::min)(my_prec_elem, v.my_prec_elem));
 
         eval_mul_dispatch_multiplication_method<decwide_t_elem_number>(v, prec_elems_for_multiply);
       }
@@ -2337,9 +2337,9 @@
         }
         else
         {
-          // Justify the data.
-          std::copy(my_data.cbegin() +  static_cast<std::ptrdiff_t>(1),
-                    my_data.cbegin() + (static_cast<std::ptrdiff_t>(1) + static_cast<std::ptrdiff_t>(my_prec_elem)),
+          // Justify the data if necessary.
+          std::copy(my_data.cbegin() +  1,
+                    my_data.cbegin() + (std::min)(decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
                     my_data.begin());
 
           my_data.back() = static_cast<limb_type>(0U);
