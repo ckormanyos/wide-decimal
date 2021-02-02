@@ -62,7 +62,7 @@ jobs:
         run: sudo apt install libboost-dev
       - name: update-libboost-all-dev
         run: sudo apt install libboost-all-dev
-      - name: run-gcc-10-cpp11
+      - name: run-gcc-10-cpp11-asan
         run: |
           echo "compile ./wide_decimal.exe"
           g++-10 -v
