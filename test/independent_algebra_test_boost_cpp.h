@@ -34,8 +34,7 @@
     independent_algebra_test_boost_cpp() : my_cpp_bin_float() { }
 
     independent_algebra_test_boost_cpp(const char* str)
-      : independent_algebra_test_base(str),
-        my_cpp_bin_float(str) { }
+      : my_cpp_bin_float(str) { }
 
     virtual ~independent_algebra_test_boost_cpp() { }
 

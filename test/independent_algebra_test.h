@@ -27,7 +27,7 @@
   struct control
   {
   public:
-    static bool eval_eq(const independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>&   a,
+    static bool eval_eq(const independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a,
                         const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& b)
     {
       std::string str_b;
@@ -36,12 +36,14 @@
 
       const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> decwide_t_b(str_b);
 
-      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ratio = fabs(1 - fabs(a.my_decwide_t / decwide_t_b));
+      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ratio = fabs(a.my_decwide_t / decwide_t_b);
 
-      static const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> eps =
+      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> delta = fabs(1 - ratio);
+
+      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> eps =
         std::numeric_limits<math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::epsilon() * 10;
 
-      const bool compare_is_ok = (ratio < eps);
+      const bool compare_is_ok = (delta < eps);
 
       return compare_is_ok;
     }
@@ -139,24 +141,30 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
+      std::atomic_flag log_algebra_test_lock = ATOMIC_FLAG_INIT;
+
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&result_is_ok](std::size_t j)
+        [&result_is_ok, &log_algebra_test_lock](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
 
+          while(log_algebra_test_lock.test_and_set()) { ; }
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
+          log_algebra_test_lock.clear();
+
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
@@ -166,12 +174,14 @@
           eval_add(result_ctrl, a_ctrl, b_ctrl);
           eval_add(result_ef, a_ef, b_ef);
 
-          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -188,24 +198,30 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
+      std::atomic_flag log_algebra_test_lock = ATOMIC_FLAG_INIT;
+
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&result_is_ok](std::size_t j)
+        [&result_is_ok, &log_algebra_test_lock](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
 
+          while(log_algebra_test_lock.test_and_set()) { ; }
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
+          log_algebra_test_lock.clear();
+
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
@@ -215,12 +231,14 @@
           eval_sub(result_ctrl, a_ctrl, b_ctrl);
           eval_sub(result_ef, a_ef, b_ef);
 
-          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -237,24 +255,30 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
+      std::atomic_flag log_algebra_test_lock = ATOMIC_FLAG_INIT;
+
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&result_is_ok](std::size_t j)
+        [&result_is_ok, &log_algebra_test_lock](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
 
+          while(log_algebra_test_lock.test_and_set()) { ; }
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
+          log_algebra_test_lock.clear();
+
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
@@ -264,12 +288,14 @@
           eval_mul(result_ctrl, a_ctrl, b_ctrl);
           eval_mul(result_ef, a_ef, b_ef);
 
-          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -286,24 +312,30 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
+      std::atomic_flag log_algebra_test_lock = ATOMIC_FLAG_INIT;
+
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&result_is_ok](std::size_t j)
+        [&result_is_ok, &log_algebra_test_lock](std::size_t j)
         {
           std::string str_a;
           std::string str_b;
 
+          while(log_algebra_test_lock.test_and_set()) { ; }
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U);
+          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
+          log_algebra_test_lock.clear();
+
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
@@ -313,12 +345,14 @@
           eval_div(result_ctrl, a_ctrl, b_ctrl);
           eval_div(result_ef, a_ef, b_ef);
 
-          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -335,19 +369,25 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
+      std::atomic_flag log_algebra_test_lock = ATOMIC_FLAG_INIT;
+
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&result_is_ok](std::size_t j)
+        [&result_is_ok, &log_algebra_test_lock](std::size_t j)
         {
           std::string str_a;
 
+          while(log_algebra_test_lock.test_and_set()) { ; }
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U, true);
+          log_algebra_test_lock.clear();
+
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
@@ -357,12 +397,14 @@
           eval_sqrt(result_ctrl, a_ctrl);
           eval_sqrt(result_ef, a_ef);
 
-          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -379,19 +421,25 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
+      std::atomic_flag log_algebra_test_lock = ATOMIC_FLAG_INIT;
+
       my_concurrency::parallel_for
       (
         std::size_t(0U),
         std::size_t(count),
-        [&result_is_ok](std::size_t j)
+        [&result_is_ok, &log_algebra_test_lock](std::size_t j)
         {
           std::string str_a;
 
+          while(log_algebra_test_lock.test_and_set()) { ; }
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U, true);
+          log_algebra_test_lock.clear();
+
           independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
@@ -401,12 +449,14 @@
           eval_log(result_ctrl, a_ctrl);
           eval_log(result_ef, a_ef);
 
-          result_is_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
+
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   } }

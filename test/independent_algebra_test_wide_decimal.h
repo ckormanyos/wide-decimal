@@ -27,8 +27,7 @@
     independent_algebra_test_decwide_t() : my_decwide_t() { }
 
     independent_algebra_test_decwide_t(const char* str)
-      : independent_algebra_test_base(str),
-        my_decwide_t(str) { }
+      : my_decwide_t(str) { }
 
     virtual ~independent_algebra_test_decwide_t() { }
 

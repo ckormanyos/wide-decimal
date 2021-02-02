@@ -8,13 +8,13 @@
 #ifndef CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H_
   #define CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H_
 
+  #include <array>
   #include <cstddef>
   #include <cstdint>
-  #include <initializer_list>
 
   namespace math { namespace constants {
 
-  const std::initializer_list<std::uint32_t> const_pi_control_head_32
+  constexpr std::array<std::uint32_t, 8U> const_pi_control_head_32
   {
     // head std::uint32_t
     (std::uint32_t) UINT32_C(3),
@@ -27,7 +27,7 @@
     (std::uint32_t) UINT32_C(10582097)
   };
 
-  const std::initializer_list<std::uint16_t> const_pi_control_head_16
+  constexpr std::array<std::uint16_t, 15U> const_pi_control_head_16
   {
     // head std::uint16_t
     (std::uint16_t) UINT16_C(3),
@@ -40,7 +40,7 @@
     (std::uint16_t) UINT16_C(1058), (std::uint16_t) UINT16_C(2097)
   };
 
-  const std::initializer_list<std::uint32_t> const_pi_control_tail_32_10001
+  constexpr std::array<std::uint32_t, 8U> const_pi_control_tail_32_10001
   {
     // tail 1 + 10^4 std::uint32_t
     (std::uint32_t) UINT32_C(29552498),
@@ -53,7 +53,7 @@
     (std::uint32_t) UINT32_C(56375678)
   };
 
-  const std::initializer_list<std::uint32_t> const_pi_control_tail_32_100001
+  constexpr std::array<std::uint32_t, 8U> const_pi_control_tail_32_100001
   {
     // tail 1 + 10^5 std::uint32_t
     (std::uint32_t) UINT32_C(38043299),
@@ -66,7 +66,7 @@
     (std::uint32_t) UINT32_C(93624646)
   };
 
-  const std::initializer_list<std::uint32_t> const_pi_control_tail_32_1000001
+  constexpr std::array<std::uint32_t, 8U> const_pi_control_tail_32_1000001
   {
     // tail 1 + 10^6 std::uint32_t
     (std::uint32_t) UINT32_C(20875424),
@@ -79,7 +79,7 @@
     (std::uint32_t) UINT32_C(79458151)
   };
 
-  const std::initializer_list<std::uint16_t> const_pi_control_tail_16_10001
+  constexpr std::array<std::uint16_t, 16U> const_pi_control_tail_16_10001
   {
     // tail 1 + 10^4 std::uint16_t
     (std::uint16_t) UINT16_C(2955), (std::uint16_t) UINT16_C(2498),
@@ -92,7 +92,7 @@
     (std::uint16_t) UINT16_C(5637), (std::uint16_t) UINT16_C(5678)
   };
 
-  const std::initializer_list<std::uint16_t> const_pi_control_tail_16_100001
+  constexpr std::array<std::uint16_t, 16U> const_pi_control_tail_16_100001
   {
     // tail 1 + 10^5 std::uint16_t
     (std::uint16_t) UINT16_C(3804), (std::uint16_t) UINT16_C(3299),
@@ -105,7 +105,7 @@
     (std::uint16_t) UINT16_C(9362), (std::uint16_t) UINT16_C(4646)
   };
 
-  const std::initializer_list<std::uint16_t> const_pi_control_tail_16_1000001
+  constexpr std::array<std::uint16_t, 16U> const_pi_control_tail_16_1000001
   {
     // tail 1 + 10^6 std::uint16_t
     (std::uint16_t) UINT16_C(2087), (std::uint16_t) UINT16_C(5424),
