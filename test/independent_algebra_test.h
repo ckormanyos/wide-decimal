@@ -141,7 +141,8 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    std::atomic_bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
@@ -175,12 +176,12 @@
 
           const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
 
-          std::atomic_store(&result_is_ok, b_ok);
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -197,7 +198,8 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    std::atomic_bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
@@ -231,12 +233,12 @@
 
           const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
 
-          std::atomic_store(&result_is_ok, b_ok);
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -253,7 +255,8 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    std::atomic_bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
@@ -287,12 +290,12 @@
 
           const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
 
-          std::atomic_store(&result_is_ok, b_ok);
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -309,7 +312,8 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    std::atomic_bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
@@ -343,12 +347,12 @@
 
           const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
 
-          std::atomic_store(&result_is_ok, b_ok);
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -365,7 +369,8 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    std::atomic_bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
@@ -394,12 +399,12 @@
 
           const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
 
-          std::atomic_store(&result_is_ok, b_ok);
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   template<const std::int32_t MyDigits10,
@@ -416,7 +421,8 @@
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
 
-    std::atomic_bool result_is_ok = true;
+    std::atomic_bool result_is_ok;
+    result_is_ok.store(true);
 
     for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
     {
@@ -445,12 +451,12 @@
 
           const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
 
-          std::atomic_store(&result_is_ok, b_ok);
+          result_is_ok.store(b_ok);
         }
       );
     }
 
-    return result_is_ok;
+    return result_is_ok.load();
   }
 
   } }
