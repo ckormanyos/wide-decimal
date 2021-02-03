@@ -239,14 +239,7 @@ namespace local
         ++n_angle_identity;
       }
 
-      if(is_cos)
-      {
-        s = cos_pade(r);
-      }
-      else
-      {
-        s = sin_pade(r);
-      }
+      s = (is_cos ? cos_pade(r) : sin_pade(r));
 
       // Rescale the result with the triple angle identity for sine.
       for(std::uint_fast32_t t = 0U; t < n_angle_identity; ++t)
@@ -310,14 +303,7 @@ namespace local
         ++n_angle_identity;
       }
 
-      if(is_sin)
-      {
-        c = sin_pade(r);
-      }
-      else
-      {
-        c = cos_pade(r);
-      }
+      c = (is_sin ? sin_pade(r) : cos_pade(r));
 
       // Rescale the result with the triple angle identity for cosine.
       for(std::uint_fast32_t t = 0U; t < n_angle_identity; ++t)
@@ -437,13 +423,17 @@ bool math::wide_decimal::example011_trig_trapezoid_integral()
   // N[BesselJ[4, 789/100], 60]
   const dec51_t control4 = dec51_t("-0.0785068635721274384104855203288065696173271865920904171127153");
 
+  using std::fabs;
+
   const dec51_t closeness2 = fabs(1 - (j2 / control2));
   const dec51_t closeness3 = fabs(1 - (j3 / control3));
   const dec51_t closeness4 = fabs(1 - (j4 / control4));
 
-  const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * 10;
+  const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * 10U;
 
-  const bool result_is_ok = ((closeness2 < tol) && (closeness3 < tol) && (closeness4 < tol));
+  const bool result_is_ok = (   (closeness2 < tol)
+                             && (closeness3 < tol)
+                             && (closeness4 < tol));
 
   return result_is_ok;
 }

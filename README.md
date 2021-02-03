@@ -33,12 +33,18 @@ Wide-decimal is written in header-only C++11.
   - ![`example009_boost_math_standalone`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
   - ![`example010_hypergeometric_2f1`](./examples/example010_hypergeometric_2f1.cpp) calculates a <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function value using an iterative rational approximation scheme.
   - ![`example010a_hypergeometric_1f1`](./examples/example010a_hypergeometric_1f1.cpp) calculates another <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function in a similar fashion.
-  - ![`example011_trig_trapezoid_integral`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving trigonometric functions to compute several cylindrical Bessel function values.
+  - ![`example011_trig_trapezoid_integral`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
 
 ## Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
 over the entire range of small to large digit counts.
+How efficient is the code? Based on a very general
+comparison, a million digit AGM calculation
+of <img src="https://render.githubusercontent.com/render/math?math=\pi">
+is about five times slower than an equivalent calculation
+performed with a big float data type based on
+[GMP](https://gmplib.org/).
 
 Portability of the code is another key point of focus. Special care
 has been taken to test in certain high-performance embedded real-time
