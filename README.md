@@ -5,7 +5,7 @@ This C++ template header-only library implements drop-in big decimal float types
 
 Wide-decimal implements both common algebraic operations as well as a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`, and also includes full support for `std::numeric_limits`.
 
-Wide-decimal is written in header-only C++11.
+Wide-decimal is written in header-only C++11, and compatible through C++14, 17 and 20.
 
 ## Implementation goals
 
