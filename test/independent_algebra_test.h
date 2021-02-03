@@ -162,11 +162,11 @@
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           log_algebra_test_lock.clear();
 
-          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+          const independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
+          const independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
           independent_algebra_test_control_type                                                                                 result_ctrl;
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
@@ -219,11 +219,11 @@
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           log_algebra_test_lock.clear();
 
-          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+          const independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
+          const independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
           independent_algebra_test_control_type                                                                                 result_ctrl;
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
@@ -276,11 +276,11 @@
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           log_algebra_test_lock.clear();
 
-          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+          const independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
+          const independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
           independent_algebra_test_control_type                                                                                 result_ctrl;
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
@@ -333,11 +333,11 @@
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_b, false);
           log_algebra_test_lock.clear();
 
-          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+          const independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
-          independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
+          const independent_algebra_test_control_type                                                                                 b_ctrl(str_b.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> b_ef  (str_b.c_str());
 
           independent_algebra_test_control_type                                                                                 result_ctrl;
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
@@ -388,8 +388,8 @@
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U, true);
           log_algebra_test_lock.clear();
 
-          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+          const independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
           independent_algebra_test_control_type                                                                                 result_ctrl;
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
@@ -440,8 +440,8 @@
           test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::get_random_float_string(str_a, j == 0U, true);
           log_algebra_test_lock.clear();
 
-          independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
-          test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
+          const independent_algebra_test_control_type                                                                                 a_ctrl(str_a.c_str());
+          const test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a_ef  (str_a.c_str());
 
           independent_algebra_test_control_type                                                                                 result_ctrl;
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
