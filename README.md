@@ -46,8 +46,8 @@ programming environments.
 
 Testing is a big issue. Generating a full test suite is in continued progress
 and tested efficient functionality on the PC and workstation is present.
-The code is delivered with an affiliated MSVC project that uses Boost.Test
-for various test cases.
+The code is delivered with an affiliated MSVC project that uses easy-to-understand
+subroutines called from `main()` that exercise various test cases.
 
 When working with even the most tiny microcontroller systems,
 various _heavy-wieght_ features such as I/O streaming,
