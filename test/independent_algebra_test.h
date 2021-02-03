@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020.                        //
+//  Copyright Christopher Kormanyos 2020 - 2021.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -446,7 +446,9 @@
           independent_algebra_test_control_type                                                                                 result_ctrl;
           test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> result_ef;
 
+          while(log_algebra_test_lock.test_and_set()) { ; }
           eval_log(result_ctrl, a_ctrl);
+          log_algebra_test_lock.clear();
           eval_log(result_ef, a_ef);
 
           const bool b_ok = test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType>::eval_eq(result_ef, result_ctrl);
