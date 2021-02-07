@@ -17,6 +17,11 @@ Wide-decimal is written in header-only C++11, and compatible through C++14, 17 a
 
 ## The examples
 
+A variety of interesting and algorithmically challenging examples are
+given in the hope that these provide inspiration and guidance on
+how to use wide-decimal. See also the [./examples](./examples) directory
+as more use cases are being created.
+
   - ![`example001_roots_sqrt`](./examples/example001_roots_sqrt.cpp) computes a square root.
   - ![`example001a_roots_seventh`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
   - ![`example001b_roots_almost_integer`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operations to compute <img src="https://render.githubusercontent.com/render/math?math=5,001"> decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
@@ -84,8 +89,6 @@ allocation is needed and can not be disabled. In other words,
 // Deactivate the disabling of dynamic memory for multithreaded PC work.
 //#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 ```
-
-See the examples directory as more use cases are being created.
 
 ## Quick start
 Easy application follows via a traditional C-style typedef or C++11 alias.
