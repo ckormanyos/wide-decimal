@@ -50,9 +50,9 @@ Portability of the code is another key point of focus. Special care
 has been taken to test in certain high-performance embedded real-time
 programming environments.
 
-Testing is a big issue. Generating a full test suite is in continued progress
-and tested efficient functionality on the PC and workstation is present.
-The code is delivered with an affiliated MSVC project that uses easy-to-understand
+Testing is a big issue and a growing test suite is in continued progress
+providing for tested, efficient functionality on the PC and workstation.
+The GitHub code is delivered with an affiliated MSVC project that uses easy-to-understand
 subroutines called from `main()` that exercise various test cases.
 
 When working with even the most tiny microcontroller systems,
@@ -71,6 +71,9 @@ can optionally be disabled with the compiler switches:
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
 #define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 ```
+
+Each one of these compiler switches has an intuitive name
+representing its meaing.
 
 Note: Activating the option `WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
 simultaneously disallows using `decwide_t` in a multithreaded application.
