@@ -19,7 +19,7 @@ Wide-decimal is written in header-only C++11, and compatible through C++14, 17 a
 
 A variety of interesting and algorithmically challenging examples are
 given in the hope that these provide inspiration and guidance on
-how to use wide-decimal. See also the [./examples](examples) directory
+how to use wide-decimal. See also the [examples](./examples) directory
 as more use cases are being created.
 
   - ![`example001_roots_sqrt`](./examples/example001_roots_sqrt.cpp) computes a square root.
