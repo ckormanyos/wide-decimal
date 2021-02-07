@@ -17,7 +17,7 @@ Wide-decimal is written in header-only C++11, and compatible through C++14, 17 a
 
 ## The examples
 
-A variety of interesting and algorithmically challenging examples are
+Various interesting and algorithmically challenging examples are
 given in the hope that these provide inspiration and guidance on
 how to use wide-decimal. See also the [examples](./examples) directory
 as more use cases are being created.
@@ -78,7 +78,7 @@ can optionally be disabled with the compiler switches:
 ```
 
 Each one of these compiler switches has an intuitive name
-representing its meaing.
+intended to represent its meaning.
 
 Note: Activating the option `WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION`
 simultaneously disallows using `decwide_t` in a multithreaded application.
