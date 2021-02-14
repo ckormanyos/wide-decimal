@@ -1,7 +1,7 @@
 name: wide_decimal
-on: [push,pull_request]
+on: [push]
 jobs:
-  run-gcc-clang-native:
+  gcc-clang-native:
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [ g++, clang++ ]
-        standard: [ c++11, c++14, c++17 ]
+        standard: [ c++11, c++14, c++17, c++2a ]
     if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v2
@@ -18,17 +18,14 @@ jobs:
           fetch-depth: '0'
       - name: update-tools
         run: sudo apt install clang libboost-dev libboost-all-dev
-      - name: run-gcc-clang-native
+      - name: gcc-clang-native
         run: |
           echo "compile ./wide_decimal.exe"
           ${{ matrix.compiler }} -v
           ${{ matrix.compiler }} -finline-functions -m64 -O2 -Wall -Wextra -pedantic -std=${{ matrix.standard }} -I. -pthread -lpthread test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_roots_sqrt.cpp examples/example001a_roots_seventh.cpp examples/example001b_roots_almost_integer.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example002c_pi_quintic.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp examples/example006_logarithm.cpp examples/example007_catalan_series.cpp examples/example008_bernoulli_tgamma.cpp examples/example009_boost_math_standalone.cpp examples/example010_hypergeometric_2f1.cpp examples/example010a_hypergeometric_1f1.cpp examples/example011_trig_trapezoid_integral.cpp -o wide_decimal.exe
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
-          result_wide_decimal=$?
-          echo "result_wide_decimal:"  "$result_wide_decimal"
-          exit $result_wide_decimal
-  run-gcc-clang-native-asan:
+  gcc-clang-native-asan:
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -37,7 +34,7 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [ g++, clang++ ]
-        standard: [ c++11, c++14, c++17 ]
+        standard: [ c++11, c++14, c++17, c++2a ]
     if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v2
@@ -45,18 +42,14 @@ jobs:
           fetch-depth: '0'
       - name: update-tools
         run: sudo apt install clang libboost-dev libboost-all-dev
-      - name: run-gcc-clang-native-asan
+      - name: gcc-clang-native-asan
         run: |
           echo "compile ./wide_decimal.exe"
           ${{ matrix.compiler }} -v
           ${{ matrix.compiler }} -finline-functions -fsanitize=address -fsanitize=leak -fsanitize=bounds -m64 -O2 -Wall -Wextra -pedantic -std=${{ matrix.standard }} -I. -pthread -lpthread test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_roots_sqrt.cpp examples/example001a_roots_seventh.cpp examples/example001b_roots_almost_integer.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example002c_pi_quintic.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp examples/example006_logarithm.cpp examples/example007_catalan_series.cpp examples/example008_bernoulli_tgamma.cpp examples/example009_boost_math_standalone.cpp examples/example010_hypergeometric_2f1.cpp examples/example010a_hypergeometric_1f1.cpp examples/example011_trig_trapezoid_integral.cpp -o wide_decimal.exe
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
-          result_wide_decimal=$?
-          echo "result_wide_decimal:"  "$result_wide_decimal"
-          exit $result_wide_decimal
-        shell: bash
-  run-gcc-clang-10:
+  gcc-clang-10:
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -73,23 +66,43 @@ jobs:
           fetch-depth: '0'
       - name: update-tools
         run: sudo apt install gcc-10 clang-10 libboost-dev libboost-all-dev
-      - name: run-gcc-clang-10
+      - name: gcc-clang-10
         run: |
           echo "compile ./wide_decimal.exe"
           ${{ matrix.compiler }} -v
           ${{ matrix.compiler }} -finline-functions -m64 -O2 -Wall -Wextra -pedantic -std=${{ matrix.standard }} -I. -pthread -lpthread test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_roots_sqrt.cpp examples/example001a_roots_seventh.cpp examples/example001b_roots_almost_integer.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example002c_pi_quintic.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp examples/example006_logarithm.cpp examples/example007_catalan_series.cpp examples/example008_bernoulli_tgamma.cpp examples/example009_boost_math_standalone.cpp examples/example010_hypergeometric_2f1.cpp examples/example010a_hypergeometric_1f1.cpp examples/example011_trig_trapezoid_integral.cpp -o wide_decimal.exe
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
-          result_wide_decimal=$?
-          echo "result_wide_decimal:"  "$result_wide_decimal"
-          exit $result_wide_decimal
-  run-msvc-release-x64:
+  apple-clang-native:
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        standard: [ c++11, c++14, c++17, c++2a ]
+    if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: update-tools
+        run: brew install boost
+      - name: apple-clang-native
+        run: |
+          echo "compile ./wide_decimal.exe"
+          clang++ -v
+          clang++ -finline-functions -m64 -O2 -Wall -Wextra -pedantic -std=${{ matrix.standard }} -I. -pthread -lpthread test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example001_roots_sqrt.cpp examples/example001a_roots_seventh.cpp examples/example001b_roots_almost_integer.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example002c_pi_quintic.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp examples/example006_logarithm.cpp examples/example007_catalan_series.cpp examples/example008_bernoulli_tgamma.cpp examples/example009_boost_math_standalone.cpp examples/example010_hypergeometric_2f1.cpp examples/example010a_hypergeometric_1f1.cpp examples/example011_trig_trapezoid_integral.cpp -o wide_decimal.exe
+          ls -la ./wide_decimal.exe
+          ./wide_decimal.exe
+  msvc-release-x64:
     runs-on: windows-latest
     if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v1
       - uses: ilammy/msvc-dev-cmd@v1
-      - name: run-msvc-release-x64
+      - name: msvc-release-x64
         shell: cmd
         working-directory: ./
         run: |
