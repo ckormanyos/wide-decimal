@@ -5,9 +5,12 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#include <math/wide_decimal/decwide_t.h>
+#include <cmath>
+
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/special_functions/cbrt.hpp>
+
+#include <math/wide_decimal/decwide_t.h>
 
 namespace
 {
@@ -87,6 +90,9 @@ inline dec1001_t constant_pi<dec1001_t>::compute(BOOST_MATH_EXPLICIT_TEMPLATE_TY
 bool math::wide_decimal::example009_boost_math_standalone()
 {
   const dec1001_t x = dec1001_t(UINT32_C(123456789)) / 100U;
+
+  using std::cbrt;
+  using std::fabs;
 
   // Compare wide-decimal's cube root function with that of Boost.Math.
   // Also exercise several different interpretations of the constant pi.

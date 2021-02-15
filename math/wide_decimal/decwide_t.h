@@ -4057,6 +4057,7 @@
   bool example007_catalan_series         ();
   bool example008_bernoulli_tgamma       ();
   bool example009_boost_math_standalone  ();
+  bool example009a_boost_math_standalone ();
   bool example010_hypergeometric_2f1     ();
   bool example010a_hypergeometric_1f1    ();
   bool example011_trig_trapezoid_integral();
