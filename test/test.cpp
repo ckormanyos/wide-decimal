@@ -60,11 +60,16 @@ int main()
                              && result_test_decwide_t_algebra_sqrt___is_ok
                              && result_test_decwide_t_algebra_log____is_ok);
 
+  const float sec =
+    ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - wide_decimal_time_start).count()) / 1000.0F;
+
   std::cout << "result_is_ok:                             : "
             << std::boolalpha
             << result_is_ok
             << ", time: "
-            << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - wide_decimal_time_start).count()) / 1000.0F << "s" << std::endl;
+            << sec
+            << "s"
+            << std::endl;
 
   return (result_is_ok ? 0 : -1);
 }
