@@ -129,9 +129,6 @@
     <ClInclude Include="util\memory\util_n_slot_array_allocator.h">
       <Filter>Source Files\util\memory</Filter>
     </ClInclude>
-    <ClInclude Include="util\utility\util_lexical_cast.h">
-      <Filter>Source Files\util\utility</Filter>
-    </ClInclude>
     <ClInclude Include="util\utility\util_noncopyable.h">
       <Filter>Source Files\util\utility</Filter>
     </ClInclude>
