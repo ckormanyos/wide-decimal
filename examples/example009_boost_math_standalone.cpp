@@ -27,9 +27,11 @@ struct precision<dec1001_t, ThisPolicy>
 {
   using precision_type = typename ThisPolicy::precision_type;
 
-  using local_digits2_type = digits2<(((long long) std::numeric_limits<dec1001_t>::digits10 + 1LL) * 1000LL) / 301LL>;
+  using local_digits_2 = digits2<(((long long) std::numeric_limits<dec1001_t>::digits10 + 1LL) * 1000LL) / 301LL>;
 
-  using type = typename std::conditional<false, local_digits2_type, precision_type>::type;
+  using type = typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
+                                          local_digits_2,
+                                          precision_type>::type;
 };
 
 } } } // namespaces boost::math::policies
