@@ -91,13 +91,14 @@ namespace math { namespace wide_decimal {
 
 namespace detail {
 
-dec1001_t sin_series(const dec1001_t& x)
+template<typename FloatingPointType>
+FloatingPointType sin_series(const FloatingPointType& x)
 {
-        dec1001_t term        = x;
-  const dec1001_t x2          = x * x;
-        dec1001_t sum         = x;
-        bool      term_is_neg = true;
-  const dec1001_t tol         = std::numeric_limits<dec1001_t>::epsilon() * x;
+        FloatingPointType term        = x;
+  const FloatingPointType x2          = x * x;
+        FloatingPointType sum         = x;
+        bool              term_is_neg = true;
+  const FloatingPointType tol         = std::numeric_limits<FloatingPointType>::epsilon() * x;
 
   for(std::uint32_t k = 3U; k < UINT32_C(0xFFFF); k += 2U)
   {
@@ -117,13 +118,14 @@ dec1001_t sin_series(const dec1001_t& x)
   return sum;
 }
 
-dec1001_t cos_series(const dec1001_t& x)
+template<typename FloatingPointType>
+FloatingPointType cos_series(const FloatingPointType& x)
 {
-  const dec1001_t x2          = x * x;
-        dec1001_t term        = x2 / 2U;
-        dec1001_t sum         = term;
-        bool      term_is_neg = true;
-  const dec1001_t tol         = std::numeric_limits<dec1001_t>::epsilon() * x;
+  const FloatingPointType x2          = x * x;
+        FloatingPointType term        = x2 / 2U;
+        FloatingPointType sum         = term;
+        bool              term_is_neg = true;
+  const FloatingPointType tol         = std::numeric_limits<FloatingPointType>::epsilon() * x;
 
   for(std::uint32_t k = 4U; k < UINT32_C(0xFFFF); k += 2U)
   {
@@ -176,10 +178,10 @@ dec1001_t sin(const dec1001_t& x)
 
     std::uint_fast32_t n_angle_identity = 0U;
 
-    static const dec1001_t two_tenths = dec1001_t(2U) / 10U;
+    static const dec1001_t one_tenth = dec1001_t(1U) / 10U;
 
-    // Reduce the argument with factors of three until it is less than 2/10.
-    while(r > two_tenths)
+    // Reduce the argument with factors of three until it is less than 1/10.
+    while(r > one_tenth)
     {
       r /= 3U;
 
@@ -240,10 +242,10 @@ dec1001_t cos(const dec1001_t& x)
 
     std::uint_fast32_t n_angle_identity = 0U;
 
-    static const dec1001_t two_tenths = dec1001_t(2U) / 10U;
+    static const dec1001_t one_tenth = dec1001_t(1U) / 10U;
 
-    // Reduce the argument with factors of three until it is less than 2/10.
-    while(r > two_tenths)
+    // Reduce the argument with factors of three until it is less than 1/10.
+    while(r > one_tenth)
     {
       r /= 3U;
 
