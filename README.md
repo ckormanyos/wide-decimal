@@ -5,7 +5,7 @@ This C++ template header-only library implements drop-in big decimal float types
 
 Wide-decimal implements both common algebraic operations as well as a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`, and also includes full support for `std::numeric_limits`.
 
-Wide-decimal is written in header-only C++11, and compatible through C++14, 17 and 20.
+Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 17, 20.
 
 ## Implementation goals
 
@@ -15,12 +15,12 @@ Wide-decimal is written in header-only C++11, and compatible through C++14, 17 a
   - Seamless portability to any modern C++11, 14, 17, 20 compiler
   - Scalability with small memory footprint and efficiency suitable for _bare-metal_ embedded systems
 
-## The examples
+## Examples
 
-Various interesting and algorithmically challenging examples are
-given in the hope that these provide inspiration and guidance on
-how to use wide-decimal. See also the [examples](./examples) directory
-as more use cases are being created.
+Various interesting and algorithmically challenging
+[examples](./examples) have been implemented.
+It is hoped that the examples provide inspiration and guidance on
+how to use wide-decimal.
 
   - ![`example001_roots_sqrt`](./examples/example001_roots_sqrt.cpp) computes a square root.
   - ![`example001a_roots_seventh`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
