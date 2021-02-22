@@ -176,6 +176,7 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool (isnan)   (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x);
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool (isfinite)(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x);
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool (isinf)   (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x);
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> int   sign     (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x);
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> fabs (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x);
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>  abs (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x);
@@ -3733,9 +3734,10 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> constexpr long_double_min       () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>((std::numeric_limits<long double>::min)());}
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> constexpr long_double_max       () { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>((std::numeric_limits<long double>::max)());}
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool (isnan)   (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x) { return (x.isnan)(); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool (isfinite)(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x) { return (x.isfinite)(); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool (isinf)   (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x) { return (x.isinf)(); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool (isnan)   (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x) { return  (x.isnan)(); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool (isfinite)(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x) { return  (x.isfinite)(); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> bool (isinf)   (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x) { return  (x.isinf)(); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> int   sign     (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x) { return ((x.iszero)() ? 0 : ((x.isneg)() ? -1 : 1)); }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> pow(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> x,

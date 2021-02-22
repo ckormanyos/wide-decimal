@@ -9,6 +9,7 @@
 
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/special_functions/cbrt.hpp>
+#include <boost/math/special_functions/sign.hpp>
 
 #include <math/wide_decimal/decwide_t.h>
 
