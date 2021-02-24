@@ -199,8 +199,8 @@
                                                                                                                                                                                          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> a);
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::ostream& operator<<(std::ostream& os, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& f);
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::istream& operator>>(std::istream& is,       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& f);
+  template<typename char_type, typename traits_type, const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::basic_ostream<char_type, traits_type>& operator<<(std::basic_ostream<char_type, traits_type>& os, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& f);
+  template<typename char_type, typename traits_type, const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType> std::basic_istream<char_type, traits_type>& operator>>(std::basic_istream<char_type, traits_type>& is,       decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& f);
   #endif // !WIDE_DECIMAL_DISABLE_IOSTREAM
 
   // Global unary operators of decwide_t reference.
@@ -3070,7 +3070,8 @@
       }
     }
 
-    friend inline std::ostream& operator<<(std::ostream& os, const decwide_t& f)
+    template<typename char_type, typename traits_type>
+    friend std::basic_ostream<char_type, traits_type>& operator<<(std::basic_ostream<char_type, traits_type>& os, const decwide_t& f)
     {
       std::string str;
 
@@ -3079,7 +3080,8 @@
       return (os << str);
     }
 
-    friend inline std::istream& operator>>(std::istream& is, decwide_t& f)
+    template<typename char_type, typename traits_type>
+    friend std::basic_istream<char_type, traits_type>& operator>>(std::basic_istream<char_type, traits_type>& is, decwide_t& f)
     {
       std::string str;
 

@@ -8,8 +8,7 @@
 #include <cmath>
 
 #include <boost/math/special_functions/gamma.hpp>
-
-#include <math/wide_decimal/decwide_t.h>
+#include <boost/math/bindings/decwide_t.hpp>
 
 namespace
 {
@@ -18,24 +17,7 @@ namespace
   using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
 }
 
-namespace boost { namespace math { namespace policies {
-
-// Specialization of the precision structure.
-template<typename ThisPolicy>
-struct precision<dec1001_t, ThisPolicy>
-{
-  using precision_type = typename ThisPolicy::precision_type;
-
-  using local_digits_2 = digits2<(((long long) std::numeric_limits<dec1001_t>::digits10 + 1LL) * 1000LL) / 301LL>;
-
-  using type = typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
-                                          local_digits_2,
-                                          precision_type>::type;
-};
-
-} } } // namespaces boost::math::policies
-
-namespace boost{ namespace math{ namespace constants{ namespace detail{
+namespace boost { namespace math { namespace constants { namespace detail {
 
 template<>
 template<int N>
