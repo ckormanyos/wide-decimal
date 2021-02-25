@@ -19,58 +19,6 @@ namespace
   using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
 }
 
-namespace boost{ namespace math{ namespace constants{ namespace detail{
-
-template<>
-template<int N>
-inline dec1001_t constant_pi<dec1001_t>::compute(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC((boost::integral_constant<int, N>)))
-{
-  // Adapted from Boost.Math.Constants (see file calculate_constants.hpp).
-  BOOST_MATH_STD_USING
-
-  dec1001_t result;
-  dec1001_t a = 1;
-  dec1001_t b;
-  dec1001_t A(a);
-  dec1001_t B = 0.5F;
-  dec1001_t D = 0.25F;
-
-  dec1001_t lim;
-  lim = boost::math::tools::epsilon<dec1001_t>();
-
-  unsigned k = 1;
-
-  do
-  {
-    result = A + B;
-    result = ldexp(result, -2);
-    b = sqrt(B);
-    a += b;
-    a = ldexp(a, -1);
-    A = a * a;
-    B = A - result;
-    B = ldexp(B, 1);
-    result = A - B;
-    bool neg = boost::math::sign(result) < 0;
-    if(neg)
-       result = -result;
-    if(result <= lim)
-       break;
-    if(neg)
-       result = -result;
-    result = ldexp(result, k - 1);
-    D -= result;
-    ++k;
-    lim = ldexp(lim, 1);
-  }
-  while(true);
-
-  result = B / D;
-  return result;
-}
-
-} } } }
-
 bool math::wide_decimal::example009_boost_math_standalone()
 {
   const dec1001_t x = dec1001_t(UINT32_C(123456789)) / 100U;
