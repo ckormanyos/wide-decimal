@@ -49,56 +49,56 @@
   struct constant_pi<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>
   {
   public:
-    using result_type = ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
+    using result_type =
+      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
 
   private:
-
-  static result_type my_compute()
-  {
-    // Adapted from Boost.Math.Constants (see file calculate_constants.hpp).
-    using std::ldexp;
-    using std::sqrt;
-
-    result_type result;
-    result_type a = 1;
-    result_type b;
-    result_type A(a);
-    result_type B = 0.5F;
-    result_type D = 0.25F;
-
-    result_type lim;
-    lim = boost::math::tools::epsilon<result_type>();
-
-    unsigned k = 1;
-
-    do
+    static result_type my_compute()
     {
-      result = A + B;
-      result = ldexp(result, -2);
-      b = sqrt(B);
-      a += b;
-      a = ldexp(a, -1);
-      A = a * a;
-      B = A - result;
-      B = ldexp(B, 1);
-      result = A - B;
-      bool neg = boost::math::sign(result) < 0;
-      if(neg)
-         result = -result;
-      if(result <= lim)
-         break;
-      if(neg)
-         result = -result;
-      result = ldexp(result, k - 1);
-      D -= result;
-      ++k;
-      lim = ldexp(lim, 1);
-    }
-    while(true);
+      // Adapted from Boost.Math.Constants (see file calculate_constants.hpp).
+      using std::ldexp;
+      using std::sqrt;
 
-    result = B / D;
-    return result;
-  }
+      result_type result;
+      result_type a = 1;
+      result_type b;
+      result_type A(a);
+      result_type B = 0.5F;
+      result_type D = 0.25F;
+
+      result_type lim;
+      lim = boost::math::tools::epsilon<result_type>();
+
+      unsigned k = 1;
+
+      do
+      {
+        result = A + B;
+        result = ldexp(result, -2);
+        b = sqrt(B);
+        a += b;
+        a = ldexp(a, -1);
+        A = a * a;
+        B = A - result;
+        B = ldexp(B, 1);
+        result = A - B;
+        bool neg = boost::math::sign(result) < 0;
+        if(neg)
+           result = -result;
+        if(result <= lim)
+           break;
+        if(neg)
+           result = -result;
+        result = ldexp(result, k - 1);
+        D -= result;
+        ++k;
+        lim = ldexp(lim, 1);
+      }
+      while(true);
+
+      result = B / D;
+      return result;
+    }
 
   public:
     // TBD: Set this check to 107600 as soon as Boost 1.76 becomes available.
@@ -111,7 +111,7 @@
       static result_type result;
       static bool        has_init = false;
 
-      if (!has_init)
+      if(has_init == false)
       {
         has_init = true;
 
@@ -128,9 +128,7 @@
     static inline const result_type get(const std::integral_constant<int, 0>&)
     #endif
     {
-      result_type result(my_compute());
-
-      return result;
+      return my_compute();
     }
   };
 
