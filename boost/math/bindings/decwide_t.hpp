@@ -101,8 +101,12 @@
   }
 
   public:
-    template <int N>
-    static inline const result_type& get(const std::integral_constant<int, N>&)
+    // TBD: Set this check to 107600 as soon as Boost 1.76 becomes available.
+    #if defined(BOOST_VERSION) && (BOOST_VERSION < 107500)
+    template<int N> static const result_type& get(const boost::integral_constant<int, N>&)
+    #else
+    template<int N> static const result_type& get(const std::integral_constant<int, N>&)
+    #endif
     {
       static result_type result;
       static bool        has_init = false;
@@ -117,7 +121,12 @@
       return result;
     }
 
+    // TBD: Set this check to 107600 as soon as Boost 1.76 becomes available.
+    #if defined(BOOST_VERSION) && (BOOST_VERSION < 107500)
+    static inline const result_type get(const boost::integral_constant<int, 0>&)
+    #else
     static inline const result_type get(const std::integral_constant<int, 0>&)
+    #endif
     {
       result_type result(my_compute());
 
