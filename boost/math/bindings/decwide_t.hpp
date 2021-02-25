@@ -103,7 +103,7 @@
   public:
     // TBD: Set this check to 107600 as soon as Boost 1.76 becomes available.
     #if defined(BOOST_VERSION) && (BOOST_VERSION < 107500)
-    template<int N> static const result_type& get(const boost::integral_constant<int, N>&)
+    template<int N> static const result_type& get(const mpl::int_<N>&)
     #else
     template<int N> static const result_type& get(const std::integral_constant<int, N>&)
     #endif
@@ -123,7 +123,7 @@
 
     // TBD: Set this check to 107600 as soon as Boost 1.76 becomes available.
     #if defined(BOOST_VERSION) && (BOOST_VERSION < 107500)
-    static inline const result_type get(const boost::integral_constant<int, 0>&)
+    static inline const result_type get(const mpl::int_<0>&)
     #else
     static inline const result_type get(const std::integral_constant<int, 0>&)
     #endif
