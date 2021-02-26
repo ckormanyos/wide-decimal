@@ -66,8 +66,7 @@
       result_type B = 0.5F;
       result_type D = 0.25F;
 
-      result_type lim;
-      lim = boost::math::tools::epsilon<result_type>();
+      result_type lim = std::numeric_limits<result_type>::epsilon();
 
       unsigned k = 1;
 

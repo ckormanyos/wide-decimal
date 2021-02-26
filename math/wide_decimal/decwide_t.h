@@ -3862,19 +3862,16 @@
     const float n_times_factor = ((float) std::numeric_limits<floating_point_type>::digits10) * 1.67F;
 
     // Extract lg_xx = Log[mantissa * radix^ib]
-    //               = Log[mantissa] + ib * Log[radix]
+    //               = Log[mantissa] + ib * Log[radix],
+    // where the logarithm of the mantissa is simply neglected
+    // in the approximation.
 
-    InternalFloatType mantissa;
-    std::int64_t      ib;
-
-    xx.extract_parts(mantissa, ib);
-
+    using std::ilogb;
     using std::log;
 
-    const float lg_xx =   log((float) mantissa)
-                        + ((float) ib * log((float) std::numeric_limits<floating_point_type>::radix));
+    const float lg_xx_approx = (float) ilogb(xx) * log((float) std::numeric_limits<floating_point_type>::radix);
 
-    const float lg_xx_over_lg2 = lg_xx / log(2.0F);
+    const float lg_xx_over_lg2 = lg_xx_approx / log(2.0F);
 
     // Ensure that the resulting power is non-negative.
     // Also enforce that m >= 3.

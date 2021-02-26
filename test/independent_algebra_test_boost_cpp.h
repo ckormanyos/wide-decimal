@@ -8,6 +8,7 @@
 #ifndef INDEPENDENT_ALGEBRA_TEST_BOOST_CPP_2020_10_17_H_
   #define INDEPENDENT_ALGEBRA_TEST_BOOST_CPP_2020_10_17_H_
 
+  #include <algorithm>
   #include <iomanip>
   #include <sstream>
 
@@ -16,6 +17,7 @@
 
   #include <boost/serialization/nvp.hpp>
   #include <boost/multiprecision/cpp_bin_float.hpp>
+  #include <boost/math/constants/constants.hpp>
 
   namespace test { namespace independent_algebra {
 
@@ -48,6 +50,95 @@
          << my_cpp_bin_float;
 
       str = ss.str();
+    }
+
+    static local_float_type my_log(local_float_type x)
+    {
+      using floating_point_type = local_float_type;
+
+      // For values less than 1 invert the argument and
+      // remember (in this case) to negate the result below.
+      const bool b_negate = (x < 1);
+
+      const floating_point_type xx((b_negate == false) ? x : 1 / x);
+
+      // Use an AGM method to compute the logarithm of x.
+      // Set a0 = 1
+      // Set b0 = 4 / (x * 2^m)
+      //        = 1 / (x * 2^(m - 2))
+
+      floating_point_type ak(1U);
+
+      const float n_times_factor = ((float) std::numeric_limits<floating_point_type>::digits10) * 1.67F;
+
+      // Extract lg_xx = Log[mantissa * radix^ib]
+      //               = Log[mantissa] + ib * Log[radix],
+      // where the logarithm of the mantissa is simply neglected
+      // in the approximation.
+
+      using std::ilogb;
+      using std::log;
+
+      const float lg_xx_approx = (float) ilogb(xx) * log((float) std::numeric_limits<floating_point_type>::radix);
+
+      const float lg_xx_over_lg2 = lg_xx_approx / log(2.0F);
+
+      // Ensure that the resulting power is non-negative.
+      // Also enforce that m >= 3.
+      const std::int32_t m = (std::max)((std::int32_t) (n_times_factor - lg_xx_over_lg2), (std::int32_t) 3);
+
+      floating_point_type bk =
+        ldexp(floating_point_type(1U), (std::int32_t) (2 - m)) / xx;
+
+      // TBD: Tolerance should have the log of the argument added to it (usually negligible).
+      const std::uint32_t digits10_iteration_goal =
+          (std::uint32_t) (std::numeric_limits<floating_point_type>::digits10 / 2)
+        + (std::uint32_t) 9U;
+
+      using std::log;
+
+      const std::uint32_t digits10_scale =
+        (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
+
+      for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
+      {
+        using std::ilogb;
+        using std::sqrt;
+
+        // Check for the number of significant digits to be
+        // at least half of the requested digits. If at least
+        // half of the requested digits have been achieved,
+        // then break after the upcoming iteration.
+
+        const std::int32_t ilogb_of_ak_minus_bk = (std::max)(std::int32_t(0), -ilogb(ak - bk));
+
+        const std::uint32_t digits10_of_iteration =
+          (std::uint32_t) ((std::uint64_t) ((std::uint64_t) ilogb_of_ak_minus_bk * digits10_scale) / 1000U);
+
+        const floating_point_type ak_tmp(ak);
+
+        ak += bk;
+        ak /= 2;
+
+        if(digits10_of_iteration > digits10_iteration_goal)
+        {
+          break;
+        }
+
+        bk *= ak_tmp;
+        bk  = sqrt(bk);
+      }
+
+      // We are now finished with the AGM iteration for log(x).
+      // Compute log(x) = {pi / [2 * AGM(1, 4 / 2^m)]} - (m * ln2)
+      // Note at this time that (ak = bk) = AGM(...)
+      // Retrieve the value of pi, divide by (2 * a) and subtract (m * ln2).
+
+      const floating_point_type result =
+               boost::math::constants::pi<floating_point_type>() / (ak * 2)
+        - (boost::math::constants::ln_two<floating_point_type>() * m);
+
+      return ((b_negate == true) ? -result : result);
     }
   };
 
@@ -94,7 +185,13 @@
   void eval_log(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& result,
                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a)
   {
-    result.my_cpp_bin_float = log(a.my_cpp_bin_float);
+    using boost_multiprecision_type =
+      typename independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>::local_float_type;
+
+    const boost_multiprecision_type lg_a =
+      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_log(a.my_cpp_bin_float);
+
+    result.my_cpp_bin_float = lg_a;
   }
 
   } }

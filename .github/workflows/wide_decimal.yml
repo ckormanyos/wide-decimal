@@ -217,8 +217,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++ ]
-        standard: [ c++11, c++14 ]
+        compiler: [ g++, clang++ ]
+        standard: [ c++11 ]
     if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v2
