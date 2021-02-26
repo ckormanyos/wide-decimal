@@ -41,6 +41,16 @@ how to use wide-decimal.
   - ![`example010a_hypergeometric_1f1`](./examples/example010a_hypergeometric_1f1.cpp) calculates another <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
 
+## Testing
+Testing is a big issue and a growing test suite is in continued progress
+providing for tested, efficient functionality on the PC and workstation.
+The GitHub code is delivered with an affiliated MSVC project that uses easy-to-understand
+subroutines called from `main()` that exercise various test cases.
+
+Continuous integration runs on push using GitHub Actions.
+Various compilers, operating systems, and C++ standards
+ranging from C++11, 14, 17, 20 are included in CI.
+
 ## Details
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
@@ -55,15 +65,6 @@ performed with a big float data type based on
 Portability of the code is another key point of focus. Special care
 has been taken to test in certain high-performance embedded real-time
 programming environments.
-
-Testing is a big issue and a growing test suite is in continued progress
-providing for tested, efficient functionality on the PC and workstation.
-The GitHub code is delivered with an affiliated MSVC project that uses easy-to-understand
-subroutines called from `main()` that exercise various test cases.
-
-Continuous integration runs on push using GitHub Actions.
-Various compilers and C++ standards ranging from C++11, 14, 17, 20
-are included in CI.
 
 When working with even the most tiny microcontroller systems,
 various _heavy-wieght_ features such as I/O streaming,
