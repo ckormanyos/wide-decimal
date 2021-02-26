@@ -15,6 +15,41 @@ Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 
   - Seamless portability to any modern C++11, 14, 17, 20 compiler
   - Scalability with small memory footprint and efficiency suitable for _bare-metal_ embedded systems
 
+## Quick start
+Easy application follows via a traditional C-style typedef or C++11 alias.
+The defined type can be used very much like a built-in floating-point type.
+
+The following sample, for instance, defines and uses a decimal type
+called `dec101_t` having
+<img src="https://render.githubusercontent.com/render/math?math=101">
+decimal digits of precision.
+
+```
+#include <iomanip>
+#include <iostream>
+
+#include <math/wide_decimal/decwide_t.h>
+
+void do_something()
+{
+  using dec101_t = math::wide_decimal::decwide_t<101U, std::uint32_t>;
+
+  dec101_t d = dec101_t(1) / 3;
+
+  // 0.33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+  std::cout << std::setprecision(std::numeric_limits<dec101_t>::digits) << d << std::endl;
+}
+```
+
+The local data type `dec101_t` is defined with a C++11 alias.
+The first template parameter `101U` sets the decimal digit
+count while the second optional template parameter `std::uint32_t`
+sets the internal _limb_ _type_. If the second template parameter is left blank,
+the default limb type is 32 bits in width and unsigned.
+The subroutine `do_something()` initializes the variable `d`
+of type `dec101_t` with 1/3 and subsequently prints the 101 digit
+value of `d` to the console.
+
 ## Examples
 
 Various interesting and algorithmically challenging
@@ -95,41 +130,6 @@ allocation is needed and can not be disabled. In other words,
 // Deactivate the disabling of dynamic memory for multithreaded PC work.
 //#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 ```
-
-## Quick start
-Easy application follows via a traditional C-style typedef or C++11 alias.
-The defined type can be used very much like a built-in floating-point type.
-
-The following sample, for instance, defines and uses a decimal type
-called `dec101_t` having
-<img src="https://render.githubusercontent.com/render/math?math=101">
-decimal digits of precision.
-
-```
-#include <iomanip>
-#include <iostream>
-
-#include <math/wide_decimal/decwide_t.h>
-
-void do_something()
-{
-  using dec101_t = math::wide_decimal::decwide_t<101U, std::uint32_t>;
-
-  dec101_t d = dec101_t(1) / 3;
-
-  // 0.33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
-  std::cout << std::setprecision(std::numeric_limits<dec101_t>::digits) << d << std::endl;
-}
-```
-
-The local data type `dec101_t` is defined with a C++11 alias.
-The first template parameter `101U` sets the decimal digit
-count while the second optional template parameter `std::uint32_t`
-sets the internal _limb_ _type_. If the second template parameter is left blank,
-the default limb type is 32 bits in width and unsigned.
-The subroutine `do_something()` initializes the variable `d`
-of type `dec101_t` with 1/3 and subsequently prints the 101 digit
-value of `d` to the console.
 
 ## Detailed examples
 
