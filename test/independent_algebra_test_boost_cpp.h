@@ -72,27 +72,27 @@
       const float n_times_factor = ((float) std::numeric_limits<floating_point_type>::digits10) * 1.67F;
 
       // Extract lg_xx = Log[mantissa * radix^ib]
-      //               = Log[mantissa] + ib * Log[radix],
-      // where the logarithm of the mantissa is simply neglected
-      // in the approximation.
+      //               = Log[mantissa] + ib * Log[radix]
 
       using std::ilogb;
       using std::log;
+      using std::scalbn;
 
-      const float lg_xx_approx = (float) ilogb(xx) * log((float) std::numeric_limits<floating_point_type>::radix);
-
-      const float lg_xx_over_lg2 = lg_xx_approx / log(2.0F);
+      const std::int32_t        ib    = ilogb(xx);
+      const floating_point_type man   = xx / scalbn(floating_point_type(1U), (int) ib);
+      const float               lg_xx =   log((float) man)
+                                        + ((float) ib * log((float) std::numeric_limits<floating_point_type>::radix));
 
       // Ensure that the resulting power is non-negative.
       // Also enforce that m >= 3.
-      const std::int32_t m = (std::max)((std::int32_t) (n_times_factor - lg_xx_over_lg2), (std::int32_t) 3);
+      const std::int32_t m = (std::max)((std::int32_t) (n_times_factor - (float) (lg_xx / log(2.0F))), (std::int32_t) 3);
 
       floating_point_type bk =
         ldexp(floating_point_type(1U), (std::int32_t) (2 - m)) / xx;
 
       // TBD: Tolerance should have the log of the argument added to it (usually negligible).
       const std::uint32_t digits10_iteration_goal =
-          (std::uint32_t) (std::numeric_limits<floating_point_type>::digits10 / 2)
+          (std::uint32_t) ((std::numeric_limits<floating_point_type>::digits10 + 1) / 2)
         + (std::uint32_t) 9U;
 
       using std::log;
@@ -120,7 +120,7 @@
         ak += bk;
         ak /= 2;
 
-        if(digits10_of_iteration > digits10_iteration_goal)
+        if((k > 4) && (digits10_of_iteration > digits10_iteration_goal))
         {
           break;
         }

@@ -26,7 +26,16 @@
            typename InternalFloatType>
   struct control
   {
+  private:
+    using local_wide_decimal_type =
+      math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
+
   public:
+    static constexpr local_wide_decimal_type my_tol()
+    {
+      return std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
+    }
+
     static bool eval_eq(const independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a,
                         const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& b)
     {
@@ -34,16 +43,13 @@
 
       b.get_string(str_b);
 
-      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> decwide_t_b(str_b);
+      const local_wide_decimal_type decwide_t_b(str_b);
 
-      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> ratio = fabs(a.my_decwide_t / decwide_t_b);
+      const local_wide_decimal_type ratio = a.my_decwide_t / decwide_t_b;
 
-      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> delta = fabs(1 - ratio);
+      const local_wide_decimal_type delta = fabs(1 - fabs(ratio));
 
-      const math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType> eps =
-        std::numeric_limits<math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::epsilon() * 10;
-
-      const bool compare_is_ok = (delta < eps);
+      const bool compare_is_ok = (delta < my_tol());
 
       return compare_is_ok;
     }
@@ -67,7 +73,7 @@
 
       std::uint32_t u;
 
-      while(str.length() < std::string::size_type(std::numeric_limits<math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>::digits10))
+      while(str.length() < std::string::size_type(std::numeric_limits<local_wide_decimal_type>::digits10))
       {
         u = dst_mantissa(eng_mantissa);
 
