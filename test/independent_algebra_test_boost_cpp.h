@@ -21,11 +21,11 @@
 
   namespace test { namespace independent_algebra {
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
   class independent_algebra_test_boost_cpp : public independent_algebra_test_base
   {
   public:
-    using other_decwide_t_type = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
+    using other_decwide_t_type = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
     using local_float_type =
       boost::multiprecision::number<boost::multiprecision::cpp_bin_float<std::numeric_limits<other_decwide_t_type>::digits10 + 3>,
@@ -142,54 +142,54 @@
     }
   };
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
-  void eval_add(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& b)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
+  void eval_add(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
     result.my_cpp_bin_float = a.my_cpp_bin_float + b.my_cpp_bin_float;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
-  void eval_sub(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& b)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
+  void eval_sub(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
     result.my_cpp_bin_float = a.my_cpp_bin_float - b.my_cpp_bin_float;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
-  void eval_mul(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& b)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
+  void eval_mul(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
     result.my_cpp_bin_float = a.my_cpp_bin_float * b.my_cpp_bin_float;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
-  void eval_div(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& b)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
+  void eval_div(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
     result.my_cpp_bin_float = a.my_cpp_bin_float / b.my_cpp_bin_float;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
-  void eval_sqrt(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& result,
-                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
+  void eval_sqrt(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a)
   {
     result.my_cpp_bin_float = sqrt(a.my_cpp_bin_float);
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType>
-  void eval_log(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>& a)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
+  void eval_log(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a)
   {
     using boost_multiprecision_type =
-      typename independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>::local_float_type;
+      typename independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::local_float_type;
 
     const boost_multiprecision_type lg_a =
-      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType>::my_log(a.my_cpp_bin_float);
+      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_log(a.my_cpp_bin_float);
 
     result.my_cpp_bin_float = lg_a;
   }

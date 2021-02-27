@@ -14,7 +14,12 @@ namespace
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
-  using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  using dec1001_t =
+    math::wide_decimal::decwide_t<wide_decimal_digits10,
+                                  std::uint32_t,
+                                  std::allocator<void>,
+                                  double,
+                                  std::int64_t>;
 }
 
 namespace math { namespace wide_decimal {

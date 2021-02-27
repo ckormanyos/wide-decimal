@@ -20,11 +20,12 @@
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
+           typename ExponentType,
            typename ThisPolicy>
-  struct precision<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>, ThisPolicy>
+  struct precision<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>, ThisPolicy>
   {
     using local_wide_decimal_type =
-      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
+      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
     using precision_type = typename ThisPolicy::precision_type;
 
@@ -45,12 +46,13 @@
   template<const std::int32_t MyDigits10,
            typename LimbType,
            typename AllocatorType,
-           typename InternalFloatType>
-  struct constant_pi<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>>
+           typename InternalFloatType,
+           typename ExponentType>
+  struct constant_pi<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>>
   {
   public:
     using result_type =
-      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType>;
+      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
   private:
     static result_type my_compute()
