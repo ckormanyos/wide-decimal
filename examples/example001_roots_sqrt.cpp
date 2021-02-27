@@ -21,7 +21,11 @@ bool math::wide_decimal::example001_roots_sqrt()
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>;
 
-  using dec101_t = math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, float>;
+  using dec101_t = math::wide_decimal::decwide_t<wide_decimal_digits10,
+                                                 local_limb_type,
+                                                 local_allocator_type,
+                                                 float,
+                                                 std::int32_t>;
 
   const dec101_t s = sqrt(dec101_t(123456U) / 100);
 

@@ -52,7 +52,7 @@
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double,
-           typename ExponentType = std::int32_t>
+           typename ExponentType = std::int64_t>
   class decwide_t;
 
   namespace detail {
@@ -133,14 +133,14 @@
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double,
-           typename ExponentType = std::int32_t>
+           typename ExponentType = std::int64_t>
   const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
   #else
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double,
-           typename ExponentType = std::int32_t>
+           typename ExponentType = std::int64_t>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
   #endif
 
@@ -149,14 +149,14 @@
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double,
-           typename ExponentType = std::int32_t>
+           typename ExponentType = std::int64_t>
   const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& ln_two();
   #else
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double,
-           typename ExponentType = std::int32_t>
+           typename ExponentType = std::int64_t>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> ln_two();
   #endif
 
@@ -164,14 +164,14 @@
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double,
-           typename ExponentType = std::int32_t>
+           typename ExponentType = std::int64_t>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
 
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double,
-           typename ExponentType = std::int32_t>
+           typename ExponentType = std::int64_t>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> calc_ln_two();
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> constexpr unsigned_long_long_max();
