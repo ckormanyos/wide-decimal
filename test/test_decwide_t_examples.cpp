@@ -13,11 +13,11 @@
 
 #if defined(__clang__)
   #if defined __has_feature && __has_feature(thread_sanitizer)
-  #define DECWIDE_T_DISABLE_EXAMPLES_IN_CI
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
   #endif
 #elif defined(__GNUC__)
   #if defined(__SANITIZE_THREAD__)
-  #define DECWIDE_T_DISABLE_EXAMPLES_IN_CI
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
   #endif
 #endif
 
@@ -25,7 +25,7 @@ bool test_decwide_t_examples_part1__()
 {
   bool result_is_ok = true;
 
-  #if !defined(DECWIDE_T_DISABLE_EXAMPLES_IN_CI)
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
   result_is_ok &= math::wide_decimal::example001_roots_sqrt           (); std::cout << "example001_roots_sqrt           : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example001a_roots_seventh       (); std::cout << "example001a_roots_seventh       : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example001b_roots_almost_integer(); std::cout << "example001b_roots_almost_integer: " << std::boolalpha << result_is_ok << std::endl;
@@ -42,7 +42,7 @@ bool test_decwide_t_examples_part2__()
 {
   bool result_is_ok = true;
 
-  #if !defined(DECWIDE_T_DISABLE_EXAMPLES_IN_CI)
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
   result_is_ok &= math::wide_decimal::example003_zeta                   ();
   result_is_ok &= math::wide_decimal::example004_bessel_recur           ();
   result_is_ok &= math::wide_decimal::example005_polylog_series         ();
