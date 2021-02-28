@@ -10,9 +10,9 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 
-bool math::wide_decimal::example001_roots_sqrt()
+bool math::wide_decimal::example001c_roots_sqrt_limb08()
 {
-  using local_limb_type = std::uint16_t;
+  using local_limb_type = std::uint8_t;
 
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(101);
 
@@ -25,7 +25,7 @@ bool math::wide_decimal::example001_roots_sqrt()
                                                  local_limb_type,
                                                  local_allocator_type,
                                                  float,
-                                                 std::int32_t>;
+                                                 std::int16_t>;
 
   const dec101_t s = sqrt(dec101_t(123456U) / 100);
 
@@ -50,7 +50,7 @@ bool math::wide_decimal::example001_roots_sqrt()
 
 int main()
 {
-  const bool result_is_ok = math::wide_decimal::example001_roots_sqrt();
+  const bool result_is_ok = math::wide_decimal::example001c_roots_sqrt_limb08();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

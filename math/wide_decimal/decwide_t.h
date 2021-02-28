@@ -375,7 +375,11 @@
     using exponent_type  = ExponentType;
     using fft_float_type = double;
 
-    static constexpr std::int32_t decwide_t_elems_for_fft     = 128;
+    static_assert((   (std::is_same<std::int8_t,  exponent_type>::value == true)
+                   || (std::is_same<std::int16_t, exponent_type>::value == true)
+                   || (std::is_same<std::int32_t, exponent_type>::value == true)
+                   || (std::is_same<std::int64_t, exponent_type>::value == true)),
+                   "Error: exponent_type (determined via the template parameter ExponentType) must be one of int8_t, int16_t, int32_t or int64_t.");
 
     static constexpr std::int32_t decwide_t_digits10          = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
     static constexpr std::int32_t decwide_t_digits            = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
@@ -403,18 +407,30 @@
 
     // Obtain the limb type, double limb type and signed limb type
     // from meta-templates.
-    using limb_type        = typename array_type::value_type;
-    using double_limb_type = typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
-                                                        std::uint64_t,
-                                                        std::uint32_t>::type;
-    using signed_limb_type = typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
-                                                        std::int32_t,
-                                                        std::int16_t>::type;
+    using limb_type = typename array_type::value_type;
 
     // Check thw width of the limb type.
-    static_assert((   (std::is_same<std::uint16_t, limb_type>::value == true)
+    static_assert((   (std::is_same<std::uint8_t,  limb_type>::value == true)
+                   || (std::is_same<std::uint16_t, limb_type>::value == true)
                    || (std::is_same<std::uint32_t, limb_type>::value == true)),
-                   "Error: limb_type (determined via the template parameter LimbType) must be either uint16_t or uint32_t.");
+                   "Error: limb_type (determined via the template parameter LimbType) must be one of uint8_t, uint16_t or uint32_t.");
+
+    using double_limb_type = typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
+                                                        std::uint64_t,
+                                                        typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value == true),
+                                                                                   std::uint32_t,
+                                                                                   std::uint16_t>::type
+                                                      >::type;
+
+    using signed_limb_type = typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
+                                                        std::int32_t,
+                                                        typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value == true),
+                                                                                   std::int16_t,
+                                                                                   std::int8_t>::type
+                                                      >::type;
+
+    static constexpr std::int32_t decwide_t_elems_for_fft =
+      ((std::is_same<limb_type, std::uint8_t>::value == true) ? 32 : 128);
 
     typedef enum fpclass_type_enum
     {
@@ -1508,7 +1524,7 @@
       //
       // Book references:
       // http://www.jjj.de/pibook/pibook.html
-      // http://www.amazon.com/exec/obidos/tg/detail/-/3540665722/qid=1035535482/sr=8-7/ref=sr_8_7/104-3357872-6059916?v=glance&n=507846
+      // http://www.springer.com/gp/book/9783642567353
 
       for(std::int32_t digits  = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1);
                        digits  < (std::int32_t) (original_prec_elem * decwide_t_elem_digits10);
@@ -2034,11 +2050,11 @@
       // part of the long double and multiply with the base-2 exponent.
       const int p2 = ld_parts.get_exponent() - (std::numeric_limits<long double>::digits - 1);
 
-      if     (p2 <  -1) { *this *= pow(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>( { UINT32_C(50000000) }, -8 ), -p2); }
-      else if(p2 == -1) { *this *=     decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>( { UINT32_C(50000000) }, -8 ); }
+      if     (p2 <  -1) { *this *= pow(half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(), -p2); }
+      else if(p2 == -1) { *this *=     half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(); }
       else if(p2 ==  0) { ; }
       else if(p2 ==  1) { *this *= 2U; }
-      else              { *this *= pow(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(2U), p2); }
+      else              { *this *= pow(two<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(), p2); }
 
       my_neg = b_neg;
     }
@@ -2661,11 +2677,15 @@
       // Extract all of the digits from decwide_t, beginning with the first data element.
       for(std::uint_fast32_t i = static_cast<std::uint_fast32_t>(1U); i < number_of_elements; i++)
       {
+        using data_element_rep_type = typename std::conditional<(std::numeric_limits<limb_type>::digits <= 32),
+                                                                 std::uint32_t,
+                                                                 limb_type>::type;
+
         std::stringstream ss;
 
         ss << std::setw(static_cast<std::streamsize>(decwide_t_elem_digits10))
            << std::setfill(static_cast<char>('0'))
-           << my_data[i];
+           << data_element_rep_type(my_data[i]);
 
         str += ss.str();
       }
@@ -3719,9 +3739,9 @@
       static constexpr bool                    is_bounded        = true;
       static constexpr bool                    is_modulo         = false;
       static constexpr bool                    is_iec559         = false;
-      static constexpr exponent_type           digits            = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits;       // Type differs from int.
-      static constexpr exponent_type           digits10          = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10;     // Type differs from int.
-      static constexpr exponent_type           max_digits10      = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_max_digits10; // Type differs from int.
+      static constexpr std::int32_t            digits            = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits;       // Type differs from int.
+      static constexpr std::int32_t            digits10          = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10;     // Type differs from int.
+      static constexpr std::int32_t            max_digits10      = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_max_digits10; // Type differs from int.
       static constexpr exponent_type           min_exponent      = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_min_exp;      // Type differs from int.
       static constexpr exponent_type           min_exponent10    = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_min_exp10;    // Type differs from int.
       static constexpr exponent_type           max_exponent      = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_max_exp;      // Type differs from int.
@@ -4070,6 +4090,7 @@
   bool example001_roots_sqrt             ();
   bool example001a_roots_seventh         ();
   bool example001b_roots_almost_integer  ();
+  bool example001c_roots_sqrt_limb08     ();
   bool example002_pi                     ();
   bool example002a_pi_small_limb         ();
   bool example002b_pi_100k               ();

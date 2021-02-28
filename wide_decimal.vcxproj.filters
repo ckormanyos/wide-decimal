@@ -115,6 +115,9 @@
     <ClCompile Include="examples\example009a_boost_math_standalone.cpp">
       <Filter>Source Files\examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example001c_roots_sqrt_limb08.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_boost_cpp.h">

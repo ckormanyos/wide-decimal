@@ -21,7 +21,7 @@ bool math::wide_decimal::example001a_roots_seventh()
     "2.7646782775741109196428393776807250048855576457486681034865195752391286191642449378095974978251349039"
   };
 
-  const dec101_t closeness = fabs(1 - (r7 / control));
+  const dec101_t closeness = fabs(1 - fabs(r7 / control));
 
   const bool result_is_ok = closeness < (std::numeric_limits<dec101_t>::epsilon() * 10);
 

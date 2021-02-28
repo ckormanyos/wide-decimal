@@ -77,7 +77,7 @@ bool math::wide_decimal::example001b_roots_almost_integer()
     "2905"
   };
 
-  const dec5001_t closeness = fabs(1 - (p / control));
+  const dec5001_t closeness = fabs(1 - fabs(p / control));
 
   const bool result_is_ok = closeness < (std::numeric_limits<dec5001_t>::epsilon() * 10);
 
