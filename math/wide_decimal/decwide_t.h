@@ -3169,15 +3169,13 @@
       }
       else
       {
-        std::int_fast16_t n10 = INT16_C(-1);
+        limb_type xx = x.my_data[0U];
 
-        limb_type p10 = (limb_type) 1U;
+        std::uint_fast16_t n10 = 0;
 
-        const limb_type limit_aligned_with_10 = x.my_data[0U] + (limb_type) (10U - (x.my_data[0U] % 10U));
-
-        while(p10 < limit_aligned_with_10)
+        while(limb_type(xx + 5U) > 10U)
         {
-          p10 *= 10U;
+          xx /= 10U;
 
           ++n10;
         }
@@ -3253,11 +3251,7 @@
     //
     //               Book reference:
     //               http://www.jjj.de/pibook/pibook.html
-    //               http://www.amazon.com/exec/obidos/tg/detail/-/3540665722/qid=1035535482/sr=8-7/ref=sr_8_7/104-3357872-6059916?v=glance&n=507846
-    //
-    //               Digits of pi available for test at:
-    //               http://www.hepl.phys.nagoya-u.ac.jp/~mitsuru/pi-e.html
-    //               http://www.cecm.sfu.ca/projects/ISC/data/pi.html
+    //               http://www.springer.com/gp/book/9783642567353
 
     if(pfn_callback_to_report_digits10 != nullptr)
     {
@@ -3268,31 +3262,13 @@
 
     floating_point_type val_pi;
 
-    floating_point_type a
-    (
-      {
-        (typename floating_point_type::limb_type) 1U
-      },
-      0
-    );
+    floating_point_type a(1U);
 
     // Initialize bB to 0.5.
-    floating_point_type bB
-    (
-      {
-        (typename floating_point_type::limb_type) (floating_point_type::decwide_t_elem_mask / 2)
-      },
-      -floating_point_type::decwide_t_elem_digits10
-    );
+    floating_point_type bB(half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
 
     // Initialize t to 0.375.
-    floating_point_type t
-    (
-      {
-        (typename floating_point_type::limb_type) ((floating_point_type::decwide_t_elem_mask * 3LL) / 8L)
-      },
-      -floating_point_type::decwide_t_elem_digits10
-    );
+    floating_point_type t(0.375F);
 
     floating_point_type s(bB);
 
