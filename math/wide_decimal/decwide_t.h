@@ -545,8 +545,8 @@
       }
       else
       {
-        my_data[0U] = u / decwide_t_elem_mask;
-        my_data[1U] = u % decwide_t_elem_mask;
+        my_data[0U] = u / (limb_type) decwide_t_elem_mask;
+        my_data[1U] = u % (limb_type) decwide_t_elem_mask;
 
         my_exp = decwide_t_elem_digits10;
       }
@@ -3268,7 +3268,7 @@
     floating_point_type bB(half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
 
     // Initialize t to 0.375.
-    floating_point_type t(0.375F);
+    floating_point_type t(floating_point_type(3U) / 8U);
 
     floating_point_type s(bB);
 
