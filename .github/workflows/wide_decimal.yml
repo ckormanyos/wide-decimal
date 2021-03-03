@@ -1,5 +1,8 @@
 name: wide_decimal
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: '0 1 * * *' # run at 1 AM UTC
 jobs:
   gcc-clang-native:
     runs-on: ubuntu-20.04
@@ -11,7 +14,6 @@ jobs:
       matrix:
         compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
-    if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -115,7 +117,6 @@ jobs:
       matrix:
         compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
-    if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -219,7 +220,6 @@ jobs:
       matrix:
         compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
-    if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -323,7 +323,6 @@ jobs:
       matrix:
         compiler: [ g++-10, clang++-10 ]
         standard: [ c++11, c++14, c++17, c++20 ]
-    if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -429,7 +428,6 @@ jobs:
       matrix:
         compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
-    if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -525,7 +523,6 @@ jobs:
           ./wide_decimal.exe
   msvc-release-x64:
     runs-on: windows-latest
-    if: "!contains(github.event.commits[0].message, '[CI SKIP]')"
     steps:
       - uses: actions/checkout@v1
       - uses: ilammy/msvc-dev-cmd@v1
