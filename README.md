@@ -1,4 +1,7 @@
-# Wide-decimal
+Wide-decimal
+[![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
+==================
+
 Wide-decimal implements a generic C++ template for extended precision decimal float types.
 
 This C++ template header-only library implements drop-in big decimal float types such as `dec101_t`, `dec10001_t`, `dec1000001_t`, etc., that can be used essentially like regular built-in floating-point types. Wide-decimal supports decimal float types having digit counts ranging from about <img src="https://render.githubusercontent.com/render/math?math=\sim\,30{\ldots}3,000,000">.
@@ -77,7 +80,7 @@ how to use wide-decimal.
   - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
 
-## Testing
+## Testing and CI
 
 Testing is a big issue and a growing test suite is in continued progress
 providing for tested, efficient functionality on the PC and workstation.
@@ -87,6 +90,9 @@ subroutines called from `main()` that exercise various test cases.
 Continuous integration runs on push using GitHub Actions.
 Various compilers, operating systems, and C++ standards
 ranging from C++11, 14, 17, 20 are included in CI.
+
+### Build Status
+[![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
 
 ## Details
 
