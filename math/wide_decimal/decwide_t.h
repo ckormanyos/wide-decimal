@@ -66,7 +66,7 @@
     using base_class_type = util::dynamic_array<MyType, MyAlloc>;
 
   public:
-    fixed_dynamic_array(const typename base_class_type::size_type       s  = MySize,
+    fixed_dynamic_array(const typename base_class_type::size_type       s = MySize,
                         const typename base_class_type::value_type&     v = typename base_class_type::value_type(),
                         const typename base_class_type::allocator_type& a = typename base_class_type::allocator_type())
       : base_class_type(MySize, typename base_class_type::value_type(), a)
@@ -120,12 +120,7 @@
     using base_class_type = std::array<MyType, MySize>;
 
   public:
-    fixed_static_array()
-    {
-      std::fill(base_class_type::begin(),
-                base_class_type::end(),
-                typename base_class_type::value_type());
-    }
+    fixed_static_array() { }
 
     fixed_static_array(const typename base_class_type::size_type   s,
                        const typename base_class_type::value_type& v = typename base_class_type::value_type())
@@ -615,9 +610,13 @@
                                               my_fpclass  (decwide_t_finite),
                                               my_prec_elem(decwide_t_elem_number)
     {
+      typename array_type::size_type u_fill;
+
       if(u < decwide_t_elem_mask)
       {
         my_data[0U] = u;
+
+        u_fill = 1U;
       }
       else
       {
@@ -625,7 +624,11 @@
         my_data[1U] = u % (limb_type) decwide_t_elem_mask;
 
         my_exp = decwide_t_elem_digits10;
+
+        u_fill = 2U;
       }
+
+      std::fill(my_data.begin() + u_fill, my_data.end(), limb_type(0U));
     }
 
     // Constructors from built-in unsigned integral types.
@@ -711,13 +714,6 @@
                                              my_neg      (other.my_neg),
                                              my_fpclass  (other.my_fpclass),
                                              my_prec_elem(other.my_prec_elem) { }
-
-    // Constructor from floating-point class.
-    explicit constexpr decwide_t(const fpclass_type fpc) : my_data     (),
-                                                           my_exp      (static_cast<exponent_type>(0)),
-                                                           my_neg      (false),
-                                                           my_fpclass  (fpc),
-                                                           my_prec_elem(decwide_t_elem_number) { }
 
     // Constructor from initializer list of limbs,
     // exponent value (normed to limb granularity) 
@@ -2017,6 +2013,10 @@
       std::reverse(temp, temp + i);
 
       std::copy(temp, temp + (std::min)(i, static_cast<std::uint_fast32_t>(decwide_t_elem_number)), my_data.begin());
+
+      std::fill(my_data.begin() + (std::min)(i, static_cast<std::uint_fast32_t>(decwide_t_elem_number)),
+                my_data.end(),
+                limb_type(0U));
     }
 
     void from_long_double(const long double l)
@@ -2034,6 +2034,8 @@
 
         return;
       }
+
+      std::fill(my_data.begin(), my_data.end(), limb_type(0U));
 
       const native_float_parts<long double> ld_parts(my_ld);
 
