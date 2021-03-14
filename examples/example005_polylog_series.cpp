@@ -44,7 +44,7 @@ namespace local
 
 bool math::wide_decimal::example005_polylog_series()
 {
-  using dec101_t = math::wide_decimal::decwide_t<101>;
+  using dec101_t = math::wide_decimal::decwide_t<101U>;
 
   using std::fabs;
 
