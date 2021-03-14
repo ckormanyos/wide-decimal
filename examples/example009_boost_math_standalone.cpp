@@ -29,7 +29,7 @@ bool math::wide_decimal::example009_boost_math_standalone()
   // Compare wide-decimal's cube root function with that of Boost.Math.
   // Also exercise several different interpretations of the constant pi.
 
-  const dec1001_t c       = cbrt(x / math::wide_decimal::pi<wide_decimal_digits10, typename dec1001_t::limb_type, std::allocator<void>, double>());
+  const dec1001_t c       = cbrt(x / math::wide_decimal::pi<wide_decimal_digits10, typename dec1001_t::limb_type, std::allocator<typename dec1001_t::limb_type>, double>());
 
   const dec1001_t control = boost::math::cbrt(x / boost::math::constants::pi<dec1001_t>());
 

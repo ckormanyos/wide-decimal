@@ -41,7 +41,7 @@ namespace
 bool test_decwide_t_algebra_add_____()
 {
   const bool result_is_ok =
-    test::independent_algebra::independent_algebra_test_add_<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t>>();
+    test::independent_algebra::independent_algebra_test_add_<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t>>();
 
   return result_is_ok;
 }
@@ -49,7 +49,7 @@ bool test_decwide_t_algebra_add_____()
 bool test_decwide_t_algebra_sub_____()
 {
   const bool result_is_ok =
-    test::independent_algebra::independent_algebra_test_sub_<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t>>();
+    test::independent_algebra::independent_algebra_test_sub_<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t>>();
 
   return result_is_ok;
 }
@@ -57,7 +57,7 @@ bool test_decwide_t_algebra_sub_____()
 bool test_decwide_t_algebra_mul_____()
 {
   const bool result_is_ok =
-    test::independent_algebra::independent_algebra_test_mul_<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t>>();
+    test::independent_algebra::independent_algebra_test_mul_<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t>>();
 
   return result_is_ok;
 }
@@ -65,7 +65,7 @@ bool test_decwide_t_algebra_mul_____()
 bool test_decwide_t_algebra_div_____()
 {
   const bool result_is_ok =
-    test::independent_algebra::independent_algebra_test_div_<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t>>();
+    test::independent_algebra::independent_algebra_test_div_<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t>>();
 
   return result_is_ok;
 }
@@ -73,7 +73,7 @@ bool test_decwide_t_algebra_div_____()
 bool test_decwide_t_algebra_sqrt____()
 {
   const bool result_is_ok =
-    test::independent_algebra::independent_algebra_test_sqrt<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t>>();
+    test::independent_algebra::independent_algebra_test_sqrt<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t, independent_algebra_test_count, independent_algebra_test_round, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t>>();
 
   return result_is_ok;
 }
@@ -81,7 +81,7 @@ bool test_decwide_t_algebra_sqrt____()
 bool test_decwide_t_algebra_log_____()
 {
   const bool result_is_ok =
-    test::independent_algebra::independent_algebra_test_log_<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t, independent_algebra_test_count_for_log, independent_algebra_test_round_for_log, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<void>, double, std::int32_t>>();
+    test::independent_algebra::independent_algebra_test_log_<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t, independent_algebra_test_count_for_log, independent_algebra_test_round_for_log, test::independent_algebra::independent_algebra_test_boost_cpp<wide_decimal_digits10, local_limb_type, std::allocator<local_limb_type>, double, std::int32_t>>();
 
   return result_is_ok;
 }

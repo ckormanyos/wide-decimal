@@ -50,7 +50,7 @@
   // Forward declaration of the decwide_t template class.
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
-           typename AllocatorType = std::allocator<void>,
+           typename AllocatorType = std::allocator<LimbType>,
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t>
   class decwide_t;
@@ -112,6 +112,84 @@
     }
   };
 
+  template<typename MyType,
+           const std::uint_fast32_t MySize>
+  class fixed_static_array final : public std::array<MyType, MySize>
+  {
+  private:
+    using base_class_type = std::array<MyType, MySize>;
+
+  public:
+    fixed_static_array()
+    {
+      std::fill(base_class_type::begin(),
+                base_class_type::end(),
+                typename base_class_type::value_type());
+    }
+
+    fixed_static_array(const typename base_class_type::size_type   s,
+                       const typename base_class_type::value_type& v = typename base_class_type::value_type())
+    {
+      std::fill(base_class_type::begin(),
+                base_class_type::begin() + (std::min)(MySize, (std::uint_fast32_t) s),
+                v);
+
+      std::fill(base_class_type::begin() + (std::min)(MySize, (std::uint_fast32_t) s),
+                base_class_type::end(),
+                typename base_class_type::value_type());
+    }
+
+    constexpr fixed_static_array(const fixed_static_array& other_array)
+      : base_class_type(static_cast<const base_class_type&>(other_array)) { }
+
+    template<const std::uint_fast32_t OtherSize>
+    fixed_static_array(const fixed_static_array<std::uint_fast32_t, OtherSize>& other_array)
+    {
+      std::copy(other_array.cbegin(),
+                other_array.cbegin() + (std::min)(OtherSize, MySize),
+                base_class_type::begin());
+
+      std::fill(base_class_type::begin() + (std::min)(OtherSize, MySize),
+                base_class_type::end(),
+                typename base_class_type::value_type());
+    }
+
+    explicit fixed_static_array(std::initializer_list<typename base_class_type::value_type> lst)
+    {
+      std::copy(lst.begin(),
+                lst.begin() + (std::min)((std::uint_fast32_t) lst.size(), MySize),
+                base_class_type::begin());
+
+      std::fill(base_class_type::begin() + (std::min)((std::uint_fast32_t) lst.size(), MySize),
+                base_class_type::end(),
+                typename base_class_type::value_type());
+    }
+
+    constexpr fixed_static_array(fixed_static_array&& other_array)
+      : base_class_type(static_cast<base_class_type&&>(other_array)) { }
+
+    fixed_static_array& operator=(const fixed_static_array& other_array)
+    {
+      base_class_type::operator=((const base_class_type&) other_array);
+
+      return *this;
+    }
+
+    fixed_static_array& operator=(fixed_static_array&& other_array)
+    {
+      base_class_type::operator=((base_class_type&&) other_array);
+
+      return *this;
+    }
+
+    ~fixed_static_array() { }
+
+    static constexpr typename base_class_type::size_type static_size()
+    {
+      return MySize;
+    }
+  };
+
   typedef enum enum_os_float_field_type
   {
     os_float_field_scientific,
@@ -131,14 +209,14 @@
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
-           typename AllocatorType = std::allocator<void>,
+           typename AllocatorType = std::allocator<LimbType>,
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t>
   const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
   #else
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
-           typename AllocatorType = std::allocator<void>,
+           typename AllocatorType = std::allocator<LimbType>,
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
@@ -147,14 +225,14 @@
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
-           typename AllocatorType = std::allocator<void>,
+           typename AllocatorType = std::allocator<LimbType>,
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t>
   const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& ln_two();
   #else
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
-           typename AllocatorType = std::allocator<void>,
+           typename AllocatorType = std::allocator<LimbType>,
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> ln_two();
@@ -162,14 +240,14 @@
 
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
-           typename AllocatorType = std::allocator<void>,
+           typename AllocatorType = std::allocator<LimbType>,
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr);
 
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
-           typename AllocatorType = std::allocator<void>,
+           typename AllocatorType = std::allocator<LimbType>,
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t>
   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> calc_ln_two();
@@ -381,33 +459,33 @@
                    || (std::is_same<std::int64_t, exponent_type>::value == true)),
                    "Error: exponent_type (determined via the template parameter ExponentType) must be one of int8_t, int16_t, int32_t or int64_t.");
 
-    static constexpr std::int32_t decwide_t_digits10          = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
-    static constexpr std::int32_t decwide_t_digits            = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
-    static constexpr std::int32_t decwide_t_max_digits10      = detail::decwide_t_helper<MyDigits10, LimbType>::max_digits10;
-    static constexpr std::int32_t decwide_t_radix             = detail::decwide_t_helper<MyDigits10, LimbType>::radix;
+    static constexpr std::int32_t decwide_t_digits10       = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
+    static constexpr std::int32_t decwide_t_digits         = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
+    static constexpr std::int32_t decwide_t_max_digits10   = detail::decwide_t_helper<MyDigits10, LimbType>::max_digits10;
+    static constexpr std::int32_t decwide_t_radix          = detail::decwide_t_helper<MyDigits10, LimbType>::radix;
 
-    static constexpr std::int32_t decwide_t_elem_digits10     = detail::decwide_t_helper<MyDigits10, LimbType>::elem_digits10;
-    static constexpr std::int32_t decwide_t_elem_number       = detail::decwide_t_helper<MyDigits10, LimbType>::elem_number;
-    static constexpr std::int32_t decwide_t_elem_mask         = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask;
-    static constexpr std::int32_t decwide_t_elem_mask_half    = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask_half;
+    static constexpr std::int32_t decwide_t_elem_digits10  = detail::decwide_t_helper<MyDigits10, LimbType>::elem_digits10;
+    static constexpr std::int32_t decwide_t_elem_number    = detail::decwide_t_helper<MyDigits10, LimbType>::elem_number;
+    static constexpr std::int32_t decwide_t_elem_mask      = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask;
+    static constexpr std::int32_t decwide_t_elem_mask_half = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask_half;
 
-    static constexpr exponent_type decwide_t_max_exp10         =  static_cast<exponent_type>((std::numeric_limits<exponent_type>::max)() / decwide_t_elem_digits10) * decwide_t_elem_digits10;
-    static constexpr exponent_type decwide_t_min_exp10         = -static_cast<exponent_type>(decwide_t_max_exp10);
-    static constexpr exponent_type decwide_t_max_exp           = decwide_t_max_exp10;
-    static constexpr exponent_type decwide_t_min_exp           = decwide_t_min_exp10;
+    static constexpr exponent_type decwide_t_max_exp10      =  static_cast<exponent_type>((std::numeric_limits<exponent_type>::max)() / decwide_t_elem_digits10) * decwide_t_elem_digits10;
+    static constexpr exponent_type decwide_t_min_exp10      = -static_cast<exponent_type>(decwide_t_max_exp10);
+    static constexpr exponent_type decwide_t_max_exp        = decwide_t_max_exp10;
+    static constexpr exponent_type decwide_t_min_exp        = decwide_t_min_exp10;
+
+    // Obtain the limb_type from template parameter.
+    using limb_type = LimbType;
 
     // Rebind the decwide_t allocator to the granularity of the LimbType.
-    using allocator_type = typename std::allocator_traits<AllocatorType>::template rebind_alloc<LimbType>;
+    using allocator_type = AllocatorType;
 
     // Define the array type, which is the internal
     // representation of the data field of a decwide_t.
-    using array_type = detail::fixed_dynamic_array<typename allocator_type::value_type,
-                                                   static_cast<std::uint_fast32_t>(decwide_t_elem_number),
-                                                   allocator_type>;
-
-    // Obtain the limb type, double limb type and signed limb type
-    // from meta-templates.
-    using limb_type = typename array_type::value_type;
+    using array_type =
+      typename std::conditional<std::is_same<AllocatorType, void>::value,
+                                detail::fixed_static_array <limb_type, static_cast<std::uint_fast32_t>(decwide_t_elem_number)>,
+                                detail::fixed_dynamic_array<limb_type, static_cast<std::uint_fast32_t>(decwide_t_elem_number), allocator_type>>::type;
 
     // Check thw width of the limb type.
     static_assert((   (std::is_same<std::uint8_t,  limb_type>::value == true)
@@ -789,10 +867,7 @@
       const std::int32_t                  ofs    = static_cast<std::int32_t>(static_cast<std::int32_t>(ofs_exp) / decwide_t_elem_digits10);
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      detail::fixed_dynamic_array<limb_type,
-                                  static_cast<std::uint_fast32_t>(decwide_t_elem_number),
-                                  std::allocator<limb_type>>
-      my_n_data_for_add_sub;
+      array_type my_n_data_for_add_sub;
       #endif
 
       if(my_neg == v.my_neg)

@@ -13,7 +13,7 @@
 
 namespace local
 {
-  using dec51_t = math::wide_decimal::decwide_t<51U>;
+  using dec51_t = math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
 
   dec51_t sin(dec51_t x);
   dec51_t cos(dec51_t x);

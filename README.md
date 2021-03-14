@@ -27,6 +27,11 @@ The following sample, for instance, defines and uses a decimal type
 called `dec101_t` having
 <img src="https://render.githubusercontent.com/render/math?math=101">
 decimal digits of precision.
+The subroutine `do_something()` initializes the variable `d`
+of type `dec101_t` with 1/3 and subsequently prints the 101 digit
+value of `d` to the console.
+
+In particular,
 
 ```
 #include <iomanip>
@@ -50,9 +55,17 @@ The first template parameter `101U` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
 the default limb type is 32 bits in width and unsigned.
-The subroutine `do_something()` initializes the variable `d`
-of type `dec101_t` with 1/3 and subsequently prints the 101 digit
-value of `d` to the console.
+
+`decwide_t` also has a third (and a few more) optional template paramter(s).
+The third template parameter
+can be used to set the allocator type for internal storage of the
+wide decimal type. The default allocator type is
+`std::allocator<limb_type>` which helps to reduce
+stack consumption, especially when using higher digit counts.
+If low digit counts are used, the allocator type can
+be explicitly set to `void`
+and stack allocation is used with an `array`-like
+internal representation.
 
 ## Examples
 
