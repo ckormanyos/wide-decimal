@@ -25,17 +25,16 @@ namespace
 
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(10001);
 
-  #if defined(DECWIDE_T_REDUCE_TEST_DEPTH)
-  constexpr std::uint32_t independent_algebra_test_count         = UINT32_C(128);
-  constexpr std::uint32_t independent_algebra_test_round         = UINT32_C(4);
-  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(8);
-  constexpr std::uint32_t independent_algebra_test_round_for_log = UINT32_C(4);
-  #else
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
   constexpr std::uint32_t independent_algebra_test_count         = UINT32_C(512);
-  constexpr std::uint32_t independent_algebra_test_round         = UINT32_C(4);
   constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(32);
-  constexpr std::uint32_t independent_algebra_test_round_for_log = UINT32_C(4);
+  #else
+  constexpr std::uint32_t independent_algebra_test_count         = UINT32_C(128);
+  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(8);
   #endif
+
+  constexpr std::uint32_t independent_algebra_test_round         = UINT32_C(4);
+  constexpr std::uint32_t independent_algebra_test_round_for_log = UINT32_C(4);
 }
 
 bool test_decwide_t_algebra_add_____()
