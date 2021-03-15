@@ -1439,7 +1439,7 @@
       // Extract the mantissa and exponent for a "manual"
       // computation of the estimate.
       InternalFloatType dd;
-      exponent_type      ne;
+      exponent_type     ne;
 
       x.extract_parts(dd, ne);
 
@@ -1728,8 +1728,8 @@
       return (it_non_zero == my_data.cend());
     }
 
-    bool isneg   () const { return my_neg; }
-    bool ispos   () const { return (!isneg()); }
+    bool isneg() const { return my_neg; }
+    bool ispos() const { return (!isneg()); }
 
     // Operators pre-increment and pre-decrement.
     decwide_t& operator++() { return *this += one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(); }
@@ -2303,19 +2303,21 @@
       // Release the carries and re-combine the low and high parts.
       // This sets the integral data elements in the big number
       // to the result of multiplication.
-      double_limb_type carry = static_cast<double_limb_type>(0U);
+      using fft_carry_type = std::uint_fast64_t;
+
+      fft_carry_type carry = static_cast<fft_carry_type>(0U);
 
       for(std::uint32_t j = static_cast<std::uint32_t>((prec_elems_for_multiply * 2L) - 2L); static_cast<std::int32_t>(j) >= 0; j -= 2U)
       {
         fft_float_type         xaj = af[j] / (n_fft / 2U);
-        const double_limb_type xlo = static_cast<double_limb_type>(xaj + detail::fft::template_half<fft_float_type>()) + carry;
-        carry                      = static_cast<double_limb_type>(xlo / static_cast<limb_type>(decwide_t_elem_mask_half));
-        const limb_type        nlo = static_cast<limb_type>       (xlo - static_cast<double_limb_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
+        const fft_carry_type xlo = static_cast<fft_carry_type>(xaj + detail::fft::template_half<fft_float_type>()) + carry;
+        carry                    = static_cast<fft_carry_type>(xlo / static_cast<limb_type>(decwide_t_elem_mask_half));
+        const limb_type      nlo = static_cast<limb_type>     (xlo - static_cast<fft_carry_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
 
-                               xaj = ((j != 0) ? (af[j - 1U] / (n_fft / 2U)) : fft_float_type(0));
-        const double_limb_type xhi = static_cast<double_limb_type>(xaj + detail::fft::template_half<fft_float_type>()) + carry;
-        carry                      = static_cast<double_limb_type>(xhi / static_cast<limb_type>(decwide_t_elem_mask_half));
-        const limb_type        nhi = static_cast<limb_type>       (xhi - static_cast<double_limb_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
+                             xaj = ((j != 0) ? (af[j - 1U] / (n_fft / 2U)) : fft_float_type(0));
+        const fft_carry_type xhi = static_cast<fft_carry_type>(xaj + detail::fft::template_half<fft_float_type>()) + carry;
+        carry                    = static_cast<fft_carry_type>(xhi / static_cast<limb_type>(decwide_t_elem_mask_half));
+        const limb_type      nhi = static_cast<limb_type>     (xhi - static_cast<fft_carry_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
 
         u[(j / 2U)] = static_cast<limb_type>(static_cast<limb_type>(nhi * static_cast<limb_type>(decwide_t_elem_mask_half)) + nlo);
       }
@@ -3146,7 +3148,7 @@
       {
         limb_type xx = x.my_data[0U];
 
-        std::uint_fast16_t n10 = 0;
+        std::int_fast16_t n10 = 0;
 
         while(limb_type(xx + 5U) > 10U)
         {
@@ -4046,6 +4048,7 @@
   bool example002a_pi_small_limb         ();
   bool example002b_pi_100k               ();
   bool example002c_pi_quintic            ();
+  bool example002d_pi_limb8              ();
   bool example003_zeta                   ();
   bool example004_bessel_recur           ();
   bool example005_polylog_series         ();

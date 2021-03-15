@@ -25,7 +25,7 @@ bool math::wide_decimal::example001c_roots_sqrt_limb08()
                                                  local_limb_type,
                                                  local_allocator_type,
                                                  float,
-                                                 std::int8_t>;
+                                                 std::int16_t>;
 
   const dec101_t s = sqrt(dec101_t(123456U) / 100);
 

@@ -14,7 +14,7 @@
 
   namespace math { namespace constants {
 
-  constexpr std::array<std::uint32_t, 8U> const_pi_control_head_32
+  constexpr std::array<std::uint32_t, 7U + 1U> const_pi_control_head_32
   {
     // head std::uint32_t
     (std::uint32_t) UINT32_C(3),
@@ -27,7 +27,7 @@
     (std::uint32_t) UINT32_C(10582097)
   };
 
-  constexpr std::array<std::uint16_t, 15U> const_pi_control_head_16
+  constexpr std::array<std::uint16_t, 14U + 1U> const_pi_control_head_16
   {
     // head std::uint16_t
     (std::uint16_t) UINT16_C(3),
@@ -40,7 +40,7 @@
     (std::uint16_t) UINT16_C(1058), (std::uint16_t) UINT16_C(2097)
   };
 
-  constexpr std::array<std::uint8_t, 31U> const_pi_control_head_08
+  constexpr std::array<std::uint8_t, 28U + 1U> const_pi_control_head_08
   {
     // head std::uint8_t
     (std::uint8_t) UINT8_C(3),
@@ -100,7 +100,7 @@
     (std::uint16_t) UINT16_C(1012), (std::uint16_t) UINT16_C(6483),
     (std::uint16_t) UINT16_C(6999), (std::uint16_t) UINT16_C(8922),
     (std::uint16_t) UINT16_C(5695), (std::uint16_t) UINT16_C(9688),
-    (std::uint16_t) UINT16_C(1592), (std::uint16_t) UINT16_C(0560),
+    (std::uint16_t) UINT16_C(1592), (std::uint16_t) UINT16_C( 560),
     (std::uint16_t) UINT16_C( 101), (std::uint16_t) UINT16_C(6552),
     (std::uint16_t) UINT16_C(5637), (std::uint16_t) UINT16_C(5678)
   };
