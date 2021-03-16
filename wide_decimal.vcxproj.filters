@@ -118,7 +118,7 @@
     <ClCompile Include="examples\example001c_roots_sqrt_limb08.cpp">
       <Filter>Source Files\examples</Filter>
     </ClCompile>
-    <ClCompile Include="examples\example002d_pi_limb8.cpp">
+    <ClCompile Include="examples\example002d_pi_limb08.cpp">
       <Filter>Source Files\examples</Filter>
     </ClCompile>
   </ItemGroup>

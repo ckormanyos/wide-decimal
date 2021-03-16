@@ -845,9 +845,10 @@
       }
 
       // Get the offset for the add/sub operation.
-      static const exponent_type max_delta_exp = static_cast<exponent_type>((decwide_t_elem_number - 1) * decwide_t_elem_digits10);
+      constexpr std::int_fast64_t max_delta_exp =
+        static_cast<std::int_fast64_t>(std::int_fast64_t(decwide_t_elem_number - 1) * decwide_t_elem_digits10);
 
-      const exponent_type ofs_exp = static_cast<exponent_type>(my_exp - v.my_exp);
+      const std::int_fast64_t ofs_exp = static_cast<std::int_fast64_t>(my_exp - v.my_exp);
 
       // Check if the operation is out of range, requiring special handling.
       if(v.iszero() || (ofs_exp > max_delta_exp))
@@ -866,7 +867,7 @@
       typename array_type::pointer        p_u    =   my_data.data();
       typename array_type::const_pointer  p_v    = v.my_data.data();
       bool                                b_copy = false;
-      const std::int32_t                  ofs    = static_cast<std::int32_t>(static_cast<std::int32_t>(ofs_exp) / decwide_t_elem_digits10);
+      const std::int32_t                  ofs    = static_cast<std::int32_t>(ofs_exp / decwide_t_elem_digits10);
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       array_type my_n_data_for_add_sub;
@@ -893,7 +894,7 @@
         else
         {
           std::copy(my_data.cbegin(),
-                    my_data.cend()     - static_cast<std::ptrdiff_t>(-ofs),
+                    my_data.cend() - static_cast<std::ptrdiff_t>(-ofs),
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(-ofs));
 
           std::fill(my_n_data_for_add_sub.begin(),
@@ -1022,7 +1023,10 @@
       }
 
       // Check for underflow.
-      if(iszero()) { return (*this = zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>()); }
+      if(iszero())
+      {
+        return (*this = zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
+      }
 
       return *this;
     }
@@ -2095,7 +2099,7 @@
       for(std::int32_t j = static_cast<std::int32_t>(p - static_cast<std::int32_t>(1)); j >= static_cast<std::int32_t>(0); j--)
       {
         const limb_type t = static_cast<limb_type>(static_cast<limb_type>(u[j] + v[j]) + carry);
-        carry             = ((t > static_cast<limb_type>(decwide_t_elem_mask)) ? 1U : 0U);
+        carry             = ((t >= static_cast<limb_type>(decwide_t_elem_mask)) ? 1U : 0U);
         u[j]              = static_cast<limb_type>(t - ((carry != 0U) ? static_cast<limb_type>(decwide_t_elem_mask) : static_cast<limb_type>(0U)));
       }
 
@@ -4048,7 +4052,7 @@
   bool example002a_pi_small_limb         ();
   bool example002b_pi_100k               ();
   bool example002c_pi_quintic            ();
-  bool example002d_pi_limb8              ();
+  bool example002d_pi_limb08             ();
   bool example003_zeta                   ();
   bool example004_bessel_recur           ();
   bool example005_polylog_series         ();

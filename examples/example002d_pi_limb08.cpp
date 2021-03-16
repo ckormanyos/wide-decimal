@@ -40,11 +40,11 @@ void example002d_pi_limb8_digits10_callback(const std::uint32_t d10)
 }
 
 
-bool math::wide_decimal::example002d_pi_limb8()
+bool math::wide_decimal::example002d_pi_limb08()
 {
   using local_limb_type = std::uint8_t;
 
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(10001);
+  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1000001);
 
   constexpr std::int32_t local_elem_number =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
@@ -54,14 +54,17 @@ bool math::wide_decimal::example002d_pi_limb8()
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
 
+  using local_wide_decimal_type =
+    math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double, std::int32_t>;
+
   const std::clock_t start = std::clock();
 
-  const math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double, std::int32_t> my_pi =
+  const local_wide_decimal_type my_pi =
     math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double, std::int32_t>(example002d_pi_limb8_digits10_callback);
 
   const std::clock_t stop = std::clock();
 
-  std::cout << "Time example002d_pi_limb8(): "
+  std::cout << "Time example002d_pi_limb08(): "
     << float(stop - start) / float(CLOCKS_PER_SEC)
     << std::endl;
 
@@ -69,14 +72,15 @@ bool math::wide_decimal::example002d_pi_limb8()
                                      my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_08.size(),
                                      math::constants::const_pi_control_head_08.begin());
 
-  using const_iterator_type = typename math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double>::array_type::const_iterator;
+  using const_iterator_type =
+    typename local_wide_decimal_type::array_type::const_iterator;
 
   const_iterator_type fi(my_pi.crepresentation().cbegin() + (std::uint32_t) (  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
                                                                              - (std::uint32_t) math::constants::const_pi_control_tail_08_1000001.size()));
 
   const bool tail_is_ok = std::equal(fi,
-                                     fi + math::constants::const_pi_control_tail_08_10001.size(),
-                                          math::constants::const_pi_control_tail_08_10001.begin());
+                                     fi + math::constants::const_pi_control_tail_08_1000001.size(),
+                                          math::constants::const_pi_control_tail_08_1000001.begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 
@@ -91,7 +95,7 @@ bool math::wide_decimal::example002d_pi_limb8()
 
 int main()
 {
-  const bool result_is_ok = math::wide_decimal::example002d_pi_limb8();
+  const bool result_is_ok = math::wide_decimal::example002d_pi_limb08();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
