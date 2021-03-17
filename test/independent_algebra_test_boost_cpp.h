@@ -15,7 +15,9 @@
   #include <math/wide_decimal/decwide_t.h>
   #include <test/independent_algebra_test_base.h>
 
+  #if (BOOST_VERSION <= 107500)
   #include <boost/serialization/nvp.hpp>
+  #endif
   #include <boost/multiprecision/cpp_bin_float.hpp>
   #include <boost/math/constants/constants.hpp>
 
