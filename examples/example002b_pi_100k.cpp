@@ -33,12 +33,15 @@ bool math::wide_decimal::example002b_pi_100k()
   constexpr std::int32_t local_elem_digits10 =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>;
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
+
+  using local_wide_decimal_type =
+    math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type>;
 
   const std::clock_t start = std::clock();
 
-  const math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
-    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>();
+  const local_wide_decimal_type my_pi =
+    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type>();
 
   const std::clock_t stop = std::clock();
 
@@ -50,7 +53,7 @@ bool math::wide_decimal::example002b_pi_100k()
                                      my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_32.size(),
                                      math::constants::const_pi_control_head_32.begin());
 
-  using const_iterator_type = typename math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double>::array_type::const_iterator;
+  using const_iterator_type = typename local_wide_decimal_type::array_type::const_iterator;
 
   const_iterator_type fi(my_pi.crepresentation().cbegin() + (std::uint32_t) (  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
                                                                              - (std::uint32_t) math::constants::const_pi_control_tail_32_100001.size()));

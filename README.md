@@ -161,7 +161,6 @@ the result of which is approximately
 <img src="https://render.githubusercontent.com/render/math?math=35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220\ldots">.
 
 ```
-#include <array>
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
@@ -199,18 +198,18 @@ In this particular example, all _heavy-weight_ components are deactivated and
 this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit pi calculation.
 
 In this example, note how a specialized custom allocator called
-`util::n_slot_array_allocator` is utilized for exact memory management
+`util::n_slot_array_allocator` is utilized for exact, efficient memory management
 of a certain number of temporary storages of mega-digit numbers
-(tuned to 16 in this particular example).
+(tuned to 18 in this particular example).
 
 ```
-#include <array>
 #include <iomanip>
 #include <iostream>
 
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
+#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 
 #include <math/wide_decimal/decwide_t.h>
 #include <util/memory/util_n_slot_array_allocator.h>
@@ -227,11 +226,14 @@ int main()
   constexpr std::int32_t local_elem_digits10 =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>;
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
+
+  using local_wide_decimal_type =
+    math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double>;
 
   const std::clock_t start = std::clock();
 
-  math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double> my_pi =
+  const local_wide_decimal_type my_pi =
     math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>(nullptr);
 
   const std::clock_t stop = std::clock();
@@ -241,12 +243,17 @@ int main()
             << std::endl;
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + const_pi_control_head<local_limb_type>().size(),
-                                     const_pi_control_head<local_limb_type>().begin());
+                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_32.size(),
+                                     math::constants::const_pi_control_head_32.begin());
 
-  const bool tail_is_ok = std::equal(my_pi.crepresentation().cbegin() + ((std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)) - const_pi_control_tail<wide_decimal_digits10, local_limb_type>().size()),
-                                     my_pi.crepresentation().cbegin() +  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10)),
-                                     const_pi_control_tail<wide_decimal_digits10, local_limb_type>().begin());
+  using const_iterator_type = typename local_wide_decimal_type::array_type::const_iterator;
+
+  const_iterator_type fi(my_pi.crepresentation().cbegin() + (std::uint32_t) (  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
+                                                                             - (std::uint32_t) math::constants::const_pi_control_tail_32_1000001.size()));
+
+  const bool tail_is_ok = std::equal(fi,
+                                     fi + math::constants::const_pi_control_tail_32_1000001.size(),
+                                          math::constants::const_pi_control_tail_32_1000001.begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
 
