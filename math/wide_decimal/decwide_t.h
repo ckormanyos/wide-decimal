@@ -677,7 +677,7 @@
                                            my_fpclass  (decwide_t_finite),
                                            my_prec_elem(decwide_t_elem_number)
     {
-      from_long_double(static_cast<long double>(f));
+      from_builtin_float_type(f);
     }
 
     #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
@@ -1424,7 +1424,7 @@
       const std::int32_t original_prec_elem = my_prec_elem;
 
       // Do the inverse estimate using InternalFloatType precision estimates of mantissa and exponent.
-      operator=(decwide_t(InternalFloatType(1.0F) / dd, -ne));
+      operator=(decwide_t(InternalFloatType(1) / dd, -ne));
 
       // Compute the inverse of *this. Quadratically convergent Newton-Raphson iteration
       // is used. During the iterative steps, the precision of the calculation is limited
@@ -1482,7 +1482,7 @@
       if((ne % 2) != static_cast<exponent_type>(0))
       {
         ++ne;
-        dd /= InternalFloatType(10.0F);
+        dd /= InternalFloatType(10);
       }
 
       using std::sqrt;
@@ -1721,14 +1721,19 @@
       // Extracts the mantissa and exponent.
       exponent = my_exp;
 
-      limb_type p10 = static_cast<limb_type>(1U);
-      limb_type d0  = my_data[0U];
+      limb_type p10  = static_cast<limb_type>(1U);
+      limb_type test = my_data[0U];
 
-      while(d0 >= 10U)
+      for(;;)
       {
-        d0 /= 10U;
+        test /= static_cast<limb_type>(10U);
 
-        p10 *= InternalFloatType(10.0F);
+        if(test == static_cast<limb_type>(0U))
+        {
+          break;
+        }
+
+        p10 *= static_cast<limb_type>(10U);
 
         ++exponent;
       }
@@ -1980,16 +1985,14 @@
                 limb_type(0U));
     }
 
-    void from_long_double(const long double l)
+    template<typename FloatingPointType>
+    void from_builtin_float_type(const FloatingPointType l)
     {
-      const bool b_neg = (l < static_cast<long double>(0.0L));
+      const bool b_neg = (l < static_cast<FloatingPointType>(0.0L));
 
-      using std::isfinite;
-      using std::isnan;
+      const FloatingPointType my_ld = ((!b_neg) ? l : -l);
 
-      const long double my_ld = ((!b_neg) ? l : -l);
-
-      if(my_ld < (std::numeric_limits<long double>::min)())
+      if(my_ld < (std::numeric_limits<FloatingPointType>::min)())
       {
         operator=(zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
 
@@ -1998,7 +2001,7 @@
 
       std::fill(my_data.begin(), my_data.end(), limb_type(0U));
 
-      const native_float_parts<long double> ld_parts(my_ld);
+      const native_float_parts<FloatingPointType> ld_parts(my_ld);
 
       // Create a decwide_t from the fractional part of the
       // mantissa expressed as an unsigned long long.
@@ -2006,7 +2009,7 @@
 
       // Scale the unsigned long long representation to the fractional
       // part of the long double and multiply with the base-2 exponent.
-      const int p2 = ld_parts.get_exponent() - (std::numeric_limits<long double>::digits - 1);
+      const int p2 = ld_parts.get_exponent() - (std::numeric_limits<FloatingPointType>::digits - 1);
 
       if     (p2 <  -1) { *this *= pow(half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(), -p2); }
       else if(p2 == -1) { *this *=     half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(); }
@@ -3067,32 +3070,23 @@
 
     friend inline std::int32_t ilogb(decwide_t x)
     {
-      exponent_type e10 = x.my_exp;
+      exponent_type e10;
 
-      limb_type d0 = x.my_data[0U];
+      limb_type xx = x.my_data[0U];
 
-      while(d0 >= 10U)
+      std::int_fast16_t n10 = 0;
+
+      while(limb_type(xx + 5U) > 10U)
       {
-        d0 /= 10U;
+        xx /= 10U;
 
-        ++e10;
+        ++n10;
       }
 
-      using ilogb_integral_compare_type =
-        typename std::conditional<std::numeric_limits<std::int32_t>::digits >= std::numeric_limits<exponent_type>::digits,
-                                  std::int32_t,
-                                  exponent_type>::type;
+      e10 = static_cast<exponent_type>(x.my_exp + n10);
 
-      if(ilogb_integral_compare_type(e10) < ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::min)()))
-      {
-        e10 = ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::min)());
-      }
-      if(ilogb_integral_compare_type(e10) > ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::max)()))
-      {
-        e10 = ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::max)());
-      }
-
-      return std::int32_t(e10);
+      return (std::max)(           (std::numeric_limits<std::int32_t>::min)(),
+                        (std::min)((std::numeric_limits<std::int32_t>::max)(), (std::int32_t) e10));
     }
   };
 
