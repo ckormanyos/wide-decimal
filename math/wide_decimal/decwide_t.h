@@ -749,13 +749,17 @@
 
       using std::fabs;
 
-      const bool mantissa_is_iszero = (fabs(mantissa) < ((std::numeric_limits<InternalFloatType>::min)() * (InternalFloatType(1) + std::numeric_limits<InternalFloatType>::epsilon())));
+      constexpr InternalFloatType close_to_zero =
+        (  (std::numeric_limits<InternalFloatType>::min)()
+         * (InternalFloatType(1) + std::numeric_limits<InternalFloatType>::epsilon()));
+
+      const bool mantissa_is_iszero = (fabs(mantissa) < close_to_zero);
 
       if(mantissa_is_iszero)
       {
         operator=((exponent == static_cast<exponent_type>(0))
-                                 ? one <MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>()
-                                 : zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
+                     ? one <MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>()
+                     : zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
 
         return;
       }
@@ -763,38 +767,45 @@
       const bool b_neg = (mantissa < InternalFloatType(0));
 
       InternalFloatType d = ((!b_neg) ? mantissa : -mantissa);
-      exponent_type  e = exponent;
+      exponent_type     e = exponent;
 
-      const InternalFloatType f10(10);
+      constexpr InternalFloatType f10(10.0F);
 
-      while(d > f10)                  { d /= f10; ++e; }
-      while(d < InternalFloatType(1)) { d *= f10; --e; }
+      while(d > f10)                     { d /= f10; ++e; }
+      while(d < InternalFloatType(1.0F)) { d *= f10; --e; }
 
-      std::int32_t shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
-
-      while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(0))
       {
-        d *= f10;
-        --e;
-        --shift;
+        std::int32_t shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
+
+        while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(0))
+        {
+          d *= f10;
+          --e;
+          --shift;
+        }
       }
 
       my_exp = e;
       my_neg = b_neg;
 
-      std::fill(my_data.begin(), my_data.end(), static_cast<limb_type>(0));
+      static constexpr std::int32_t digit_loops =
+                                    static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                              / static_cast<std::int32_t>(decwide_t_elem_digits10))
+        + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                              % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
 
-      static const std::int32_t digit_ratio = static_cast<std::int32_t>(static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10) / static_cast<std::int32_t>(decwide_t_elem_digits10));
-      static const std::int32_t digit_loops = static_cast<std::int32_t>(digit_ratio + static_cast<std::int32_t>(2));
+      typename array_type::size_type limb_index;
 
-      for(typename array_type::size_type i = static_cast<typename array_type::size_type>(0); i < static_cast<typename array_type::size_type>(digit_loops); i++)
+      for(limb_index = static_cast<typename array_type::size_type>(0); limb_index < static_cast<typename array_type::size_type>(digit_loops); ++limb_index)
       {
         limb_type n = static_cast<limb_type>(static_cast<std::uint64_t>(d));
 
-        my_data[i]  = static_cast<limb_type>(n);
-        d          -= static_cast<InternalFloatType>(n);
-        d          *= static_cast<InternalFloatType>(decwide_t_elem_mask);
+        my_data[limb_index]  = static_cast<limb_type>(n);
+        d                   -= static_cast<InternalFloatType>(n);
+        d                   *= static_cast<InternalFloatType>(decwide_t_elem_mask);
       }
+
+      std::fill(my_data.begin() + limb_index, my_data.end(), static_cast<limb_type>(0));
     }
 
   public:
