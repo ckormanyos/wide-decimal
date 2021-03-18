@@ -65,8 +65,8 @@ bool math::wide_decimal::example002d_pi_limb08()
   const std::clock_t stop = std::clock();
 
   std::cout << "Time example002d_pi_limb08(): "
-    << float(stop - start) / float(CLOCKS_PER_SEC)
-    << std::endl;
+            << float(stop - start) / float(CLOCKS_PER_SEC)
+            << std::endl;
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
                                      my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_08.size(),

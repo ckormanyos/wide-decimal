@@ -677,7 +677,7 @@
                                            my_fpclass  (decwide_t_finite),
                                            my_prec_elem(decwide_t_elem_number)
     {
-      from_long_double(static_cast<long double>(f));
+      from_built_in_floating_point_type(f);
     }
 
     #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
@@ -749,7 +749,8 @@
 
       using std::fabs;
 
-      const bool mantissa_is_iszero = (fabs(mantissa) < ((std::numeric_limits<InternalFloatType>::min)() * (InternalFloatType(1) + std::numeric_limits<InternalFloatType>::epsilon())));
+      const bool mantissa_is_iszero =
+        (fabs(mantissa) < ((std::numeric_limits<InternalFloatType>::min)() * (InternalFloatType(1) + std::numeric_limits<InternalFloatType>::epsilon())));
 
       if(mantissa_is_iszero)
       {
@@ -763,38 +764,45 @@
       const bool b_neg = (mantissa < InternalFloatType(0));
 
       InternalFloatType d = ((!b_neg) ? mantissa : -mantissa);
-      exponent_type  e = exponent;
+      exponent_type     e = exponent;
 
-      const InternalFloatType f10(10);
+      constexpr InternalFloatType f10(10.0F);
 
-      while(d > f10)                  { d /= f10; ++e; }
-      while(d < InternalFloatType(1)) { d *= f10; --e; }
+      while(d > f10)                     { d /= f10; ++e; }
+      while(d < InternalFloatType(1.0F)) { d *= f10; --e; }
 
-      std::int32_t shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
-
-      while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(0))
       {
-        d *= f10;
-        --e;
-        --shift;
+        std::int32_t shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
+
+        while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(0))
+        {
+          d *= f10;
+          --e;
+          --shift;
+        }
       }
 
       my_exp = e;
       my_neg = b_neg;
 
-      std::fill(my_data.begin(), my_data.end(), static_cast<limb_type>(0));
+      static constexpr std::int32_t digit_loops =
+                                    static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                              / static_cast<std::int32_t>(decwide_t_elem_digits10))
+        + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                              % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
 
-      static const std::int32_t digit_ratio = static_cast<std::int32_t>(static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10) / static_cast<std::int32_t>(decwide_t_elem_digits10));
-      static const std::int32_t digit_loops = static_cast<std::int32_t>(digit_ratio + static_cast<std::int32_t>(2));
+      typename array_type::size_type limb_index;
 
-      for(typename array_type::size_type i = static_cast<typename array_type::size_type>(0); i < static_cast<typename array_type::size_type>(digit_loops); i++)
+      for(limb_index = static_cast<typename array_type::size_type>(0); limb_index < static_cast<typename array_type::size_type>(digit_loops); ++limb_index)
       {
         limb_type n = static_cast<limb_type>(static_cast<std::uint64_t>(d));
 
-        my_data[i]  = static_cast<limb_type>(n);
-        d          -= static_cast<InternalFloatType>(n);
-        d          *= static_cast<InternalFloatType>(decwide_t_elem_mask);
+        my_data[limb_index]  = static_cast<limb_type>(n);
+        d                   -= static_cast<InternalFloatType>(n);
+        d                   *= static_cast<InternalFloatType>(decwide_t_elem_mask);
       }
+
+      std::fill(my_data.begin() + limb_index, my_data.end(), static_cast<limb_type>(0));
     }
 
   public:
@@ -864,10 +872,10 @@
 
       // Do the add/sub operation.
 
-      typename array_type::pointer        p_u    =   my_data.data();
-      typename array_type::const_pointer  p_v    = v.my_data.data();
-      bool                                b_copy = false;
-      const std::int32_t                  ofs    = static_cast<std::int32_t>(ofs_exp / decwide_t_elem_digits10);
+      typename array_type::pointer       p_u    =   my_data.data();
+      typename array_type::const_pointer p_v    = v.my_data.data();
+      bool                               b_copy = false;
+      const std::int32_t                 ofs    = static_cast<std::int32_t>(ofs_exp / decwide_t_elem_digits10);
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       array_type my_n_data_for_add_sub;
@@ -1413,7 +1421,7 @@
       const std::int32_t original_prec_elem = my_prec_elem;
 
       // Do the inverse estimate using InternalFloatType precision estimates of mantissa and exponent.
-      operator=(decwide_t(InternalFloatType(1) / dd, -ne));
+      operator=(decwide_t(InternalFloatType(1.0F) / dd, -ne));
 
       // Compute the inverse of *this. Quadratically convergent Newton-Raphson iteration
       // is used. During the iterative steps, the precision of the calculation is limited
@@ -1471,7 +1479,7 @@
       if((ne % 2) != static_cast<exponent_type>(0))
       {
         ++ne;
-        dd /= InternalFloatType(10);
+        dd /= InternalFloatType(10.0F);
       }
 
       using std::sqrt;
@@ -1708,43 +1716,39 @@
       // Extract the approximate parts mantissa and base-10 exponent from the input decwide_t value x.
 
       // Extracts the mantissa and exponent.
-      exponent = my_exp;
+      InternalFloatType scale10 = InternalFloatType(1.0F);
+      limb_type         d0      = my_data[0U];
 
-      limb_type p10  = static_cast<limb_type>(1U);
-      limb_type test = my_data[0U];
+      exponent  = my_exp;
+      mantissa  = InternalFloatType(d0);
 
-      for(;;)
+      while(d0 >= 10U)
       {
-        test /= static_cast<limb_type>(10U);
+        d0 /= 10U;
 
-        if(test == static_cast<limb_type>(0U))
-        {
-          break;
-        }
-
-        p10 *= static_cast<limb_type>(10U);
+        scale10 *= InternalFloatType(10.0F);
 
         ++exponent;
       }
 
-      mantissa = static_cast<InternalFloatType>(my_data[0]) / static_cast<InternalFloatType>(p10);
+      mantissa /= scale10;
 
-      InternalFloatType scale = (InternalFloatType(1) / static_cast<InternalFloatType>(decwide_t_elem_mask)) / static_cast<InternalFloatType>(p10);
+      static constexpr std::int32_t digit_loops =
+                                    static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                              / static_cast<std::int32_t>(decwide_t_elem_digits10))
+        + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                              % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
 
-      std::int_fast16_t scale_order = -((std::int_fast16_t) decwide_t_elem_digits10);
+      constexpr InternalFloatType mask10 = InternalFloatType(decwide_t_elem_mask);
 
-      for(typename array_type::size_type i = 1U; i < my_data.size(); ++i)
+      for(typename array_type::size_type
+            limb_index = static_cast<typename array_type::size_type>(1U);
+          ((limb_index < static_cast<typename array_type::size_type>(digit_loops + 1)) && (limb_index < my_data.size()));
+          ++limb_index)
       {
-        mantissa += (static_cast<InternalFloatType>(my_data[i]) * scale);
+        scale10  *= mask10;
 
-        scale_order = -((std::int_fast16_t) decwide_t_elem_digits10);
-
-        if(scale_order < -std::numeric_limits<InternalFloatType>::max_digits10)
-        {
-          break;
-        }
-
-        scale /= static_cast<InternalFloatType>(decwide_t_elem_mask);
+        mantissa += InternalFloatType(my_data[limb_index]) / scale10;
       }
 
       if(my_neg)
@@ -1974,16 +1978,17 @@
                 limb_type(0U));
     }
 
-    void from_long_double(const long double l)
+    template<typename BuiltInFloatingPointType>
+    void from_built_in_floating_point_type(const BuiltInFloatingPointType lf)
     {
-      const bool b_neg = (l < static_cast<long double>(0.0L));
+      const bool b_neg = (lf < static_cast<BuiltInFloatingPointType>(0));
 
       using std::isfinite;
       using std::isnan;
 
-      const long double my_ld = ((!b_neg) ? l : -l);
+      const BuiltInFloatingPointType my_lf = ((!b_neg) ? lf : -lf);
 
-      if(my_ld < (std::numeric_limits<long double>::min)())
+      if(my_lf < (std::numeric_limits<BuiltInFloatingPointType>::min)())
       {
         operator=(zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
 
@@ -1992,15 +1997,15 @@
 
       std::fill(my_data.begin(), my_data.end(), limb_type(0U));
 
-      const native_float_parts<long double> ld_parts(my_ld);
+      const native_float_parts<BuiltInFloatingPointType> lf_parts(my_lf);
 
       // Create a decwide_t from the fractional part of the
       // mantissa expressed as an unsigned long long.
-      from_unsigned_long_long(ld_parts.get_mantissa());
+      from_unsigned_long_long(lf_parts.get_mantissa());
 
       // Scale the unsigned long long representation to the fractional
       // part of the long double and multiply with the base-2 exponent.
-      const int p2 = ld_parts.get_exponent() - (std::numeric_limits<long double>::digits - 1);
+      const int p2 = lf_parts.get_exponent() - (std::numeric_limits<BuiltInFloatingPointType>::digits - 1);
 
       if     (p2 <  -1) { *this *= pow(half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(), -p2); }
       else if(p2 == -1) { *this *=     half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(); }
@@ -3061,23 +3066,32 @@
 
     friend inline std::int32_t ilogb(decwide_t x)
     {
-      exponent_type e10;
+      exponent_type e10 = x.my_exp;
 
-      limb_type xx = x.my_data[0U];
+      limb_type d0 = x.my_data[0U];
 
-      std::int_fast16_t n10 = 0;
-
-      while(limb_type(xx + 5U) > 10U)
+      while(d0 >= 10U)
       {
-        xx /= 10U;
+        d0 /= 10U;
 
-        ++n10;
+        ++e10;
       }
 
-      e10 = static_cast<exponent_type>(x.my_exp + n10);
+      using ilogb_integral_compare_type =
+        typename std::conditional<std::numeric_limits<std::int32_t>::digits >= std::numeric_limits<exponent_type>::digits,
+                                  std::int32_t,
+                                  exponent_type>::type;
 
-      return (std::max)(           (std::numeric_limits<std::int32_t>::min)(),
-                        (std::min)((std::numeric_limits<std::int32_t>::max)(), (std::int32_t) e10));
+      if(ilogb_integral_compare_type(e10) < ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::min)()))
+      {
+        e10 = ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::min)());
+      }
+      if(ilogb_integral_compare_type(e10) > ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::max)()))
+      {
+        e10 = ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::max)());
+      }
+
+      return std::int32_t(e10);
     }
   };
 
@@ -3139,8 +3153,8 @@
     // Description : Compute pi using the quadratically convergent Gauss AGM,
     //               in particular the Schoenhage variant.
     //               For a description of the algorithm see the book "Pi Unleashed":
-    //               If the input b_trace = true, then the calculation progress
-    //               will be output to cout.
+    //               An optional input callback function pointer can be provided
+    //               for printing digit-related messages at various points.
     //
     //               Book reference:
     //               http://www.jjj.de/pibook/pibook.html
