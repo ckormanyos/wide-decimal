@@ -875,10 +875,10 @@
 
       // Do the add/sub operation.
 
-      typename array_type::pointer        p_u    =   my_data.data();
-      typename array_type::const_pointer  p_v    = v.my_data.data();
-      bool                                b_copy = false;
-      const std::int32_t                  ofs    = static_cast<std::int32_t>(ofs_exp / decwide_t_elem_digits10);
+      typename array_type::pointer       p_u    =   my_data.data();
+      typename array_type::const_pointer p_v    = v.my_data.data();
+      bool                               b_copy = false;
+      const std::int32_t                 ofs    = static_cast<std::int32_t>(ofs_exp / decwide_t_elem_digits10);
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       array_type my_n_data_for_add_sub;
@@ -1424,7 +1424,7 @@
       const std::int32_t original_prec_elem = my_prec_elem;
 
       // Do the inverse estimate using InternalFloatType precision estimates of mantissa and exponent.
-      operator=(decwide_t(InternalFloatType(1) / dd, -ne));
+      operator=(decwide_t(InternalFloatType(1.0F) / dd, -ne));
 
       // Compute the inverse of *this. Quadratically convergent Newton-Raphson iteration
       // is used. During the iterative steps, the precision of the calculation is limited
@@ -1482,7 +1482,7 @@
       if((ne % 2) != static_cast<exponent_type>(0))
       {
         ++ne;
-        dd /= InternalFloatType(10);
+        dd /= InternalFloatType(10.0F);
       }
 
       using std::sqrt;
@@ -1719,43 +1719,39 @@
       // Extract the approximate parts mantissa and base-10 exponent from the input decwide_t value x.
 
       // Extracts the mantissa and exponent.
-      exponent = my_exp;
+      InternalFloatType scale10 = InternalFloatType(1.0F);
+      limb_type         d0      = my_data[0U];
 
-      limb_type p10  = static_cast<limb_type>(1U);
-      limb_type test = my_data[0U];
+      exponent  = my_exp;
+      mantissa  = InternalFloatType(d0);
 
-      for(;;)
+      while(d0 >= 10U)
       {
-        test /= static_cast<limb_type>(10U);
+        d0 /= 10U;
 
-        if(test == static_cast<limb_type>(0U))
-        {
-          break;
-        }
-
-        p10 *= static_cast<limb_type>(10U);
+        scale10 *= InternalFloatType(10.0F);
 
         ++exponent;
       }
 
-      mantissa = static_cast<InternalFloatType>(my_data[0]) / static_cast<InternalFloatType>(p10);
+      mantissa /= scale10;
 
-      InternalFloatType scale = (InternalFloatType(1) / static_cast<InternalFloatType>(decwide_t_elem_mask)) / static_cast<InternalFloatType>(p10);
+      static constexpr std::int32_t digit_loops =
+                                    static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                              / static_cast<std::int32_t>(decwide_t_elem_digits10))
+        + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                              % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
 
-      std::int_fast16_t scale_order = -((std::int_fast16_t) decwide_t_elem_digits10);
+      constexpr InternalFloatType mask10 = InternalFloatType(decwide_t_elem_mask);
 
-      for(typename array_type::size_type i = 1U; i < my_data.size(); ++i)
+      for(typename array_type::size_type
+            limb_index = static_cast<typename array_type::size_type>(1U);
+          ((limb_index < static_cast<typename array_type::size_type>(digit_loops + 1)) && (limb_index < my_data.size()));
+          ++limb_index)
       {
-        mantissa += (static_cast<InternalFloatType>(my_data[i]) * scale);
+        scale10  *= mask10;
 
-        scale_order = -((std::int_fast16_t) decwide_t_elem_digits10);
-
-        if(scale_order < -std::numeric_limits<InternalFloatType>::max_digits10)
-        {
-          break;
-        }
-
-        scale /= static_cast<InternalFloatType>(decwide_t_elem_mask);
+        mantissa += InternalFloatType(my_data[limb_index]) / scale10;
       }
 
       if(my_neg)
@@ -3072,23 +3068,32 @@
 
     friend inline std::int32_t ilogb(decwide_t x)
     {
-      exponent_type e10;
+      exponent_type e10 = x.my_exp;
 
-      limb_type xx = x.my_data[0U];
+      limb_type d0 = x.my_data[0U];
 
-      std::int_fast16_t n10 = 0;
-
-      while(limb_type(xx + 5U) > 10U)
+      while(d0 >= 10U)
       {
-        xx /= 10U;
+        d0 /= 10U;
 
-        ++n10;
+        ++e10;
       }
 
-      e10 = static_cast<exponent_type>(x.my_exp + n10);
+      using ilogb_integral_compare_type =
+        typename std::conditional<std::numeric_limits<std::int32_t>::digits >= std::numeric_limits<exponent_type>::digits,
+                                  std::int32_t,
+                                  exponent_type>::type;
 
-      return (std::max)(           (std::numeric_limits<std::int32_t>::min)(),
-                        (std::min)((std::numeric_limits<std::int32_t>::max)(), (std::int32_t) e10));
+      if(ilogb_integral_compare_type(e10) < ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::min)()))
+      {
+        e10 = ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::min)());
+      }
+      if(ilogb_integral_compare_type(e10) > ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::max)()))
+      {
+        e10 = ilogb_integral_compare_type((std::numeric_limits<std::int32_t>::max)());
+      }
+
+      return std::int32_t(e10);
     }
   };
 
@@ -3150,8 +3155,8 @@
     // Description : Compute pi using the quadratically convergent Gauss AGM,
     //               in particular the Schoenhage variant.
     //               For a description of the algorithm see the book "Pi Unleashed":
-    //               If the input b_trace = true, then the calculation progress
-    //               will be output to cout.
+    //               An optional input callback function pointer can be provided
+    //               for printing digit-related messages at various points.
     //
     //               Book reference:
     //               http://www.jjj.de/pibook/pibook.html
