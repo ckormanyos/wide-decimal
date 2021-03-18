@@ -942,7 +942,7 @@
         // might have to be treated with a positive, negative or zero offset.
         if(       (ofs >  static_cast<std::int32_t>(0))
            || (   (ofs == static_cast<std::int32_t>(0))
-               && (cmp_data(v.my_data) > static_cast<std::int32_t>(0))))
+               && (cmp_data(v.my_data) > static_cast<std::int_fast8_t>(0))))
         {
           // In this case, |u| > |v| and ofs is positive.
           // Copy the data of v, shifted down to a lower value
@@ -1081,7 +1081,7 @@
       const bool u_and_v_are_identical =
         (   (my_fpclass == v.my_fpclass)
          && (my_exp     == v.my_exp)
-         && (cmp_data(v.my_data) == static_cast<std::int32_t>(0)));
+         && (cmp_data(v.my_data) == static_cast<std::int_fast8_t>(0)));
 
       if(u_and_v_are_identical)
       {
@@ -1284,14 +1284,7 @@
       return static_cast<decwide_t&>(*this);
     }
 
-    int compare(const decwide_t& v) const
-    {
-      const std::int32_t this_compare_result = cmp(v);
-
-      return static_cast<int>(this_compare_result);
-    }
-
-    std::int32_t cmp(const decwide_t& v) const
+    std::int_fast8_t cmp(const decwide_t& v) const
     {
       // Compare v with *this.
       //         Return +1 for *this > v
@@ -1302,13 +1295,13 @@
       if(iszero())
       {
         // The value of *this is zero and v is either zero or non-zero.
-        return (v.iszero() ? static_cast<std::int32_t>(0)
-                           : (v.my_neg ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1)));
+        return (v.iszero() ? static_cast<std::int_fast8_t>(0)
+                           : (v.my_neg ? static_cast<std::int_fast8_t>(1) : static_cast<std::int_fast8_t>(-1)));
       }
       else if(v.iszero())
       {
         // The value of v is zero and *this is non-zero.
-        return (my_neg ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1));
+        return (my_neg ? static_cast<std::int_fast8_t>(-1) : static_cast<std::int_fast8_t>(1));
       }
       else
       {
@@ -1317,22 +1310,23 @@
         if(my_neg != v.my_neg)
         {
           // The signs are different.
-          return (my_neg ? static_cast<std::int32_t>(-1) : static_cast<std::int32_t>(1));
+          return (my_neg ? static_cast<std::int_fast8_t>(-1) : static_cast<std::int_fast8_t>(1));
         }
         else if(my_exp != v.my_exp)
         {
           // The signs are the same and the exponents are different.
-          const std::int32_t val_cmp_exp = ((my_exp < v.my_exp) ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(-1));
+          const std::int_fast8_t val_cmp_exp =
+            ((my_exp < v.my_exp) ? static_cast<std::int_fast8_t>(1) : static_cast<std::int_fast8_t>(-1));
 
-          return (my_neg ? val_cmp_exp : static_cast<std::int32_t>(-val_cmp_exp));
+          return (my_neg ? val_cmp_exp : static_cast<std::int_fast8_t>(-val_cmp_exp));
         }
         else
         {
           // The signs are the same and the exponents are the same.
           // Compare the data.
-          const std::int32_t val_cmp_data = cmp_data(v.my_data);
+          const std::int_fast8_t val_cmp_data = cmp_data(v.my_data);
 
-          return ((!my_neg) ? val_cmp_data : static_cast<std::int32_t>(-val_cmp_data));
+          return ((!my_neg) ? val_cmp_data : static_cast<std::int_fast8_t>(-val_cmp_data));
         }
       }
     }
@@ -2021,27 +2015,32 @@
       my_neg = b_neg;
     }
 
-    std::int32_t cmp_data(const array_type& vd) const
+    std::int_fast8_t cmp_data(const array_type& vd) const
     {
       // Compare the data of *this with those of v.
       //         Return +1 for *this > v
       //                 0 for *this = v
       //                -1 for *this < v
 
-      using const_iterator_type = typename array_type::const_iterator;
 
-      using mismatch_pair_type = std::pair<const_iterator_type, const_iterator_type>;
+      // TBD: Here we could check the exact number of digits in the final limb to be more "exact".
 
-      const mismatch_pair_type mismatch_pair =
-        std::mismatch(my_data.cbegin(), my_data.cend(), vd.cbegin());
+      const auto mismatch_pair = std::mismatch(my_data.cbegin(), my_data.cend(), vd.cbegin());
 
-      const bool is_equal = (   (mismatch_pair.first  == my_data.cend())
-                             && (mismatch_pair.second == vd.cend()));
+      std::int_fast8_t n_return;
 
-      const std::int32_t n_return =
-        (is_equal ? static_cast<std::int32_t>(0)
-                  : ((*mismatch_pair.first > *mismatch_pair.second) ? static_cast<std::int32_t>(1)
-                                                                    : static_cast<std::int32_t>(-1)));
+      if((mismatch_pair.first != my_data.cend()) || (mismatch_pair.second != vd.cend()))
+      {
+        const limb_type left  = *mismatch_pair.first;
+        const limb_type right = *mismatch_pair.second;
+
+        n_return = ((left > right) ? static_cast<std::int_fast8_t>( 1)
+                                   : static_cast<std::int_fast8_t>(-1));
+      }
+      else
+      {
+        n_return = static_cast<std::int_fast8_t>(0);
+      }
 
       return n_return;
     }
@@ -3572,28 +3571,28 @@
   }
 
   // Global comparison operators of const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, typename ExponentType>& with const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>&.
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator< (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) <  static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator<=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) <= static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator==(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) == static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator!=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) != static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator>=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) >= static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator> (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) >  static_cast<std::int32_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator< (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) <  static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator<=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) <= static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator==(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) == static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator!=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) != static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator>=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) >= static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> bool operator> (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (u.cmp(v) >  static_cast<std::int_fast8_t>(0)); }
 
   // Global comparison operators of const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& with all built-in types.
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator< (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) <  static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator<=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) <= static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator==(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) == static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator!=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) != static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator>=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) >= static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator> (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) >  static_cast<std::int32_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator< (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) <  static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator<=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) <= static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator==(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) == static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator!=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) != static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator>=(const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) >= static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator> (const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& u, const ArithmeticType& v) { return (u.cmp(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(v)) >  static_cast<std::int_fast8_t>(0)); }
 
   // Global comparison operators of all built-in types with const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>&.
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator< (ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) <  static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator<=(ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) <= static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator==(ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) == static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator!=(ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) != static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator>=(ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) >= static_cast<std::int32_t>(0)); }
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator> (ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) >  static_cast<std::int32_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator< (ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) <  static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator<=(ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) <= static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator==(ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) == static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator!=(ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) != static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator>=(ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) >= static_cast<std::int_fast8_t>(0)); }
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename ArithmeticType> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value == true, bool>::type operator> (ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v) { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(u).cmp(v) >  static_cast<std::int_fast8_t>(0)); }
 
   } } // namespace math::wide_decimal
 
