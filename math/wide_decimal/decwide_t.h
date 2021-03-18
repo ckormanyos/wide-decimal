@@ -610,32 +610,18 @@
              typename std::enable_if<(   (std::is_integral<UnsignedIntegralType>::value == true)
                                       && (std::is_unsigned<UnsignedIntegralType>::value == true)
                                       && (std::numeric_limits<UnsignedIntegralType>::digits <= std::numeric_limits<limb_type>::digits))>::type const* = nullptr>
-    decwide_t(const UnsignedIntegralType u) : my_data     (),
-                                              my_exp      (static_cast<exponent_type>(0)),
-                                              my_neg      (false),
-                                              my_fpclass  (decwide_t_finite),
-                                              my_prec_elem(decwide_t_elem_number)
-    {
-      typename array_type::size_type u_fill;
-
-      if(u < decwide_t_elem_mask)
-      {
-        my_data[0U] = u;
-
-        u_fill = 1U;
-      }
-      else
-      {
-        my_data[0U] = u / (limb_type) decwide_t_elem_mask;
-        my_data[1U] = u % (limb_type) decwide_t_elem_mask;
-
-        my_exp = decwide_t_elem_digits10;
-
-        u_fill = 2U;
-      }
-
-      std::fill(my_data.begin() + u_fill, my_data.end(), limb_type(0U));
-    }
+    constexpr decwide_t(const UnsignedIntegralType u)
+      : my_data
+        (
+          {
+            (u < decwide_t_elem_mask) ? u             : u / (limb_type) decwide_t_elem_mask,
+            (u < decwide_t_elem_mask) ? limb_type(0U) : u % (limb_type) decwide_t_elem_mask
+          }
+        ),
+        my_exp      ((u < decwide_t_elem_mask) ? exponent_type(0) : exponent_type(decwide_t_elem_digits10)),
+        my_neg      (false),
+        my_fpclass  (decwide_t_finite),
+        my_prec_elem(decwide_t_elem_number) { }
 
     // Constructors from built-in unsigned integral types.
     template<typename UnsignedIntegralType,
@@ -788,16 +774,18 @@
       my_exp = e;
       my_neg = b_neg;
 
-     constexpr std::int32_t digit_loops = static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
-                                                                    / static_cast<std::int32_t>(decwide_t_elem_digits10))
-              + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
-                                                                    % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
+      constexpr std::int32_t digit_loops = static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                                     / static_cast<std::int32_t>(decwide_t_elem_digits10))
+               + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                                     % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
 
       typename array_type::size_type limb_index;
 
-      for(limb_index = static_cast<typename array_type::size_type>(0); limb_index < static_cast<typename array_type::size_type>(digit_loops); ++limb_index)
+      for(  limb_index = static_cast<typename array_type::size_type>(0);
+            limb_index < static_cast<typename array_type::size_type>(digit_loops);
+          ++limb_index)
       {
-        limb_type n = static_cast<limb_type>(static_cast<std::uint64_t>(d));
+        const limb_type n = static_cast<limb_type>(d);
 
         my_data[limb_index]  = static_cast<limb_type>(n);
         d                   -= static_cast<InternalFloatType>(n);
@@ -1619,7 +1607,7 @@
 
     bool iszero() const
     {
-      return ((my_fpclass == decwide_t_finite) && (my_data[0U] == static_cast<limb_type>(0U)));
+      return (my_data[0U] == static_cast<limb_type>(0U));
     }
 
     bool isone() const
@@ -1947,8 +1935,6 @@
 
     void from_unsigned_long_long(const unsigned long long u)
     {
-      std::fill(my_data.begin(), my_data.end(), static_cast<limb_type>(0U));
-
       my_exp = static_cast<exponent_type>(0);
 
       std::uint_fast32_t i =static_cast<std::uint_fast32_t>(0U);
