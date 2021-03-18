@@ -1719,39 +1719,38 @@
       // Extract the approximate parts mantissa and base-10 exponent from the input decwide_t value x.
 
       // Extracts the mantissa and exponent.
-      InternalFloatType scale10 = InternalFloatType(1.0F);
-      limb_type         d0      = my_data[0U];
+      exponent = my_exp;
 
-      exponent  = my_exp;
-      mantissa  = InternalFloatType(d0);
+      limb_type p10 = static_cast<limb_type>(1U);
+      limb_type d0  = my_data[0U];
 
       while(d0 >= 10U)
       {
         d0 /= 10U;
 
-        scale10 *= InternalFloatType(10.0F);
+        p10 *= InternalFloatType(10.0F);
 
         ++exponent;
       }
 
-      mantissa /= scale10;
+      mantissa = static_cast<InternalFloatType>(my_data[0]) / static_cast<InternalFloatType>(p10);
 
-      static constexpr std::int32_t digit_loops =
-                                    static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
-                                                              / static_cast<std::int32_t>(decwide_t_elem_digits10))
-        + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
-                                                              % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
+      InternalFloatType scale = (InternalFloatType(1) / static_cast<InternalFloatType>(decwide_t_elem_mask)) / static_cast<InternalFloatType>(p10);
 
-      constexpr InternalFloatType mask10 = InternalFloatType(decwide_t_elem_mask);
+      std::int_fast16_t scale_order = -((std::int_fast16_t) decwide_t_elem_digits10);
 
-      for(typename array_type::size_type
-            limb_index = static_cast<typename array_type::size_type>(1U);
-          ((limb_index < static_cast<typename array_type::size_type>(digit_loops + 1)) && (limb_index < my_data.size()));
-          ++limb_index)
+      for(typename array_type::size_type i = 1U; i < my_data.size(); ++i)
       {
-        scale10  *= mask10;
+        mantissa += (static_cast<InternalFloatType>(my_data[i]) * scale);
 
-        mantissa += InternalFloatType(my_data[limb_index]) / scale10;
+        scale_order = -((std::int_fast16_t) decwide_t_elem_digits10);
+
+        if(scale_order < -std::numeric_limits<InternalFloatType>::max_digits10)
+        {
+          break;
+        }
+
+        scale /= static_cast<InternalFloatType>(decwide_t_elem_mask);
       }
 
       if(my_neg)
