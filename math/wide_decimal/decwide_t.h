@@ -722,14 +722,14 @@
   private:
     // Constructor from mantissa and exponent.
     explicit decwide_t(const InternalFloatType mantissa,
-                       const exponent_type exponent) : my_data     (),
-                                                       my_exp      (static_cast<exponent_type>(0)),
-                                                       my_neg      (false),
-                                                       my_fpclass  (decwide_t_finite),
-                                                       my_prec_elem(decwide_t_elem_number)
+                       const exponent_type     exponent)
+      : my_data     (),
+        my_exp      (static_cast<exponent_type>(0)),
+        my_neg      (false),
+        my_fpclass  (decwide_t_finite),
+        my_prec_elem(decwide_t_elem_number)
     {
       // Create a decwide_t from mantissa and exponent.
-
       // This constructor is intended to maintain the
       // full precision of the InternalFloatType.
 
@@ -743,56 +743,59 @@
 
       if(mantissa_is_iszero)
       {
-        operator=((exponent == static_cast<exponent_type>(0))
-                     ? one <MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>()
-                     : zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
+        my_data.fill(static_cast<limb_type>(0));
 
-        return;
-      }
-
-      const bool b_neg = (mantissa < InternalFloatType(0));
-
-      InternalFloatType d = ((!b_neg) ? mantissa : -mantissa);
-      exponent_type     e = exponent;
-
-      constexpr InternalFloatType f10(10.0F);
-
-      while(d > f10)                     { d /= f10; ++e; }
-      while(d < InternalFloatType(1.0F)) { d *= f10; --e; }
-
-      {
-        std::int32_t shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
-
-        while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(0))
+        if(exponent == static_cast<exponent_type>(0))
         {
-          d *= f10;
-          --e;
-          --shift;
+          my_data[0U] = limb_type(1U);
         }
       }
-
-      my_exp = e;
-      my_neg = b_neg;
-
-      constexpr std::int32_t digit_loops = static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
-                                                                     / static_cast<std::int32_t>(decwide_t_elem_digits10))
-               + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
-                                                                     % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
-
-      typename array_type::size_type limb_index;
-
-      for(  limb_index = static_cast<typename array_type::size_type>(0);
-            limb_index < static_cast<typename array_type::size_type>(digit_loops);
-          ++limb_index)
+      else
       {
-        const limb_type n = static_cast<limb_type>(d);
+        const bool b_neg = (mantissa < InternalFloatType(0));
 
-        my_data[limb_index]  = static_cast<limb_type>(n);
-        d                   -= static_cast<InternalFloatType>(n);
-        d                   *= static_cast<InternalFloatType>(decwide_t_elem_mask);
+        InternalFloatType d = ((!b_neg) ? mantissa : -mantissa);
+        exponent_type     e = exponent;
+
+        constexpr InternalFloatType f10(10.0F);
+
+        while(d > f10)                     { d /= f10; ++e; }
+        while(d < InternalFloatType(1.0F)) { d *= f10; --e; }
+
+        {
+          std::int32_t shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
+
+          while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(0))
+          {
+            d *= f10;
+            --e;
+            --shift;
+          }
+        }
+
+        my_exp = e;
+        my_neg = b_neg;
+
+        constexpr std::int32_t digit_loops = static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                                       / static_cast<std::int32_t>(decwide_t_elem_digits10))
+                 + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                                       % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
+
+        typename array_type::size_type limb_index;
+
+        for(  limb_index = static_cast<typename array_type::size_type>(0);
+              limb_index < static_cast<typename array_type::size_type>(digit_loops);
+            ++limb_index)
+        {
+          const limb_type n = static_cast<limb_type>(d);
+
+          my_data[limb_index]  = static_cast<limb_type>(n);
+          d                   -= static_cast<InternalFloatType>(n);
+          d                   *= static_cast<InternalFloatType>(decwide_t_elem_mask);
+        }
+
+        std::fill(my_data.begin() + limb_index, my_data.end(), static_cast<limb_type>(0));
       }
-
-      std::fill(my_data.begin() + limb_index, my_data.end(), static_cast<limb_type>(0));
     }
 
   public:
