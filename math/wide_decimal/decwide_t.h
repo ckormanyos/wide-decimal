@@ -3247,9 +3247,7 @@
 
     floating_point_type ak(1U);
 
-    using std::log;
-
-    const float n_times_factor = ((float) std::numeric_limits<floating_point_type>::digits10) * 1.67F;
+    constexpr float n_times_factor = ((float) std::numeric_limits<floating_point_type>::digits10) * 1.67F;
 
     // Ensure that the resulting power is non-negative.
     // Also enforce that m >= 3.
@@ -3270,7 +3268,6 @@
     for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
     {
       using std::ilogb;
-      using std::sqrt;
 
       // Check for the number of significant digits to be
       // at least half of the requested digits. If at least
@@ -3285,13 +3282,15 @@
       const floating_point_type ak_tmp(ak);
 
       ak += bk;
-      ak /= 2;
 
       if(digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
 
+      using std::sqrt;
+
+      ak /= 2;
       bk *= ak_tmp;
       bk  = sqrt(bk);
     }
@@ -3301,7 +3300,7 @@
     // Retrieve the value of pi and divide by (a * (2 * m)).
 
     const floating_point_type result =
-         pi<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>() / (ak * (2 * m));
+         pi<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>() / (ak * m);
 
     return result;
   }
@@ -3791,16 +3790,11 @@
         (std::uint32_t) (std::numeric_limits<floating_point_type>::digits10 / 2)
       + (std::max)((std::uint32_t) (floating_point_type::decwide_t_elem_digits10 + 1), (std::uint32_t) 9U);
 
-    using std::log;
-
     const std::uint32_t digits10_scale =
       (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
 
     for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
     {
-      using std::ilogb;
-      using std::sqrt;
-
       // Check for the number of significant digits to be
       // at least half of the requested digits. If at least
       // half of the requested digits have been achieved,
@@ -3814,13 +3808,15 @@
       const floating_point_type ak_tmp(ak);
 
       ak += bk;
-      ak /= 2;
 
       if(digits10_of_iteration > digits10_iteration_goal)
       {
         break;
       }
 
+      using std::sqrt;
+
+      ak /= 2;
       bk *= ak_tmp;
       bk  = sqrt(bk);
     }
@@ -3831,7 +3827,7 @@
     // Retrieve the value of pi, divide by (2 * a) and subtract (m * ln2).
 
     const floating_point_type result =
-             pi<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>() / (ak * 2)
+             (pi<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>() / ak)
       - (ln_two<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>() * m);
 
     return ((b_negate == true) ? -result : result);
