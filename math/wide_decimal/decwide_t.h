@@ -494,22 +494,24 @@
                    || (std::is_same<std::uint32_t, limb_type>::value == true)),
                    "Error: limb_type (determined via the template parameter LimbType) must be one of uint8_t, uint16_t or uint32_t.");
 
-    using double_limb_type = typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
-                                                        std::uint64_t,
-                                                        typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value == true),
-                                                                                   std::uint32_t,
-                                                                                   std::uint16_t>::type
-                                                      >::type;
+    using double_limb_type =
+      typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
+                                 std::uint64_t,
+                                 typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value == true),
+                                                            std::uint32_t,
+                                                            std::uint16_t>::type>::type;
 
-    using signed_limb_type = typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
-                                                        std::int32_t,
-                                                        typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value == true),
-                                                                                   std::int16_t,
-                                                                                   std::int8_t>::type
-                                                      >::type;
+    using signed_limb_type =
+      typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
+                                 std::int32_t,
+                                 typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value == true),
+                                                            std::int16_t,
+                                                            std::int8_t>::type>::type;
 
     static constexpr std::int32_t decwide_t_elems_for_fft =
-      ((std::is_same<limb_type, std::uint8_t>::value == true) ? 32 : 128);
+      ((std::is_same<limb_type, std::uint32_t>::value == true)
+        ? 256
+        : ((std::is_same<limb_type, std::uint16_t>::value == true) ? 128 : 16));
 
     typedef enum fpclass_type
     {
@@ -1506,7 +1508,7 @@
          x.precision(new_prec_as_digits10);
 
         // Next iteration of vi
-        vi += vi * (-((*this * vi) * static_cast<std::int32_t>(2)) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
+        vi += vi * (((*this * vi) * static_cast<std::int32_t>(-2)) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
 
         // Next iteration of *this
         *this += (vi * (-((*this) * (*this)) + x));
