@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020.                        //
+//  Copyright Christopher Kormanyos 2020 - 2021.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -184,7 +184,7 @@ bool math::wide_decimal::example008_bernoulli_tgamma()
   //                    (4^n) n!
 
   // Table[Factorial[2 n]/((4^n) Factorial[n]), {n, 0, 17, 1}]
-  constexpr std::array<std::pair<std::uint64_t, std::uint32_t>, 18U> ratios =
+  const std::array<std::pair<std::uint64_t, std::uint32_t>, 18U> ratios =
   {{
     { UINT64_C(                  1), UINT32_C(     1) },
     { UINT64_C(                  1), UINT32_C(     2) },

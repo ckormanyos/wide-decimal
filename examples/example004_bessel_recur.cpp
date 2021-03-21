@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020.                        //
+//  Copyright Christopher Kormanyos 2020 - 2021.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -219,7 +219,7 @@ bool math::wide_decimal::example004_bessel_recur()
   // Calculate 1,001 decimal digits of the value
   // of BesselJ[11, 123456 / 10000].
 
-  using dec1001_t = math::wide_decimal::decwide_t<1001U>;
+  using dec1001_t = math::wide_decimal::decwide_t<1001U, std::uint32_t, void>;
 
   // Downward recursion and simultaneous summation of
   // the normalization factor.

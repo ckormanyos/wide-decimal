@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020.                        //
+//  Copyright Christopher Kormanyos 2020 - 2021.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -123,10 +123,13 @@ bool math::wide_decimal::example002c_pi_quintic()
   constexpr std::int32_t local_elem_digits10 =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
 
+  using local_wide_decimal_type =
+    math::wide_decimal::decwide_t<wide_decimal_digits10>;
+
   const std::clock_t start = std::clock();
 
-  const math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type> my_pi =
-    pi_borwein_quintic<math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type>>(&std::cout);
+  const local_wide_decimal_type my_pi =
+    pi_borwein_quintic<math::wide_decimal::decwide_t<wide_decimal_digits10>>(&std::cout);
 
   const std::clock_t stop = std::clock();
 
@@ -138,7 +141,7 @@ bool math::wide_decimal::example002c_pi_quintic()
                                      my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_32.size(),
                                      math::constants::const_pi_control_head_32.begin());
 
-  using const_iterator_type = typename math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type>::array_type::const_iterator;
+  using const_iterator_type = typename local_wide_decimal_type::array_type::const_iterator;
 
   const_iterator_type fi(my_pi.crepresentation().cbegin() + (std::uint32_t) (  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
                                                                              - (std::uint32_t) math::constants::const_pi_control_tail_32_1000001.size()));

@@ -41,6 +41,15 @@
     <Filter Include="_doc">
       <UniqueIdentifier>{c84326e0-541e-4462-bd66-7f5086e5ce3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\boost">
+      <UniqueIdentifier>{b3288824-b78f-4a7d-a7cc-d7f5d1892b26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost\math">
+      <UniqueIdentifier>{f9e28eae-c346-44a8-9a14-a555b7b978f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost\math\bindings">
+      <UniqueIdentifier>{73323c60-6a6c-4ad9-8508-42ec0b55fc21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -103,6 +112,15 @@
     <ClCompile Include="test\test_decwide_t_examples.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example009a_boost_math_standalone.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example001c_roots_sqrt_limb08.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002d_pi_limb08.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_boost_cpp.h">
@@ -128,9 +146,6 @@
     </ClInclude>
     <ClInclude Include="util\memory\util_n_slot_array_allocator.h">
       <Filter>Source Files\util\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="util\utility\util_lexical_cast.h">
-      <Filter>Source Files\util\utility</Filter>
     </ClInclude>
     <ClInclude Include="util\utility\util_noncopyable.h">
       <Filter>Source Files\util\utility</Filter>
@@ -167,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="math\wide_decimal\decwide_t_detail_fft.h">
       <Filter>Source Files\math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="boost\math\bindings\decwide_t.hpp">
+      <Filter>Source Files\boost\math\bindings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
