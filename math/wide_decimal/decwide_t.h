@@ -508,10 +508,12 @@
                                                             std::int16_t,
                                                             std::int8_t>::type>::type;
 
-    static constexpr std::int32_t decwide_t_elems_for_fft =
+    static constexpr std::int32_t decwide_t_elems_for_karatsuba =
       ((std::is_same<limb_type, std::uint32_t>::value == true)
         ? 256
         : ((std::is_same<limb_type, std::uint16_t>::value == true) ? 128 : 16));
+
+    static constexpr std::int32_t decwide_t_elems_for_fft = decwide_t_elems_for_karatsuba;
 
     typedef enum fpclass_type
     {
@@ -909,7 +911,7 @@
         }
 
         // Addition.
-        const limb_type carry = add_loop_uv(p_u, p_u, p_v, decwide_t_elem_number);
+        const limb_type carry = eval_add_n(p_u, p_u, p_v, decwide_t_elem_number);
 
         if(b_copy)
         {
@@ -977,7 +979,7 @@
         }
 
         // Subtraction.
-        const signed_limb_type borrow = sub_loop_uv(p_u, p_u, p_v, decwide_t_elem_number);
+        const signed_limb_type borrow = eval_subtract_n(p_u, p_u, p_v, decwide_t_elem_number);
 
         static_cast<void>(borrow);
 
@@ -1333,7 +1335,7 @@
       return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>
       (
         {
-          (limb_type) detail::decwide_t_helper<MyDigits10, LimbType>::pow10_maker((std::uint32_t) ((std::int32_t) (INT32_C(1) + (std::int32_t) (((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10)) - decwide_t_digits10))
+          (limb_type) detail::pow10_maker((std::uint32_t) ((std::int32_t) (INT32_C(1) + (std::int32_t) (((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10)) - decwide_t_digits10))
         },
         -(exponent_type) (((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10)
       );
@@ -1929,7 +1931,7 @@
   private:
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
-    static fft_float_type my_af_bf_fft_mul_pool[detail::decwide_t_helper<MyDigits10, LimbType>::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
+    static fft_float_type my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
     static array_type     my_n_data_for_add_sub;
     #endif
 
@@ -2034,11 +2036,11 @@
       return n_return;
     }
 
-    static limb_type add_loop_uv(      limb_type*   r,
-                                 const limb_type*   u,
-                                 const limb_type*   v,
-                                 const std::int32_t count,
-                                 const limb_type    carry_in = 0U)
+    static limb_type eval_add_n(      limb_type*   r,
+                                const limb_type*   u,
+                                const limb_type*   v,
+                                const std::int32_t count,
+                                const limb_type    carry_in = 0U)
     {
       // Addition algorithm
       std::uint_fast8_t carry = static_cast<std::uint_fast8_t>(carry_in);
@@ -2057,11 +2059,11 @@
       return static_cast<limb_type>(carry);
     }
 
-    static signed_limb_type sub_loop_uv(      limb_type*   r,
-                                        const limb_type*   u,
-                                        const limb_type*   v,
-                                        const std::int32_t count,
-                                        const bool         has_borrow_in = false)
+    static signed_limb_type eval_subtract_n(      limb_type*   r,
+                                            const limb_type*   u,
+                                            const limb_type*   v,
+                                            const std::int32_t count,
+                                            const bool         has_borrow_in = false)
     {
       // Subtraction algorithm
       std::int_fast8_t borrow =
@@ -2103,22 +2105,34 @@
           sum += static_cast<double_limb_type>(u[j - i] * static_cast<double_limb_type>(v[i]));
         }
 
-        u[j]  = static_cast<limb_type>(sum % static_cast<limb_type>(decwide_t_elem_mask));
+        u[j]  = static_cast<limb_type>       (sum % static_cast<limb_type>(decwide_t_elem_mask));
         carry = static_cast<double_limb_type>(sum / static_cast<limb_type>(decwide_t_elem_mask));
       }
 
       return static_cast<limb_type>(carry);
     }
 
-    static void mul_loop_n_by_n_to_2n(      limb_type* r,
-                                      const limb_type* u,
-                                      const limb_type* v,
+    static void mul_loop_n_by_n_to_2n(      limb_type*   r,
+                                      const limb_type*   u,
+                                      const limb_type*   v,
                                       const std::int32_t count)
     {
-      (void) r;
-      (void) u;
-      (void) v;
-      (void) count;
+      std::fill(r, r + (count * 2U), limb_type(0U));
+
+      double_limb_type carry = static_cast<double_limb_type>(0U);
+
+      for(std::int32_t j = static_cast<std::int32_t>(count - 1); j >= static_cast<std::int32_t>(0); --j)
+      {
+        double_limb_type sum = carry;
+
+        for(std::int32_t i = static_cast<std::int32_t>(count - 1); i >= static_cast<std::int32_t>(0); --i)
+        {
+          sum += static_cast<double_limb_type>(u[j - i] * static_cast<double_limb_type>(v[i]));
+        }
+
+        r[j]  = static_cast<limb_type>       (sum % static_cast<limb_type>(decwide_t_elem_mask));
+        carry = static_cast<double_limb_type>(sum / static_cast<limb_type>(decwide_t_elem_mask));
+      }
     }
 
     static limb_type mul_loop_n(limb_type* const u, limb_type n, const std::int32_t p)
@@ -2150,7 +2164,7 @@
       return static_cast<limb_type>(prev);
     }
 
-    static void mul_loop_karatsuba_n_by_n_to_2n(      limb_type*         r,
+    static void eval_multiply_kara_n_by_n_to_2n(      limb_type*         r,
                                                 const limb_type*         a,
                                                 const limb_type*         b,
                                                 const std::uint_fast32_t n,
@@ -2164,12 +2178,6 @@
       }
       else
       {
-        (void) r;
-        (void) a;
-        (void) b;
-        (void) n;
-        (void) t;
-
         // Based on "Algorithm 1.3 KaratsubaMultiply", Sect. 1.3.2, page 5
         // of R.P. Brent and P. Zimmermann, "Modern Computer Arithmetic",
         // Cambridge University Press (2011).
@@ -2210,39 +2218,39 @@
 
         const std::uint_fast32_t  nh = n / 2U;
 
-        const limb_type* a1 = a + 0U;
         const limb_type* a0 = a + nh;
+        const limb_type* a1 = a + 0U;
 
-        const limb_type* b1 = b + 0U;
         const limb_type* b0 = b + nh;
+        const limb_type* b1 = b + 0U;
 
-              limb_type* r4 = r + 0U;
-              limb_type* r3 = r + nh;
-              limb_type* r2 = r + n;
-              limb_type* r1 = r + (n + nh);
               limb_type* r0 = r + (n + n);
+              limb_type* r1 = r + (n + nh);
+              limb_type* r2 = r + n;
+              limb_type* r3 = r + nh;
+              limb_type* r4 = r + 0U;
 
-              limb_type* t4 = t + 0U;
-              limb_type* t3 = t + nh;
-              limb_type* t2 = t + n;
               limb_type* t0 = t + (n + n);
+              limb_type* t1 = t + (n + nh);
+              limb_type* t2 = t + n;
+              limb_type* t4 = t + 0U;
 
         // Step 1
         //   a1*b1 -> r2
         //   a0*b0 -> r0
         //   r -> t0
-        mul_loop_karatsuba_n_by_n_to_2n(r2, a1, b1, nh, t0);
-        mul_loop_karatsuba_n_by_n_to_2n(r0, a0, b0, nh, t0);
+        eval_multiply_kara_n_by_n_to_2n(r2, a1, b1, nh, t0);
+        eval_multiply_kara_n_by_n_to_2n(r0, a0, b0, nh, t0);
         std::copy(r0, r4, t0);
 
         // Step 2
         //   r1 += a1*b1
         //   r1 += a0*b0
         limb_type carry;
-        carry = add_loop_uv(r1, r1, t2, n);
-        mul_loop_karatsuba_n_by_n_to_2n(r3, nh, carry);
-        carry = add_loop_uv(r1, r1, t0, n);
-        mul_loop_karatsuba_n_by_n_to_2n(r3, nh, carry);
+        carry = eval_add_n(r1, r1, t2, n);
+        eval_multiply_kara_propagate_carry(r3, nh, carry);
+        carry = eval_add_n(r1, r1, t0, n);
+        eval_multiply_kara_propagate_carry(r3, nh, carry);
 
         // Step 3
         //   |a1-a0| -> t0
@@ -2250,11 +2258,11 @@
 
         if(cmp_result_a1a0 == 1)
         {
-          static_cast<void>(sub_loop_uv(t0, a1, a0, nh));
+          static_cast<void>(eval_subtract_n(t0, a1, a0, nh));
         }
         else if(cmp_result_a1a0 == -1)
         {
-          static_cast<void>(sub_loop_uv(t0, a0, a1, nh));
+          static_cast<void>(eval_subtract_n(t0, a0, a1, nh));
         }
 
         // Step 4
@@ -2263,60 +2271,108 @@
 
         if(cmp_result_b0b1 == 1)
         {
-          static_cast<void>(sub_loop_uv(t3, b0, b1, nh));
+          static_cast<void>(eval_subtract_n(t1, b0, b1, nh));
         }
         else if(cmp_result_b0b1 == -1)
         {
-          static_cast<void>(sub_loop_uv(t3, b1, b0, nh));
+          static_cast<void>(eval_subtract_n(t1, b1, b0, nh));
         }
 
         // Step 5
         //   |a1-a0|*|b0-b1| -> t2
-        mul_loop_karatsuba_n_by_n_to_2n(t2, t0, t3, nh, t4);
+        eval_multiply_kara_n_by_n_to_2n(t2, t0, t1, nh, t4);
 
         // Step 6
         //   either r1 += |a1-a0|*|b0-b1|
         //   or     r1 -= |a1-a0|*|b0-b1|
         if((cmp_result_a1a0 * cmp_result_b0b1) == 1)
         {
-          carry = add_loop_uv(r1, r1, t2, n);
+          carry = eval_add_n(r1, r1, t2, n);
 
-          mul_loop_karatsuba_propagate_carry(r3, nh, carry);
+          eval_multiply_kara_propagate_carry(r3, nh, carry);
         }
         else if((cmp_result_a1a0 * cmp_result_b0b1) == -1)
         {
-          const bool has_borrow = sub_loop_uv(r1, r1, t2, n);
+          const bool has_borrow = eval_subtract_n(r1, r1, t2, n);
 
-          mul_loop_karatsuba_propagate_borrow(r3, nh, has_borrow);
+          eval_multiply_kara_propagate_borrow(r3, nh, has_borrow);
         }
       }
     }
 
-    static void mul_loop_karatsuba_propagate_carry(limb_type* t, const std::uint_fast32_t n, const bool has_borrow)
+    static void eval_multiply_kara_propagate_carry(limb_type* t, const std::uint_fast32_t n, const limb_type carry)
     {
-      // TBD: Implement propagate carry.
+      using local_reverse_iterator_type = std::reverse_iterator<limb_type*>;
 
-      (void) t;
-      (void) n;
-      (void) has_borrow;
+      std::uint_fast8_t carry_out = static_cast<std::uint_fast8_t>(carry);
+
+      for(local_reverse_iterator_type
+            it  = local_reverse_iterator_type(t + n);
+            it != local_reverse_iterator_type(t) && (carry_out != 0U);
+          ++it)
+      {
+        const limb_type tt = static_cast<limb_type>(*it + carry_out);
+
+        carry_out = ((tt >= static_cast<limb_type>(decwide_t_elem_mask)) ? static_cast<std::uint_fast8_t>(1U)
+                                                                         : static_cast<std::uint_fast8_t>(0U));
+
+        *it  = static_cast<limb_type>(tt - ((carry_out != 0U) ? static_cast<limb_type>(decwide_t_elem_mask)
+                                                              : static_cast<limb_type>(0U)));
+      }
     }
 
-    static void mul_loop_karatsuba_propagate_borrow(limb_type* t, const std::uint_fast32_t n, const bool has_borrow)
+    static void eval_multiply_kara_propagate_borrow(limb_type* t, const std::uint_fast32_t n, const bool has_borrow_in)
     {
-      // TBD: Implement propagate borrow.
+      using local_reverse_iterator_type = std::reverse_iterator<limb_type*>;
 
-      (void) t;
-      (void) n;
-      (void) has_borrow;
+      std::int_fast8_t borrow =
+        (has_borrow_in ? static_cast<std::int_fast8_t>(1) : static_cast<std::int_fast8_t>(0));
+
+      for(local_reverse_iterator_type
+            it  = local_reverse_iterator_type(t + n);
+           (it != local_reverse_iterator_type(t)) && (borrow != 0U);
+          ++it)
+      {
+        signed_limb_type tt = static_cast<signed_limb_type>(static_cast<signed_limb_type>(*it) - borrow);
+
+        // Underflow? Borrow?
+        if(tt < 0)
+        {
+          // Yes, underflow and borrow
+          tt    += static_cast<signed_limb_type>(decwide_t_elem_mask);
+          borrow = static_cast<int_fast8_t>(1);
+        }
+        else
+        {
+          borrow = static_cast<int_fast8_t>(0);
+        }
+
+        *it = static_cast<limb_type>(tt);
+      }
     }
 
     static void mul_loop_karatsuba(limb_type* const u, const limb_type* const v, const std::int32_t prec_elems_for_multiply)
     {
-      // TBD: Implement Karatsuby multiplication loop.
+      const std::uint32_t local_number_of_limbs =
+        detail::pow2_maker_of_upper_limit(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
-      (void) u;
-      (void) v;
-      (void) prec_elems_for_multiply;
+      // TBD: Can use specialized allocator or memory pool for these arrays.
+      detail::fixed_static_array<limb_type, decwide_t_elems_for_fft * 2U> result;
+
+      detail::fixed_static_array<limb_type, decwide_t_elems_for_fft * 4U> t;
+
+      result.fill(limb_type(0U));
+      t.fill(limb_type(0U));
+
+      eval_multiply_kara_n_by_n_to_2n(result.data(),
+                                      u,
+                                      v,
+                                      local_number_of_limbs,
+                                      t.data());
+
+      std::copy(result.cbegin(),
+                result.cbegin() + local_number_of_limbs,
+                u);
     }
 
     static void mul_loop_fft(limb_type* const u, const limb_type* const v, const std::int32_t prec_elems_for_multiply)
@@ -2456,7 +2512,7 @@
       // Note: Karatsuba multiplication is not used for intermediate digit counts.
       // TBD: Implement Karatsuba multiplication for intermediate digit counts.
 
-      if(prec_elems_for_multiply < decwide_t_elems_for_fft)
+      if(prec_elems_for_multiply < decwide_t_elems_for_karatsuba)
       {
         // Use school multiplication.
         const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_elems_for_multiply);
@@ -2472,6 +2528,26 @@
                              my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
 
           my_data.front() = static_cast<limb_type>(carry);
+        }
+      }
+      else if(prec_elems_for_multiply < decwide_t_elems_for_fft)
+      {
+        // Use Karatsuba multiplication.
+        mul_loop_karatsuba(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(prec_elems_for_multiply));
+
+        if(my_data.front() != static_cast<limb_type>(0U))
+        {
+          // Adjust the exponent because of the internal scaling of the FFT multiplication.
+          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+        }
+        else
+        {
+          // Justify the data if necessary.
+          std::copy(my_data.cbegin() +  1,
+                    my_data.cbegin() + (std::min)(decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
+                    my_data.begin());
+
+          my_data.back() = static_cast<limb_type>(0U);
         }
       }
       else
@@ -3231,7 +3307,7 @@
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_af_bf_fft_mul_pool[detail::decwide_t_helper<MyDigits10, LimbType>::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
+  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
   typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::array_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_n_data_for_add_sub;
