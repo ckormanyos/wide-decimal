@@ -1060,7 +1060,7 @@
 
         const std::int32_t prec_elems_for_multiply = (std::min)(decwide_t_elem_number, (std::min)(my_prec_elem, v.my_prec_elem));
 
-        eval_mul_dispatch_multiplication_method<decwide_t_elem_number>(v, prec_elems_for_multiply);
+        eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
       }
 
       // Set the sign of the result.
@@ -2282,19 +2282,22 @@
       #endif
     }
 
-    template<const std::int32_t ElemsForFftThreshold>
-    void eval_mul_dispatch_multiplication_method(const decwide_t& v,
-                                                 const std::int32_t prec_elems_for_multiply,
-                                                 const std::int32_t = ElemsForFftThreshold,
-                                                 const typename std::enable_if<(decwide_t_elems_for_fft >= ElemsForFftThreshold)>::type* = nullptr)
+    template<const std::int32_t OtherDigits10>
+    void eval_mul_dispatch_multiplication_method(
+      const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v,
+      const std::int32_t prec_elems_for_multiply,
+      const typename std::enable_if<(decwide_t_elems_for_fft >= decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number)>::type* = nullptr)
     {
       // Use school multiplication.
+      constexpr std::int32_t local_decwide_t_elem_digits10 =
+        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_digits10;
+
       const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
       // Handle a potential carry.
       if(carry != static_cast<limb_type>(0U))
       {
-        my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+        my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
 
         // Shift the result of the multiplication one element to the right.
         std::copy_backward(my_data.cbegin(),
@@ -2305,14 +2308,20 @@
       }
     }
 
-    template<const std::int32_t ElemsForFftThreshold>
-    void eval_mul_dispatch_multiplication_method(const decwide_t& v,
-                                                 const std::int32_t prec_elems_for_multiply,
-                                                 const std::int32_t = ElemsForFftThreshold,
-                                                 const typename std::enable_if<(ElemsForFftThreshold > decwide_t_elems_for_fft)>::type* = nullptr)
+    template<const std::int32_t OtherDigits10>
+    void eval_mul_dispatch_multiplication_method(
+      const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v,
+      const std::int32_t prec_elems_for_multiply,
+      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number > decwide_t_elems_for_fft)>::type* = nullptr)
     {
       // Note: Karatsuba multiplication is not used for intermediate digit counts.
       // TBD: Implement Karatsuba multiplication for intermediate digit counts.
+
+      constexpr std::int32_t local_decwide_t_elem_digits10 =
+        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_digits10;
+
+      constexpr std::int32_t local_decwide_t_elem_number =
+        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number;
 
       if(prec_elems_for_multiply < decwide_t_elems_for_fft)
       {
@@ -2322,7 +2331,7 @@
         // Handle a potential carry.
         if(carry != static_cast<limb_type>(0U))
         {
-          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
 
           // Shift the result of the multiplication one element to the right.
           std::copy_backward(my_data.cbegin(),
@@ -2340,13 +2349,13 @@
         if(my_data.front() != static_cast<limb_type>(0U))
         {
           // Adjust the exponent because of the internal scaling of the FFT multiplication.
-          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
         }
         else
         {
           // Justify the data if necessary.
           std::copy(my_data.cbegin() +  1,
-                    my_data.cbegin() + (std::min)(decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
+                    my_data.cbegin() + (std::min)(local_decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
                     my_data.begin());
 
           my_data.back() = static_cast<limb_type>(0U);
