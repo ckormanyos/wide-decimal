@@ -121,6 +121,9 @@
     <ClCompile Include="examples\example002d_pi_limb08.cpp">
       <Filter>Source Files\examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example000_multiply_nines.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_boost_cpp.h">

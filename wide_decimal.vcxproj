@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="examples\example000_multiply_nines.cpp" />
     <ClCompile Include="examples\example001a_roots_seventh.cpp" />
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp" />
     <ClCompile Include="examples\example001c_roots_sqrt_limb08.cpp" />

@@ -25,6 +25,7 @@ bool test_decwide_t_examples_part1__()
 {
   bool result_is_ok = true;
 
+  result_is_ok &= math::wide_decimal::example000_multiply_nines       (); std::cout << "example000_multiply_nines       : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example001_roots_sqrt           (); std::cout << "example001_roots_sqrt           : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example001a_roots_seventh       (); std::cout << "example001a_roots_seventh       : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example001b_roots_almost_integer(); std::cout << "example001b_roots_almost_integer: " << std::boolalpha << result_is_ok << std::endl;

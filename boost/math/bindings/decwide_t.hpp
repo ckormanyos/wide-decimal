@@ -29,13 +29,11 @@
 
     using precision_type = typename ThisPolicy::precision_type;
 
-    using local_digits_2 =
-      digits2<(((long long) std::numeric_limits<local_wide_decimal_type>::digits10 + 1LL) * 1000LL) / 301LL>;
+    using local_digits_2 = digits2<(((long long) std::numeric_limits<local_wide_decimal_type>::digits10 + 1LL) * 1000LL) / 301LL>;
 
-    using type =
-      typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
-                                  local_digits_2,
-                                  precision_type>::type;
+    using type = typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
+                                            local_digits_2,
+                                            precision_type>::type;
   };
 
   } // namespace policies
@@ -64,15 +62,15 @@
       using std::sqrt;
 
       result_type result;
-      result_type a(1U);
+      result_type a = 1;
       result_type b;
       result_type A(a);
-      result_type B(0.5F);
-      result_type D(0.25F);
+      result_type B = 0.5F;
+      result_type D = 0.25F;
 
       result_type lim = std::numeric_limits<result_type>::epsilon();
 
-      unsigned k = 1U;
+      unsigned k = 1;
 
       do
       {
@@ -85,35 +83,21 @@
         B = A - result;
         B = ldexp(B, 1);
         result = A - B;
-
-        const bool neg = (boost::math::sign(result) < 0);
-
+        bool neg = boost::math::sign(result) < 0;
         if(neg)
-        {
-          result = -result;
-        }
-
+           result = -result;
         if(result <= lim)
-        {
-          break;
-        }
-
+           break;
         if(neg)
-        {
-          result = -result;
-        }
-
-        result  = ldexp(result, int(k - 1U));
-        D      -= result;
-
+           result = -result;
+        result = ldexp(result, k - 1);
+        D -= result;
         ++k;
-
         lim = ldexp(lim, 1);
       }
       while(true);
 
       result = B / D;
-
       return result;
     }
 

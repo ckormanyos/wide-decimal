@@ -5,20 +5,20 @@
 
   namespace math { namespace wide_decimal { namespace detail {
 
-  constexpr std::uint32_t pow2_maker_of_upper_limit(std::uint32_t value, std::size_t p2 = 0U)
-  {
-    return (value >> p2) != 0U ? pow2_maker_of_upper_limit(value, p2 + 1) : std::uint32_t(1) << p2;
-  }
-
-  constexpr std::uint32_t pow10_maker(std::uint32_t n)
-  {
-    return ((n == UINT32_C(0)) ? UINT32_C(1) : pow10_maker(n - UINT32_C(1)) * UINT32_C(10));
-  }
-
   template<const std::int32_t MyDigits10,
            typename LimbType>
   struct decwide_t_helper
   {
+    static constexpr std::uint32_t pow2_maker_of_upper_limit(std::uint32_t value, std::size_t p2 = 0U)
+    {
+      return (value >> p2) != 0U ? pow2_maker_of_upper_limit(value, p2 + 1) : std::uint32_t(1) << p2;
+    }
+
+    static constexpr std::uint32_t pow10_maker(std::uint32_t n)
+    {
+      return ((n == UINT32_C(0)) ? UINT32_C(1) : pow10_maker(n - UINT32_C(1)) * UINT32_C(10));
+    }
+
     static constexpr std::int32_t digits10          = MyDigits10;
     static constexpr std::int32_t digits            = digits10;
     static constexpr std::int32_t max_digits10      = static_cast<std::int32_t>(digits10 + 1);
