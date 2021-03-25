@@ -508,10 +508,14 @@
                                                             std::int16_t,
                                                             std::int8_t>::type>::type;
 
-    static constexpr std::int32_t decwide_t_elems_for_fft =
+    static constexpr std::int32_t decwide_t_elems_for_kara =
       ((std::is_same<limb_type, std::uint32_t>::value == true)
-        ? (256 + 1)
-        : ((std::is_same<limb_type, std::uint16_t>::value == true) ? (128 + 1) : (16 + 1)));
+        ? static_cast<std::int32_t>(256 + 1)
+        : ((std::is_same<limb_type, std::uint16_t>::value == true)
+          ? static_cast<std::int32_t>(128 + 1)
+          : static_cast<std::int32_t>( 18 + 1)));
+
+    static constexpr std::int32_t decwide_t_elems_for_fft = static_cast<std::int32_t>(2048 + 1);
 
     typedef enum fpclass_type
     {
@@ -909,7 +913,7 @@
         }
 
         // Addition.
-        const limb_type carry = add_loop_uv(p_u, p_v, decwide_t_elem_number);
+        const limb_type carry = eval_add_n(p_u, p_u, p_v, decwide_t_elem_number);
 
         if(b_copy)
         {
@@ -977,7 +981,7 @@
         }
 
         // Subtraction.
-        const signed_limb_type borrow = sub_loop_uv(p_u, p_v, decwide_t_elem_number);
+        const signed_limb_type borrow = eval_sub_n(p_u, p_u, p_v, decwide_t_elem_number);
 
         static_cast<void>(borrow);
 
@@ -2036,31 +2040,37 @@
       return n_return;
     }
 
-    static limb_type add_loop_uv(limb_type* const u, const limb_type* const v, const std::int32_t p)
+    static limb_type eval_add_n(      limb_type*   r,
+                                const limb_type*   u,
+                                const limb_type*   v,
+                                const std::int32_t count)
     {
       // Addition algorithm
       std::uint_fast8_t carry = static_cast<std::uint_fast8_t>(0U);
 
-      for(std::int32_t j = static_cast<std::int32_t>(p - static_cast<std::int32_t>(1)); j >= static_cast<std::int32_t>(0); --j)
+      for(std::int32_t j = static_cast<std::int32_t>(count - static_cast<std::int32_t>(1)); j >= static_cast<std::int32_t>(0); --j)
       {
         const limb_type t = static_cast<limb_type>(static_cast<limb_type>(u[j] + v[j]) + carry);
 
         carry = ((t >= static_cast<limb_type>(decwide_t_elem_mask)) ? static_cast<std::uint_fast8_t>(1U)
                                                                     : static_cast<std::uint_fast8_t>(0U));
 
-        u[j]  = static_cast<limb_type>(t - ((carry != 0U) ? static_cast<limb_type>(decwide_t_elem_mask)
+        r[j]  = static_cast<limb_type>(t - ((carry != 0U) ? static_cast<limb_type>(decwide_t_elem_mask)
                                                           : static_cast<limb_type>(0U)));
       }
 
       return static_cast<limb_type>(carry);
     }
 
-    static signed_limb_type sub_loop_uv(limb_type* const u, const limb_type* const v, const std::int32_t p)
+    static signed_limb_type eval_sub_n(      limb_type*   r,
+                                       const limb_type*   u,
+                                       const limb_type*   v,
+                                       const std::int32_t count)
     {
       // Subtraction algorithm
       std::int_fast8_t borrow = static_cast<std::int_fast8_t>(0);
 
-      for(std::uint32_t j = static_cast<std::uint32_t>(p - static_cast<std::int32_t>(1)); static_cast<std::int32_t>(j) >= static_cast<std::int32_t>(0); --j)
+      for(std::uint32_t j = static_cast<std::uint32_t>(count - static_cast<std::int32_t>(1)); static_cast<std::int32_t>(j) >= static_cast<std::int32_t>(0); --j)
       {
         signed_limb_type t = static_cast<signed_limb_type>(  static_cast<signed_limb_type>(u[j])
                                                            - static_cast<signed_limb_type>(v[j])) - borrow;
@@ -2077,7 +2087,7 @@
           borrow = static_cast<int_fast8_t>(0);
         }
 
-        u[j] = static_cast<limb_type>(t);
+        r[j] = static_cast<limb_type>(t);
       }
 
       return static_cast<signed_limb_type>(borrow);
@@ -2132,32 +2142,22 @@
       return static_cast<limb_type>(prev);
     }
 
-    static void mul_loop_karatsuba_n_by_n_to_2n(      limb_type*         r,
-                                                const limb_type*         a,
-                                                const limb_type*         b,
-                                                const std::uint_fast32_t count)
+    #if 0
+    static void eval_multiply_kara_propagate_carry(limb_type* t, const std::uint_fast32_t n, const limb_type carry)
     {
-      (void) r;
-      (void) a;
-      (void) b;
-      (void) count;
+      (void) t;
+      (void) n;
+      (void) carry;
     }
 
-    static void mul_loop_karatsuba_propagate_carry(limb_type* t, const std::uint_fast32_t n, const bool has_borrow)
+    static void eval_multiply_kara_propagate_borrow(limb_type* t, const std::uint_fast32_t n, const bool has_borrow)
     {
       (void) t;
       (void) n;
       (void) has_borrow;
     }
 
-    static void mul_loop_karatsuba_propagate_borrow(limb_type* t, const std::uint_fast32_t n, const bool has_borrow)
-    {
-      (void) t;
-      (void) n;
-      (void) has_borrow;
-    }
-
-    static void mul_loop_karatsuba_n_by_n_to_2n(      limb_type*         r,
+    static void eval_multiply_kara_n_by_n_to_2n(      limb_type*         r,
                                                 const limb_type*         a,
                                                 const limb_type*         b,
                                                 const std::uint_fast32_t n,
@@ -2170,14 +2170,15 @@
       (void) t;
     }
 
-    static void mul_loop_karatsuba(limb_type* const u, const limb_type* const v, const std::int32_t prec_elems_for_multiply)
+    static void mul_loop_karatsuba(limb_type* u, const limb_type* v, const std::int32_t prec_elems_for_multiply)
     {
       (void) u;
       (void) v;
       (void) prec_elems_for_multiply;
     }
+    #endif
 
-    static void mul_loop_fft(limb_type* const u, const limb_type* const v, const std::int32_t prec_elems_for_multiply)
+    static void mul_loop_fft(limb_type* u, const limb_type* v, const std::int32_t prec_elems_for_multiply)
     {
       // Determine the required FFT size n_fft,
       // where n_fft must be a power of two.
@@ -2286,7 +2287,7 @@
     void eval_mul_dispatch_multiplication_method(
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v,
       const std::int32_t prec_elems_for_multiply,
-      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number < decwide_t_elems_for_fft)>::type* = nullptr)
+      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number < decwide_t_elems_for_kara)>::type* = nullptr)
     {
       // Use school multiplication.
       constexpr std::int32_t local_decwide_t_elem_digits10 =
@@ -2312,18 +2313,16 @@
     void eval_mul_dispatch_multiplication_method(
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v,
       const std::int32_t prec_elems_for_multiply,
-      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number >= decwide_t_elems_for_fft)>::type* = nullptr)
+      const typename std::enable_if<(   (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number >= decwide_t_elems_for_kara)
+                                     && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number <  decwide_t_elems_for_fft))>::type* = nullptr)
     {
-      // Note: Karatsuba multiplication is not used for intermediate digit counts.
-      // TBD: Implement Karatsuba multiplication for intermediate digit counts.
-
       constexpr std::int32_t local_decwide_t_elem_digits10 =
         decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_digits10;
 
       constexpr std::int32_t local_decwide_t_elem_number =
         decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number;
 
-      if(prec_elems_for_multiply < decwide_t_elems_for_fft)
+      if(prec_elems_for_multiply < decwide_t_elems_for_kara)
       {
         // Use school multiplication.
         const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_elems_for_multiply);
@@ -2343,7 +2342,88 @@
       }
       else
       {
+        // Use Karatsuba multiplication multiplication.
+
+        // TBD: Temporarily use FFT-based multiplication.
+        // TBD: Implement Karatsuba multiplication for intermediate digit counts.
+
+        mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(prec_elems_for_multiply));
+
+        if(my_data.front() != static_cast<limb_type>(0U))
+        {
+          // Adjust the exponent because of the internal scaling of the FFT multiplication.
+          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+        }
+        else
+        {
+          // Justify the data if necessary.
+          std::copy(my_data.cbegin() +  1,
+                    my_data.cbegin() + (std::min)(local_decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
+                    my_data.begin());
+
+          my_data.back() = static_cast<limb_type>(0U);
+        }
+      }
+    }
+
+    template<const std::int32_t OtherDigits10>
+    void eval_mul_dispatch_multiplication_method(
+      const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v,
+      const std::int32_t prec_elems_for_multiply,
+      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number >= decwide_t_elems_for_fft)>::type* = nullptr)
+    {
+      constexpr std::int32_t local_decwide_t_elem_digits10 =
+        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_digits10;
+
+      constexpr std::int32_t local_decwide_t_elem_number =
+        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number;
+
+      if(prec_elems_for_multiply < decwide_t_elems_for_kara)
+      {
+        // Use school multiplication.
+        const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_elems_for_multiply);
+
+        // Handle a potential carry.
+        if(carry != static_cast<limb_type>(0U))
+        {
+          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+
+          // Shift the result of the multiplication one element to the right.
+          std::copy_backward(my_data.cbegin(),
+                             my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
+                             my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
+
+          my_data.front() = static_cast<limb_type>(carry);
+        }
+      }
+      else if(prec_elems_for_multiply < decwide_t_elems_for_fft)
+      {
+        // Use Karatsuba multiplication multiplication.
+
+        // TBD: Temporarily use FFT-based multiplication.
+        // TBD: Implement Karatsuba multiplication for intermediate digit counts.
+
+        mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(prec_elems_for_multiply));
+
+        if(my_data.front() != static_cast<limb_type>(0U))
+        {
+          // Adjust the exponent because of the internal scaling of the FFT multiplication.
+          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+        }
+        else
+        {
+          // Justify the data if necessary.
+          std::copy(my_data.cbegin() +  1,
+                    my_data.cbegin() + (std::min)(local_decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
+                    my_data.begin());
+
+          my_data.back() = static_cast<limb_type>(0U);
+        }
+      }
+      else
+      {
         // Use FFT-based multiplication.
+
         mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(prec_elems_for_multiply));
 
         if(my_data.front() != static_cast<limb_type>(0U))
@@ -3953,6 +4033,7 @@
     return result;
   }
 
+  bool example000_multiply_nines         ();
   bool example001_roots_sqrt             ();
   bool example001a_roots_seventh         ();
   bool example001b_roots_almost_integer  ();
