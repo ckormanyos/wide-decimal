@@ -510,8 +510,8 @@
 
     static constexpr std::int32_t decwide_t_elems_for_fft =
       ((std::is_same<limb_type, std::uint32_t>::value == true)
-        ? 256
-        : ((std::is_same<limb_type, std::uint16_t>::value == true) ? 128 : 16));
+        ? (256 + 1)
+        : ((std::is_same<limb_type, std::uint16_t>::value == true) ? (128 + 1) : (16 + 1)));
 
     typedef enum fpclass_type
     {
@@ -2286,7 +2286,7 @@
     void eval_mul_dispatch_multiplication_method(
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v,
       const std::int32_t prec_elems_for_multiply,
-      const typename std::enable_if<(decwide_t_elems_for_fft >= decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number)>::type* = nullptr)
+      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number < decwide_t_elems_for_fft)>::type* = nullptr)
     {
       // Use school multiplication.
       constexpr std::int32_t local_decwide_t_elem_digits10 =
@@ -2312,7 +2312,7 @@
     void eval_mul_dispatch_multiplication_method(
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& v,
       const std::int32_t prec_elems_for_multiply,
-      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number > decwide_t_elems_for_fft)>::type* = nullptr)
+      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number >= decwide_t_elems_for_fft)>::type* = nullptr)
     {
       // Note: Karatsuba multiplication is not used for intermediate digit counts.
       // TBD: Implement Karatsuba multiplication for intermediate digit counts.
