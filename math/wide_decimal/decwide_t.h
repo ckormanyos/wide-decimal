@@ -512,8 +512,8 @@
       ((std::is_same<limb_type, std::uint32_t>::value == true)
         ? static_cast<std::int32_t>(256 + 1)
         : ((std::is_same<limb_type, std::uint16_t>::value == true)
-          ? static_cast<std::int32_t>(128 + 1)
-          : static_cast<std::int32_t>( 12 + 1)));
+          ? static_cast<std::int32_t>(64 + 1)
+          : static_cast<std::int32_t>( 5 + 1)));
 
     static constexpr std::int32_t decwide_t_elems_for_fft = static_cast<std::int32_t>(2048 + 1);
 
@@ -2093,7 +2093,7 @@
       return static_cast<signed_limb_type>(borrow);
     }
 
-    static limb_type mul_loop_uv(limb_type* const u, const limb_type* const v, const std::int32_t p)
+    static limb_type mul_loop_uv(limb_type* u, const limb_type* v, const std::int32_t p)
     {
       double_limb_type carry = static_cast<double_limb_type>(0U);
 
@@ -2106,7 +2106,7 @@
           sum += static_cast<double_limb_type>(u[j - i] * static_cast<double_limb_type>(v[i]));
         }
 
-        u[j]  = static_cast<limb_type>(sum % static_cast<limb_type>(decwide_t_elem_mask));
+        u[j]  = static_cast<limb_type>       (sum % static_cast<limb_type>(decwide_t_elem_mask));
         carry = static_cast<double_limb_type>(sum / static_cast<limb_type>(decwide_t_elem_mask));
       }
 

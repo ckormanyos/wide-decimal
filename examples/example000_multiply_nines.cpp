@@ -14,7 +14,7 @@ bool math::wide_decimal::example000_multiply_nines()
 {
   using local_limb_type = std::uint8_t;
 
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(14);
+  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(4);
 
   using wide_decimal_type =
     math::wide_decimal::decwide_t<wide_decimal_digits10,
