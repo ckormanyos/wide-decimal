@@ -1936,6 +1936,7 @@
   private:
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
+    static limb_type      my_result_2n_mul_pool[(decwide_t_elems_for_kara - 1) * 2];
     static fft_float_type my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
     static array_type     my_n_data_for_add_sub;
     #endif
@@ -2119,11 +2120,13 @@
     }
     #endif
 
-    static void eval_multiply_n_by_n_to_2n(      limb_type*         r,
-                                           const limb_type*         a,
-                                           const limb_type*         b,
-                                           const std::uint_fast32_t count)
+    static void eval_multiply_n_by_n_to_2n(      limb_type*        r,
+                                           const limb_type*        a,
+                                           const limb_type*        b,
+                                           const std::int_fast32_t count)
     {
+      std::fill(r, r + (count * 2), limb_type(0));
+
       for(std::int_fast32_t i = count - 1; i >= 0; --i)
       {
         if(a[i] != limb_type(0U))
@@ -2329,29 +2332,35 @@
       constexpr std::int32_t local_decwide_t_elem_number =
         decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number;
 
-      using array_for_mul_result_type =
-        detail::fixed_static_array<limb_type, static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2)>;
+      #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+      limb_type* my_result_2n_mul_pool = new limb_type[prec_elems_for_multiply * 2];
+      #endif
 
-      array_for_mul_result_type result(static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2));
+      limb_type* result = my_result_2n_mul_pool;
 
-      eval_multiply_n_by_n_to_2n(result.data(), my_data.data(), v.my_data.data(), prec_elems_for_multiply);
+      eval_multiply_n_by_n_to_2n(result, my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
       // Handle a potential carry.
-      if(result.front() != static_cast<limb_type>(0U))
+      if(result[0U] != static_cast<limb_type>(0U))
       {
         my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
 
         // Shift the result of the multiplication one element to the right.
-        std::copy(result.cbegin(),
-                  result.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+        std::copy(result,
+                  result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
                   my_data.begin());
       }
       else
       {
-        std::copy(result.cbegin() + 1,
-                  result.cbegin() + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+        std::copy(result + 1,
+                  result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
                   my_data.begin());
       }
+
+      #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+      // De-allocate the dynamic memory for the FFT result arrays.
+      delete [] my_result_2n_mul_pool;
+      #endif
     }
 
     template<const std::int32_t OtherDigits10>
@@ -2370,29 +2379,35 @@
       if(prec_elems_for_multiply < decwide_t_elems_for_kara)
       {
         // Use school multiplication.
-        using array_for_mul_result_type =
-          detail::fixed_static_array<limb_type, static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2)>;
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        limb_type* my_result_2n_mul_pool = new limb_type[prec_elems_for_multiply * 2];
+        #endif
 
-        array_for_mul_result_type result(static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2));
+        limb_type* result = my_result_2n_mul_pool;
 
-        eval_multiply_n_by_n_to_2n(result.data(), my_data.data(), v.my_data.data(), prec_elems_for_multiply);
+        eval_multiply_n_by_n_to_2n(result, my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
         // Handle a potential carry.
-        if(result.front() != static_cast<limb_type>(0U))
+        if(result[0U] != static_cast<limb_type>(0U))
         {
           my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
 
           // Shift the result of the multiplication one element to the right.
-          std::copy(result.cbegin(),
-                    result.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+          std::copy(result,
+                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
                     my_data.begin());
         }
         else
         {
-          std::copy(result.cbegin() + 1,
-                    result.cbegin() + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+          std::copy(result + 1,
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
                     my_data.begin());
         }
+
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        // De-allocate the dynamic memory for the FFT result arrays.
+        delete [] my_result_2n_mul_pool;
+        #endif
       }
       else
       {
@@ -2435,29 +2450,35 @@
       if(prec_elems_for_multiply < decwide_t_elems_for_kara)
       {
         // Use school multiplication.
-        using array_for_mul_result_type =
-          detail::fixed_static_array<limb_type, static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2)>;
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        limb_type* my_result_2n_mul_pool = new limb_type[prec_elems_for_multiply * 2];
+        #endif
 
-        array_for_mul_result_type result(static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2));
+        limb_type* result = my_result_2n_mul_pool;
 
-        eval_multiply_n_by_n_to_2n(result.data(), my_data.data(), v.my_data.data(), prec_elems_for_multiply);
+        eval_multiply_n_by_n_to_2n(result, my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
         // Handle a potential carry.
-        if(result.front() != static_cast<limb_type>(0U))
+        if(result[0U] != static_cast<limb_type>(0U))
         {
           my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
 
           // Shift the result of the multiplication one element to the right.
-          std::copy(result.cbegin(),
-                    result.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+          std::copy(result,
+                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
                     my_data.begin());
         }
         else
         {
-          std::copy(result.cbegin() + 1,
-                    result.cbegin() + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+          std::copy(result + 1,
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
                     my_data.begin());
         }
+
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        // De-allocate the dynamic memory for the FFT result arrays.
+        delete [] my_result_2n_mul_pool;
+        #endif
       }
       else if(prec_elems_for_multiply < decwide_t_elems_for_fft)
       {
@@ -3240,6 +3261,9 @@
 
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
+  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::limb_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_result_2n_mul_pool[(decwide_t_elems_for_kara - 1) * 2];
+
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
   typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
 
