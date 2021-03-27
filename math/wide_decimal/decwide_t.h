@@ -508,14 +508,18 @@
                                                             std::int16_t,
                                                             std::int8_t>::type>::type;
 
-    static constexpr std::int32_t decwide_t_elems_for_kara =
+    #if 0
+    static constexpr std::int32_t decwide_t_elems_for_2n =
       ((std::is_same<limb_type, std::uint32_t>::value == true)
         ? static_cast<std::int32_t>(256 + 1)
         : ((std::is_same<limb_type, std::uint16_t>::value == true)
-          ? static_cast<std::int32_t>(128 + 1)
-          : static_cast<std::int32_t>( 18 + 1)));
+          ? static_cast<std::int32_t>(64 + 1)
+          : static_cast<std::int32_t>( 5 + 1)));
+    #endif
 
-    static constexpr std::int32_t decwide_t_elems_for_fft = static_cast<std::int32_t>(2048 + 1);
+    static constexpr std::int32_t decwide_t_elems_for_kara = static_cast<std::int32_t>( 256 + 1);
+
+    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(2048 + 1);
 
     typedef enum fpclass_type
     {
@@ -1336,7 +1340,7 @@
       return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>
       (
         {
-          (limb_type) detail::decwide_t_helper<MyDigits10, LimbType>::pow10_maker((std::uint32_t) ((std::int32_t) (INT32_C(1) + (std::int32_t) (((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10)) - decwide_t_digits10))
+          (limb_type) detail::pow10_maker((std::uint32_t) ((std::int32_t) (INT32_C(1) + (std::int32_t) (((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10)) - decwide_t_digits10))
         },
         -(exponent_type) (((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10)
       );
@@ -1932,7 +1936,7 @@
   private:
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
-    static fft_float_type my_af_bf_fft_mul_pool[detail::decwide_t_helper<MyDigits10, LimbType>::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
+    static fft_float_type my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
     static array_type     my_n_data_for_add_sub;
     #endif
 
@@ -2093,7 +2097,8 @@
       return static_cast<signed_limb_type>(borrow);
     }
 
-    static limb_type mul_loop_uv(limb_type* const u, const limb_type* const v, const std::int32_t p)
+    #if 0
+    static limb_type mul_loop_uv(limb_type* u, const limb_type* v, const std::int32_t p)
     {
       double_limb_type carry = static_cast<double_limb_type>(0U);
 
@@ -2106,11 +2111,39 @@
           sum += static_cast<double_limb_type>(u[j - i] * static_cast<double_limb_type>(v[i]));
         }
 
-        u[j]  = static_cast<limb_type>(sum % static_cast<limb_type>(decwide_t_elem_mask));
+        u[j]  = static_cast<limb_type>       (sum % static_cast<limb_type>(decwide_t_elem_mask));
         carry = static_cast<double_limb_type>(sum / static_cast<limb_type>(decwide_t_elem_mask));
       }
 
       return static_cast<limb_type>(carry);
+    }
+    #endif
+
+    static void eval_multiply_n_by_n_to_2n(      limb_type*         r,
+                                           const limb_type*         a,
+                                           const limb_type*         b,
+                                           const std::uint_fast32_t count)
+    {
+      for(std::int_fast32_t i = count - 1; i >= 0; --i)
+      {
+        if(a[i] != limb_type(0U))
+        {
+          std::int_fast32_t j = count - 1;
+
+          double_limb_type carry = 0U;
+
+          for( ; j >= 0; --j)
+          {
+            carry += double_limb_type(double_limb_type(a[i]) * b[j]);
+            carry += r[1 + i + j];
+
+            r[1 + i + j] = static_cast<limb_type>       (carry % static_cast<limb_type>(decwide_t_elem_mask));
+            carry        = static_cast<double_limb_type>(carry / static_cast<limb_type>(decwide_t_elem_mask));
+          }
+
+          r[1 + i + j] = limb_type(carry);
+        }
+      }
     }
 
     static limb_type mul_loop_n(limb_type* const u, limb_type n, const std::int32_t p)
@@ -2293,19 +2326,31 @@
       constexpr std::int32_t local_decwide_t_elem_digits10 =
         decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_digits10;
 
-      const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_elems_for_multiply);
+      constexpr std::int32_t local_decwide_t_elem_number =
+        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number;
+
+      using array_for_mul_result_type =
+        detail::fixed_static_array<limb_type, static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2)>;
+
+      array_for_mul_result_type result(static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2));
+
+      eval_multiply_n_by_n_to_2n(result.data(), my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
       // Handle a potential carry.
-      if(carry != static_cast<limb_type>(0U))
+      if(result.front() != static_cast<limb_type>(0U))
       {
         my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
 
         // Shift the result of the multiplication one element to the right.
-        std::copy_backward(my_data.cbegin(),
-                           my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
-                           my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
-
-        my_data.front() = static_cast<limb_type>(carry);
+        std::copy(result.cbegin(),
+                  result.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+                  my_data.begin());
+      }
+      else
+      {
+        std::copy(result.cbegin() + 1,
+                  result.cbegin() + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                  my_data.begin());
       }
     }
 
@@ -2325,19 +2370,28 @@
       if(prec_elems_for_multiply < decwide_t_elems_for_kara)
       {
         // Use school multiplication.
-        const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_elems_for_multiply);
+        using array_for_mul_result_type =
+          detail::fixed_static_array<limb_type, static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2)>;
+
+        array_for_mul_result_type result(static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2));
+
+        eval_multiply_n_by_n_to_2n(result.data(), my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
         // Handle a potential carry.
-        if(carry != static_cast<limb_type>(0U))
+        if(result.front() != static_cast<limb_type>(0U))
         {
           my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
 
           // Shift the result of the multiplication one element to the right.
-          std::copy_backward(my_data.cbegin(),
-                             my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
-                             my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
-
-          my_data.front() = static_cast<limb_type>(carry);
+          std::copy(result.cbegin(),
+                    result.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+                    my_data.begin());
+        }
+        else
+        {
+          std::copy(result.cbegin() + 1,
+                    result.cbegin() + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                    my_data.begin());
         }
       }
       else
@@ -2381,19 +2435,28 @@
       if(prec_elems_for_multiply < decwide_t_elems_for_kara)
       {
         // Use school multiplication.
-        const limb_type carry = mul_loop_uv(my_data.data(), v.my_data.data(), prec_elems_for_multiply);
+        using array_for_mul_result_type =
+          detail::fixed_static_array<limb_type, static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2)>;
+
+        array_for_mul_result_type result(static_cast<std::uint_fast32_t>((decwide_t_elems_for_kara - 1) * 2));
+
+        eval_multiply_n_by_n_to_2n(result.data(), my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
         // Handle a potential carry.
-        if(carry != static_cast<limb_type>(0U))
+        if(result.front() != static_cast<limb_type>(0U))
         {
           my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
 
           // Shift the result of the multiplication one element to the right.
-          std::copy_backward(my_data.cbegin(),
-                             my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
-                             my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
-
-          my_data.front() = static_cast<limb_type>(carry);
+          std::copy(result.cbegin(),
+                    result.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+                    my_data.begin());
+        }
+        else
+        {
+          std::copy(result.cbegin() + 1,
+                    result.cbegin() + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                    my_data.begin());
         }
       }
       else if(prec_elems_for_multiply < decwide_t_elems_for_fft)
@@ -3178,7 +3241,7 @@
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_af_bf_fft_mul_pool[detail::decwide_t_helper<MyDigits10, LimbType>::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
+  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
   typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::array_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_n_data_for_add_sub;
