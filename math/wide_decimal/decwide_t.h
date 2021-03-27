@@ -943,7 +943,7 @@
         // might have to be treated with a positive, negative or zero offset.
         if(       (ofs >  static_cast<std::int32_t>(0))
            || (   (ofs == static_cast<std::int32_t>(0))
-               && (cmp_data(v.my_data) > static_cast<std::int_fast8_t>(0))))
+               && (compare_ranges(my_data.data(), v.my_data.data(), decwide_t_elem_number) > static_cast<std::int_fast8_t>(0))))
         {
           // In this case, |u| > |v| and ofs is positive.
           // Copy the data of v, shifted down to a lower value
@@ -985,7 +985,7 @@
         }
 
         // Subtraction.
-        const signed_limb_type borrow = eval_sub_n(p_u, p_u, p_v, decwide_t_elem_number);
+        const signed_limb_type borrow = eval_subtract_n(p_u, p_u, p_v, decwide_t_elem_number);
 
         static_cast<void>(borrow);
 
@@ -1082,7 +1082,7 @@
       const bool u_and_v_are_identical =
         (   (my_fpclass == v.my_fpclass)
          && (my_exp     == v.my_exp)
-         && (cmp_data(v.my_data) == static_cast<std::int_fast8_t>(0)));
+         && (compare_ranges(my_data.data(), v.my_data.data(), decwide_t_elem_number) == static_cast<std::int_fast8_t>(0)));
 
       if(u_and_v_are_identical)
       {
@@ -1325,7 +1325,7 @@
         {
           // The signs are the same and the exponents are the same.
           // Compare the data.
-          const std::int_fast8_t val_cmp_data = cmp_data(v.my_data);
+          const std::int_fast8_t val_cmp_data = compare_ranges(my_data.data(), v.my_data.data(), decwide_t_elem_number);
 
           return ((!my_neg) ? val_cmp_data : static_cast<std::int_fast8_t>(-val_cmp_data));
         }
@@ -2015,21 +2015,20 @@
       my_neg = b_neg;
     }
 
-    std::int_fast8_t cmp_data(const array_type& vd) const
+    static std::int_fast8_t compare_ranges(const limb_type* a, const limb_type* b, const std::uint_fast32_t count)
     {
-      // Compare the data of *this with those of v.
-      //         Return +1 for *this > v
-      //                 0 for *this = v
-      //                -1 for *this < v
+      using local_const_iterator_type = const limb_type*;
 
+      local_const_iterator_type cbegin_a(a);
+      local_const_iterator_type cend_a  (a + count);
+      local_const_iterator_type cbegin_b(b);
+      local_const_iterator_type cend_b  (b + count);
 
-      // TBD: Here we could check the exact number of digits in the final limb to be more "exact".
-
-      const auto mismatch_pair = std::mismatch(my_data.cbegin(), my_data.cend(), vd.cbegin());
+      const auto mismatch_pair = std::mismatch(cbegin_a, cend_a, cbegin_b);
 
       std::int_fast8_t n_return;
 
-      if((mismatch_pair.first != my_data.cend()) || (mismatch_pair.second != vd.cend()))
+      if((mismatch_pair.first != cend_a) || (mismatch_pair.second != cend_b))
       {
         const limb_type left  = *mismatch_pair.first;
         const limb_type right = *mismatch_pair.second;
@@ -2067,10 +2066,10 @@
       return static_cast<limb_type>(carry);
     }
 
-    static signed_limb_type eval_sub_n(      limb_type*   r,
-                                       const limb_type*   u,
-                                       const limb_type*   v,
-                                       const std::int32_t count)
+    static signed_limb_type eval_subtract_n(      limb_type*   r,
+                                            const limb_type*   u,
+                                            const limb_type*   v,
+                                            const std::int32_t count)
     {
       // Subtraction algorithm
       std::int_fast8_t borrow = static_cast<std::int_fast8_t>(0);
@@ -2181,16 +2180,62 @@
     #if 0
     static void eval_multiply_kara_propagate_carry(limb_type* t, const std::uint_fast32_t n, const limb_type carry)
     {
-      (void) t;
-      (void) n;
-      (void) carry;
+      using local_reverse_iterator_type = std::reverse_iterator<limb_type*>;
+
+      std::uint_fast8_t carry_out = ((carry != 0U) ? static_cast<std::uint_fast8_t>(1U)
+                                                   : static_cast<std::uint_fast8_t>(0U));
+
+      local_reverse_iterator_type t_rbegin = local_reverse_iterator_type(t + n);
+      local_reverse_iterator_type t_rend   = local_reverse_iterator_type(t);
+
+      local_reverse_iterator_type it = t_rbegin;
+
+      while((it != t_rend) && (carry_out != 0U))
+      {
+        const double_limb_type tt = double_limb_type(*it) + carry_out;
+
+        carry_out = ((tt >= static_cast<limb_type>(decwide_t_elem_mask)) ? static_cast<std::uint_fast8_t>(1U)
+                                                                         : static_cast<std::uint_fast8_t>(0U));
+
+        *it  = static_cast<limb_type>(tt - ((carry_out != 0U) ? static_cast<limb_type>(decwide_t_elem_mask)
+                                                              : static_cast<limb_type>(0U)));
+
+        ++it;
+      }
     }
 
     static void eval_multiply_kara_propagate_borrow(limb_type* t, const std::uint_fast32_t n, const bool has_borrow)
     {
-      (void) t;
-      (void) n;
-      (void) has_borrow;
+      using local_reverse_iterator_type = std::reverse_iterator<limb_type*>;
+
+      std::int_fast8_t borrow = (has_borrow ? static_cast<std::int_fast8_t>(1)
+                                            : static_cast<std::int_fast8_t>(0));
+
+      local_reverse_iterator_type t_rbegin = local_reverse_iterator_type(t + n);
+      local_reverse_iterator_type t_rend   = local_reverse_iterator_type(t);
+
+      local_reverse_iterator_type it = t_rbegin;
+
+      while((it != t_rend) && (borrow == static_cast<std::int_fast8_t>(1)))
+      {
+        signed_limb_type tt = static_cast<signed_limb_type>(static_cast<signed_limb_type>(*it) - borrow);
+
+        // Underflow? Borrow?
+        if(tt < 0)
+        {
+          // Yes, underflow and borrow
+          tt    += static_cast<signed_limb_type>(decwide_t_elem_mask);
+          borrow = static_cast<int_fast8_t>(1);
+        }
+        else
+        {
+          borrow = static_cast<int_fast8_t>(0);
+        }
+
+        *it = static_cast<limb_type>(tt);
+
+        ++it;
+      }
     }
 
     static void eval_multiply_kara_n_by_n_to_2n(      limb_type*         r,
@@ -2199,18 +2244,128 @@
                                                 const std::uint_fast32_t n,
                                                       limb_type*         t)
     {
-      (void) r;
-      (void) a;
-      (void) b;
-      (void) n;
-      (void) t;
-    }
+      if(n <= 32U)
+      {
+        static_cast<void>(t);
 
-    static void mul_loop_karatsuba(limb_type* u, const limb_type* v, const std::int32_t prec_elems_for_multiply)
-    {
-      (void) u;
-      (void) v;
-      (void) prec_elems_for_multiply;
+        eval_multiply_n_by_n_to_2n(r, a, b, n);
+      }
+      else
+      {
+        // Based on "Algorithm 1.3 KaratsubaMultiply", Sect. 1.3.2, page 5
+        // of R.P. Brent and P. Zimmermann, "Modern Computer Arithmetic",
+        // Cambridge University Press (2011).
+
+        // The Karatsuba multipliation computes the product of u*v as:
+        // [b^N + b^(N/2)] a1*b1 + [b^(N/2)](a1 - a0)(b0 - b1) + [b^(N/2) + 1] a0*b0
+
+        // Here we visualize u and v in two components 0,1 corresponding
+        // to the high and low order parts, respectively.
+
+        // Step 1
+        // Calculate a1*b1 and store it in the upper part of r.
+        // Calculate a0*b0 and store it in the lower part of r.
+        // copy r to t0.
+
+        // Step 2
+        // Add a1*b1 (which is t2) to the middle two-quarters of r (which is r1)
+        // Add a0*b0 (which is t0) to the middle two-quarters of r (which is r1)
+
+        // Step 3
+        // Calculate |a1-a0| in t0 and note the sign (i.e., the borrow flag)
+
+        // Step 4
+        // Calculate |b0-b1| in t1 and note the sign (i.e., the borrow flag)
+
+        // Step 5
+        // Call kara mul to calculate |a1-a0|*|b0-b1| in (t2),
+        // while using temporary storage in t4 along the way.
+
+        // Step 6
+        // Check the borrow signs. If a1-a0 and b0-b1 have the same signs,
+        // then add |a1-a0|*|b0-b1| to r1, otherwise subtract it from r1.
+
+        const std::uint_fast32_t  nh = n / 2U;
+
+        const limb_type* a0 = a + 0U;
+        const limb_type* a1 = a + nh;
+
+        const limb_type* b0 = b + 0U;
+        const limb_type* b1 = b + nh;
+
+              limb_type* r0 = r + 0U;
+              limb_type* r1 = r + nh;
+              limb_type* r2 = r + n;
+              limb_type* r3 = r + (n + nh);
+
+              limb_type* t0 = t + 0U;
+              limb_type* t1 = t + nh;
+              limb_type* t2 = t + n;
+              limb_type* t4 = t + (n + n);
+
+        // Step 1
+        //   a1*b1 -> r2
+        //   a0*b0 -> r0
+        //   r -> t0
+        eval_multiply_kara_n_by_n_to_2n(r2, a1, b1, nh, t0);
+        eval_multiply_kara_n_by_n_to_2n(r0, a0, b0, nh, t0);
+        std::copy(r0, r0 + (2U * n), t0);
+
+        // Step 2
+        //   r1 += a1*b1
+        //   r1 += a0*b0
+        limb_type carry;
+        carry = eval_add_n(r1, r1, t2, n);
+        eval_multiply_kara_propagate_carry(r3, nh, carry);
+        carry = eval_add_n(r1, r1, t0, n);
+        eval_multiply_kara_propagate_carry(r3, nh, carry);
+
+        // Step 3
+        //   |a1-a0| -> t0
+        const std::int_fast8_t cmp_result_a1a0 = compare_ranges(a1, a0, nh);
+
+        if(cmp_result_a1a0 == 1)
+        {
+          static_cast<void>(eval_subtract_n(t0, a1, a0, nh));
+        }
+        else if(cmp_result_a1a0 == -1)
+        {
+          static_cast<void>(eval_subtract_n(t0, a0, a1, nh));
+        }
+
+        // Step 4
+        //   |b0-b1| -> t1
+        const std::int_fast8_t cmp_result_b0b1 = compare_ranges(b0, b1, nh);
+
+        if(cmp_result_b0b1 == 1)
+        {
+          static_cast<void>(eval_subtract_n(t1, b0, b1, nh));
+        }
+        else if(cmp_result_b0b1 == -1)
+        {
+          static_cast<void>(eval_subtract_n(t1, b1, b0, nh));
+        }
+
+        // Step 5
+        //   |a1-a0|*|b0-b1| -> t2
+        eval_multiply_kara_n_by_n_to_2n(t2, t0, t1, nh, t4);
+
+        // Step 6
+        //   either r1 += |a1-a0|*|b0-b1|
+        //   or     r1 -= |a1-a0|*|b0-b1|
+        if((cmp_result_a1a0 * cmp_result_b0b1) == 1)
+        {
+          carry = eval_add_n(r1, r1, t2, n);
+
+          eval_multiply_kara_propagate_carry(r3, nh, carry);
+        }
+        else if((cmp_result_a1a0 * cmp_result_b0b1) == -1)
+        {
+          const bool has_borrow = eval_subtract_n(r1, r1, t2, n);
+
+          eval_multiply_kara_propagate_borrow(r3, nh, has_borrow);
+        }
+      }
     }
     #endif
 
@@ -2411,8 +2566,46 @@
       }
       else
       {
-        // Use Karatsuba multiplication multiplication.
+        #if 0
+        // Karatsuba multiplication.
 
+        // TBD: Can use specialized allocator or memory pool for these arrays.
+        const std::uint_fast32_t kara_elems_for_multiply =
+          detail::pow2_maker_of_upper_limit(static_cast<std::uint32_t>(prec_elems_for_multiply));
+
+        limb_type* result = new limb_type[kara_elems_for_multiply * 2];
+        limb_type* t      = new limb_type[kara_elems_for_multiply * 4];
+
+        std::fill(result, result + kara_elems_for_multiply * 2, limb_type(0U));
+        std::fill(t,      t      + kara_elems_for_multiply * 4, limb_type(0U));
+
+        eval_multiply_kara_n_by_n_to_2n(result,
+                                        my_data.data(),
+                                        v.my_data.data(),
+                                        kara_elems_for_multiply,
+                                        t);
+
+        delete[] t;
+
+        // Handle a potential carry.
+        if(result[0U] != static_cast<limb_type>(0U))
+        {
+          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+
+          // Shift the result of the multiplication one element to the right.
+          std::copy(result,
+                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+                    my_data.begin());
+        }
+        else
+        {
+          std::copy(result + 1,
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                    my_data.begin());
+        }
+
+        delete[] result;
+        #endif
         // TBD: Temporarily use FFT-based multiplication.
         // TBD: Implement Karatsuba multiplication for intermediate digit counts.
 
