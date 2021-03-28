@@ -20,25 +20,21 @@
   #include <algorithm>
   #include <cmath>
   #include <cstddef>
-  #include <cstdint>
   #include <limits>
-  #include <initializer_list>
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   #include <iomanip>
   #include <iostream>
   #include <sstream>
   #endif
-  #include <memory>
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
   #include <string>
   #endif
   #include <type_traits>
 
+  #include <math/wide_decimal/decwide_t_detail.h>
   #include <math/wide_decimal/decwide_t_detail_fft.h>
-  #include <math/wide_decimal/decwide_t_detail_helper.h>
 
   #include <util/utility/util_baselexical_cast.h>
-  #include <util/utility/util_dynamic_array.h>
 
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
   #include <util/utility/util_numeric_cast.h>
@@ -53,149 +49,6 @@
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t>
   class decwide_t;
-
-  namespace detail {
-
-  template <typename MyType,
-            const std::uint_fast32_t MySize,
-            typename MyAlloc>
-  class fixed_dynamic_array final : public util::dynamic_array<MyType, MyAlloc>
-  {
-  private:
-    using base_class_type = util::dynamic_array<MyType, MyAlloc>;
-
-  public:
-    constexpr fixed_dynamic_array()
-      : base_class_type(MySize) { }
-
-    fixed_dynamic_array(const typename base_class_type::size_type       s,
-                        const typename base_class_type::value_type&     v = typename base_class_type::value_type(),
-                        const typename base_class_type::allocator_type& a = typename base_class_type::allocator_type())
-      : base_class_type(MySize, typename base_class_type::value_type(), a)
-    {
-      std::fill(base_class_type::begin(),
-                base_class_type::begin() + (std::min)(MySize, (std::uint_fast32_t) s),
-                v);
-    }
-
-    constexpr fixed_dynamic_array(const fixed_dynamic_array& other_array)
-      : base_class_type((const base_class_type&) other_array) { }
-
-    explicit fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
-      : base_class_type(MySize)
-    {
-      std::copy(lst.begin(),
-                lst.begin() + (std::min)((std::uint_fast32_t) lst.size(), MySize),
-                base_class_type::begin());
-    }
-
-    constexpr fixed_dynamic_array(fixed_dynamic_array&& other_array)
-      : base_class_type((base_class_type&&) other_array) { }
-
-    fixed_dynamic_array& operator=(const fixed_dynamic_array& other_array)
-    {
-      base_class_type::operator=((const base_class_type&) other_array);
-
-      return *this;
-    }
-
-    fixed_dynamic_array& operator=(fixed_dynamic_array&& other_array)
-    {
-      base_class_type::operator=((base_class_type&&) other_array);
-
-      return *this;
-    }
-
-    virtual ~fixed_dynamic_array() { }
-
-    static constexpr typename base_class_type::size_type static_size()
-    {
-      return MySize;
-    }
-  };
-
-  template<typename MyType,
-           const std::uint_fast32_t MySize>
-  class fixed_static_array final : public std::array<MyType, MySize>
-  {
-  private:
-    using base_class_type = std::array<MyType, MySize>;
-
-  public:
-    fixed_static_array() { }
-
-    fixed_static_array(const typename base_class_type::size_type   s,
-                       const typename base_class_type::value_type& v = typename base_class_type::value_type())
-    {
-      std::fill(base_class_type::begin(),
-                base_class_type::begin() + (std::min)(MySize, (std::uint_fast32_t) s),
-                v);
-
-      std::fill(base_class_type::begin() + (std::min)(MySize, (std::uint_fast32_t) s),
-                base_class_type::end(),
-                typename base_class_type::value_type());
-    }
-
-    constexpr fixed_static_array(const fixed_static_array& other_array)
-      : base_class_type(static_cast<const base_class_type&>(other_array)) { }
-
-    template<const std::uint_fast32_t OtherSize>
-    fixed_static_array(const fixed_static_array<std::uint_fast32_t, OtherSize>& other_array)
-    {
-      std::copy(other_array.cbegin(),
-                other_array.cbegin() + (std::min)(OtherSize, MySize),
-                base_class_type::begin());
-
-      std::fill(base_class_type::begin() + (std::min)(OtherSize, MySize),
-                base_class_type::end(),
-                typename base_class_type::value_type());
-    }
-
-    explicit fixed_static_array(std::initializer_list<typename base_class_type::value_type> lst)
-    {
-      std::copy(lst.begin(),
-                lst.begin() + (std::min)((std::uint_fast32_t) lst.size(), MySize),
-                base_class_type::begin());
-
-      std::fill(base_class_type::begin() + (std::min)((std::uint_fast32_t) lst.size(), MySize),
-                base_class_type::end(),
-                typename base_class_type::value_type());
-    }
-
-    constexpr fixed_static_array(fixed_static_array&& other_array)
-      : base_class_type(static_cast<base_class_type&&>(other_array)) { }
-
-    fixed_static_array& operator=(const fixed_static_array& other_array)
-    {
-      base_class_type::operator=((const base_class_type&) other_array);
-
-      return *this;
-    }
-
-    fixed_static_array& operator=(fixed_static_array&& other_array)
-    {
-      base_class_type::operator=((base_class_type&&) other_array);
-
-      return *this;
-    }
-
-    ~fixed_static_array() { }
-
-    static constexpr typename base_class_type::size_type static_size()
-    {
-      return MySize;
-    }
-  };
-
-  typedef enum enum_os_float_field_type
-  {
-    os_float_field_scientific,
-    os_float_field_fixed,
-    os_float_field_none
-  }
-  os_float_field_type;
-
-  } // namespace math::wide_decimal::detail
 
   // Forward declarations of various decwide_t namespace functions.
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType> zero();
