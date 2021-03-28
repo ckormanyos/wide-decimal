@@ -36,7 +36,6 @@
 
   #include <math/wide_decimal/decwide_t_detail_fft.h>
   #include <math/wide_decimal/decwide_t_detail_helper.h>
-  #include <math/wide_decimal/decwide_t_detail_karatsuba.h>
 
   #include <util/utility/util_baselexical_cast.h>
   #include <util/utility/util_dynamic_array.h>
@@ -519,7 +518,7 @@
 
     static constexpr std::int32_t decwide_t_elems_for_kara = static_cast<std::int32_t>(  64 + 1);
 
-    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(1280 + 1);
+    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(1024 + 1);
 
     typedef enum fpclass_type
     {
@@ -1936,7 +1935,8 @@
   private:
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
-    static limb_type      my_result_2n_mul_pool[(decwide_t_elems_for_kara - 1) * 2];
+    static limb_type      my_school_mul_pool[(decwide_t_elems_for_kara - 1) * 2];
+    static limb_type      my_kara_mul_pool     [detail::a029747_maker_of_upper_limit(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL];
     static fft_float_type my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
     static array_type     my_n_data_for_add_sub;
     #endif
@@ -2467,10 +2467,10 @@
         decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number;
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      limb_type* my_result_2n_mul_pool = new limb_type[prec_elems_for_multiply * 2];
+      limb_type* my_school_mul_pool = new limb_type[prec_elems_for_multiply * 2];
       #endif
 
-      limb_type* result = my_result_2n_mul_pool;
+      limb_type* result = my_school_mul_pool;
 
       eval_multiply_n_by_n_to_2n(result, my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
@@ -2492,8 +2492,8 @@
       }
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      // De-allocate the dynamic memory for the FFT result arrays.
-      delete [] my_result_2n_mul_pool;
+      // De-allocate the dynamic memory for school multiplication arrays.
+      delete [] my_school_mul_pool;
       #endif
     }
 
@@ -2514,10 +2514,10 @@
       {
         // Use school multiplication.
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        limb_type* my_result_2n_mul_pool = new limb_type[prec_elems_for_multiply * 2];
+        limb_type* my_school_mul_pool = new limb_type[prec_elems_for_multiply * 2];
         #endif
 
-        limb_type* result = my_result_2n_mul_pool;
+        limb_type* result = my_school_mul_pool;
 
         eval_multiply_n_by_n_to_2n(result, my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
@@ -2539,48 +2539,26 @@
         }
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        // De-allocate the dynamic memory for the FFT result arrays.
-        delete [] my_result_2n_mul_pool;
+        // De-allocate the dynamic memory for the school multiplication arrays.
+        delete [] my_school_mul_pool;
         #endif
       }
       else
       {
-        #if 1
         // Karatsuba multiplication.
 
-        // Sloanes's A029747
-        // Numbers of the form 2^k times 1, 3 or 5.
-        constexpr std::array<std::uint32_t, 48> sloanes_a029747
-        {{
-              1L,     2L,     3L,     4L,     5L,     6L,     8L,    10L,
-             12L,    16L,    20L,    24L,    32L,    40L,    48L,    64L,
-             80L,    96L,   128L,   160L,   192L,   256L,   320L,   384L,
-            512L,   640L,   768L,  1024L,  1280L,  1536L,  2048L,  2560L,
-           3072L,  4096L,  5120L,  6144L,  8192L, 10240L, 12288L, 16384L,
-          20480L, 24576L, 32768L, 40960L, 49152L, 65536L, 81920L, 98304L
-        }};
+        // Sloanes's A029747: Numbers of the form 2^k times 1, 3 or 5.
+        const std::uint32_t kara_elems_for_multiply =
+          detail::a029747_maker_of_upper_limit(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
-        std::uint_fast32_t kara_elems_for_multiply;
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        limb_type* my_kara_mul_pool = new limb_type[kara_elems_for_multiply * 8U];
+        #endif
 
-        for(unsigned i = 0U; i < sloanes_a029747.size(); ++i)
-        {
-          kara_elems_for_multiply = sloanes_a029747[i];
-
-          if(kara_elems_for_multiply >= static_cast<std::uint32_t>(prec_elems_for_multiply))
-          {
-            break;
-          }
-        }
-
-        // TBD: Can use specialized allocator or memory pool for these arrays.
-
-        limb_type* result  = new limb_type[kara_elems_for_multiply * 2];
-        limb_type* t       = new limb_type[kara_elems_for_multiply * 4];
-        limb_type* u_local = new limb_type[kara_elems_for_multiply];
-        limb_type* v_local = new limb_type[kara_elems_for_multiply];
-
-        std::fill(result,  result  + kara_elems_for_multiply * 2, limb_type(0U));
-        std::fill(t,       t       + kara_elems_for_multiply * 4, limb_type(0U));
+        limb_type* result  = my_kara_mul_pool + (kara_elems_for_multiply * 0U);
+        limb_type* t       = my_kara_mul_pool + (kara_elems_for_multiply * 2U);
+        limb_type* u_local = my_kara_mul_pool + (kara_elems_for_multiply * 6U);
+        limb_type* v_local = my_kara_mul_pool + (kara_elems_for_multiply * 7U);
 
         std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
@@ -2592,10 +2570,6 @@
                                         v_local,
                                         kara_elems_for_multiply,
                                         t);
-
-        delete[] t;
-        delete[] u_local;
-        delete[] v_local;
 
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U))
@@ -2614,27 +2588,9 @@
                     my_data.begin());
         }
 
-        delete[] result;
-        #else
-        // TBD: Temporarily use FFT-based multiplication.
-        // TBD: Implement Karatsuba multiplication for intermediate digit counts.
-
-        mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(prec_elems_for_multiply));
-
-        if(my_data.front() != static_cast<limb_type>(0U))
-        {
-          // Adjust the exponent because of the internal scaling of the FFT multiplication.
-          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
-        }
-        else
-        {
-          // Justify the data if necessary.
-          std::copy(my_data.cbegin() +  1,
-                    my_data.cbegin() + (std::min)(local_decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
-                    my_data.begin());
-
-          my_data.back() = static_cast<limb_type>(0U);
-        }
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        // De-allocate the dynamic memory for the Karatsuba multiplication arrays.
+        delete [] my_kara_mul_pool;
         #endif
       }
     }
@@ -2655,10 +2611,10 @@
       {
         // Use school multiplication.
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        limb_type* my_result_2n_mul_pool = new limb_type[prec_elems_for_multiply * 2];
+        limb_type* my_school_mul_pool = new limb_type[prec_elems_for_multiply * 2];
         #endif
 
-        limb_type* result = my_result_2n_mul_pool;
+        limb_type* result = my_school_mul_pool;
 
         eval_multiply_n_by_n_to_2n(result, my_data.data(), v.my_data.data(), prec_elems_for_multiply);
 
@@ -2680,52 +2636,26 @@
         }
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        // De-allocate the dynamic memory for the FFT result arrays.
-        delete [] my_result_2n_mul_pool;
+        // De-allocate the dynamic memory for the school multiplication arrays.
+        delete [] my_school_mul_pool;
         #endif
       }
       else if(prec_elems_for_multiply < decwide_t_elems_for_fft)
       {
         // Use Karatsuba multiplication multiplication.
 
-        #if 1
+        // Sloanes's A029747: Numbers of the form 2^k times 1, 3 or 5.
+        const std::uint32_t kara_elems_for_multiply =
+          detail::a029747_maker_of_upper_limit(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
-        // Sloanes's A029747
-        // Numbers of the form 2^k times 1, 3 or 5.
-        constexpr std::array<std::uint32_t, 48> sloanes_a029747
-        {{
-              1L,     2L,     3L,     4L,     5L,     6L,     8L,    10L,
-             12L,    16L,    20L,    24L,    32L,    40L,    48L,    64L,
-             80L,    96L,   128L,   160L,   192L,   256L,   320L,   384L,
-            512L,   640L,   768L,  1024L,  1280L,  1536L,  2048L,  2560L,
-           3072L,  4096L,  5120L,  6144L,  8192L, 10240L, 12288L, 16384L,
-          20480L, 24576L, 32768L, 40960L, 49152L, 65536L, 81920L, 98304L
-        }};
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        limb_type* my_kara_mul_pool = new limb_type[kara_elems_for_multiply * 8U];
+        #endif
 
-        std::uint_fast32_t kara_elems_for_multiply;
-
-        for(unsigned i = 0U; i < sloanes_a029747.size(); ++i)
-        {
-          kara_elems_for_multiply = sloanes_a029747[i];
-
-          if(kara_elems_for_multiply >= static_cast<std::uint32_t>(prec_elems_for_multiply))
-          {
-            break;
-          }
-        }
-
-        // TBD: Can use specialized allocator or memory pool for these arrays.
-
-        //const std::uint_fast32_t kara_elems_for_multiply =
-        //  detail::pow2_maker_of_upper_limit(static_cast<std::uint32_t>(prec_elems_for_multiply));
-
-        limb_type* result  = new limb_type[kara_elems_for_multiply * 2];
-        limb_type* t       = new limb_type[kara_elems_for_multiply * 4];
-        limb_type* u_local = new limb_type[kara_elems_for_multiply];
-        limb_type* v_local = new limb_type[kara_elems_for_multiply];
-
-        std::fill(result,  result  + kara_elems_for_multiply * 2, limb_type(0U));
-        std::fill(t,       t       + kara_elems_for_multiply * 4, limb_type(0U));
+        limb_type* result  = my_kara_mul_pool + (kara_elems_for_multiply * 0U);
+        limb_type* t       = my_kara_mul_pool + (kara_elems_for_multiply * 2U);
+        limb_type* u_local = my_kara_mul_pool + (kara_elems_for_multiply * 6U);
+        limb_type* v_local = my_kara_mul_pool + (kara_elems_for_multiply * 7U);
 
         std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
@@ -2737,10 +2667,6 @@
                                         v_local,
                                         kara_elems_for_multiply,
                                         t);
-
-        delete[] t;
-        delete[] u_local;
-        delete[] v_local;
 
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U))
@@ -2759,27 +2685,9 @@
                     my_data.begin());
         }
 
-        delete[] result;
-        #else
-        // TBD: Temporarily use FFT-based multiplication.
-        // TBD: Implement Karatsuba multiplication for intermediate digit counts.
-
-        mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(prec_elems_for_multiply));
-
-        if(my_data.front() != static_cast<limb_type>(0U))
-        {
-          // Adjust the exponent because of the internal scaling of the FFT multiplication.
-          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
-        }
-        else
-        {
-          // Justify the data if necessary.
-          std::copy(my_data.cbegin() +  1,
-                    my_data.cbegin() + (std::min)(local_decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
-                    my_data.begin());
-
-          my_data.back() = static_cast<limb_type>(0U);
-        }
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        // De-allocate the dynamic memory for the Karatsuba multiplication arrays.
+        delete [] my_kara_mul_pool;
         #endif
       }
       else
@@ -3540,7 +3448,10 @@
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::limb_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_result_2n_mul_pool[(decwide_t_elems_for_kara - 1) * 2];
+  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::limb_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_school_mul_pool[(decwide_t_elems_for_kara - 1) * 2];
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
+  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::limb_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_kara_mul_pool[detail::a029747_maker_of_upper_limit(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8];
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
   typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
