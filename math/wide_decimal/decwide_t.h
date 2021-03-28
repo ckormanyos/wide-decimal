@@ -517,9 +517,9 @@
           : static_cast<std::int32_t>( 5 + 1)));
     #endif
 
-    static constexpr std::int32_t decwide_t_elems_for_kara = static_cast<std::int32_t>( 256 + 1);
+    static constexpr std::int32_t decwide_t_elems_for_kara = static_cast<std::int32_t>(  64 + 1);
 
-    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(2048 + 1);
+    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(1280 + 1);
 
     typedef enum fpclass_type
     {
@@ -2177,48 +2177,31 @@
       return static_cast<limb_type>(prev);
     }
 
-    #if 0
     static void eval_multiply_kara_propagate_carry(limb_type* t, const std::uint_fast32_t n, const limb_type carry)
     {
-      using local_reverse_iterator_type = std::reverse_iterator<limb_type*>;
-
       std::uint_fast8_t carry_out = ((carry != 0U) ? static_cast<std::uint_fast8_t>(1U)
                                                    : static_cast<std::uint_fast8_t>(0U));
 
-      local_reverse_iterator_type t_rbegin = local_reverse_iterator_type(t + n);
-      local_reverse_iterator_type t_rend   = local_reverse_iterator_type(t);
-
-      local_reverse_iterator_type it = t_rbegin;
-
-      while((it != t_rend) && (carry_out != 0U))
+      for(std::int32_t i = static_cast<std::int32_t>(n - 1U); ((i >= 0) && (carry_out != 0U)); --i)
       {
-        const double_limb_type tt = double_limb_type(*it) + carry_out;
+        const double_limb_type tt = t[i] + carry_out;
 
         carry_out = ((tt >= static_cast<limb_type>(decwide_t_elem_mask)) ? static_cast<std::uint_fast8_t>(1U)
                                                                          : static_cast<std::uint_fast8_t>(0U));
 
-        *it  = static_cast<limb_type>(tt - ((carry_out != 0U) ? static_cast<limb_type>(decwide_t_elem_mask)
-                                                              : static_cast<limb_type>(0U)));
-
-        ++it;
+        t[i]  = static_cast<limb_type>(tt - ((carry_out != 0U) ? static_cast<limb_type>(decwide_t_elem_mask)
+                                                               : static_cast<limb_type>(0U)));
       }
     }
 
     static void eval_multiply_kara_propagate_borrow(limb_type* t, const std::uint_fast32_t n, const bool has_borrow)
     {
-      using local_reverse_iterator_type = std::reverse_iterator<limb_type*>;
-
       std::int_fast8_t borrow = (has_borrow ? static_cast<std::int_fast8_t>(1)
                                             : static_cast<std::int_fast8_t>(0));
 
-      local_reverse_iterator_type t_rbegin = local_reverse_iterator_type(t + n);
-      local_reverse_iterator_type t_rend   = local_reverse_iterator_type(t);
-
-      local_reverse_iterator_type it = t_rbegin;
-
-      while((it != t_rend) && (borrow == static_cast<std::int_fast8_t>(1)))
+      for(std::int32_t i = static_cast<std::int32_t>(n - 1U); ((i >= 0) && (borrow != 0)); --i)
       {
-        signed_limb_type tt = static_cast<signed_limb_type>(static_cast<signed_limb_type>(*it) - borrow);
+        signed_limb_type tt = static_cast<signed_limb_type>(static_cast<signed_limb_type>(t[i]) - borrow);
 
         // Underflow? Borrow?
         if(tt < 0)
@@ -2232,23 +2215,21 @@
           borrow = static_cast<int_fast8_t>(0);
         }
 
-        *it = static_cast<limb_type>(tt);
-
-        ++it;
+        t[i] = static_cast<limb_type>(tt);
       }
     }
 
     static void eval_multiply_kara_n_by_n_to_2n(      limb_type*         r,
-                                                const limb_type*         a,
-                                                const limb_type*         b,
+                                                const limb_type*         u,
+                                                const limb_type*         v,
                                                 const std::uint_fast32_t n,
                                                       limb_type*         t)
     {
-      if(n <= 32U)
+      if(n <= 16U)
       {
         static_cast<void>(t);
 
-        eval_multiply_n_by_n_to_2n(r, a, b, n);
+        eval_multiply_n_by_n_to_2n(r, u, v, n);
       }
       else
       {
@@ -2287,16 +2268,15 @@
 
         const std::uint_fast32_t  nh = n / 2U;
 
-        const limb_type* a0 = a + 0U;
-        const limb_type* a1 = a + nh;
+        const limb_type* u0 = u + nh;
+        const limb_type* u1 = u + 0U;
 
-        const limb_type* b0 = b + 0U;
-        const limb_type* b1 = b + nh;
+        const limb_type* v0 = v + nh;
+        const limb_type* v1 = v + 0U;
 
               limb_type* r0 = r + 0U;
               limb_type* r1 = r + nh;
               limb_type* r2 = r + n;
-              limb_type* r3 = r + (n + nh);
 
               limb_type* t0 = t + 0U;
               limb_type* t1 = t + nh;
@@ -2304,46 +2284,46 @@
               limb_type* t4 = t + (n + n);
 
         // Step 1
-        //   a1*b1 -> r2
-        //   a0*b0 -> r0
+        //   a1*b1 -> r0
+        //   a0*b0 -> r2
         //   r -> t0
-        eval_multiply_kara_n_by_n_to_2n(r2, a1, b1, nh, t0);
-        eval_multiply_kara_n_by_n_to_2n(r0, a0, b0, nh, t0);
+        eval_multiply_kara_n_by_n_to_2n(r0, u1, v1, nh, t);
+        eval_multiply_kara_n_by_n_to_2n(r2, u0, v0, nh, t);
         std::copy(r0, r0 + (2U * n), t0);
 
         // Step 2
         //   r1 += a1*b1
         //   r1 += a0*b0
         limb_type carry;
-        carry = eval_add_n(r1, r1, t2, n);
-        eval_multiply_kara_propagate_carry(r3, nh, carry);
         carry = eval_add_n(r1, r1, t0, n);
-        eval_multiply_kara_propagate_carry(r3, nh, carry);
+        eval_multiply_kara_propagate_carry(r0, nh, carry);
+        carry = eval_add_n(r1, r1, t2, n);
+        eval_multiply_kara_propagate_carry(r0, nh, carry);
 
         // Step 3
         //   |a1-a0| -> t0
-        const std::int_fast8_t cmp_result_a1a0 = compare_ranges(a1, a0, nh);
+        const std::int_fast8_t cmp_result_u1u0 = compare_ranges(u1, u0, nh);
 
-        if(cmp_result_a1a0 == 1)
+        if(cmp_result_u1u0 == 1)
         {
-          static_cast<void>(eval_subtract_n(t0, a1, a0, nh));
+          static_cast<void>(eval_subtract_n(t0, u1, u0, nh));
         }
-        else if(cmp_result_a1a0 == -1)
+        else if(cmp_result_u1u0 == -1)
         {
-          static_cast<void>(eval_subtract_n(t0, a0, a1, nh));
+          static_cast<void>(eval_subtract_n(t0, u0, u1, nh));
         }
 
         // Step 4
         //   |b0-b1| -> t1
-        const std::int_fast8_t cmp_result_b0b1 = compare_ranges(b0, b1, nh);
+        const std::int_fast8_t cmp_result_v0v1 = compare_ranges(v0, v1, nh);
 
-        if(cmp_result_b0b1 == 1)
+        if(cmp_result_v0v1 == 1)
         {
-          static_cast<void>(eval_subtract_n(t1, b0, b1, nh));
+          static_cast<void>(eval_subtract_n(t1, v0, v1, nh));
         }
-        else if(cmp_result_b0b1 == -1)
+        else if(cmp_result_v0v1 == -1)
         {
-          static_cast<void>(eval_subtract_n(t1, b1, b0, nh));
+          static_cast<void>(eval_subtract_n(t1, v1, v0, nh));
         }
 
         // Step 5
@@ -2353,21 +2333,20 @@
         // Step 6
         //   either r1 += |a1-a0|*|b0-b1|
         //   or     r1 -= |a1-a0|*|b0-b1|
-        if((cmp_result_a1a0 * cmp_result_b0b1) == 1)
+        if((cmp_result_u1u0 * cmp_result_v0v1) == 1)
         {
           carry = eval_add_n(r1, r1, t2, n);
 
-          eval_multiply_kara_propagate_carry(r3, nh, carry);
+          eval_multiply_kara_propagate_carry(r0, nh, carry);
         }
-        else if((cmp_result_a1a0 * cmp_result_b0b1) == -1)
+        else if((cmp_result_u1u0 * cmp_result_v0v1) == -1)
         {
           const bool has_borrow = eval_subtract_n(r1, r1, t2, n);
 
-          eval_multiply_kara_propagate_borrow(r3, nh, has_borrow);
+          eval_multiply_kara_propagate_borrow(r0, nh, has_borrow);
         }
       }
     }
-    #endif
 
     static void mul_loop_fft(limb_type* u, const limb_type* v, const std::int32_t prec_elems_for_multiply)
     {
@@ -2566,26 +2545,57 @@
       }
       else
       {
-        #if 0
+        #if 1
         // Karatsuba multiplication.
 
+        // Sloanes's A029747
+        // Numbers of the form 2^k times 1, 3 or 5.
+        constexpr std::array<std::uint32_t, 48> sloanes_a029747
+        {{
+              1L,     2L,     3L,     4L,     5L,     6L,     8L,    10L,
+             12L,    16L,    20L,    24L,    32L,    40L,    48L,    64L,
+             80L,    96L,   128L,   160L,   192L,   256L,   320L,   384L,
+            512L,   640L,   768L,  1024L,  1280L,  1536L,  2048L,  2560L,
+           3072L,  4096L,  5120L,  6144L,  8192L, 10240L, 12288L, 16384L,
+          20480L, 24576L, 32768L, 40960L, 49152L, 65536L, 81920L, 98304L
+        }};
+
+        std::uint_fast32_t kara_elems_for_multiply;
+
+        for(unsigned i = 0U; i < sloanes_a029747.size(); ++i)
+        {
+          kara_elems_for_multiply = sloanes_a029747[i];
+
+          if(kara_elems_for_multiply >= static_cast<std::uint32_t>(prec_elems_for_multiply))
+          {
+            break;
+          }
+        }
+
         // TBD: Can use specialized allocator or memory pool for these arrays.
-        const std::uint_fast32_t kara_elems_for_multiply =
-          detail::pow2_maker_of_upper_limit(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
-        limb_type* result = new limb_type[kara_elems_for_multiply * 2];
-        limb_type* t      = new limb_type[kara_elems_for_multiply * 4];
+        limb_type* result  = new limb_type[kara_elems_for_multiply * 2];
+        limb_type* t       = new limb_type[kara_elems_for_multiply * 4];
+        limb_type* u_local = new limb_type[kara_elems_for_multiply];
+        limb_type* v_local = new limb_type[kara_elems_for_multiply];
 
-        std::fill(result, result + kara_elems_for_multiply * 2, limb_type(0U));
-        std::fill(t,      t      + kara_elems_for_multiply * 4, limb_type(0U));
+        std::fill(result,  result  + kara_elems_for_multiply * 2, limb_type(0U));
+        std::fill(t,       t       + kara_elems_for_multiply * 4, limb_type(0U));
+
+        std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
+        std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
+        std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply * 1, limb_type(0U));
+        std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply * 1, limb_type(0U));
 
         eval_multiply_kara_n_by_n_to_2n(result,
-                                        my_data.data(),
-                                        v.my_data.data(),
+                                        u_local,
+                                        v_local,
                                         kara_elems_for_multiply,
                                         t);
 
         delete[] t;
+        delete[] u_local;
+        delete[] v_local;
 
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U))
@@ -2605,7 +2615,7 @@
         }
 
         delete[] result;
-        #endif
+        #else
         // TBD: Temporarily use FFT-based multiplication.
         // TBD: Implement Karatsuba multiplication for intermediate digit counts.
 
@@ -2625,6 +2635,7 @@
 
           my_data.back() = static_cast<limb_type>(0U);
         }
+        #endif
       }
     }
 
@@ -2677,6 +2688,79 @@
       {
         // Use Karatsuba multiplication multiplication.
 
+        #if 1
+
+        // Sloanes's A029747
+        // Numbers of the form 2^k times 1, 3 or 5.
+        constexpr std::array<std::uint32_t, 48> sloanes_a029747
+        {{
+              1L,     2L,     3L,     4L,     5L,     6L,     8L,    10L,
+             12L,    16L,    20L,    24L,    32L,    40L,    48L,    64L,
+             80L,    96L,   128L,   160L,   192L,   256L,   320L,   384L,
+            512L,   640L,   768L,  1024L,  1280L,  1536L,  2048L,  2560L,
+           3072L,  4096L,  5120L,  6144L,  8192L, 10240L, 12288L, 16384L,
+          20480L, 24576L, 32768L, 40960L, 49152L, 65536L, 81920L, 98304L
+        }};
+
+        std::uint_fast32_t kara_elems_for_multiply;
+
+        for(unsigned i = 0U; i < sloanes_a029747.size(); ++i)
+        {
+          kara_elems_for_multiply = sloanes_a029747[i];
+
+          if(kara_elems_for_multiply >= static_cast<std::uint32_t>(prec_elems_for_multiply))
+          {
+            break;
+          }
+        }
+
+        // TBD: Can use specialized allocator or memory pool for these arrays.
+
+        //const std::uint_fast32_t kara_elems_for_multiply =
+        //  detail::pow2_maker_of_upper_limit(static_cast<std::uint32_t>(prec_elems_for_multiply));
+
+        limb_type* result  = new limb_type[kara_elems_for_multiply * 2];
+        limb_type* t       = new limb_type[kara_elems_for_multiply * 4];
+        limb_type* u_local = new limb_type[kara_elems_for_multiply];
+        limb_type* v_local = new limb_type[kara_elems_for_multiply];
+
+        std::fill(result,  result  + kara_elems_for_multiply * 2, limb_type(0U));
+        std::fill(t,       t       + kara_elems_for_multiply * 4, limb_type(0U));
+
+        std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
+        std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
+        std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply * 1, limb_type(0U));
+        std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply * 1, limb_type(0U));
+
+        eval_multiply_kara_n_by_n_to_2n(result,
+                                        u_local,
+                                        v_local,
+                                        kara_elems_for_multiply,
+                                        t);
+
+        delete[] t;
+        delete[] u_local;
+        delete[] v_local;
+
+        // Handle a potential carry.
+        if(result[0U] != static_cast<limb_type>(0U))
+        {
+          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+
+          // Shift the result of the multiplication one element to the right.
+          std::copy(result,
+                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+                    my_data.begin());
+        }
+        else
+        {
+          std::copy(result + 1,
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                    my_data.begin());
+        }
+
+        delete[] result;
+        #else
         // TBD: Temporarily use FFT-based multiplication.
         // TBD: Implement Karatsuba multiplication for intermediate digit counts.
 
@@ -2696,6 +2780,7 @@
 
           my_data.back() = static_cast<limb_type>(0U);
         }
+        #endif
       }
       else
       {
