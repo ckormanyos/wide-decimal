@@ -360,18 +360,9 @@
                                                             std::int16_t,
                                                             std::int8_t>::type>::type;
 
-    #if 0
-    static constexpr std::int32_t decwide_t_elems_for_2n =
-      ((std::is_same<limb_type, std::uint32_t>::value == true)
-        ? static_cast<std::int32_t>(256 + 1)
-        : ((std::is_same<limb_type, std::uint16_t>::value == true)
-          ? static_cast<std::int32_t>(64 + 1)
-          : static_cast<std::int32_t>( 5 + 1)));
-    #endif
+    static constexpr std::int32_t decwide_t_elems_for_kara = static_cast<std::int32_t>( 64 + 1);
 
-    static constexpr std::int32_t decwide_t_elems_for_kara = static_cast<std::int32_t>(  64 + 1);
-
-    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(1024 + 1);
+    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(768 + 1);
 
     typedef enum fpclass_type
     {
@@ -1950,55 +1941,98 @@
       return static_cast<signed_limb_type>(borrow);
     }
 
-    #if 0
-    static limb_type mul_loop_uv(limb_type* u, const limb_type* v, const std::int32_t p)
+    template<typename OtherLimbType>
+    static void eval_multiply_n_by_n_to_2n(      OtherLimbType*        r,
+                                           const OtherLimbType*        a,
+                                           const OtherLimbType*        b,
+                                           const std::int_fast32_t count,
+                                           const typename std::enable_if<(std::is_same<OtherLimbType, std::uint8_t>::value == true)>::type* = nullptr)
     {
-      double_limb_type carry = static_cast<double_limb_type>(0U);
+      using local_limb_type = OtherLimbType;
 
-      for(std::int32_t j = static_cast<std::int32_t>(p - 1); j >= static_cast<std::int32_t>(0); --j)
-      {
-        double_limb_type sum = carry;
+      using local_double_limb_type =
+        typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value == true),
+                                   std::uint64_t,
+                                   typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value == true),
+                                                              std::uint32_t,
+                                                              std::uint16_t>::type>::type;
 
-        for(std::int32_t i = j; i >= static_cast<std::int32_t>(0); --i)
-        {
-          sum += static_cast<double_limb_type>(u[j - i] * static_cast<double_limb_type>(v[i]));
-        }
-
-        u[j]  = static_cast<limb_type>       (sum % static_cast<limb_type>(decwide_t_elem_mask));
-        carry = static_cast<double_limb_type>(sum / static_cast<limb_type>(decwide_t_elem_mask));
-      }
-
-      return static_cast<limb_type>(carry);
-    }
-    #endif
-
-    static void eval_multiply_n_by_n_to_2n(      limb_type*        r,
-                                           const limb_type*        a,
-                                           const limb_type*        b,
-                                           const std::int_fast32_t count)
-    {
-      std::fill(r, r + (count * 2), limb_type(0));
+      std::fill(r, r + (count * 2), local_limb_type(0));
 
       for(std::int_fast32_t i = count - 1; i >= 0; --i)
       {
-        if(a[i] != limb_type(0U))
+        std::int_fast32_t j = count - 1;
+
+        local_double_limb_type carry = 0U;
+
+        for( ; j >= 0; --j)
         {
-          std::int_fast32_t j = count - 1;
+          carry += local_double_limb_type(local_double_limb_type(a[i]) * b[j]);
+          carry += r[1 + i + j];
 
-          double_limb_type carry = 0U;
-
-          for( ; j >= 0; --j)
-          {
-            carry += double_limb_type(double_limb_type(a[i]) * b[j]);
-            carry += r[1 + i + j];
-
-            r[1 + i + j] = static_cast<limb_type>       (carry % static_cast<limb_type>(decwide_t_elem_mask));
-            carry        = static_cast<double_limb_type>(carry / static_cast<limb_type>(decwide_t_elem_mask));
-          }
-
-          r[1 + i + j] = limb_type(carry);
+          r[1 + i + j] = static_cast<local_limb_type>       (carry % static_cast<local_limb_type>(decwide_t_elem_mask));
+          carry        = static_cast<local_double_limb_type>(carry / static_cast<local_limb_type>(decwide_t_elem_mask));
         }
+
+        r[1 + i + j] = local_limb_type(carry);
       }
+    }
+
+    template<typename OtherLimbType>
+    static void eval_multiply_n_by_n_to_2n(      OtherLimbType*    r,
+                                           const OtherLimbType*    a,
+                                           const OtherLimbType*    b,
+                                           const std::int_fast32_t count,
+                                           const typename std::enable_if<(   (std::is_same<OtherLimbType, std::uint16_t>::value == true)
+                                                                          || (std::is_same<OtherLimbType, std::uint32_t>::value == true))>::type* = nullptr)
+    {
+      using local_limb_type = OtherLimbType;
+
+      using local_double_limb_type =
+        typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value == true),
+                                   std::uint64_t,
+                                   typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value == true),
+                                                              std::uint32_t,
+                                                              std::uint16_t>::type>::type;
+
+      std::fill(r, r + (count * 2), local_limb_type(0));
+
+      std::reverse_iterator<local_limb_type*> ir = std::reverse_iterator<local_limb_type*>(r + (count * 2));
+
+      local_double_limb_type carry = 0U;
+      local_double_limb_type sum;
+
+      for(std::int32_t j = static_cast<std::int32_t>(count - 1); j >= static_cast<std::int32_t>(1); --j)
+      {
+        sum = carry;
+
+        for(std::int32_t i = count - 1; i >= j; --i)
+        {
+          sum += local_double_limb_type(local_double_limb_type(a[i]) * b[(count - 1) - (i - j)]);
+        }
+
+        *ir    = static_cast<local_limb_type>       (sum % static_cast<local_limb_type>(decwide_t_elem_mask));
+        carry  = static_cast<local_double_limb_type>(sum / static_cast<local_limb_type>(decwide_t_elem_mask));
+
+        ++ir;
+      }
+
+      for(std::int32_t j = static_cast<std::int32_t>(count - 1); j >= static_cast<std::int32_t>(0); --j)
+      {
+        sum = carry;
+
+        for(std::int32_t i = j; i >= static_cast<std::int32_t>(0); --i)
+        {
+          sum += static_cast<local_double_limb_type>(a[j - i] * static_cast<local_double_limb_type>(b[i]));
+        }
+
+        *ir   = static_cast<local_limb_type>       (sum % static_cast<local_limb_type>(decwide_t_elem_mask));
+        carry = static_cast<local_double_limb_type>(sum / static_cast<local_limb_type>(decwide_t_elem_mask));
+
+        ++ir;
+      }
+
+      *ir   = static_cast<local_limb_type>(carry);
     }
 
     static limb_type mul_loop_n(limb_type* const u, limb_type n, const std::int32_t p)
@@ -2073,8 +2107,8 @@
     }
 
     static void eval_multiply_kara_n_by_n_to_2n(      limb_type*         r,
-                                                const limb_type*         u,
-                                                const limb_type*         v,
+                                                const limb_type*         a,
+                                                const limb_type*         b,
                                                 const std::uint_fast32_t n,
                                                       limb_type*         t)
     {
@@ -2082,7 +2116,7 @@
       {
         static_cast<void>(t);
 
-        eval_multiply_n_by_n_to_2n(r, u, v, n);
+        eval_multiply_n_by_n_to_2n(r, a, b, n);
       }
       else
       {
@@ -2121,11 +2155,11 @@
 
         const std::uint_fast32_t  nh = n / 2U;
 
-        const limb_type* u0 = u + nh;
-        const limb_type* u1 = u + 0U;
+        const limb_type* a0 = a + nh;
+        const limb_type* a1 = a + 0U;
 
-        const limb_type* v0 = v + nh;
-        const limb_type* v1 = v + 0U;
+        const limb_type* b0 = b + nh;
+        const limb_type* b1 = b + 0U;
 
               limb_type* r0 = r + 0U;
               limb_type* r1 = r + nh;
@@ -2140,8 +2174,8 @@
         //   a1*b1 -> r0
         //   a0*b0 -> r2
         //   r -> t0
-        eval_multiply_kara_n_by_n_to_2n(r0, u1, v1, nh, t);
-        eval_multiply_kara_n_by_n_to_2n(r2, u0, v0, nh, t);
+        eval_multiply_kara_n_by_n_to_2n(r0, a1, b1, nh, t);
+        eval_multiply_kara_n_by_n_to_2n(r2, a0, b0, nh, t);
         std::copy(r0, r0 + (2U * n), t0);
 
         // Step 2
@@ -2155,28 +2189,28 @@
 
         // Step 3
         //   |a1-a0| -> t0
-        const std::int_fast8_t cmp_result_u1u0 = compare_ranges(u1, u0, nh);
+        const std::int_fast8_t cmp_result_a1a0 = compare_ranges(a1, a0, nh);
 
-        if(cmp_result_u1u0 == 1)
+        if(cmp_result_a1a0 == 1)
         {
-          static_cast<void>(eval_subtract_n(t0, u1, u0, nh));
+          static_cast<void>(eval_subtract_n(t0, a1, a0, nh));
         }
-        else if(cmp_result_u1u0 == -1)
+        else if(cmp_result_a1a0 == -1)
         {
-          static_cast<void>(eval_subtract_n(t0, u0, u1, nh));
+          static_cast<void>(eval_subtract_n(t0, a0, a1, nh));
         }
 
         // Step 4
         //   |b0-b1| -> t1
-        const std::int_fast8_t cmp_result_v0v1 = compare_ranges(v0, v1, nh);
+        const std::int_fast8_t cmp_result_b0b1 = compare_ranges(b0, b1, nh);
 
-        if(cmp_result_v0v1 == 1)
+        if(cmp_result_b0b1 == 1)
         {
-          static_cast<void>(eval_subtract_n(t1, v0, v1, nh));
+          static_cast<void>(eval_subtract_n(t1, b0, b1, nh));
         }
-        else if(cmp_result_v0v1 == -1)
+        else if(cmp_result_b0b1 == -1)
         {
-          static_cast<void>(eval_subtract_n(t1, v1, v0, nh));
+          static_cast<void>(eval_subtract_n(t1, b1, b0, nh));
         }
 
         // Step 5
@@ -2186,13 +2220,13 @@
         // Step 6
         //   either r1 += |a1-a0|*|b0-b1|
         //   or     r1 -= |a1-a0|*|b0-b1|
-        if((cmp_result_u1u0 * cmp_result_v0v1) == 1)
+        if((cmp_result_a1a0 * cmp_result_b0b1) == 1)
         {
           carry = eval_add_n(r1, r1, t2, n);
 
           eval_multiply_kara_propagate_carry(r0, nh, carry);
         }
-        else if((cmp_result_u1u0 * cmp_result_v0v1) == -1)
+        else if((cmp_result_a1a0 * cmp_result_b0b1) == -1)
         {
           const bool has_borrow = eval_subtract_n(r1, r1, t2, n);
 
