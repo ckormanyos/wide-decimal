@@ -1997,9 +1997,9 @@
                                                               std::uint32_t,
                                                               std::uint16_t>::type>::type;
 
-      std::fill(r, r + (count * 2), local_limb_type(0));
+      using local_reverse_iterator_type = std::reverse_iterator<local_limb_type*>;
 
-      std::reverse_iterator<local_limb_type*> ir = std::reverse_iterator<local_limb_type*>(r + (count * 2));
+      local_reverse_iterator_type ir(r + (count * 2));
 
       local_double_limb_type carry = 0U;
 
@@ -2068,15 +2068,20 @@
       std::uint_fast8_t carry_out = ((carry != 0U) ? static_cast<std::uint_fast8_t>(1U)
                                                    : static_cast<std::uint_fast8_t>(0U));
 
-      for(std::int32_t i = static_cast<std::int32_t>(n - 1U); ((i >= 0) && (carry_out != 0U)); --i)
+      using local_reverse_iterator_type = std::reverse_iterator<limb_type*>;
+
+      local_reverse_iterator_type ri_t  (t + n);
+      local_reverse_iterator_type rend_t(t);
+
+      while((carry_out != 0U) && (ri_t != rend_t))
       {
-        const double_limb_type tt = t[i] + carry_out;
+        const double_limb_type tt = *ri_t + carry_out;
 
         carry_out = ((tt >= static_cast<limb_type>(decwide_t_elem_mask)) ? static_cast<std::uint_fast8_t>(1U)
                                                                          : static_cast<std::uint_fast8_t>(0U));
 
-        t[i]  = static_cast<limb_type>(tt - ((carry_out != 0U) ? static_cast<limb_type>(decwide_t_elem_mask)
-                                                               : static_cast<limb_type>(0U)));
+        *ri_t++  = static_cast<limb_type>(tt - ((carry_out != 0U) ? static_cast<limb_type>(decwide_t_elem_mask)
+                                                                  : static_cast<limb_type>(0U)));
       }
     }
 
@@ -2085,9 +2090,14 @@
       std::int_fast8_t borrow = (has_borrow ? static_cast<std::int_fast8_t>(1)
                                             : static_cast<std::int_fast8_t>(0));
 
-      for(std::int32_t i = static_cast<std::int32_t>(n - 1U); ((i >= 0) && (borrow != 0)); --i)
+      using local_reverse_iterator_type = std::reverse_iterator<limb_type*>;
+
+      local_reverse_iterator_type ri_t  (t + n);
+      local_reverse_iterator_type rend_t(t);
+
+      while((borrow != 0U) && (ri_t != rend_t))
       {
-        signed_limb_type tt = static_cast<signed_limb_type>(static_cast<signed_limb_type>(t[i]) - borrow);
+        signed_limb_type tt = static_cast<signed_limb_type>(static_cast<signed_limb_type>(*ri_t) - borrow);
 
         // Underflow? Borrow?
         if(tt < 0)
@@ -2101,7 +2111,7 @@
           borrow = static_cast<int_fast8_t>(0);
         }
 
-        t[i] = static_cast<limb_type>(tt);
+        *ri_t++ = static_cast<limb_type>(tt);
       }
     }
 
