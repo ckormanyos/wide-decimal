@@ -362,7 +362,7 @@
 
     static constexpr std::int32_t decwide_t_elems_for_kara = static_cast<std::int32_t>(  48 + 1);
 
-    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(1024 + 1);
+    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(1280 + 1);
 
     typedef enum fpclass_type
     {
@@ -2133,15 +2133,15 @@
         // of R.P. Brent and P. Zimmermann, "Modern Computer Arithmetic",
         // Cambridge University Press (2011).
 
-        // The Karatsuba multipliation computes the product of u*v as:
+        // The Karatsuba multipliation computes the product of a*b as:
         // [b^N + b^(N/2)] a1*b1 + [b^(N/2)](a1 - a0)(b0 - b1) + [b^(N/2) + 1] a0*b0
 
-        // Here we visualize u and v in two components 0,1 corresponding
+        // Here we visualize a and b in two components 1,0 corresponding
         // to the high and low order parts, respectively.
 
         // Step 1
-        // Calculate a1*b1 and store it in the upper part of r.
-        // Calculate a0*b0 and store it in the lower part of r.
+        // Calculate a1*b1 and store it in the upper-order part of r.
+        // Calculate a0*b0 and store it in the lower-order part of r.
         // copy r to t0.
 
         // Step 2
@@ -2180,16 +2180,11 @@
               limb_type* t4 = t + (n + n);
 
         // Step 1
-        //   a1*b1 -> r0
-        //   a0*b0 -> r2
-        //   r -> t0
         eval_multiply_kara_n_by_n_to_2n(r0, a1, b1, nh, t);
         eval_multiply_kara_n_by_n_to_2n(r2, a0, b0, nh, t);
         std::copy(r0, r0 + (2U * n), t0);
 
         // Step 2
-        //   r1 += a1*b1
-        //   r1 += a0*b0
         limb_type carry;
         carry = eval_add_n(r1, r1, t0, n);
         eval_multiply_kara_propagate_carry(r0, nh, carry);
@@ -2197,7 +2192,6 @@
         eval_multiply_kara_propagate_carry(r0, nh, carry);
 
         // Step 3
-        //   |a1-a0| -> t0
         const std::int_fast8_t cmp_result_a1a0 = compare_ranges(a1, a0, nh);
 
         if(cmp_result_a1a0 == 1)
@@ -2210,7 +2204,6 @@
         }
 
         // Step 4
-        //   |b0-b1| -> t1
         const std::int_fast8_t cmp_result_b0b1 = compare_ranges(b0, b1, nh);
 
         if(cmp_result_b0b1 == 1)
@@ -2223,12 +2216,9 @@
         }
 
         // Step 5
-        //   |a1-a0|*|b0-b1| -> t2
         eval_multiply_kara_n_by_n_to_2n(t2, t0, t1, nh, t4);
 
         // Step 6
-        //   either r1 += |a1-a0|*|b0-b1|
-        //   or     r1 -= |a1-a0|*|b0-b1|
         if((cmp_result_a1a0 * cmp_result_b0b1) == 1)
         {
           carry = eval_add_n(r1, r1, t2, n);
