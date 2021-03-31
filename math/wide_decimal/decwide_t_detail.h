@@ -12,6 +12,14 @@
 #ifndef DECWIDE_T_DETAIL_2020_10_26_H_
   #define DECWIDE_T_DETAIL_2020_10_26_H_
 
+  #if defined(__clang__)
+  #if defined __has_feature && __has_feature(undefined_behavior_sanitizer)
+  #define WIDE_DECIMAL_WORKAROUND_INCLASS_MEMBER_INIT
+  #endif
+  #elif defined(__GNUC__) && defined(__cplusplus) && (__cplusplus <= 201402L)
+  #define WIDE_DECIMAL_WORKAROUND_INCLASS_MEMBER_INIT
+  #endif
+
   #include <array>
   #include <cstdint>
   #include <initializer_list>
@@ -92,12 +100,18 @@
                                                                   : static_cast<std::int32_t>(2)));
 
     static constexpr std::int32_t elem_number_extra = 3;
+    #if defined(WIDE_DECIMAL_WORKAROUND_INCLASS_MEMBER_INIT)
     static const     std::int32_t elem_number       = static_cast<std::int32_t>(((digits10 / elem_digits10) + (((digits10 % elem_digits10) != 0) ? 1 : 0)) + elem_number_extra);
+    #else
+    static constexpr std::int32_t elem_number       = static_cast<std::int32_t>(((digits10 / elem_digits10) + (((digits10 % elem_digits10) != 0) ? 1 : 0)) + elem_number_extra);
+    #endif
     static constexpr std::int32_t elem_mask         = static_cast<std::int32_t>(pow10_maker((std::uint32_t)  elem_digits10));
     static constexpr std::int32_t elem_mask_half    = static_cast<std::int32_t>(pow10_maker((std::uint32_t) (elem_digits10 / 2)));
   };
 
+  #if defined(WIDE_DECIMAL_WORKAROUND_INCLASS_MEMBER_INIT)
   template<const std::int32_t MyDigits10, typename LimbType> const std::int32_t decwide_t_helper<MyDigits10, LimbType>::elem_number;
+  #endif
 
   template <typename MyType,
             const std::uint_fast32_t MySize,
