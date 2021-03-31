@@ -309,20 +309,23 @@
                    || (std::is_same<std::int64_t, exponent_type>::value == true)),
                    "Error: exponent_type (determined via the template parameter ExponentType) must be one of int8_t, int16_t, int32_t or int64_t.");
 
-    static constexpr std::int32_t decwide_t_digits10       = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
-    static constexpr std::int32_t decwide_t_digits         = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
-    static constexpr std::int32_t decwide_t_max_digits10   = detail::decwide_t_helper<MyDigits10, LimbType>::max_digits10;
-    static constexpr std::int32_t decwide_t_radix          = detail::decwide_t_helper<MyDigits10, LimbType>::radix;
+    static constexpr std::int32_t  decwide_t_digits10       = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
+    static constexpr std::int32_t  decwide_t_digits         = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
+    static constexpr std::int32_t  decwide_t_max_digits10   = detail::decwide_t_helper<MyDigits10, LimbType>::max_digits10;
+    static constexpr std::int32_t  decwide_t_radix          = detail::decwide_t_helper<MyDigits10, LimbType>::radix;
 
-    static constexpr std::int32_t decwide_t_elem_digits10  = detail::decwide_t_helper<MyDigits10, LimbType>::elem_digits10;
-    static constexpr std::int32_t decwide_t_elem_number    = detail::decwide_t_helper<MyDigits10, LimbType>::elem_number;
-    static constexpr std::int32_t decwide_t_elem_mask      = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask;
-    static constexpr std::int32_t decwide_t_elem_mask_half = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask_half;
+    static constexpr std::int32_t  decwide_t_elem_digits10  = detail::decwide_t_helper<MyDigits10, LimbType>::elem_digits10;
+    static const     std::int32_t  decwide_t_elem_number    = detail::decwide_t_helper<MyDigits10, LimbType>::elem_number;
+    static constexpr std::int32_t  decwide_t_elem_mask      = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask;
+    static constexpr std::int32_t  decwide_t_elem_mask_half = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask_half;
 
-    static constexpr exponent_type decwide_t_max_exp10     =  static_cast<exponent_type>((std::numeric_limits<exponent_type>::max)() / decwide_t_elem_digits10) * decwide_t_elem_digits10;
-    static constexpr exponent_type decwide_t_min_exp10     = -static_cast<exponent_type>(decwide_t_max_exp10);
-    static constexpr exponent_type decwide_t_max_exp       = decwide_t_max_exp10;
-    static constexpr exponent_type decwide_t_min_exp       = decwide_t_min_exp10;
+    static constexpr exponent_type decwide_t_max_exp10      =  static_cast<exponent_type>((std::numeric_limits<exponent_type>::max)() / decwide_t_elem_digits10) * decwide_t_elem_digits10;
+    static constexpr exponent_type decwide_t_min_exp10      = -static_cast<exponent_type>(decwide_t_max_exp10);
+    static constexpr exponent_type decwide_t_max_exp        = decwide_t_max_exp10;
+    static constexpr exponent_type decwide_t_min_exp        = decwide_t_min_exp10;
+
+    static constexpr std::int32_t  decwide_t_elems_for_kara = static_cast<std::int32_t>(  48 + 1);
+    static constexpr std::int32_t  decwide_t_elems_for_fft  = static_cast<std::int32_t>(1280 + 1);
 
     // Obtain the limb_type from template parameter.
     using limb_type = LimbType;
@@ -359,10 +362,6 @@
                                  typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value == true),
                                                             std::int16_t,
                                                             std::int8_t>::type>::type;
-
-    static constexpr std::int32_t decwide_t_elems_for_kara = static_cast<std::int32_t>(  48 + 1);
-
-    static constexpr std::int32_t decwide_t_elems_for_fft  = static_cast<std::int32_t>(1280 + 1);
 
     typedef enum fpclass_type
     {
@@ -3325,6 +3324,8 @@
                         (std::min)((std::numeric_limits<std::int32_t>::max)(), (std::int32_t) e10));
     }
   };
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType> const std::int32_t decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_elem_number;
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
