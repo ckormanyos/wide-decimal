@@ -575,6 +575,15 @@
         my_fpclass  (decwide_t_finite),
         my_prec_elem(decwide_t_elem_number) { }
 
+    // Constructor from floating-point class type, even though
+    // (at the moment) decwide_t instances can only be finite.
+    explicit constexpr decwide_t(const fpclass_type)
+      : my_data     (),
+        my_exp      (0),
+        my_neg      (false),
+        my_fpclass  (decwide_t_finite),
+        my_prec_elem(decwide_t_elem_number) { }
+
   private:
     // Constructor from mantissa and exponent.
     explicit decwide_t(const InternalFloatType mantissa,
@@ -2760,7 +2769,7 @@
       {
         str.insert(static_cast<std::string::size_type>(pos_plus_one + n_shift), ".");
 
-        str.erase(pos, static_cast<std::ptrdiff_t>(1U));
+        str.erase(pos, static_cast<std::ptrdiff_t>(1));
 
         my_exp -= static_cast<exponent_type>(n_shift);
       }
