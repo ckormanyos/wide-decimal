@@ -1846,29 +1846,27 @@
       if(my_ld < (std::numeric_limits<FloatingPointType>::min)())
       {
         operator=(zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>());
-
-        return;
       }
+      else
+      {
+        const native_float_parts<FloatingPointType> ld_parts(my_ld);
 
-      std::fill(my_data.begin(), my_data.end(), limb_type(0U));
+        // Create a decwide_t from the fractional part of the
+        // mantissa expressed as an unsigned long long.
+        from_unsigned_long_long(ld_parts.get_mantissa());
 
-      const native_float_parts<FloatingPointType> ld_parts(my_ld);
+        // Scale the unsigned long long representation to the fractional
+        // part of the long double and multiply with the base-2 exponent.
+        const int p2 = ld_parts.get_exponent() - (std::numeric_limits<FloatingPointType>::digits - 1);
 
-      // Create a decwide_t from the fractional part of the
-      // mantissa expressed as an unsigned long long.
-      from_unsigned_long_long(ld_parts.get_mantissa());
+        if     (p2 <  -1) { *this *= pow(half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(), -p2); }
+        else if(p2 == -1) { *this *=     half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(); }
+        else if(p2 ==  0) { ; }
+        else if(p2 ==  1) { *this *= 2U; }
+        else              { *this *= pow(two<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(), p2); }
 
-      // Scale the unsigned long long representation to the fractional
-      // part of the long double and multiply with the base-2 exponent.
-      const int p2 = ld_parts.get_exponent() - (std::numeric_limits<FloatingPointType>::digits - 1);
-
-      if     (p2 <  -1) { *this *= pow(half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(), -p2); }
-      else if(p2 == -1) { *this *=     half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(); }
-      else if(p2 ==  0) { ; }
-      else if(p2 ==  1) { *this *= 2U; }
-      else              { *this *= pow(two<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>(), p2); }
-
-      my_neg = b_neg;
+        my_neg = b_neg;
+      }
     }
 
     static std::int_fast8_t compare_ranges(const limb_type* a, const limb_type* b, const std::uint_fast32_t count)
