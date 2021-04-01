@@ -30,6 +30,7 @@ bool test_decwide_t_examples_part1__()
   result_is_ok &= math::wide_decimal::example001a_roots_seventh       (); std::cout << "example001a_roots_seventh       : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example001b_roots_almost_integer(); std::cout << "example001b_roots_almost_integer: " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example001c_roots_sqrt_limb08   (); std::cout << "example001c_roots_sqrt_limb08   : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example001d_pow2_from_list      (); std::cout << "example001d_pow2_from_list      : " << std::boolalpha << result_is_ok << std::endl;
   #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
   result_is_ok &= math::wide_decimal::example002_pi                   (); std::cout << "example002_pi                   : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example002a_pi_small_limb       (); std::cout << "example002a_pi_small_limb       : " << std::boolalpha << result_is_ok << std::endl;

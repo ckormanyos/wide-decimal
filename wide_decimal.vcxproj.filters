@@ -124,6 +124,9 @@
     <ClCompile Include="examples\example000_multiply_nines.cpp">
       <Filter>Source Files\examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example001d_pow2_from_list.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_boost_cpp.h">

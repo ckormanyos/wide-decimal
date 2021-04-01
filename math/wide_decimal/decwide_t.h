@@ -4209,6 +4209,7 @@
   bool example001a_roots_seventh         ();
   bool example001b_roots_almost_integer  ();
   bool example001c_roots_sqrt_limb08     ();
+  bool example001d_pow2_from_list        ();
   bool example002_pi                     ();
   bool example002a_pi_small_limb         ();
   bool example002b_pi_100k               ();
