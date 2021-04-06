@@ -566,9 +566,9 @@
     // Constructor from initializer list of limbs,
     // exponent value (normed to limb granularity)
     // and optional sign flag.
-    explicit constexpr decwide_t(std::initializer_list<limb_type> limb_values,
-                                 const exponent_type e = 0,
-                                 const bool is_neg = false)
+    explicit decwide_t(std::initializer_list<limb_type> limb_values,
+                       const exponent_type e = 0,
+                       const bool is_neg = false)
       : my_data     (limb_values),
         my_exp      (e),
         my_neg      (is_neg),
@@ -2131,7 +2131,7 @@
                                                 const std::uint_fast32_t n,
                                                       limb_type*         t)
     {
-      if(n <= 32U)
+      if(n <= 24U)
       {
         static_cast<void>(t);
 
@@ -4203,6 +4203,7 @@
   }
 
   bool example000_multiply_nines         ();
+  bool example000a_multiply_pi_squared   ();
   bool example001_roots_sqrt             ();
   bool example001a_roots_seventh         ();
   bool example001b_roots_almost_integer  ();
