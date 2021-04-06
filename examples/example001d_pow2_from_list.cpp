@@ -15,7 +15,7 @@ bool math::wide_decimal::example001d_pow2_from_list()
 
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(100);
 
-  using wide_decimal_type = math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, void, double, std::int32_t>;
+  using wide_decimal_type = math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, void>;
 
   static const std::array<wide_decimal_type, 256U> local_pow2_data =
   {{
@@ -279,21 +279,25 @@ bool math::wide_decimal::example001d_pow2_from_list()
 
   bool result_is_ok = true;
 
+  const wide_decimal_type local_half(wide_decimal_type(1U) / 2U);
+  const wide_decimal_type local_one (1U);
+  const wide_decimal_type local_two (2U);
+
   for(std::size_t i = 0U; i < local_pow2_data.size(); ++i)
   {
     wide_decimal_type x2;
-    
+
     if(i <= 127U)
     {
-      x2 = pow(math::wide_decimal::half<wide_decimal_digits10, local_limb_type, void, double, std::int32_t>(), std::ptrdiff_t(128 - std::ptrdiff_t(i)));
+      x2 = pow(local_half, std::ptrdiff_t(128 - std::ptrdiff_t(i)));
     }
     else if(i == 128U)
     {
-      x2 = math::wide_decimal::one<wide_decimal_digits10, local_limb_type, void, double, std::int32_t>();
+      x2 = local_one;
     }
     else
     {
-      x2 = pow(math::wide_decimal::two<wide_decimal_digits10, local_limb_type, void, double, std::int32_t>(), std::ptrdiff_t(std::ptrdiff_t(i) - 128));
+      x2 = pow(local_two, std::ptrdiff_t(std::ptrdiff_t(i) - 128));
     }
 
     result_is_ok &= (x2 == local_pow2_data[i]);
