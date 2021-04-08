@@ -336,8 +336,8 @@
     static constexpr exponent_type decwide_t_max_exp        = decwide_t_max_exp10;
     static constexpr exponent_type decwide_t_min_exp        = decwide_t_min_exp10;
 
-    static constexpr std::int32_t  decwide_t_elems_for_kara = static_cast<std::int32_t>(  48 + 1);
-    static constexpr std::int32_t  decwide_t_elems_for_fft  = static_cast<std::int32_t>(1280 + 1);
+    static constexpr std::int32_t  decwide_t_elems_for_kara = static_cast<std::int32_t>(  64 + 1);
+    static constexpr std::int32_t  decwide_t_elems_for_fft  = static_cast<std::int32_t>(1536 + 1);
 
     // Obtain the limb_type from template parameter.
     using limb_type = LimbType;
@@ -1800,7 +1800,7 @@
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
     static limb_type      my_school_mul_pool   [std::uint32_t((decwide_t_elems_for_kara - 1) * 2)];
-    static limb_type      my_kara_mul_pool     [detail::a029747_maker_of_upper_limit(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL];
+    static limb_type      my_kara_mul_pool     [detail::a029750::a029750_as_constexpr(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL];
     static fft_float_type my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
     static array_type     my_n_data_for_add_sub;
     #endif
@@ -2139,7 +2139,7 @@
                                                 const std::uint_fast32_t n,
                                                       limb_type*         t)
     {
-      if(n <= 24U)
+      if(n <= 32U)
       {
         static_cast<void>(t);
 
@@ -2453,7 +2453,7 @@
 
         // Sloanes's A029747: Numbers of the form 2^k times 1, 3 or 5.
         const std::uint32_t kara_elems_for_multiply =
-          detail::a029747_maker_of_upper_limit(static_cast<std::uint32_t>(prec_elems_for_multiply));
+          detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
         limb_type* my_kara_mul_pool = new limb_type[kara_elems_for_multiply * 8U];
@@ -2550,7 +2550,7 @@
 
         // Sloanes's A029747: Numbers of the form 2^k times 1, 3 or 5.
         const std::uint32_t kara_elems_for_multiply =
-          detail::a029747_maker_of_upper_limit(static_cast<std::uint32_t>(prec_elems_for_multiply));
+          detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
         limb_type* my_kara_mul_pool = new limb_type[kara_elems_for_multiply * 8U];
@@ -3356,7 +3356,7 @@
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_school_mul_pool   [std::uint32_t((decwide_t_elems_for_kara - 1) * 2)];
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool     [detail::a029747_maker_of_upper_limit(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL];
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool     [detail::a029750::a029750_as_constexpr(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL];
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::array_type     decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_n_data_for_add_sub;
   #endif
