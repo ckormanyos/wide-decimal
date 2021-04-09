@@ -509,7 +509,7 @@
     {
       const unsigned long long u =
         ((!my_neg) ? static_cast<unsigned long long>(n)
-                   : static_cast<unsigned long long>(-static_cast<signed long long>(n)));
+                   : static_cast<unsigned long long>(1U) + static_cast<unsigned long long>(-(n + 1)));
 
       from_unsigned_long_long(u);
     }
@@ -715,10 +715,10 @@
       }
 
       // Get the offset for the add/sub operation.
-      constexpr std::int_fast64_t max_delta_exp =
-        static_cast<std::int_fast64_t>(std::int_fast64_t(decwide_t_elem_number - 1) * decwide_t_elem_digits10);
+      constexpr exponent_type max_delta_exp =
+        static_cast<exponent_type>((decwide_t_elem_number - 1) * decwide_t_elem_digits10);
 
-      const std::int_fast64_t ofs_exp = static_cast<std::int_fast64_t>(my_exp - v.my_exp);
+      const exponent_type ofs_exp = static_cast<exponent_type>(my_exp - v.my_exp);
 
       // Check if the operation is out of range, requiring special handling.
       if(v.iszero() || (ofs_exp > max_delta_exp))

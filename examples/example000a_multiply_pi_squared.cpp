@@ -11,8 +11,6 @@
 
 bool math::wide_decimal::example000a_multiply_pi_squared()
 {
-  using local_limb_type = std::uint32_t;
-
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
   using float_type = math::wide_decimal::decwide_t<wide_decimal_digits10>;
