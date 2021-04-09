@@ -939,11 +939,30 @@
       else
       {
         // Set the exponent of the result.
-        my_exp += v.my_exp;
+        using local_unsigned_wrap_type = detail::unsigned_wrap<unsigned_exponent_type, exponent_type>;
 
-        const std::int32_t prec_elems_for_multiply = (std::min)(decwide_t_elem_number, (std::min)(my_prec_elem, v.my_prec_elem));
+        local_unsigned_wrap_type u_exp(  my_exp);
+        local_unsigned_wrap_type v_exp(v.my_exp);
 
-        eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
+        const local_unsigned_wrap_type result_exp = (u_exp + v_exp);
+
+        if((result_exp.get_is_neg() == false) && (result_exp.get_value_unsigned() >= decwide_t_max_exp10))
+        {
+          operator=(my_value_max());
+        }
+        else if((result_exp.get_is_neg() == true) && (result_exp.get_value_unsigned() >= decwide_t_max_exp10))
+        {
+          operator=(my_value_min());
+        }
+        else
+        {
+          my_exp = ((result_exp.get_is_neg() == false) ? +static_cast<exponent_type>(result_exp.get_value_unsigned())
+                                                       : -static_cast<exponent_type>(result_exp.get_value_unsigned()));
+
+          const std::int32_t prec_elems_for_multiply = (std::min)(decwide_t_elem_number, (std::min)(my_prec_elem, v.my_prec_elem));
+
+          eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
+        }
       }
 
       // Set the sign of the result.
