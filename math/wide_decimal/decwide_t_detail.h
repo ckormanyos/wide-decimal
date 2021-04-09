@@ -259,6 +259,96 @@
   }
   os_float_field_type;
 
+  template<typename UnsignedIntegerType,
+           typename SignedIntegerType>
+  struct unsigned_wrap
+  {
+    using unsigned_type = UnsignedIntegerType;
+    using   signed_type =   SignedIntegerType;
+
+    constexpr unsigned_wrap(signed_type n)
+      : my_neg  (n < static_cast<signed_type>(0)),
+        my_value((my_neg == false) ? static_cast<unsigned_type>(n)
+                                   : static_cast<unsigned_type>(1U) + static_cast<unsigned_type>(-(n + 1))) { }
+
+    unsigned_type get_value_unsigned() const { return my_value; }
+      signed_type get_value_signed  () const { return (my_neg == false) ? (signed_type) my_value : -(signed_type) my_value; }
+
+    bool          get_is_neg        () const { return my_neg; }
+
+    bool          my_neg;
+    unsigned_type my_value;
+
+    unsigned_wrap& operator+=(const unsigned_wrap& other)
+    {
+      if(my_neg == other.my_neg)
+      {
+        // +3 + (+2)
+        // -3 + (-2)
+        my_value += other.my_value;
+      }
+      else
+      {
+        if(my_neg == false)
+        {
+          if(my_value > other.my_value)
+          {
+            // +3 + (-2)
+            my_value -= other.my_value;
+          }
+          else
+          {
+            // +2 + (-3)
+            my_value = other.my_value - my_value;
+
+            my_neg = (my_value != 0U) ? true : false;
+          }
+        }
+        else
+        {
+          if(my_value > other.my_value)
+          {
+            // -3 + (+2)
+            my_value -= other.my_value;
+          }
+          else
+          {
+            // -2 + (+3)
+            my_value = other.my_value - my_value;
+
+            my_neg = false;
+          }
+        }
+      }
+
+      return *this;
+    }
+
+    unsigned_wrap& operator-=(const unsigned_wrap& other)
+    {
+      if(my_value == 0U)
+      {
+        if(other.my_value != 0U)
+        {
+          my_value = other.my_value;
+
+          my_neg = (!other.my_neg);
+        }
+      }
+      else
+      {
+        my_neg = (!my_neg);
+        operator+=(other);
+        my_neg = (my_value != 0U) ? (!my_neg) : false;
+      }
+
+      return *this;
+    }
+  };
+
+  template<typename UnsignedIntegerType, typename SignedIntegerType> inline unsigned_wrap<UnsignedIntegerType, SignedIntegerType> operator+(const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& a, const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& b) { return unsigned_wrap<UnsignedIntegerType, SignedIntegerType>(a) += b; }
+  template<typename UnsignedIntegerType, typename SignedIntegerType> inline unsigned_wrap<UnsignedIntegerType, SignedIntegerType> operator-(const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& a, const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& b) { return unsigned_wrap<UnsignedIntegerType, SignedIntegerType>(a) -= b; }
+
   } } } // namespace math::wide_decimal::detail
 
 #endif // DECWIDE_T_DETAIL_2020_10_26_H_

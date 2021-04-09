@@ -327,7 +327,7 @@
     static constexpr std::int32_t  decwide_t_elem_mask      = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask;
     static constexpr std::int32_t  decwide_t_elem_mask_half = detail::decwide_t_helper<MyDigits10, LimbType>::elem_mask_half;
 
-    static constexpr exponent_type decwide_t_max_exp10      =  static_cast<exponent_type>((std::numeric_limits<exponent_type>::max)() / decwide_t_elem_digits10) * decwide_t_elem_digits10;
+    static constexpr exponent_type decwide_t_max_exp10      =  static_cast<exponent_type>(1) << (std::numeric_limits<exponent_type>::digits - ((std::is_same<exponent_type, std::int64_t>::value == true) ? 4 : ((std::is_same<exponent_type, std::int32_t>::value == true) ? 3 : ((std::is_same<exponent_type, std::int16_t>::value == true) ? 2 : 1))));
     static constexpr exponent_type decwide_t_min_exp10      = -static_cast<exponent_type>(decwide_t_max_exp10);
     static constexpr exponent_type decwide_t_max_exp        = decwide_t_max_exp10;
     static constexpr exponent_type decwide_t_min_exp        = decwide_t_min_exp10;
@@ -370,6 +370,15 @@
                                  typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value == true),
                                                             std::int16_t,
                                                             std::int8_t>::type>::type;
+
+    using unsigned_exponent_type =
+      typename std::conditional<(std::is_same<exponent_type, std::int64_t>::value == true),
+                                 std::uint64_t,
+                                 typename std::conditional<(std::is_same<exponent_type, std::int32_t>::value == true),
+                                                            std::uint32_t,
+                                                            typename std::conditional<(std::is_same<exponent_type, std::int16_t>::value == true),
+                                                                                       std::uint16_t,
+                                                                                       std::uint8_t>::type>::type>::type;
 
     typedef enum fpclass_type
     {
@@ -716,17 +725,23 @@
 
       // Get the offset for the add/sub operation.
       constexpr exponent_type max_delta_exp =
-        static_cast<exponent_type>((decwide_t_elem_number - 1) * decwide_t_elem_digits10);
+        static_cast<exponent_type>(decwide_t_elem_number * decwide_t_elem_digits10);
 
-      const exponent_type ofs_exp = static_cast<exponent_type>(my_exp - v.my_exp);
+      using local_unsigned_wrap_type = detail::unsigned_wrap<unsigned_exponent_type, exponent_type>;
+
+      local_unsigned_wrap_type u_exp(  my_exp);
+      local_unsigned_wrap_type v_exp(v.my_exp);
+
+      const local_unsigned_wrap_type ofs_exp = (u_exp - v_exp);
 
       // Check if the operation is out of range, requiring special handling.
-      if(v.iszero() || (ofs_exp > max_delta_exp))
+      if(   v.iszero()
+         || ((ofs_exp.get_is_neg() == false) && (ofs_exp.get_value_unsigned() >= (unsigned_exponent_type) max_delta_exp)))
       {
         // Result is *this unchanged since v is negligible compared to *this.
         return *this;
       }
-      else if(ofs_exp < -max_delta_exp)
+      else if((ofs_exp.get_is_neg() == true) && (ofs_exp.get_value_unsigned() >= (unsigned_exponent_type) max_delta_exp))
       {
         // Result is *this = v since *this is negligible compared to v.
         return operator=(v);
@@ -737,7 +752,8 @@
       typename array_type::pointer       p_u    =   my_data.data();
       typename array_type::const_pointer p_v    = v.my_data.data();
       bool                               b_copy = false;
-      const std::int32_t                 ofs    = static_cast<std::int32_t>(ofs_exp / decwide_t_elem_digits10);
+      const std::int32_t                 ofs    = ((ofs_exp.get_is_neg() == false) ? +static_cast<std::int32_t>(ofs_exp.get_value_unsigned() / (unsigned_exponent_type) decwide_t_elem_digits10)
+                                                                                   : -static_cast<std::int32_t>(ofs_exp.get_value_unsigned() / (unsigned_exponent_type) decwide_t_elem_digits10));
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       array_type my_n_data_for_add_sub;
@@ -4070,7 +4086,7 @@
     const std::uint32_t digits10_scale =
       (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
 
-    for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
+    for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(128); ++k)
     {
       // Check for the number of significant digits to be
       // at least half of the requested digits. If at least
@@ -4104,7 +4120,7 @@
     // Retrieve the value of pi, divide by (2 * a) and subtract (m * ln2).
 
     const floating_point_type result =
-             (pi<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() / ak)
+            (pi<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() / ak)
       - (ln_two<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() * m);
 
     return ((b_negate == true) ? -result : result);
