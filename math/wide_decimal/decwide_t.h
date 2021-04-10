@@ -2421,7 +2421,7 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+                    result + (std::min)(prec_elems_for_multiply, decwide_t_elem_number),
                     my_data.begin());
         }
         else
@@ -2517,7 +2517,7 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+                    result + (std::min)(prec_elems_for_multiply, decwide_t_elem_number),
                     my_data.begin());
         }
         else
@@ -2568,7 +2568,7 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+                    result + (std::min)(prec_elems_for_multiply, decwide_t_elem_number),
                     my_data.begin());
         }
         else
@@ -2598,7 +2598,7 @@
         {
           // Justify the data if necessary.
           std::copy(my_data.cbegin() +  1,
-                    my_data.cbegin() + (std::min)(decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
+                    my_data.cbegin() + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number),
                     my_data.begin());
 
           my_data.back() = static_cast<limb_type>(0U);
