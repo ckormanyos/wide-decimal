@@ -1830,9 +1830,10 @@
   private:
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
-    static limb_type      my_school_mul_pool   [std::uint32_t((decwide_t_elems_for_kara - 1) * 2)];
-    static limb_type      my_kara_mul_pool     [detail::a029750::a029750_as_constexpr(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL];
-    static fft_float_type my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
+    static limb_type      my_school_mul_pool[std::uint32_t((decwide_t_elems_for_kara - 1) * 2)];
+    static limb_type      my_kara_mul_pool  [detail::a029750::a029750_as_constexpr(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL];
+    static fft_float_type my_af_fft_mul_pool[detail::a000079::a000079_as_constexpr(std::uint32_t(decwide_t_elem_number)) * 4UL];
+    static fft_float_type my_bf_fft_mul_pool[detail::a000079::a000079_as_constexpr(std::uint32_t(decwide_t_elem_number)) * 4UL];
     static array_type     my_n_data_for_add_sub;
     #endif
 
@@ -1917,14 +1918,18 @@
       local_const_iterator_type cbegin_b(b);
       local_const_iterator_type cend_b  (b + count);
 
-      const auto mismatch_pair = std::mismatch(cbegin_a, cend_a, cbegin_b);
+      using local_mismatch_pair_type = std::pair<local_const_iterator_type, local_const_iterator_type>;
+
+      const local_mismatch_pair_type mismatch_pair = std::mismatch(cbegin_a, cend_a, cbegin_b);
 
       std::int_fast8_t n_return;
 
       if((mismatch_pair.first != cend_a) || (mismatch_pair.second != cend_b))
       {
-        const limb_type left  = *mismatch_pair.first;
-        const limb_type right = *mismatch_pair.second;
+        using local_value_type = typename std::iterator_traits<local_const_iterator_type>::value_type;
+
+        const local_value_type left (*(mismatch_pair.first));
+        const local_value_type right(*(mismatch_pair.second));
 
         n_return = ((left > right) ? static_cast<std::int_fast8_t>( 1)
                                    : static_cast<std::int_fast8_t>(-1));
@@ -2298,38 +2303,20 @@
       // multiplication. Furthermore, the FFT size is doubled again
       // since half-limbs are used.
 
-      std::uint32_t n_fft = 0U;
-
-      {
-        std::uint32_t p_fft = (std::uint32_t) ((prec_elems_for_multiply * 2L) * 2L);
-
-        // Use O(log2[N]) binary-halving in an unrolled loop to find the msb.
-        if((p_fft & UINT32_C(0xFFFF0000)) != UINT32_C(0)) { p_fft >>= 16U; n_fft |= UINT8_C(16); }
-        if((p_fft & UINT32_C(0x0000FF00)) != UINT32_C(0)) { p_fft >>=  8U; n_fft |= UINT8_C( 8); }
-        if((p_fft & UINT32_C(0x000000F0)) != UINT32_C(0)) { p_fft >>=  4U; n_fft |= UINT8_C( 4); }
-        if((p_fft & UINT32_C(0x0000000C)) != UINT32_C(0)) { p_fft >>=  2U; n_fft |= UINT8_C( 2); }
-        if((p_fft & UINT32_C(0x00000002)) != UINT32_C(0)) { p_fft >>=  1U; n_fft |= UINT8_C( 1); }
-
-        // We now obtain the needed FFT size doubled (and doubled again),
-        // with the added condition of needing to be a power of 2.
-        n_fft = (std::uint32_t) (1UL << n_fft);
-
-        if(n_fft < (std::uint32_t) ((prec_elems_for_multiply * 2L) * 2L))
-        {
-          n_fft <<= 1U;
-        }
-      }
-
-      // We now have the needed FFT size doubled (and doubled again).
+      // Obtain the needed FFT size doubled (and doubled again),
+      // with the added condition of needing to be a power of 2.
+      const std::uint32_t n_fft = detail::a000079::a000079_as_constexpr(std::uint32_t(prec_elems_for_multiply)) * 4UL;
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      fft_float_type* my_af_bf_fft_mul_pool = new fft_float_type[n_fft * 2U];
+      fft_float_type* my_af_fft_mul_pool = new fft_float_type[n_fft];
+      fft_float_type* my_bf_fft_mul_pool = new fft_float_type[n_fft];
       #endif
 
-      std::fill(my_af_bf_fft_mul_pool, my_af_bf_fft_mul_pool + (n_fft * 2U), fft_float_type(0));
+      std::fill(my_af_fft_mul_pool, my_af_fft_mul_pool + n_fft, fft_float_type(0));
+      std::fill(my_bf_fft_mul_pool, my_bf_fft_mul_pool + n_fft, fft_float_type(0));
 
-      fft_float_type* af = my_af_bf_fft_mul_pool + (0U * n_fft);
-      fft_float_type* bf = my_af_bf_fft_mul_pool + (1U * n_fft);
+      fft_float_type* af = my_af_fft_mul_pool;
+      fft_float_type* bf = my_bf_fft_mul_pool;
 
       for(std::uint32_t i = static_cast<std::uint32_t>(0U); i < static_cast<std::uint32_t>(prec_elems_for_multiply); ++i)
       {
@@ -2384,7 +2371,8 @@
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       // De-allocate the dynamic memory for the FFT result arrays.
-      delete [] my_af_bf_fft_mul_pool;
+      delete [] my_af_fft_mul_pool;
+      delete [] my_bf_fft_mul_pool;
       #endif
     }
 
@@ -2392,7 +2380,8 @@
     void eval_mul_dispatch_multiplication_method(
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
       const std::int32_t prec_elems_for_multiply,
-      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number < decwide_t_elems_for_kara)>::type* = nullptr)
+      const typename std::enable_if<(    (OtherDigits10 == MyDigits10)
+                                     && !(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara))>::type* = nullptr)
     {
       // Use school multiplication.
       constexpr std::int32_t local_decwide_t_elem_digits10 =
@@ -2436,7 +2425,8 @@
     void eval_mul_dispatch_multiplication_method(
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
       const std::int32_t prec_elems_for_multiply,
-      const typename std::enable_if<(   (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara)
+      const typename std::enable_if<(   (OtherDigits10 == MyDigits10)
+                                     && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara)
                                      && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number <  decwide_t_elems_for_fft))>::type* = nullptr)
     {
       constexpr std::int32_t local_decwide_t_elem_digits10 =
@@ -2534,7 +2524,8 @@
     void eval_mul_dispatch_multiplication_method(
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
       const std::int32_t prec_elems_for_multiply,
-      const typename std::enable_if<(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_fft)>::type* = nullptr)
+      const typename std::enable_if<(   (OtherDigits10 == MyDigits10)
+                                     && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_fft))>::type* = nullptr)
     {
       constexpr std::int32_t local_decwide_t_elem_digits10 =
         decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_digits10;
@@ -3398,9 +3389,10 @@
 
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_school_mul_pool   [std::uint32_t((decwide_t_elems_for_kara - 1) * 2)];
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool     [detail::a029750::a029750_as_constexpr(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL];
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_bf_fft_mul_pool[detail::pow2_maker_of_upper_limit(decwide_t_elem_number) * 8UL];
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_school_mul_pool[std::uint32_t((decwide_t_elems_for_kara - 1) * 2)];
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool  [detail::a029750::a029750_as_constexpr(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL];
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_fft_mul_pool[detail::a000079::a000079_as_constexpr(std::uint32_t(decwide_t_elem_number)) * 4UL];
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_bf_fft_mul_pool[detail::a000079::a000079_as_constexpr(std::uint32_t(decwide_t_elem_number)) * 4UL];
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::array_type     decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_n_data_for_add_sub;
   #endif
 

@@ -12,6 +12,7 @@
 #ifndef DECWIDE_T_DETAIL_2020_10_26_H_
   #define DECWIDE_T_DETAIL_2020_10_26_H_
 
+  #include <algorithm>
   #include <array>
   #include <cstdint>
   #include <initializer_list>
@@ -20,12 +21,6 @@
   #include <util/utility/util_dynamic_array.h>
 
   namespace math { namespace wide_decimal { namespace detail {
-
-  constexpr std::uint32_t pow2_maker_of_upper_limit(std::uint32_t value, std::size_t p2 = 0U)
-  {
-    // Calculate the nearest power of 2 larger than or equal to the input value.
-    return (value >> p2) != 0U ? pow2_maker_of_upper_limit(value, p2 + 1) : std::uint32_t(1) << p2;
-  }
 
   struct a029750
   {
@@ -53,9 +48,11 @@
 
     static std::uint32_t a029750_as_runtime_value(const std::uint32_t value)
     {
+      using array_type = std::array<std::uint32_t, 65U>;
+
       // Sloane's A029750 List of numbers of the form 2^k times 1, 3, 5 or 7.
       // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 78}], x]
-      constexpr std::array<std::uint32_t, 65U> a029750_data =
+      constexpr array_type a029750_data =
       {{
         UINT32_C(        32), UINT32_C(     40), UINT32_C(     48), UINT32_C(     56),
         UINT32_C(        64), UINT32_C(     80), UINT32_C(     96), UINT32_C(    112),
@@ -76,10 +73,50 @@
         UINT32_C(0x7FFFFFFF)
       }};
 
-      const std::array<std::uint32_t, 65U>::const_iterator it =
+      const typename array_type::const_iterator it =
         std::lower_bound(a029750_data.cbegin(), a029750_data.cend(), value);
 
       return ((it != a029750_data.cend()) ? *it : UINT32_C(0xFFFFFFFF));
+    }
+  };
+
+  struct a000079
+  {
+    static constexpr std::uint32_t a000079_as_constexpr(const std::uint32_t value)
+    {
+      // Sloane's A000079 List of numbers of powers of 2.
+      // Table[2^n, {n, 0, 31, 1}]
+      return ((value <= UINT32_C(        8)) ? UINT32_C(        8) : ((value <=  UINT32_C(       16)) ?  UINT32_C(       16) : ((value <= UINT32_C(       32)) ? UINT32_C(       32) : ((value <= UINT32_C(        64)) ? UINT32_C(        64) :
+             ((value <= UINT32_C(      128)) ? UINT32_C(      128) : ((value <=  UINT32_C(      256)) ?  UINT32_C(      256) : ((value <= UINT32_C(      512)) ? UINT32_C(      512) : ((value <= UINT32_C(      1024)) ? UINT32_C(      1024) :
+             ((value <= UINT32_C(     2048)) ? UINT32_C(     2048) : ((value <=  UINT32_C(     4096)) ?  UINT32_C(     4096) : ((value <= UINT32_C(     8192)) ? UINT32_C(     8192) : ((value <= UINT32_C(     16384)) ? UINT32_C(     16384) :
+             ((value <= UINT32_C(    32768)) ? UINT32_C(    32768) : ((value <=  UINT32_C(    65536)) ?  UINT32_C(    65536) : ((value <= UINT32_C(   131072)) ? UINT32_C(   131072) : ((value <= UINT32_C(    262144)) ? UINT32_C(    262144) :
+             ((value <= UINT32_C(   524288)) ? UINT32_C(   524288) : ((value <=  UINT32_C(  1048576)) ?  UINT32_C(  1048576) : ((value <= UINT32_C(  2097152)) ? UINT32_C(  2097152) : ((value <= UINT32_C(   4194304)) ? UINT32_C(   4194304) :
+             ((value <= UINT32_C(  8388608)) ? UINT32_C(  8388608) : ((value <=  UINT32_C( 16777216)) ?  UINT32_C( 16777216) : ((value <= UINT32_C( 33554432)) ? UINT32_C( 33554432) : ((value <= UINT32_C(  67108864)) ? UINT32_C(  67108864) :
+             ((value <= UINT32_C(134217728)) ? UINT32_C(134217728) : ((value <=  UINT32_C(268435456)) ?  UINT32_C(268435456) : ((value <= UINT32_C(536870912)) ? UINT32_C(536870912) : ((value <= UINT32_C(1073741824)) ? UINT32_C(1073741824) : UINT32_C(2147483648)))))))))))))))))))))))))))));
+    }
+
+    static std::uint32_t a000079_as_runtime_value(const std::uint32_t value)
+    {
+      using array_type = std::array<std::uint32_t, 29U>;
+
+      // Sloane's A000079 List of numbers of powers of 2.
+      // Table[2^n, {n, 0, 31, 1}]
+      constexpr array_type a000079_data =
+      {{
+        UINT32_C(         8), UINT32_C(       16), UINT32_C(       32), UINT32_C(        64),
+        UINT32_C(       128), UINT32_C(      256), UINT32_C(      512), UINT32_C(      1024),
+        UINT32_C(      2048), UINT32_C(     4096), UINT32_C(     8192), UINT32_C(     16384),
+        UINT32_C(     32768), UINT32_C(    65536), UINT32_C(   131072), UINT32_C(    262144),
+        UINT32_C(    524288), UINT32_C(  1048576), UINT32_C(  2097152), UINT32_C(   4194304),
+        UINT32_C(   8388608), UINT32_C( 16777216), UINT32_C( 33554432), UINT32_C(  67108864),
+        UINT32_C( 134217728), UINT32_C(268435456), UINT32_C(536870912), UINT32_C(1073741824),
+        UINT32_C(2147483648)
+      }};
+
+      const typename array_type::const_iterator it =
+        std::lower_bound(a000079_data.cbegin(), a000079_data.cend(), value);
+
+      return ((it != a000079_data.cend()) ? *it : UINT32_C(0xFFFFFFFF));
     }
   };
 
