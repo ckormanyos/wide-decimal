@@ -1911,32 +1911,12 @@
 
     static std::int_fast8_t compare_ranges(const limb_type* a, const limb_type* b, const std::uint_fast32_t count)
     {
-      using local_const_iterator_type = const limb_type*;
+      std::int_fast8_t n_return = 0;
 
-      local_const_iterator_type cbegin_a(a);
-      local_const_iterator_type cend_a  (a + count);
-      local_const_iterator_type cbegin_b(b);
-      local_const_iterator_type cend_b  (b + count);
-
-      using local_mismatch_pair_type = std::pair<local_const_iterator_type, local_const_iterator_type>;
-
-      const local_mismatch_pair_type mismatch_pair = std::mismatch(cbegin_a, cend_a, cbegin_b);
-
-      std::int_fast8_t n_return;
-
-      if((mismatch_pair.first != cend_a) || (mismatch_pair.second != cend_b))
+      for(std::uint_fast32_t i = 0U; i < count; ++i)
       {
-        using local_value_type = typename std::iterator_traits<local_const_iterator_type>::value_type;
-
-        const local_value_type left (*(mismatch_pair.first));
-        const local_value_type right(*(mismatch_pair.second));
-
-        n_return = ((left > right) ? static_cast<std::int_fast8_t>( 1)
-                                   : static_cast<std::int_fast8_t>(-1));
-      }
-      else
-      {
-        n_return = static_cast<std::int_fast8_t>(0);
+        if     (a[i] > b[i]) { n_return =  1; break; }
+        else if(a[i] < b[i]) { n_return = -1; break; }
       }
 
       return n_return;
@@ -2384,12 +2364,6 @@
                                      && !(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara))>::type* = nullptr)
     {
       // Use school multiplication.
-      constexpr std::int32_t local_decwide_t_elem_digits10 =
-        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_digits10;
-
-      constexpr std::int32_t local_decwide_t_elem_number =
-        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number;
-
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       limb_type* my_school_mul_pool = new limb_type[prec_elems_for_multiply * 2];
       #endif
@@ -2401,7 +2375,7 @@
       // Handle a potential carry.
       if(result[0U] != static_cast<limb_type>(0U))
       {
-        my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+        my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
 
         // Shift the result of the multiplication one element to the right.
         std::copy(result,
@@ -2411,7 +2385,7 @@
       else
       {
         std::copy(result + 1,
-                  result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                  result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number),
                   my_data.begin());
       }
 
@@ -2429,12 +2403,6 @@
                                      && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara)
                                      && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number <  decwide_t_elems_for_fft))>::type* = nullptr)
     {
-      constexpr std::int32_t local_decwide_t_elem_digits10 =
-        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_digits10;
-
-      constexpr std::int32_t local_decwide_t_elem_number =
-        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number;
-
       if(prec_elems_for_multiply < decwide_t_elems_for_kara)
       {
         // Use school multiplication.
@@ -2449,7 +2417,7 @@
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U))
         {
-          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
@@ -2459,7 +2427,7 @@
         else
         {
           std::copy(result + 1,
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number),
                     my_data.begin());
         }
 
@@ -2500,17 +2468,17 @@
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U))
         {
-          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + (std::min)(prec_elems_for_multiply, local_decwide_t_elem_number),
+                    result + (std::min)(prec_elems_for_multiply, decwide_t_elem_number),
                     my_data.begin());
         }
         else
         {
           std::copy(result + 1,
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number),
                     my_data.begin());
         }
 
@@ -2531,12 +2499,6 @@
       const typename std::enable_if<(   (OtherDigits10 == MyDigits10)
                                      && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_fft))>::type* = nullptr)
     {
-      constexpr std::int32_t local_decwide_t_elem_digits10 =
-        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_digits10;
-
-      constexpr std::int32_t local_decwide_t_elem_number =
-        decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number;
-
       if(prec_elems_for_multiply < decwide_t_elems_for_kara)
       {
         // Use school multiplication.
@@ -2551,7 +2513,7 @@
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U))
         {
-          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
@@ -2561,7 +2523,7 @@
         else
         {
           std::copy(result + 1,
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number),
                     my_data.begin());
         }
 
@@ -2602,7 +2564,7 @@
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U))
         {
-          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
@@ -2612,7 +2574,7 @@
         else
         {
           std::copy(result + 1,
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), local_decwide_t_elem_number),
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number),
                     my_data.begin());
         }
 
@@ -2630,13 +2592,13 @@
         if(my_data.front() != static_cast<limb_type>(0U))
         {
           // Adjust the exponent because of the internal scaling of the FFT multiplication.
-          my_exp += static_cast<exponent_type>(local_decwide_t_elem_digits10);
+          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
         }
         else
         {
           // Justify the data if necessary.
           std::copy(my_data.cbegin() +  1,
-                    my_data.cbegin() + (std::min)(local_decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
+                    my_data.cbegin() + (std::min)(decwide_t_elem_number, (std::int32_t) (my_prec_elem + 1)),
                     my_data.begin());
 
           my_data.back() = static_cast<limb_type>(0U);

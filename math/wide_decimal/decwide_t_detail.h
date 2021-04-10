@@ -43,7 +43,7 @@
              ((value <= UINT32_C( 131072)) ? UINT32_C( 131072) : ((value <=  UINT32_C( 163840)) ?  UINT32_C( 163840) : ((value <= UINT32_C( 196608)) ? UINT32_C( 196608) : ((value <= UINT32_C( 229376)) ? UINT32_C( 229376) :
              ((value <= UINT32_C( 262144)) ? UINT32_C( 262144) : ((value <=  UINT32_C( 327680)) ?  UINT32_C( 327680) : ((value <= UINT32_C( 393216)) ? UINT32_C( 393216) : ((value <= UINT32_C( 458752)) ? UINT32_C( 458752) :
              ((value <= UINT32_C( 524288)) ? UINT32_C( 524288) : ((value <=  UINT32_C( 655360)) ?  UINT32_C( 655360) : ((value <= UINT32_C( 786432)) ? UINT32_C( 786432) : ((value <= UINT32_C( 917504)) ? UINT32_C( 917504) :
-             ((value <= UINT32_C(1048576)) ? UINT32_C(1048576) : ((value <=  UINT32_C(1310720)) ?  UINT32_C(1310720) : ((value <= UINT32_C(1572864)) ? UINT32_C(1572864) : ((value <= UINT32_C(1835008)) ? UINT32_C(1835008) : UINT32_C(0x7FFFFFFF)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+             ((value <= UINT32_C(1048576)) ? UINT32_C(1048576) : ((value <=  UINT32_C(1310720)) ?  UINT32_C(1310720) : ((value <= UINT32_C(1572864)) ? UINT32_C(1572864) : ((value <= UINT32_C(1835008)) ? UINT32_C(1835008) : UINT32_C(2097152)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
     }
 
     static std::uint32_t a029750_as_runtime_value(const std::uint32_t value)
@@ -70,13 +70,13 @@
         UINT32_C(    262144), UINT32_C( 327680), UINT32_C( 393216), UINT32_C( 458752),
         UINT32_C(    524288), UINT32_C( 655360), UINT32_C( 786432), UINT32_C( 917504),
         UINT32_C(   1048576), UINT32_C(1310720), UINT32_C(1572864), UINT32_C(1835008),
-        UINT32_C(0x7FFFFFFF)
+        UINT32_C(   2097152)
       }};
 
       const typename array_type::const_iterator it =
         std::lower_bound(a029750_data.cbegin(), a029750_data.cend(), value);
 
-      return ((it != a029750_data.cend()) ? *it : UINT32_C(0xFFFFFFFF));
+      return ((it != a029750_data.cend()) ? *it : a029750_data.back());
     }
   };
 
@@ -116,7 +116,7 @@
       const typename array_type::const_iterator it =
         std::lower_bound(a000079_data.cbegin(), a000079_data.cend(), value);
 
-      return ((it != a000079_data.cend()) ? *it : UINT32_C(0xFFFFFFFF));
+      return ((it != a000079_data.cend()) ? *it : a000079_data.back());
     }
   };
 
