@@ -2468,11 +2468,12 @@
         delete [] my_school_mul_pool;
         #endif
       }
-      else
+      else if(   (prec_elems_for_multiply >= decwide_t_elems_for_kara)
+              && (prec_elems_for_multiply <  decwide_t_elems_for_fft))
       {
         // Karatsuba multiplication.
 
-        // Sloanes's A029747: Numbers of the form 2^k times 1, 3 or 5.
+        // Sloanes's A029750: Numbers of the form 2^k times 1, 3, 5 or 7.
         const std::uint32_t kara_elems_for_multiply =
           detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
@@ -2480,15 +2481,15 @@
         limb_type* my_kara_mul_pool = new limb_type[kara_elems_for_multiply * 8U];
         #endif
 
-        limb_type* result  = my_kara_mul_pool + (kara_elems_for_multiply * 0U);
-        limb_type* t       = my_kara_mul_pool + (kara_elems_for_multiply * 2U);
-        limb_type* u_local = my_kara_mul_pool + (kara_elems_for_multiply * 6U);
-        limb_type* v_local = my_kara_mul_pool + (kara_elems_for_multiply * 7U);
+        limb_type* u_local = my_kara_mul_pool + (kara_elems_for_multiply * 0U);
+        limb_type* v_local = my_kara_mul_pool + (kara_elems_for_multiply * 1U);
+        limb_type* result  = my_kara_mul_pool + (kara_elems_for_multiply * 2U);
+        limb_type* t       = my_kara_mul_pool + (kara_elems_for_multiply * 4U);
 
         std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
-        std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply * 1, limb_type(0U));
-        std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply * 1, limb_type(0U));
+        std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply, limb_type(0U));
+        std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply, limb_type(0U));
 
         eval_multiply_kara_n_by_n_to_2n(result,
                                         u_local,
@@ -2503,7 +2504,7 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply),
+                    result + (std::min)(prec_elems_for_multiply, local_decwide_t_elem_number),
                     my_data.begin());
         }
         else
@@ -2517,6 +2518,9 @@
         // De-allocate the dynamic memory for the Karatsuba multiplication arrays.
         delete [] my_kara_mul_pool;
         #endif
+      }
+      else
+      {
       }
     }
 
@@ -2566,11 +2570,12 @@
         delete [] my_school_mul_pool;
         #endif
       }
-      else if(prec_elems_for_multiply < decwide_t_elems_for_fft)
+      else if(   (prec_elems_for_multiply >= decwide_t_elems_for_kara)
+              && (prec_elems_for_multiply <  decwide_t_elems_for_fft))
       {
         // Use Karatsuba multiplication multiplication.
 
-        // Sloanes's A029747: Numbers of the form 2^k times 1, 3 or 5.
+        // Sloanes's A029750: Numbers of the form 2^k times 1, 3, 5 or 7.
         const std::uint32_t kara_elems_for_multiply =
           detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
@@ -2578,15 +2583,15 @@
         limb_type* my_kara_mul_pool = new limb_type[kara_elems_for_multiply * 8U];
         #endif
 
-        limb_type* result  = my_kara_mul_pool + (kara_elems_for_multiply * 0U);
-        limb_type* t       = my_kara_mul_pool + (kara_elems_for_multiply * 2U);
-        limb_type* u_local = my_kara_mul_pool + (kara_elems_for_multiply * 6U);
-        limb_type* v_local = my_kara_mul_pool + (kara_elems_for_multiply * 7U);
+        limb_type* u_local = my_kara_mul_pool + (kara_elems_for_multiply * 0U);
+        limb_type* v_local = my_kara_mul_pool + (kara_elems_for_multiply * 1U);
+        limb_type* result  = my_kara_mul_pool + (kara_elems_for_multiply * 2U);
+        limb_type* t       = my_kara_mul_pool + (kara_elems_for_multiply * 4U);
 
         std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
-        std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply * 1, limb_type(0U));
-        std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply * 1, limb_type(0U));
+        std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply, limb_type(0U));
+        std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply, limb_type(0U));
 
         eval_multiply_kara_n_by_n_to_2n(result,
                                         u_local,
@@ -2616,7 +2621,7 @@
         delete [] my_kara_mul_pool;
         #endif
       }
-      else
+      else if(prec_elems_for_multiply >= decwide_t_elems_for_fft)
       {
         // Use FFT-based multiplication.
 
@@ -2636,6 +2641,9 @@
 
           my_data.back() = static_cast<limb_type>(0U);
         }
+      }
+      else
+      {
       }
     }
 
