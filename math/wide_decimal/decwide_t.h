@@ -2129,7 +2129,7 @@
       local_reverse_iterator_type ri_t  (t + n);
       local_reverse_iterator_type rend_t(t);
 
-      while((borrow != 0U) && (ri_t != rend_t))
+      while((borrow != 0) && (ri_t != rend_t))
       {
         signed_limb_type tt = static_cast<signed_limb_type>(static_cast<signed_limb_type>(*ri_t) - borrow);
 
@@ -2159,7 +2159,7 @@
       {
         static_cast<void>(t);
 
-        eval_multiply_n_by_n_to_2n(r, a, b, n);
+        eval_multiply_n_by_n_to_2n(r, a, b, static_cast<std::int32_t>(n));
       }
       else
       {
@@ -2220,9 +2220,9 @@
 
         // Step 2
         limb_type carry;
-        carry = eval_add_n(r1, r1, t0, n);
+        carry = eval_add_n(r1, r1, t0, static_cast<std::int32_t>(n));
         eval_multiply_kara_propagate_carry(r0, nh, carry);
-        carry = eval_add_n(r1, r1, t2, n);
+        carry = eval_add_n(r1, r1, t2, static_cast<std::int32_t>(n));
         eval_multiply_kara_propagate_carry(r0, nh, carry);
 
         // Step 3
@@ -2230,11 +2230,11 @@
 
         if(cmp_result_a1a0 == 1)
         {
-          static_cast<void>(eval_subtract_n(t0, a1, a0, nh));
+          static_cast<void>(eval_subtract_n(t0, a1, a0, static_cast<std::int32_t>(nh)));
         }
         else if(cmp_result_a1a0 == -1)
         {
-          static_cast<void>(eval_subtract_n(t0, a0, a1, nh));
+          static_cast<void>(eval_subtract_n(t0, a0, a1, static_cast<std::int32_t>(nh)));
         }
 
         // Step 4
@@ -2242,11 +2242,11 @@
 
         if(cmp_result_b0b1 == 1)
         {
-          static_cast<void>(eval_subtract_n(t1, b0, b1, nh));
+          static_cast<void>(eval_subtract_n(t1, b0, b1, static_cast<std::int32_t>(nh)));
         }
         else if(cmp_result_b0b1 == -1)
         {
-          static_cast<void>(eval_subtract_n(t1, b1, b0, nh));
+          static_cast<void>(eval_subtract_n(t1, b1, b0, static_cast<std::int32_t>(nh)));
         }
 
         // Step 5
@@ -2255,13 +2255,13 @@
         // Step 6
         if((cmp_result_a1a0 * cmp_result_b0b1) == 1)
         {
-          carry = eval_add_n(r1, r1, t2, n);
+          carry = eval_add_n(r1, r1, t2, static_cast<std::int32_t>(n));
 
           eval_multiply_kara_propagate_carry(r0, nh, carry);
         }
         else if((cmp_result_a1a0 * cmp_result_b0b1) == -1)
         {
-          const bool has_borrow = eval_subtract_n(r1, r1, t2, n);
+          const bool has_borrow = eval_subtract_n(r1, r1, t2, static_cast<std::int32_t>(n));
 
           eval_multiply_kara_propagate_borrow(r0, nh, has_borrow);
         }
