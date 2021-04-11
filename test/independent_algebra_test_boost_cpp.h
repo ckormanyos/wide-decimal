@@ -18,7 +18,11 @@
   #if (BOOST_VERSION <= 107500)
   #include <boost/serialization/nvp.hpp>
   #endif
+  #if defined(DECWIDE_T_TEST_OPTION_TEST_CPP_DEC_FLOAT)
+  #include <boost/multiprecision/cpp_dec_float.hpp>
+  #else
   #include <boost/multiprecision/cpp_bin_float.hpp>
+  #endif
   #include <boost/math/constants/constants.hpp>
 
   namespace test { namespace independent_algebra {
@@ -29,16 +33,22 @@
   public:
     using other_decwide_t_type = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
+    #if defined(DECWIDE_T_TEST_OPTION_TEST_CPP_DEC_FLOAT)
+    using local_float_type =
+      boost::multiprecision::number<boost::multiprecision::cpp_dec_float<std::numeric_limits<other_decwide_t_type>::digits10 + 3>,
+                                    boost::multiprecision::et_off>;
+    #else
     using local_float_type =
       boost::multiprecision::number<boost::multiprecision::cpp_bin_float<std::numeric_limits<other_decwide_t_type>::digits10 + 3>,
                                     boost::multiprecision::et_off>;
+    #endif
 
-    local_float_type my_cpp_bin_float;
+    local_float_type my_cpp_boost_float;
 
-    independent_algebra_test_boost_cpp() : my_cpp_bin_float() { }
+    independent_algebra_test_boost_cpp() : my_cpp_boost_float() { }
 
     independent_algebra_test_boost_cpp(const char* str)
-      : my_cpp_bin_float(str) { }
+      : my_cpp_boost_float(str) { }
 
     virtual ~independent_algebra_test_boost_cpp() { }
 
@@ -49,7 +59,7 @@
       ss << std::scientific
          << std::uppercase
          << std::setprecision(std::streamsize(std::numeric_limits<local_float_type>::digits10 + 1))
-         << my_cpp_bin_float;
+         << my_cpp_boost_float;
 
       str = ss.str();
     }
@@ -151,7 +161,7 @@
                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
-    result.my_cpp_bin_float = a.my_cpp_bin_float + b.my_cpp_bin_float;
+    result.my_cpp_boost_float = a.my_cpp_boost_float + b.my_cpp_boost_float;
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
@@ -159,7 +169,7 @@
                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
-    result.my_cpp_bin_float = a.my_cpp_bin_float - b.my_cpp_bin_float;
+    result.my_cpp_boost_float = a.my_cpp_boost_float - b.my_cpp_boost_float;
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
@@ -167,7 +177,7 @@
                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
-    result.my_cpp_bin_float = a.my_cpp_bin_float * b.my_cpp_bin_float;
+    result.my_cpp_boost_float = a.my_cpp_boost_float * b.my_cpp_boost_float;
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
@@ -175,14 +185,14 @@
                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
-    result.my_cpp_bin_float = a.my_cpp_bin_float / b.my_cpp_bin_float;
+    result.my_cpp_boost_float = a.my_cpp_boost_float / b.my_cpp_boost_float;
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
   void eval_sqrt(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
                  const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a)
   {
-    result.my_cpp_bin_float = sqrt(a.my_cpp_bin_float);
+    result.my_cpp_boost_float = sqrt(a.my_cpp_boost_float);
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
@@ -193,9 +203,9 @@
       typename independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::local_float_type;
 
     const boost_multiprecision_type lg_a =
-      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_log(a.my_cpp_bin_float);
+      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_log(a.my_cpp_boost_float);
 
-    result.my_cpp_bin_float = lg_a;
+    result.my_cpp_boost_float = lg_a;
   }
 
   } }

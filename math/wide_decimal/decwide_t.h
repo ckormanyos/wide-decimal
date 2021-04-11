@@ -2292,9 +2292,6 @@
       fft_float_type* my_bf_fft_mul_pool = new fft_float_type[n_fft];
       #endif
 
-      std::fill(my_af_fft_mul_pool, my_af_fft_mul_pool + n_fft, fft_float_type(0));
-      std::fill(my_bf_fft_mul_pool, my_bf_fft_mul_pool + n_fft, fft_float_type(0));
-
       fft_float_type* af = my_af_fft_mul_pool;
       fft_float_type* bf = my_bf_fft_mul_pool;
 
@@ -2306,6 +2303,9 @@
         bf[(i * 2U)]      = fft_float_type(v[i] / decwide_t_elem_mask_half);
         bf[(i * 2U) + 1U] = fft_float_type(v[i] % decwide_t_elem_mask_half);
       }
+
+      std::fill(af + (2 * prec_elems_for_multiply), af + n_fft, fft_float_type(0));
+      std::fill(bf + (2 * prec_elems_for_multiply), bf + n_fft, fft_float_type(0));
 
       // Perform forward FFTs on the data arrays a and b.
       detail::fft::rfft_lanczos_rfft<fft_float_type, true>(n_fft, af);
