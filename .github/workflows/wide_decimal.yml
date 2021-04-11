@@ -2,7 +2,7 @@ name: wide_decimal
 on:
   push:
   schedule:
-    - cron: '0 1 * * *' # run at 1 AM UTC
+    - cron: '15 0 * * *' # run at 00:15 AM UTC
 jobs:
   gcc-clang-native:
     runs-on: ubuntu-20.04
