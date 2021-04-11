@@ -959,7 +959,7 @@
           my_exp = ((result_exp.get_is_neg() == false) ? +static_cast<exponent_type>(result_exp.get_value_unsigned())
                                                        : -static_cast<exponent_type>(result_exp.get_value_unsigned()));
 
-          const std::int32_t prec_elems_for_multiply = (std::min)(decwide_t_elem_number, (std::min)(my_prec_elem, v.my_prec_elem));
+          const std::int32_t prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
           eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
         }
@@ -2517,7 +2517,7 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + (std::min)(prec_elems_for_multiply, decwide_t_elem_number),
+                    result + prec_elems_for_multiply,
                     my_data.begin());
         }
         else
@@ -2568,13 +2568,13 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + (std::min)(prec_elems_for_multiply, decwide_t_elem_number),
+                    result + prec_elems_for_multiply,
                     my_data.begin());
         }
         else
         {
           std::copy(result + 1,
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number),
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elems_for_fft),
                     my_data.begin());
         }
 

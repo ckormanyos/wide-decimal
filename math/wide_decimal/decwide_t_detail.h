@@ -43,15 +43,12 @@
              ((value <= UINT32_C( 131072)) ? UINT32_C( 131072) : ((value <=  UINT32_C(  163840)) ?  UINT32_C(  163840) : ((value <= UINT32_C(  196608)) ? UINT32_C(  196608) : ((value <= UINT32_C(  229376)) ? UINT32_C(  229376) :
              ((value <= UINT32_C( 262144)) ? UINT32_C( 262144) : ((value <=  UINT32_C(  327680)) ?  UINT32_C(  327680) : ((value <= UINT32_C(  393216)) ? UINT32_C(  393216) : ((value <= UINT32_C(  458752)) ? UINT32_C(  458752) :
              ((value <= UINT32_C( 524288)) ? UINT32_C( 524288) : ((value <=  UINT32_C(  655360)) ?  UINT32_C(  655360) : ((value <= UINT32_C(  786432)) ? UINT32_C(  786432) : ((value <= UINT32_C(  917504)) ? UINT32_C(  917504) :
-             ((value <= UINT32_C(1048576)) ? UINT32_C(1048576) : ((value <=  UINT32_C( 1310720)) ?  UINT32_C( 1310720) : ((value <= UINT32_C( 1572864)) ? UINT32_C( 1572864) : ((value <= UINT32_C( 1835008)) ? UINT32_C( 1835008) :
-             ((value <= UINT32_C(2097152)) ? UINT32_C(2097152) : ((value <=  UINT32_C( 2621440)) ?  UINT32_C( 2621440) : ((value <= UINT32_C( 3145728)) ? UINT32_C( 3145728) : ((value <= UINT32_C( 3670016)) ? UINT32_C( 3670016) :
-             ((value <= UINT32_C(4194304)) ? UINT32_C(4194304) : ((value <=  UINT32_C( 5242880)) ?  UINT32_C( 5242880) : ((value <= UINT32_C( 6291456)) ? UINT32_C( 6291456) : ((value <= UINT32_C( 7340032)) ? UINT32_C( 7340032) :
-             ((value <= UINT32_C(8388608)) ? UINT32_C(8388608) : ((value <=  UINT32_C(10485760)) ?  UINT32_C(10485760) : ((value <= UINT32_C(12582912)) ? UINT32_C(12582912) : ((value <= UINT32_C(14680064)) ? UINT32_C(14680064) : UINT32_C(16777216)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+             ((value <= UINT32_C(1048576)) ? UINT32_C(1048576) : ((value <=  UINT32_C( 1310720)) ?  UINT32_C( 1310720) : ((value <= UINT32_C( 1572864)) ? UINT32_C( 1572864) : ((value <= UINT32_C( 1835008)) ? UINT32_C( 1835008) : UINT32_C(2097152)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
     }
 
     static std::uint32_t a029750_as_runtime_value(const std::uint32_t value)
     {
-      using array_type = std::array<std::uint32_t, 77U>;
+      using array_type = std::array<std::uint32_t, 65U>;
 
       // Sloane's A029750 List of numbers of the form 2^k times 1, 3, 5 or 7.
       // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 91}], x]
@@ -73,10 +70,7 @@
         UINT32_C(  262144), UINT32_C(  327680), UINT32_C(  393216), UINT32_C(  458752),
         UINT32_C(  524288), UINT32_C(  655360), UINT32_C(  786432), UINT32_C(  917504),
         UINT32_C( 1048576), UINT32_C( 1310720), UINT32_C( 1572864), UINT32_C( 1835008),
-        UINT32_C( 2097152), UINT32_C( 2621440), UINT32_C( 3145728), UINT32_C( 3670016),
-        UINT32_C( 4194304), UINT32_C( 5242880), UINT32_C( 6291456), UINT32_C( 7340032),
-        UINT32_C( 8388608), UINT32_C(10485760), UINT32_C(12582912), UINT32_C(14680064),
-        UINT32_C(16777216)
+        UINT32_C( 2097152)
       }};
 
       const typename array_type::const_iterator it =
