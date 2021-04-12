@@ -192,6 +192,9 @@
     <ClInclude Include="math\wide_decimal\decwide_t_detail.h">
       <Filter>Source Files\math\wide_decimal</Filter>
     </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t_detail_ops.h">
+      <Filter>Source Files\math\wide_decimal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\wide_decimal.yml">
