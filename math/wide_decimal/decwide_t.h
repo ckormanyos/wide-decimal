@@ -31,7 +31,6 @@
   #endif
   #include <type_traits>
 
-  #include <math/wide_decimal/decwide_t_detail_fft.h>
   #include <math/wide_decimal/decwide_t_detail_ops.h>
 
   #include <util/utility/util_baselexical_cast.h>
@@ -1917,94 +1916,6 @@
       }
     }
 
-    static void mul_loop_fft(limb_type* u, const limb_type* v, const std::int32_t prec_elems_for_multiply)
-    {
-      // Determine the required FFT size n_fft,
-      // where n_fft must be a power of two.
-
-      // We use half-limbs in the FFT in order to reduce
-      // the size of the data points in the FFTs.
-      // This helps preserve precision for large
-      // array lengths.
-
-      // The size is doubled in order to contain the multiplication
-      // result. This is because we are performing (n * n -> 2n)
-      // multiplication. Furthermore, the FFT size is doubled again
-      // since half-limbs are used.
-
-      // Obtain the needed FFT size doubled (and doubled again),
-      // with the added condition of needing to be a power of 2.
-      const std::uint32_t n_fft = detail::a000079::a000079_as_constexpr(std::uint32_t(prec_elems_for_multiply)) * 4UL;
-
-      #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      fft_float_type* my_af_fft_mul_pool = new fft_float_type[n_fft];
-      fft_float_type* my_bf_fft_mul_pool = new fft_float_type[n_fft];
-      #endif
-
-      fft_float_type* af = my_af_fft_mul_pool;
-      fft_float_type* bf = my_bf_fft_mul_pool;
-
-      for(std::uint32_t i = static_cast<std::uint32_t>(0U); i < static_cast<std::uint32_t>(prec_elems_for_multiply); ++i)
-      {
-        af[(i * 2U)]      = fft_float_type(u[i] / decwide_t_elem_mask_half);
-        af[(i * 2U) + 1U] = fft_float_type(u[i] % decwide_t_elem_mask_half);
-
-        bf[(i * 2U)]      = fft_float_type(v[i] / decwide_t_elem_mask_half);
-        bf[(i * 2U) + 1U] = fft_float_type(v[i] % decwide_t_elem_mask_half);
-      }
-
-      std::fill(af + (2 * prec_elems_for_multiply), af + n_fft, fft_float_type(0));
-      std::fill(bf + (2 * prec_elems_for_multiply), bf + n_fft, fft_float_type(0));
-
-      // Perform forward FFTs on the data arrays a and b.
-      detail::fft::rfft_lanczos_rfft<fft_float_type, true>(n_fft, af);
-      detail::fft::rfft_lanczos_rfft<fft_float_type, true>(n_fft, bf);
-
-      // Perform the convolution of a and b in the transform space.
-      // This does, in fact, execute the actual multiplication of (a * b).
-      af[0U] *= bf[0U];
-      af[1U] *= bf[1U];
-
-      for(std::uint32_t j = static_cast<std::uint32_t>(2U); j < n_fft; j += 2U)
-      {
-        const fft_float_type tmp_aj = af[j];
-
-        af[j + 0U] = (tmp_aj * bf[j + 0U]) - (af[j + 1U] * bf[j + 1U]);
-        af[j + 1U] = (tmp_aj * bf[j + 1U]) + (af[j + 1U] * bf[j + 0U]);
-      }
-
-      // Perform the reverse FFT on the result of the convolution.
-      detail::fft::rfft_lanczos_rfft<fft_float_type, false>(n_fft, af);
-
-      // Release the carries and re-combine the low and high parts.
-      // This sets the integral data elements in the big number
-      // to the result of multiplication.
-      using fft_carry_type = std::uint_fast64_t;
-
-      fft_carry_type carry = static_cast<fft_carry_type>(0U);
-
-      for(std::uint32_t j = static_cast<std::uint32_t>((prec_elems_for_multiply * 2L) - 2L); static_cast<std::int32_t>(j) >= 0; j -= 2U)
-      {
-        fft_float_type         xaj = af[j] / (n_fft / 2U);
-        const fft_carry_type xlo = static_cast<fft_carry_type>(xaj + detail::fft::template_half<fft_float_type>()) + carry;
-        carry                    = static_cast<fft_carry_type>(xlo / static_cast<limb_type>(decwide_t_elem_mask_half));
-        const limb_type      nlo = static_cast<limb_type>     (xlo - static_cast<fft_carry_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
-
-                             xaj = ((j != 0) ? (af[j - 1U] / (n_fft / 2U)) : fft_float_type(0));
-        const fft_carry_type xhi = static_cast<fft_carry_type>(xaj + detail::fft::template_half<fft_float_type>()) + carry;
-        carry                    = static_cast<fft_carry_type>(xhi / static_cast<limb_type>(decwide_t_elem_mask_half));
-        const limb_type      nhi = static_cast<limb_type>     (xhi - static_cast<fft_carry_type>(carry * static_cast<limb_type>(decwide_t_elem_mask_half)));
-
-        u[(j / 2U)] = static_cast<limb_type>(static_cast<limb_type>(nhi * static_cast<limb_type>(decwide_t_elem_mask_half)) + nlo);
-      }
-
-      #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      // De-allocate the dynamic memory for the FFT result arrays.
-      delete [] my_af_fft_mul_pool;
-      delete [] my_bf_fft_mul_pool;
-      #endif
-    }
-
     template<const std::int32_t OtherDigits10>
     void eval_mul_dispatch_multiplication_method(
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
@@ -2246,7 +2157,38 @@
       {
         // Use FFT-based multiplication.
 
-        mul_loop_fft(my_data.data(), v.my_data.data(), static_cast<std::int32_t>(prec_elems_for_multiply));
+        // Determine the required FFT size n_fft,
+        // where n_fft must be a power of two.
+
+        // We use half-limbs in the FFT in order to reduce
+        // the size of the data points in the FFTs.
+        // This helps preserve precision for large
+        // array lengths.
+
+        // The size is doubled in order to contain the multiplication
+        // result. This is because we are performing (n * n -> 2n)
+        // multiplication. Furthermore, the FFT size is doubled again
+        // since half-limbs are used.
+
+        // Obtain the needed FFT size doubled (and doubled again),
+        // with the added condition of needing to be a power of 2.
+        const std::uint32_t n_fft = detail::a000079::a000079_as_constexpr(std::uint32_t(prec_elems_for_multiply)) * 4UL;
+
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        fft_float_type* my_af_fft_mul_pool = new fft_float_type[n_fft];
+        fft_float_type* my_bf_fft_mul_pool = new fft_float_type[n_fft];
+        #endif
+
+        fft_float_type* af = my_af_fft_mul_pool;
+        fft_float_type* bf = my_bf_fft_mul_pool;
+
+        detail::mul_loop_fft(my_data.data(),
+                             typename std::add_const<limb_type*>::type(my_data.data()),
+                             typename std::add_const<limb_type*>::type(v.my_data.data()),
+                             af,
+                             bf,
+                             static_cast<std::int32_t>(prec_elems_for_multiply),
+                             n_fft);
 
         if(my_data.front() != static_cast<limb_type>(0U))
         {
@@ -2262,6 +2204,12 @@
 
           my_data.back() = static_cast<limb_type>(0U);
         }
+
+        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+        // De-allocate the dynamic memory for the FFT result arrays.
+        delete [] my_af_fft_mul_pool;
+        delete [] my_bf_fft_mul_pool;
+        #endif
       }
       else
       {

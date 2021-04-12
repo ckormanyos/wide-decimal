@@ -1,3 +1,14 @@
+///////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 1999 - 2021.                 //
+//  Distributed under the Boost Software License,                //
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
+//  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
+///////////////////////////////////////////////////////////////////
+
+// This work is also based on an earlier work:
+// "Algorithm 910: A Portable C++ Multiple-Precision System for Special-Function Calculations",
+// in ACM TOMS, {VOL 37, ISSUE 4, (February 2011)} (C) ACM, 2011. http://doi.acm.org/10.1145/1916461.1916469
+
 #ifndef DECWIDE_T_DETAIL_OPS_2021_04_12_H_
   #define DECWIDE_T_DETAIL_OPS_2021_04_12_H_
 
@@ -6,6 +17,7 @@
   #include <type_traits>
 
   #include <math/wide_decimal/decwide_t_detail.h>
+  #include <math/wide_decimal/decwide_t_detail_fft.h>
 
   namespace math { namespace wide_decimal { namespace detail {
 
@@ -445,6 +457,81 @@
 
         eval_multiply_kara_propagate_borrow(r0, nh, has_borrow);
       }
+    }
+  }
+
+  template<typename InputLimbIteratorType,
+           typename OutputLimbIteratorType,
+           typename FftFloatIteratorType>
+  void mul_loop_fft(OutputLimbIteratorType r,
+                    InputLimbIteratorType u,
+                    InputLimbIteratorType v,
+                    FftFloatIteratorType af,
+                    FftFloatIteratorType bf,
+                    const std::int32_t prec_elems_for_multiply,
+                    const std::uint32_t n_fft)
+  {
+    using local_limb_type = typename std::iterator_traits<OutputLimbIteratorType>::value_type;
+
+    constexpr local_limb_type local_elem_mask_half = decwide_t_helper_base<local_limb_type>::elem_mask_half;
+
+    using local_fft_float_type = typename std::iterator_traits<FftFloatIteratorType>::value_type;
+
+    for(std::uint32_t i = static_cast<std::uint32_t>(0U); i < static_cast<std::uint32_t>(prec_elems_for_multiply); ++i)
+    {
+      af[(i * 2U)]      = local_fft_float_type(u[i] / local_elem_mask_half);
+      af[(i * 2U) + 1U] = local_fft_float_type(u[i] % local_elem_mask_half);
+
+      bf[(i * 2U)]      = local_fft_float_type(v[i] / local_elem_mask_half);
+      bf[(i * 2U) + 1U] = local_fft_float_type(v[i] % local_elem_mask_half);
+    }
+
+    std::fill(af + (2 * prec_elems_for_multiply), af + n_fft, local_fft_float_type(0));
+    std::fill(bf + (2 * prec_elems_for_multiply), bf + n_fft, local_fft_float_type(0));
+
+    // Perform forward FFTs on the data arrays a and b.
+    detail::fft::rfft_lanczos_rfft<local_fft_float_type, true>(n_fft, af);
+    detail::fft::rfft_lanczos_rfft<local_fft_float_type, true>(n_fft, bf);
+
+    // Perform the convolution of a and b in the transform space.
+    // This does, in fact, execute the actual multiplication of (a * b).
+    af[0U] *= bf[0U];
+    af[1U] *= bf[1U];
+
+    for(std::uint32_t j = static_cast<std::uint32_t>(2U); j < n_fft; j += 2U)
+    {
+      const local_fft_float_type tmp_aj = af[j];
+
+      af[j + 0U] = (tmp_aj * bf[j + 0U]) - (af[j + 1U] * bf[j + 1U]);
+      af[j + 1U] = (tmp_aj * bf[j + 1U]) + (af[j + 1U] * bf[j + 0U]);
+    }
+
+    // Perform the reverse FFT on the result of the convolution.
+    detail::fft::rfft_lanczos_rfft<local_fft_float_type, false>(n_fft, af);
+
+    // Release the carries and re-combine the low and high parts.
+    // This sets the integral data elements in the big number
+    // to the result of multiplication.
+    using fft_carry_type = std::uint_fast64_t;
+
+    fft_carry_type carry = static_cast<fft_carry_type>(0U);
+
+    for(std::uint32_t j = static_cast<std::uint32_t>((prec_elems_for_multiply * 2L) - 2L); static_cast<std::int32_t>(j) >= 0; j -= 2U)
+    {
+      local_fft_float_type  xaj = af[j] / (n_fft / 2U);
+      const fft_carry_type  xlo = static_cast<fft_carry_type> (xaj + detail::fft::template_half<local_fft_float_type>()) + carry;
+      carry                     = static_cast<fft_carry_type> (xlo / static_cast<local_limb_type>(local_elem_mask_half));
+      const local_limb_type nlo = static_cast<local_limb_type>(xlo - static_cast<fft_carry_type>(carry * static_cast<local_limb_type>(local_elem_mask_half)));
+
+                             xaj = ((j != 0) ? (af[j - 1U] / (n_fft / 2U)) : local_fft_float_type(0));
+      const fft_carry_type   xhi = static_cast<fft_carry_type> (xaj + detail::fft::template_half<local_fft_float_type>()) + carry;
+      carry                      = static_cast<fft_carry_type> (xhi / static_cast<local_limb_type>(local_elem_mask_half));
+      const local_limb_type nhi  = static_cast<local_limb_type>(xhi - static_cast<fft_carry_type>(carry * static_cast<local_limb_type>(local_elem_mask_half)));
+
+      r[(j / 2U)] =
+        static_cast<local_limb_type>(static_cast<local_limb_type>(
+                                         nhi
+                                       * static_cast<local_limb_type>(local_elem_mask_half)) + nlo);
     }
   }
 
