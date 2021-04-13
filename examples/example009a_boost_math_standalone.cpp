@@ -10,6 +10,8 @@
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/bindings/decwide_t.hpp>
 
+#include <math/wide_decimal/decwide_t_examples.h>
+
 namespace
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);

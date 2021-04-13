@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include <math/wide_decimal/decwide_t.h>
+#include <math/wide_decimal/decwide_t_examples.h>
 
 bool math::wide_decimal::example001a_roots_seventh()
 {

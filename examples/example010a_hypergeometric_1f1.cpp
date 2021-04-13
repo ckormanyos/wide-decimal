@@ -11,6 +11,7 @@
 #include <numeric>
 
 #include <math/wide_decimal/decwide_t.h>
+#include <math/wide_decimal/decwide_t_examples.h>
 
 namespace local
 {

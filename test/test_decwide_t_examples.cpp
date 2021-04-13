@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include <math/wide_decimal/decwide_t.h>
+#include <math/wide_decimal/decwide_t_examples.h>
 #include <test/test_decwide_t_examples.h>
 
 #if defined(__clang__)

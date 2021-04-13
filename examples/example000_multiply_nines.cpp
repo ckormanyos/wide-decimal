@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include <math/wide_decimal/decwide_t.h>
+#include <math/wide_decimal/decwide_t_examples.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 
 bool math::wide_decimal::example000_multiply_nines()

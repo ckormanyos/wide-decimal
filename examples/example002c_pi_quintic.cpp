@@ -19,6 +19,7 @@
 
 #include <math/constants/constants_pi_control_for_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+#include <math/wide_decimal/decwide_t_examples.h>
 
 namespace
 {
