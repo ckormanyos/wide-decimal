@@ -1485,11 +1485,13 @@
 
         using std::pow;
 
-        // Estimate the one over the root using simple manipulations.
+        // Estimate the initial guess of one over the root using simple manipulations.
         const InternalFloatType one_over_rtn_d = pow(dd, InternalFloatType(-1) / static_cast<InternalFloatType>(p));
 
         // Set the result equal to the initial guess.
         result = decwide_t(one_over_rtn_d, static_cast<exponent_type>(-ne / p));
+
+        const decwide_t my_local_one(one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
 
         for(std::int32_t digits  = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1);
                          digits  < (std::int32_t) (original_prec_elem * decwide_t_elem_digits10);
@@ -1501,17 +1503,17 @@
             + (std::max)((std::int32_t) (decwide_t_elem_digits10  + 1), (std::int32_t) 9);
 
           result.precision(new_prec_as_digits10);
+               x.precision(new_prec_as_digits10);
 
           // Perform the next iteration.
-          decwide_t term =
-              (((-pow(result, p) * x) + one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) / p)
-            + one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+          decwide_t term = (((-pow(result, p) * x) + my_local_one) / p) + my_local_one;
 
           term.precision(new_prec_as_digits10);
 
           result *= term;
         }
 
+             x.my_prec_elem = original_prec_elem;
         result.my_prec_elem = original_prec_elem;
       }
 
