@@ -80,7 +80,7 @@ bool math::wide_decimal::example002d_pi_limb08()
 
   // When using 8-bit limb size, the two least significant limbs are imprecise.
   const bool tail_is_ok = std::equal(fi,
-                                     fi + (math::constants::const_pi_control_tail_08_1000001.size() - 2U),
+                                     fi + (math::constants::const_pi_control_tail_08_1000001.size() - 3U),
                                            math::constants::const_pi_control_tail_08_1000001.begin());
 
   const bool result_is_ok = (head_is_ok && tail_is_ok);
