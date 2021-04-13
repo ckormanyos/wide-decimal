@@ -37,8 +37,11 @@
 
     for( ; it_a != (a + count); ++it_a, ++it_b)
     {
-      if     (*it_a > typename std::iterator_traits<InputIteratorLeftType>::value_type(*it_b)) { n_return =  1; break; }
-      else if(*it_a < typename std::iterator_traits<InputIteratorLeftType>::value_type(*it_b)) { n_return = -1; break; }
+      using value_left_type =
+        typename std::iterator_traits<InputIteratorLeftType>::value_type;
+
+      if     (*it_a > value_left_type(*it_b)) { n_return =  1; break; }
+      else if(*it_a < value_left_type(*it_b)) { n_return = -1; break; }
     }
 
     return n_return;
