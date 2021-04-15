@@ -8,6 +8,8 @@
 #ifndef DECWIDE_T_EXAMPLES_2021_04_13_H_
   #define DECWIDE_T_EXAMPLES_2021_04_13_H_
 
+  // This file contains function prototypes of the decwide_t examples.
+
   namespace math { namespace wide_decimal {
 
   bool example000_multiply_nines         ();

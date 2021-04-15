@@ -10,8 +10,8 @@
 // in ACM TOMS, {VOL 37, ISSUE 4, (February 2011)} (C) ACM, 2011. http://doi.acm.org/10.1145/1916461.1916469
 
 // This file implements the class decwide_t and most of its
-// basic functions including constructors, algebraic operations,
-// and more.
+// basic functions including constructors, binary arithmetic
+// operations, comparison operators and more.
 
 #ifndef DECWIDE_T_2004_06_01_H_
   #define DECWIDE_T_2004_06_01_H_
