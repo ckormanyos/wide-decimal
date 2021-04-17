@@ -217,8 +217,8 @@ namespace local
 
 bool math::wide_decimal::example004_bessel_recur()
 {
-  // Calculate 1,001 decimal digits of the value
-  // of BesselJ[11, 123456 / 10000].
+  // Calculate 1,001 decimal digits of the value of a cylindrical Bessel function.
+  // N[BesselJ[9, 123456789/10000000], 1001]
 
   using dec1001_t = math::wide_decimal::decwide_t<1001U, std::uint32_t, void>;
 
@@ -226,9 +226,8 @@ bool math::wide_decimal::example004_bessel_recur()
   // the normalization factor.
   const dec1001_t x(dec1001_t(123456789UL) / 10000000UL);
 
-  const dec1001_t j11 = local::cyl_bessel_j(9, x);
+  const dec1001_t j9 = local::cyl_bessel_j(9, x);
 
-  // N[BesselJ[9, 123456789/10000000], 1001]
   const dec1001_t control
   {
     "0."
@@ -245,7 +244,7 @@ bool math::wide_decimal::example004_bessel_recur()
     "5"
   };
 
-  const dec1001_t closeness = fabs(1 - (j11 / control));
+  const dec1001_t closeness = fabs(1 - (j9 / control));
 
   const bool result_is_ok = closeness < (std::numeric_limits<dec1001_t>::epsilon() * 100);
 

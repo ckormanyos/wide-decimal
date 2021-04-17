@@ -21,8 +21,8 @@
                       callable_function_type parallel_function)
     {
       // Estimate the number of threads available.
-      static const unsigned int number_of_threads_hint =
-        std::thread::hardware_concurrency();
+      static const unsigned int number_of_threads_hint = (std::min)(std::thread::hardware_concurrency(),
+                                                                    (unsigned int) 8U);
 
       static const unsigned int number_of_threads =
         ((number_of_threads_hint == 0U) ? 4U : number_of_threads_hint);
