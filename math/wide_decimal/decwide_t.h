@@ -829,7 +829,7 @@
         // might have to be treated with a positive, negative or zero offset.
         if(       (ofs >  static_cast<std::int32_t>(0))
            || (   (ofs == static_cast<std::int32_t>(0))
-               && (detail::compare_ranges(my_data.data(), v.my_data.data(), prec_elems_for_add_sub) > static_cast<std::int_fast8_t>(0))))
+               && (detail::compare_ranges(my_data.data(), v.my_data.data(), static_cast<std::uint_fast32_t>(prec_elems_for_add_sub)) > 0)))
         {
           // In this case, |u| > |v| and ofs is positive.
           // Copy the data of v, shifted down to a lower value
@@ -995,7 +995,7 @@
       const bool u_and_v_are_identical =
         (   (my_fpclass == v.my_fpclass)
          && (my_exp     == v.my_exp)
-         && (detail::compare_ranges(my_data.data(), v.my_data.data(), decwide_t_elem_number) == static_cast<std::int_fast8_t>(0)));
+         && (detail::compare_ranges(my_data.data(), v.my_data.data(), static_cast<std::uint_fast32_t>(decwide_t_elem_number)) == 0));
 
       if(u_and_v_are_identical)
       {
@@ -1238,7 +1238,8 @@
         {
           // The signs are the same and the exponents are the same.
           // Compare the data.
-          const std::int_fast8_t val_cmp_data = detail::compare_ranges(my_data.data(), v.my_data.data(), decwide_t_elem_number);
+          const std::int_fast8_t val_cmp_data =
+            detail::compare_ranges(my_data.data(), v.my_data.data(), static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
           return ((!my_neg) ? val_cmp_data : static_cast<std::int_fast8_t>(-val_cmp_data));
         }
