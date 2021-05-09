@@ -40,7 +40,7 @@ value of `d` to the console.
 
 In particular,
 
-```
+```C
 #include <iomanip>
 #include <iostream>
 
@@ -62,6 +62,18 @@ The first template parameter `101U` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
 the default limb type is 32 bits in width and unsigned.
+
+The template signature of the `decwide_t` class is shown below.
+
+```C
+template<const std::int32_t MyDigits10,
+         typename LimbType = std::uint32_t,
+         typename AllocatorType = std::allocator<void>,
+         typename InternalFloatType = double,
+         typename ExponentType = std::int64_t,
+         typename FftFloatType = double>
+  class decwide_t;
+```
 
 `decwide_t` also has a third (and a few more) optional template paramter(s).
 The third template parameter
@@ -145,7 +157,7 @@ and
 <img src="https://render.githubusercontent.com/render/math?math=\log(2)">
 can optionally be disabled with the compiler switches:
 
-```
+```C
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
@@ -160,7 +172,7 @@ simultaneously disallows using `decwide_t` in a multithreaded application.
 So if PC-based or other kinds of multithreading are used, then dynamic memory
 allocation is needed and can not be disabled. In other words,
 
-```
+```C
 // Deactivate the disabling of dynamic memory for multithreaded PC work.
 //#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 ```
@@ -172,7 +184,7 @@ The example below calculates the square root of the decimal representation of
 the result of which is approximately
 <img src="https://render.githubusercontent.com/render/math?math=35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220\ldots">.
 
-```
+```C
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
@@ -214,7 +226,7 @@ In this example, note how a specialized custom allocator called
 of a certain number of temporary storages of mega-digit numbers
 (tuned to 18 in this particular example).
 
-```
+```C
 #include <iomanip>
 #include <iostream>
 
