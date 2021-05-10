@@ -73,7 +73,7 @@ bool math::wide_decimal::example002a_pi_small_limb()
                                      my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_16.size(),
                                      math::constants::const_pi_control_head_16.begin());
 
-  using const_iterator_type = typename local_wide_decimal_type::array_type::const_iterator;
+  using const_iterator_type = typename local_wide_decimal_type::representation_type::const_iterator;
 
   const_iterator_type fi(my_pi.crepresentation().cbegin() + (std::uint32_t) (  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
                                                                              - (std::uint32_t) math::constants::const_pi_control_tail_16_1000001.size()));
