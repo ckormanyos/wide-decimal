@@ -55,10 +55,17 @@
   class decwide_t;
 
   // Forward declarations of various decwide_t namespace functions.
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> zero();
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> one ();
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> two ();
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> half();
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType = std::int64_t, typename FftFloatType>
+  constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> zero();
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType = std::int64_t, typename FftFloatType>
+  constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> one();
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType = std::int64_t, typename FftFloatType>
+  constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> two();
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType = std::int64_t, typename FftFloatType>
+  constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> half();
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
   template<const std::int32_t MyDigits10,
@@ -2961,67 +2968,57 @@
                         (std::min)((std::numeric_limits<std::int32_t>::max)(), (std::int32_t) e10));
     }
 
-    template<const std::int32_t AnyMyDigits10,
-             typename AnyLimbType,
-             typename AnyAllocatorType,
-             typename AnyInternalFloatType,
-             typename AnyExponentType,
-             typename AnyFftFloatType>
-    friend constexpr decwide_t<AnyMyDigits10, AnyLimbType, AnyAllocatorType, AnyInternalFloatType, AnyExponentType, AnyFftFloatType> zero()
-    {
-      using any_wide_decimal_type = decwide_t<AnyMyDigits10, AnyLimbType, AnyAllocatorType, AnyInternalFloatType, AnyExponentType, AnyFftFloatType>;
+    template<const std::int32_t OtherMyDigits10, typename OtherLimbType, typename OtherAllocatorType, typename OtherInternalFloatType, typename OtherExponentType, typename OtherFftFloatType>
+    friend constexpr decwide_t<OtherMyDigits10, OtherLimbType, OtherAllocatorType, OtherInternalFloatType, OtherExponentType, OtherFftFloatType> zero();
 
-      return
-      any_wide_decimal_type::from_lst( { typename any_wide_decimal_type::limb_type(0U) } );
-    }
+    template<const std::int32_t OtherMyDigits10, typename OtherLimbType, typename OtherAllocatorType, typename OtherInternalFloatType, typename OtherExponentType, typename OtherFftFloatType>
+    friend constexpr decwide_t<OtherMyDigits10, OtherLimbType, OtherAllocatorType, OtherInternalFloatType, OtherExponentType, OtherFftFloatType> one();
 
-    template<const std::int32_t AnyMyDigits10,
-             typename AnyLimbType,
-             typename AnyAllocatorType,
-             typename AnyInternalFloatType,
-             typename AnyExponentType,
-             typename AnyFftFloatType>
-    friend constexpr decwide_t<AnyMyDigits10, AnyLimbType, AnyAllocatorType, AnyInternalFloatType, AnyExponentType, AnyFftFloatType> one()
-    {
-      using any_wide_decimal_type = decwide_t<AnyMyDigits10, AnyLimbType, AnyAllocatorType, AnyInternalFloatType, AnyExponentType, AnyFftFloatType>;
+    template<const std::int32_t OtherMyDigits10, typename OtherLimbType, typename OtherAllocatorType, typename OtherInternalFloatType, typename OtherExponentType, typename OtherFftFloatType>
+    friend constexpr decwide_t<OtherMyDigits10, OtherLimbType, OtherAllocatorType, OtherInternalFloatType, OtherExponentType, OtherFftFloatType> two();
 
-      return
-      any_wide_decimal_type::from_lst( { typename any_wide_decimal_type::limb_type(1U) } );
-    }
-
-    template<const std::int32_t AnyMyDigits10,
-             typename AnyLimbType,
-             typename AnyAllocatorType,
-             typename AnyInternalFloatType,
-             typename AnyExponentType,
-             typename AnyFftFloatType>
-    friend constexpr decwide_t<AnyMyDigits10, AnyLimbType, AnyAllocatorType, AnyInternalFloatType, AnyExponentType, AnyFftFloatType> two()
-    {
-      using any_wide_decimal_type = decwide_t<AnyMyDigits10, AnyLimbType, AnyAllocatorType, AnyInternalFloatType, AnyExponentType, AnyFftFloatType>;
-
-      return any_wide_decimal_type::from_lst( { typename any_wide_decimal_type::limb_type(2U) } );
-    }
-
-    template<const std::int32_t AnyMyDigits10,
-             typename AnyLimbType,
-             typename AnyAllocatorType,
-             typename AnyInternalFloatType,
-             typename AnyExponentType,
-             typename AnyFftFloatType>
-    friend constexpr decwide_t<AnyMyDigits10, AnyLimbType, AnyAllocatorType, AnyInternalFloatType, AnyExponentType, AnyFftFloatType> half()
-    {
-      using any_wide_decimal_type = decwide_t<AnyMyDigits10, AnyLimbType, AnyAllocatorType, AnyInternalFloatType, AnyExponentType, AnyFftFloatType>;
-
-      return
-      any_wide_decimal_type::from_lst
-      (
-        {
-          typename any_wide_decimal_type::limb_type(any_wide_decimal_type::decwide_t_elem_mask / 2)
-        },
-        -any_wide_decimal_type::decwide_t_elem_digits10
-      );
-    }
+    template<const std::int32_t OtherMyDigits10, typename OtherLimbType, typename OtherAllocatorType, typename OtherInternalFloatType, typename OtherExponentType, typename OtherFftFloatType>
+    friend constexpr decwide_t<OtherMyDigits10, OtherLimbType, OtherAllocatorType, OtherInternalFloatType, OtherExponentType, OtherFftFloatType> half();
   };
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> zero()
+  {
+    using other_wide_decimal_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return other_wide_decimal_type::from_lst( { typename other_wide_decimal_type::limb_type(0U) } );
+  }
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> one()
+  {
+    using other_wide_decimal_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return other_wide_decimal_type::from_lst( { typename other_wide_decimal_type::limb_type(1U) } );
+  }
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> two()
+  {
+    using other_wide_decimal_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return other_wide_decimal_type::from_lst( { typename other_wide_decimal_type::limb_type(2U) } );
+  }
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  constexpr decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> half()
+  {
+    using other_wide_decimal_type = decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return
+    other_wide_decimal_type::from_lst
+    (
+      {
+        typename other_wide_decimal_type::limb_type(other_wide_decimal_type::decwide_t_elem_mask / 2)
+      },
+      -other_wide_decimal_type::decwide_t_elem_digits10
+    );
+  }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr std::int32_t decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_digits10;
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr std::int32_t decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_digits;
