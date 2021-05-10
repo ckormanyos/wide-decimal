@@ -44,7 +44,7 @@
 
       b.get_string(str_b);
 
-      const local_wide_decimal_type decwide_t_b(str_b);
+      const local_wide_decimal_type decwide_t_b(str_b.c_str());
 
       const local_wide_decimal_type ratio = a.my_decwide_t / decwide_t_b;
 
