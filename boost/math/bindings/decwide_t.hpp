@@ -8,7 +8,9 @@
 #ifndef DECWIDE_T_2021_02_24_HPP_
   #define DECWIDE_T_2021_02_24_HPP_
 
+  #include <boost/math/bindings/detail/big_lanczos.hpp>
   #include <boost/math/policies/policy.hpp>
+
   #include <math/wide_decimal/decwide_t.h>
 
   namespace boost { namespace math {
@@ -36,7 +38,7 @@
                                             precision_type>::type;
   };
 
-  } // namespace policies
+  } // namespace boost::math::policies
 
   namespace constants { namespace detail {
 
@@ -135,7 +137,32 @@
     }
   };
 
-  } } // namespace constants::detail
+  } } // namespace boost::math::constants::detail
+
+  namespace lanczos {
+
+  template <typename T, typename Policy>
+  struct lanczos;
+
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename Policy>
+  struct lanczos< ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>, Policy>
+  {
+    using local_backend_type =
+      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    using precision_type =
+      typename boost::math::policies::precision<local_backend_type, Policy>::type;
+
+    using type = typename std::conditional<
+      precision_type::value && (precision_type::value <= 73),
+        lanczos13UDT,
+        typename std::conditional<
+          precision_type::value && (precision_type::value <= 122),
+          lanczos22UDT,
+          undefined_lanczos>::type>::type;
+  };
+
+  } // namespace boost::math::lanczos
 
   } } // namespace boost::math
 
