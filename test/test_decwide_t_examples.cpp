@@ -55,9 +55,10 @@ bool test_decwide_t_examples_part2__()
   result_is_ok &= math::wide_decimal::example007_catalan_series         ();
   #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
   result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma       ();
+  #endif
   result_is_ok &= math::wide_decimal::example009_boost_math_standalone  ();
   result_is_ok &= math::wide_decimal::example009a_boost_math_standalone ();
-  #endif
+  result_is_ok &= math::wide_decimal::example009b_boost_math_standalone ();
   result_is_ok &= math::wide_decimal::example010_hypergeometric_2f1     ();
   result_is_ok &= math::wide_decimal::example010a_hypergeometric_1f1    ();
   result_is_ok &= math::wide_decimal::example011_trig_trapezoid_integral();
