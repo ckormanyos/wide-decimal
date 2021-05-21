@@ -12,6 +12,8 @@
   #include <iomanip>
   #include <sstream>
 
+  #include <boost/version.hpp>
+
   #include <math/wide_decimal/decwide_t.h>
   #include <test/independent_algebra_test_base.h>
 

@@ -10,6 +10,7 @@
 
   #include <boost/math/bindings/detail/big_lanczos.hpp>
   #include <boost/math/policies/policy.hpp>
+  #include <boost/version.hpp>
 
   #include <math/wide_decimal/decwide_t.h>
 
