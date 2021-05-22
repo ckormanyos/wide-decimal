@@ -111,7 +111,7 @@
     template<int N> static const result_type& get(const boost::integral_constant<int, N>&)
     #else
     template<int N> static const result_type& get(const std::integral_constant<int, N>&)
-    #endif
+    #endif // BOOST_VERSION
     {
       static result_type result;
       static bool        has_init = false;
@@ -132,7 +132,7 @@
     static inline const result_type get(const boost::integral_constant<int, 0>&)
     #else
     static inline const result_type get(const std::integral_constant<int, 0>&)
-    #endif
+    #endif // BOOST_VERSION
     {
       return my_compute();
     }
@@ -140,30 +140,48 @@
 
   } } // namespace boost::math::constants::detail
 
+  #if (BOOST_VERSION <= 107600)
   namespace lanczos {
 
   template <typename T, typename Policy>
   struct lanczos;
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename Policy>
-  struct lanczos< ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>, Policy>
+  template<const std::int32_t MyDigits10,
+           typename LimbType,
+           typename AllocatorType,
+           typename InternalFloatType,
+           typename ExponentType,
+           typename FftFloatType,
+           typename Policy>
+  struct lanczos<::math::wide_decimal::decwide_t<MyDigits10,
+                                                 LimbType,
+                                                 AllocatorType,
+                                                 InternalFloatType,
+                                                 ExponentType,
+                                                 FftFloatType>,
+                 Policy>
   {
     using local_backend_type =
-      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      ::math::wide_decimal::decwide_t<MyDigits10,
+                                      LimbType,
+                                      AllocatorType,
+                                      InternalFloatType,
+                                      ExponentType,
+                                      FftFloatType>;
 
     using precision_type =
       typename boost::math::policies::precision<local_backend_type, Policy>::type;
 
-    using type = typename std::conditional<
-      precision_type::value && (precision_type::value <= 73),
-        lanczos13UDT,
-        typename std::conditional<
-          precision_type::value && (precision_type::value <= 122),
-          lanczos22UDT,
-          undefined_lanczos>::type>::type;
+    using type =
+      typename std::conditional<precision_type::value && (precision_type::value <= 73),
+                                lanczos13UDT,
+                                typename std::conditional<precision_type::value && (precision_type::value <= 122),
+                                                          lanczos22UDT,
+                                                          undefined_lanczos>::type>::type;
   };
 
   } // namespace boost::math::lanczos
+  #endif // BOOST_VERSION
 
   } } // namespace boost::math
 
