@@ -338,7 +338,7 @@
       {
         // +3 + (+2)
         // -3 + (-2)
-        my_value += other.my_value;
+        my_value = static_cast<unsigned_type>(my_value + other.my_value);
       }
       else
       {
@@ -347,12 +347,12 @@
           if(my_value > other.my_value)
           {
             // +3 + (-2)
-            my_value -= other.my_value;
+            my_value = static_cast<unsigned_type>(my_value + static_cast<unsigned_type>(static_cast<unsigned_type>(~other.my_value) + 1U));
           }
           else
           {
             // +2 + (-3)
-            my_value = other.my_value - my_value;
+            my_value = static_cast<unsigned_type>(other.my_value + static_cast<unsigned_type>(static_cast<unsigned_type>(~my_value) + 1U));
 
             my_neg = (my_value != 0U) ? true : false;
           }
@@ -362,12 +362,12 @@
           if(my_value > other.my_value)
           {
             // -3 + (+2)
-            my_value -= other.my_value;
+            my_value = static_cast<unsigned_type>(my_value + static_cast<unsigned_type>(static_cast<unsigned_type>(~other.my_value) + 1U));
           }
           else
           {
             // -2 + (+3)
-            my_value = other.my_value - my_value;
+            my_value = other.my_value + static_cast<unsigned_type>(static_cast<unsigned_type>(~my_value) + 1U);
 
             my_neg = false;
           }

@@ -804,7 +804,7 @@
 
           my_data[0U] = carry;
 
-          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+          my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
         }
       }
       else
@@ -906,7 +906,7 @@
                       my_data.end(),
                       static_cast<limb_type>(0));
 
-            my_exp -= static_cast<exponent_type>(sj * static_cast<std::ptrdiff_t>(decwide_t_elem_digits10));
+            my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(sj * static_cast<std::ptrdiff_t>(decwide_t_elem_digits10)));
           }
         }
       }
@@ -1051,7 +1051,7 @@
       // Handle the carry and adjust the exponent.
       if(carry != static_cast<limb_type>(0U))
       {
-        my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+        my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
         // Shift the result of the multiplication one element to the right.
         std::copy_backward(my_data.cbegin(),
@@ -1107,7 +1107,7 @@
         if(my_data[0] == static_cast<limb_type>(0U))
         {
           // Adjust the exponent
-          my_exp -= static_cast<exponent_type>(decwide_t_elem_digits10);
+          my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(decwide_t_elem_digits10));
 
           // Shift result of the division one element to the left.
           std::copy(my_data.cbegin() + static_cast<std::ptrdiff_t>(1),
@@ -1964,7 +1964,7 @@
       // Handle a potential carry.
       if(result[0U] != static_cast<limb_type>(0U))
       {
-        my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+        my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
         // Shift the result of the multiplication one element to the right.
         std::copy(result,
@@ -2009,7 +2009,7 @@
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U))
         {
-          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+          my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
@@ -2060,7 +2060,7 @@
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U))
         {
-          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+          my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
@@ -2363,7 +2363,7 @@
 
           str.insert(static_cast<std::uint_fast32_t>(1U), ".");
 
-          my_exp -= static_cast<exponent_type>(delta_exp + 1U);
+          my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(delta_exp + 1U));
         }
       }
       else
@@ -2402,7 +2402,7 @@
 
         str.erase(pos, static_cast<std::ptrdiff_t>(1));
 
-        my_exp -= static_cast<exponent_type>(n_shift);
+        my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(n_shift));
       }
 
       // Cut the size of the mantissa to <= decwide_t_elem_digits10.
@@ -2419,7 +2419,7 @@
 
         str.erase(static_cast<std::string::size_type>(pos_plus_one), static_cast<std::uint_fast32_t>(1U));
 
-        my_exp += static_cast<exponent_type>(static_cast<exponent_type>(n) * static_cast<exponent_type>(decwide_t_elem_digits10));
+        my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(static_cast<exponent_type>(n) * static_cast<exponent_type>(decwide_t_elem_digits10)));
       }
 
       // Pad the decimal part such that its value is an even
