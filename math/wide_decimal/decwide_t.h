@@ -1951,7 +1951,7 @@
     {
       // Use school multiplication.
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      limb_type* my_school_mul_pool = new limb_type[prec_elems_for_multiply * 2];
+      limb_type* my_school_mul_pool = new limb_type[(std::size_t) ((std::size_t) prec_elems_for_multiply * 2U)];
       #endif
 
       limb_type* result = my_school_mul_pool;
@@ -1996,7 +1996,7 @@
       {
         // Use school multiplication.
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        limb_type* my_school_mul_pool = new limb_type[prec_elems_for_multiply * 2];
+        limb_type* my_school_mul_pool = new limb_type[(std::size_t) ((std::size_t) prec_elems_for_multiply * 2U)];
         #endif
 
         limb_type* result = my_school_mul_pool;
@@ -3820,7 +3820,7 @@
       using std::ldexp;
       using std::pow;
 
-      const floating_point_type exp_series = pow(h0f0, p2) * ldexp(floating_point_type(1U), nf);
+      const floating_point_type exp_series = pow(h0f0, p2) * ldexp(floating_point_type(1U), (int) nf);
 
       exp_result = ((b_neg == false) ? exp_series : 1 / exp_series);
     }

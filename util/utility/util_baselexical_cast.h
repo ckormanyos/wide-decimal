@@ -36,9 +36,9 @@
 
       ++index;
 
-      output_value_type c(x % BaseRepresentation);
+      output_value_type c = (output_value_type) (x % (unsigned_integer_type) BaseRepresentation);
 
-      x /= BaseRepresentation;
+      x = unsigned_integer_type(x / (unsigned_integer_type) BaseRepresentation);
 
       if(c <= (output_value_type) 9)
       {
