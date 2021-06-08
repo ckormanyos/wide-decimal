@@ -1633,7 +1633,7 @@
             break;
           }
 
-          p10 *= static_cast<limb_type>(10U);
+          p10 = static_cast<limb_type>(p10 * static_cast<limb_type>(10U));
 
           ++exponent;
         }
@@ -2198,7 +2198,7 @@
 
         // Obtain the needed FFT size doubled (and doubled again),
         // with the added condition of needing to be a power of 2.
-        const std::uint32_t n_fft = detail::a000079::a000079_as_constexpr(std::uint32_t(prec_elems_for_multiply)) * 4UL;
+        const std::uint32_t n_fft = static_cast<std::uint32_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(prec_elems_for_multiply)) * UINT32_C(4));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
         fft_float_type* my_af_fft_mul_pool = new fft_float_type[n_fft];

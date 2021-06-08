@@ -42,12 +42,12 @@
 
       if(c <= (output_value_type) 9)
       {
-        c = c + (output_value_type) '0';
+        c = (output_value_type) (c + (output_value_type) '0');
       }
       else if((c >= (output_value_type) 0xA) && (c <= (output_value_type) 0xF))
       {
-        c =   (UpperCase ? (output_value_type) 'A' : (output_value_type) 'a')
-            + (output_value_type) (c - (output_value_type) 0xA);
+        c = (output_value_type) (  (output_value_type) (UpperCase ? (output_value_type) 'A' : (output_value_type) 'a')
+                                 + (output_value_type) (c - (output_value_type) 0xA));
       }
 
       *OutFirst = c;

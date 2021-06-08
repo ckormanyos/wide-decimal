@@ -96,14 +96,14 @@
     {
       local_signed_limb_type t =
         static_cast<local_signed_limb_type>(  static_cast<local_signed_limb_type>(u[j])
-                                            - static_cast<local_signed_limb_type>(v[j])) - borrow;
+                                            - static_cast<local_signed_limb_type>(v[j])) - static_cast<local_signed_limb_type>(borrow);
 
       // Underflow? Borrow?
       if(t < 0)
       {
         // Yes, underflow and borrow
-        t      += static_cast<local_signed_limb_type>(local_elem_mask);
-        borrow  = static_cast<int_fast8_t>(1);
+        t      = static_cast<local_signed_limb_type>(t + static_cast<local_signed_limb_type>(local_elem_mask));
+        borrow = static_cast<int_fast8_t>(1);
       }
       else
       {
@@ -146,11 +146,11 @@
 
       for( ; j >= 0; --j)
       {
-        carry += local_double_limb_type(local_double_limb_type(a[i]) * b[j]);
-        carry += r[1 + i + j];
+        carry = local_double_limb_type(carry + local_double_limb_type(local_double_limb_type(a[i]) * b[j]));
+        carry = local_double_limb_type(carry + r[1 + (i + j)]);
 
-        r[1 + i + j] = static_cast<local_limb_type>       (carry % local_elem_mask);
-        carry        = static_cast<local_double_limb_type>(carry / local_elem_mask);
+        r[1 + (i + j)] = static_cast<local_limb_type>       (carry % local_elem_mask);
+        carry          = static_cast<local_double_limb_type>(carry / local_elem_mask);
       }
 
       r[1 + i + j] = local_limb_type(carry);
@@ -302,7 +302,7 @@
 
     while((carry_out != 0U) && (ri_t != rend_t))
     {
-      const local_limb_type tt = *ri_t + carry_out;
+      const local_limb_type tt = local_limb_type(*ri_t + local_limb_type(carry_out));
 
       carry_out = ((tt >= local_elem_mask) ? static_cast<std::uint_fast8_t>(1U)
                                            : static_cast<std::uint_fast8_t>(0U));
@@ -341,7 +341,7 @@
       if(tt < 0)
       {
         // Yes, underflow and borrow
-        tt    += static_cast<local_signed_limb_type>(local_elem_mask);
+        tt     = static_cast<local_signed_limb_type>(tt + static_cast<local_signed_limb_type>(local_elem_mask));
         borrow = static_cast<int_fast8_t>(1);
       }
       else
