@@ -7,6 +7,18 @@
 
 #include <cmath>
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#endif
+
+#if defined(__clang__) && !defined(__APPLE__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#endif
+
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/bindings/decwide_t.hpp>
 
@@ -264,4 +276,13 @@ int main()
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
 
+#endif
+
+#if defined(__clang__) && !defined(__APPLE__)
+#pragma GCC diagnostic pop
+#endif
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 #endif

@@ -5,6 +5,18 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#endif
+
+#if defined(__clang__) && !defined(__APPLE__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#endif
+
 #include <math/wide_decimal/decwide_t.h>
 #include <test/independent_algebra_test.h>
 #include <test/test_decwide_t_algebra.h>
@@ -168,3 +180,12 @@ bool test_decwide_t_algebra_log_____()
 
   return result_is_ok;
 }
+
+#if defined(__clang__) && !defined(__APPLE__)
+#pragma GCC diagnostic pop
+#endif
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#endif

@@ -128,7 +128,7 @@ namespace
     static std::uint32_t mstart1(const float x, const std::uint32_t digits)
     {
       m_z = (std::max)(x, 0.1F);
-      m_p = digits;
+      m_p = (std::int32_t) digits;
 
       // Get the starting order for recursion.
       const float         f_order = bisect(fn_mstart1, 0.1F, x + 100000.0F);
@@ -142,7 +142,7 @@ namespace
     {
       m_z = (std::max)(x, 0.1F);
       m_n = dn;
-      m_p = digits;
+      m_p = (std::int32_t) digits;
 
       // Get the starting order for recursion.
       const float         f_order = bisect(fn_mstart2, 0.1F, x + 100000.0F);
@@ -178,8 +178,8 @@ namespace local
     const std::uint32_t d10 = static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10);
 
     // Get the starting order for recursive calculations.
-    const std::int32_t n_start1 = Jn_algo::mstart1((float) x,                  d10);
-    const std::int32_t n_start2 = Jn_algo::mstart2((float) x, (float) (n - 1), d10);
+    const std::int32_t n_start1 = (std::int32_t) Jn_algo::mstart1((float) x,                  d10);
+    const std::int32_t n_start2 = (std::int32_t) Jn_algo::mstart2((float) x, (float) (n - 1), d10);
 
     const std::int32_t n_start = (std::max)(n_start2, n_start1);
 
