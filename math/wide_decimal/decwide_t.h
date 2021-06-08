@@ -959,8 +959,8 @@
         }
         else
         {
-          my_exp = ((result_exp.get_is_neg() == false) ? +static_cast<exponent_type>(result_exp.get_value_unsigned())
-                                                       : -static_cast<exponent_type>(result_exp.get_value_unsigned()));
+          my_exp = static_cast<exponent_type>((result_exp.get_is_neg() == false) ? static_cast<exponent_type>(result_exp.get_value_unsigned())
+                                                                                 : static_cast<exponent_type>(unsigned_exponent_type(unsigned_exponent_type(~result_exp.get_value_unsigned()) + 1U)));
 
           const std::int32_t prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
@@ -1318,7 +1318,7 @@
       const std::int32_t original_prec_elem = my_prec_elem;
 
       // Do the inverse estimate using InternalFloatType precision estimates of mantissa and exponent.
-      operator=(decwide_t(InternalFloatType(1) / dd, -ne));
+      operator=(decwide_t(InternalFloatType(1) / dd, static_cast<exponent_type>(-ne)));
 
       // Compute the inverse of *this. Quadratically convergent Newton-Raphson iteration
       // is used. During the iterative steps, the precision of the calculation is limited
@@ -1390,7 +1390,7 @@
       *this = decwide_t(sqd, static_cast<exponent_type>(ne / 2));
 
       // Estimate 1.0 / (2.0 * x0) using simple manipulations.
-      decwide_t vi(InternalFloatType(0.5F) / sqd, -static_cast<exponent_type>(ne / 2));
+      decwide_t vi(InternalFloatType(0.5F) / sqd, static_cast<exponent_type>(static_cast<exponent_type>(-ne) / 2));
 
       // Compute the square root of x. Coupled Newton iteration
       // as described in "Pi Unleashed" is used. During the
@@ -1897,7 +1897,7 @@
 
       if(i > static_cast<std::uint_fast32_t>(1U))
       {
-        my_exp += static_cast<exponent_type>((i - 1U) * static_cast<std::uint_fast32_t>(decwide_t_elem_digits10));
+        my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>((i - 1U) * static_cast<std::uint_fast32_t>(decwide_t_elem_digits10)));
       }
 
       std::reverse(temp, temp + i);

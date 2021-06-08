@@ -95,8 +95,8 @@
     for(std::uint32_t j = static_cast<std::uint32_t>(count - static_cast<std::int32_t>(1)); static_cast<std::int32_t>(j) >= static_cast<std::int32_t>(0); --j)
     {
       local_signed_limb_type t =
-        static_cast<local_signed_limb_type>(  static_cast<local_signed_limb_type>(u[j])
-                                            - static_cast<local_signed_limb_type>(v[j])) - static_cast<local_signed_limb_type>(borrow);
+        static_cast<local_signed_limb_type>(  u[j]
+                                            + local_limb_type(local_limb_type(~local_limb_type(v[j] + local_limb_type(borrow))) + 1U));
 
       // Underflow? Borrow?
       if(t < 0)
