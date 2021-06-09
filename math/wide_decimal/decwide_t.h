@@ -1626,7 +1626,7 @@
 
         for(;;)
         {
-          d0 /= static_cast<limb_type>(10U);
+          d0 = static_cast<limb_type>(d0 / static_cast<limb_type>(10U));
 
           if(d0 == static_cast<limb_type>(0U))
           {
