@@ -1880,15 +1880,23 @@
     {
       my_exp = static_cast<exponent_type>(0);
 
-      std::uint_fast32_t i =static_cast<std::uint_fast32_t>(0U);
+      std::uint_fast32_t i = static_cast<std::uint_fast32_t>(0U);
 
       unsigned long long uu = u;
 
-      limb_type temp[std::uint_fast32_t(std::numeric_limits<unsigned long long>::digits10 / static_cast<int>(decwide_t_elem_digits10)) + 3U] = { static_cast<limb_type>(0U) };
+      using local_tmp_array_type =
+        std::array<limb_type, std::size_t(std::numeric_limits<unsigned long long>::digits10 / static_cast<int>(decwide_t_elem_digits10)) + 3U>;
 
-      while(uu != static_cast<unsigned long long>(0U))
+      local_tmp_array_type tmp;
+      tmp.fill(static_cast<limb_type>(0U));
+
+      while
+      (
+        (   (uu != static_cast<unsigned long long>(0U))
+         && ( i <  static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value)))
+      )
       {
-        temp[i] = static_cast<limb_type>(uu % static_cast<unsigned long long>(decwide_t_elem_mask));
+        tmp[i] = static_cast<limb_type>(uu % static_cast<unsigned long long>(decwide_t_elem_mask));
 
         uu = static_cast<unsigned long long>(uu / static_cast<unsigned long long>(decwide_t_elem_mask));
 
@@ -1900,11 +1908,17 @@
         my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>((i - 1U) * static_cast<std::uint_fast32_t>(decwide_t_elem_digits10)));
       }
 
-      std::reverse(temp, temp + i);
+      std::reverse(tmp.begin(), tmp.begin() + i);
 
-      std::copy(temp, temp + (std::min)(i, static_cast<std::uint_fast32_t>(decwide_t_elem_number)), my_data.begin());
+      constexpr std::uint_fast32_t copy_limit =
+        (std::min)(static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value),
+                   static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
-      std::fill(my_data.begin() + (std::min)(i, static_cast<std::uint_fast32_t>(decwide_t_elem_number)),
+      std::copy(tmp.cbegin(),
+                tmp.cbegin() + std::ptrdiff_t((std::min)(i, copy_limit)),
+                my_data.begin());
+
+      std::fill(my_data.begin() + std::ptrdiff_t((std::min)(i, copy_limit)),
                 my_data.end(),
                 limb_type(0U));
     }
