@@ -1910,7 +1910,7 @@
 
       std::reverse(tmp.begin(), tmp.begin() + i);
 
-      constexpr std::uint_fast32_t copy_limit =
+      const std::uint_fast32_t copy_limit =
         (std::min)(static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value),
                    static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
