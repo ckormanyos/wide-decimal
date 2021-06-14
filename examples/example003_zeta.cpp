@@ -21,7 +21,7 @@ namespace
     // It uses rudimentary (and slow) trial division with denominator
     // ranging from 3 up to the square root of the largest expected prime.
 
-    for(std::uint_fast16_t i = UINT32_C(3); i <= maximum_value; i += UINT32_C(2))
+    for(std::uint_fast16_t i = UINT16_C(3); i <= maximum_value; i = std::uint_fast16_t(i + UINT16_C(2)))
     {
       const std::uint_fast16_t maximum_square_root_value = static_cast<std::uint_fast16_t>(std::sqrt(static_cast<float>(i)) + 0.1F);
 
