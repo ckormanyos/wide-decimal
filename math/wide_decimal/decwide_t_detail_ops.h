@@ -90,30 +90,32 @@
     constexpr local_limb_type local_elem_mask = decwide_t_helper_base<local_limb_type>::elem_mask;
 
     // Subtraction algorithm
-    std::int_fast8_t borrow = static_cast<std::int_fast8_t>(0);
+    std::uint_fast8_t borrow = static_cast<std::uint_fast8_t>(0U);
 
     for(std::uint32_t j = static_cast<std::uint32_t>(count - static_cast<std::int32_t>(1)); static_cast<std::int32_t>(j) >= static_cast<std::int32_t>(0); --j)
     {
       local_signed_limb_type t =
-        static_cast<local_signed_limb_type>(  u[j]
-                                            + local_limb_type(local_limb_type(~local_limb_type(v[j] + local_limb_type(borrow))) + 1U));
+        static_cast<local_signed_limb_type>
+        (
+          local_limb_type(u[j] + local_limb_type(local_limb_type(~local_limb_type(local_limb_type(v[j] + local_limb_type(borrow)))) + 1U))
+        );
 
       // Underflow? Borrow?
       if(t < 0)
       {
         // Yes, underflow and borrow
         t      = static_cast<local_signed_limb_type>(t + static_cast<local_signed_limb_type>(local_elem_mask));
-        borrow = static_cast<int_fast8_t>(1);
+        borrow = static_cast<std::uint_fast8_t>(1U);
       }
       else
       {
-        borrow = static_cast<int_fast8_t>(0);
+        borrow = static_cast<std::uint_fast8_t>(0U);
       }
 
       r[j] = static_cast<local_limb_type>(t);
     }
 
-    return (borrow != 0);
+    return (borrow != 0U);
   }
 
   template<typename InputLimbIteratorType,
