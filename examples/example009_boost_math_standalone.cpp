@@ -12,6 +12,8 @@
 #pragma GCC diagnostic ignored "-Wconversion"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 
 #if defined(__clang__) && !defined(__APPLE__)
@@ -74,6 +76,7 @@ int main()
 #endif
 
 #if defined(__GNUC__)
+#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #endif
