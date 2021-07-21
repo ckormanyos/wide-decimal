@@ -13,11 +13,11 @@
 #include <test/test_decwide_t_examples.h>
 
 #if defined(__clang__)
-  #if defined __has_feature && __has_feature(thread_sanitizer)
+  #if defined __has_feature && (__has_feature(thread_sanitizer) || __has_feature(address_sanitizer))
   #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
   #endif
 #elif defined(__GNUC__)
-  #if defined(__SANITIZE_THREAD__)
+  #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__)
   #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
   #endif
 #endif
@@ -51,9 +51,9 @@ bool test_decwide_t_examples_part2__()
   result_is_ok &= math::wide_decimal::example003_zeta                   ();
   result_is_ok &= math::wide_decimal::example004_bessel_recur           ();
   result_is_ok &= math::wide_decimal::example005_polylog_series         ();
+  #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
   result_is_ok &= math::wide_decimal::example006_logarithm              ();
   result_is_ok &= math::wide_decimal::example007_catalan_series         ();
-  #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
   result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma       ();
   #endif
   result_is_ok &= math::wide_decimal::example009_boost_math_standalone  ();

@@ -24,11 +24,11 @@
 #include <test/test_decwide_t_algebra.h>
 
 #if defined(__clang__)
-  #if defined __has_feature && __has_feature(thread_sanitizer)
+  #if defined __has_feature && (__has_feature(thread_sanitizer) || __has_feature(address_sanitizer))
   #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
   #endif
 #elif defined(__GNUC__)
-  #if defined(__SANITIZE_THREAD__)
+  #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__)
   #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
   #endif
 #endif
@@ -40,15 +40,15 @@ namespace
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(10001);
 
   #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
-  constexpr std::uint32_t independent_algebra_test_count         = UINT32_C(512);
-  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(32);
-  #else
   constexpr std::uint32_t independent_algebra_test_count         = UINT32_C(128);
-  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(8);
+  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(16);
+  #else
+  constexpr std::uint32_t independent_algebra_test_count         = UINT32_C(64);
+  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(4);
   #endif
 
   constexpr std::uint32_t independent_algebra_test_round         = UINT32_C(4);
-  constexpr std::uint32_t independent_algebra_test_round_for_log = UINT32_C(4);
+  constexpr std::uint32_t independent_algebra_test_round_for_log = UINT32_C(2);
 }
 
 bool test_decwide_t_algebra_add_____()
