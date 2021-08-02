@@ -3843,9 +3843,7 @@
       using std::ldexp;
       using std::pow;
 
-      const int n = (int) nf;
-
-      exp_result = ((n == 0) ? pow(h0f0, p2) : ldexp(pow(h0f0, p2), nf));
+      exp_result = ((nf == 0U) ? pow(h0f0, p2) : ldexp(pow(h0f0, p2), (int) nf));
 
       if(b_neg)
       {
