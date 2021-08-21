@@ -400,7 +400,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++-10, clang++-10 ]
+        compiler: [ g++-10, g++-11, clang++-10, clang++-11 ]
         standard: [ c++11, c++14, c++17, c++20 ]
     steps:
       - uses: actions/checkout@v2
@@ -441,7 +441,7 @@ jobs:
           ./bootstrap.sh
           ./b2 headers
       - name: update-tools
-        run: sudo apt install gcc-10 clang-10
+        run: sudo apt install gcc-10 g++-10 gcc-11 g++-11 clang-10 clang-11
       - name: gcc-clang-10
         run: |
           echo "compile ./wide_decimal.exe"
