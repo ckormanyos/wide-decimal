@@ -527,8 +527,8 @@
                                             my_prec_elem(decwide_t_elem_number)
     {
       const unsigned long long u =
-        ((!my_neg) ? static_cast<unsigned long long>(n)
-                   : static_cast<unsigned long long>(1U) + static_cast<unsigned long long>(-(n + 1)));
+        ((my_neg == false) ?                static_cast<unsigned long long>(n)
+                           : detail::negate(static_cast<unsigned long long>(n)));
 
       from_unsigned_long_long(u);
     }
@@ -959,8 +959,10 @@
         }
         else
         {
-          my_exp = static_cast<exponent_type>((result_exp.get_is_neg() == false) ? static_cast<exponent_type>(result_exp.get_value_unsigned())
-                                                                                 : static_cast<exponent_type>(unsigned_exponent_type(unsigned_exponent_type(~result_exp.get_value_unsigned()) + 1U)));
+          my_exp =
+            static_cast<exponent_type>((result_exp.get_is_neg() == false)
+              ?                static_cast<exponent_type>(result_exp.get_value_unsigned())
+              : detail::negate(static_cast<exponent_type>(result_exp.get_value_unsigned())));
 
           const std::int32_t prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
