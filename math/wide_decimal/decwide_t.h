@@ -350,14 +350,14 @@
 
     // Rebind the decwide_t allocator to the granularity of the LimbType.
     using allocator_type =
-      typename std::allocator_traits<typename std::conditional<std::is_same<AllocatorType, void>::value,
+      typename std::allocator_traits<typename std::conditional<(std::is_same<AllocatorType, void>::value == true),
                                                                std::allocator<void>,
                                                                AllocatorType>::type>::template rebind_alloc<limb_type>;
 
     // Define the array type, which is the internal
     // representation of the data field of a decwide_t.
     using representation_type =
-      typename std::conditional<std::is_same<AllocatorType, void>::value,
+      typename std::conditional<(std::is_same<AllocatorType, void>::value == true),
                                 detail::fixed_static_array <limb_type, static_cast<std::uint_fast32_t>(decwide_t_elem_number)>,
                                 detail::fixed_dynamic_array<limb_type, static_cast<std::uint_fast32_t>(decwide_t_elem_number), allocator_type>>::type;
 
@@ -716,12 +716,12 @@
       const exponent_type max_delta_exp =
         static_cast<exponent_type>(prec_elems_for_add_sub * decwide_t_elem_digits10);
 
-      using local_unsigned_wrap_type = detail::unsigned_wrap<unsigned_exponent_type, exponent_type>;
+      using local_unsigned_exponent_wrap_type = detail::unsigned_wrap<unsigned_exponent_type, exponent_type>;
 
-      local_unsigned_wrap_type u_exp(  my_exp);
-      local_unsigned_wrap_type v_exp(v.my_exp);
+      local_unsigned_exponent_wrap_type u_exp(  my_exp);
+      local_unsigned_exponent_wrap_type v_exp(v.my_exp);
 
-      const local_unsigned_wrap_type ofs_exp = (u_exp - v_exp);
+      const local_unsigned_exponent_wrap_type ofs_exp = (u_exp - v_exp);
 
       // Check if the operation is out of range, requiring special handling.
       if(   v.iszero()
@@ -1138,7 +1138,7 @@
       if(n < static_cast<signed long long>(0))
       {
         negate();
-        add_unsigned_long_long(static_cast<unsigned long long>(-n));
+        add_unsigned_long_long(detail::negate(static_cast<unsigned long long>(n)));
         negate();
       }
       else
@@ -1158,7 +1158,7 @@
     {
       const bool b_neg = (n < static_cast<signed long long>(0));
 
-      mul_unsigned_long_long((!b_neg) ? static_cast<unsigned long long>(n) : static_cast<unsigned long long>(-n));
+      mul_unsigned_long_long((!b_neg) ? static_cast<unsigned long long>(n) : detail::negate(static_cast<unsigned long long>(n)));
 
       if(b_neg)
       {
@@ -1172,7 +1172,7 @@
     {
       const bool b_neg = (n < static_cast<signed long long>(0));
 
-      div_unsigned_long_long((!b_neg) ? static_cast<unsigned long long>(n) : static_cast<unsigned long long>(-n));
+      div_unsigned_long_long((!b_neg) ? static_cast<unsigned long long>(n) : detail::negate(static_cast<unsigned long long>(n)));
 
       if(b_neg)
       {

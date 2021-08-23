@@ -24,6 +24,22 @@
 
   namespace math { namespace wide_decimal { namespace detail {
 
+  template<typename UnsignedIntegralType>
+  constexpr typename std::enable_if<   (std::is_integral<UnsignedIntegralType>::value == true)
+                                    && (std::is_unsigned<UnsignedIntegralType>::value == true), UnsignedIntegralType>::type
+  negate(UnsignedIntegralType u)
+  {
+    return (UnsignedIntegralType) (((UnsignedIntegralType) ~u) + 1U);
+  }
+
+  template<typename SignedIntegralType>
+  constexpr typename std::enable_if<   (std::is_integral<SignedIntegralType>::value == true)
+                                    && (std::is_signed  <SignedIntegralType>::value == true), SignedIntegralType>::type
+  negate(SignedIntegralType n)
+  {
+    return (SignedIntegralType) detail::negate((unsigned long long) n);
+  }
+
   struct a029750
   {
     static constexpr std::uint32_t a029750_as_constexpr(const std::uint32_t value)
