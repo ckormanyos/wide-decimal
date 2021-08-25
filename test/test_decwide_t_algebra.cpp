@@ -40,15 +40,13 @@ namespace
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(10001);
 
   #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
-  constexpr std::uint32_t independent_algebra_test_count         = UINT32_C(64);
-  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(16);
+  constexpr std::uint32_t independent_algebra_test_count         = UINT32_C(128);
+  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(32);
   constexpr std::uint32_t independent_algebra_test_round         = UINT32_C(4);
-  constexpr std::uint32_t independent_algebra_test_round_for_log = UINT32_C(2);
   #else
   constexpr std::uint32_t independent_algebra_test_count         = UINT32_C(32);
-  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(4);
+  constexpr std::uint32_t independent_algebra_test_count_for_log = UINT32_C(8);
   constexpr std::uint32_t independent_algebra_test_round         = UINT32_C(1);
-  constexpr std::uint32_t independent_algebra_test_round_for_log = UINT32_C(1);
   #endif
 }
 
@@ -178,7 +176,7 @@ bool test_decwide_t_algebra_log_____()
                                                              double,
                                                              std::int32_t,
                                                              independent_algebra_test_count_for_log,
-                                                             independent_algebra_test_round_for_log,
+                                                             independent_algebra_test_round,
                                                              independent_algebra_test_boost_cpp_type>();
 
   return result_is_ok;

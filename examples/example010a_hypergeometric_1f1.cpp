@@ -27,7 +27,7 @@ namespace local
     // in order to repair one or two type-setting errors in the
     // original publication.
 
-    // Luke's original Fortran77 and algorithmic work are fascinating
+    // Luke's original Fortran77 programs and algorithmic work are fascinating
     // since they are generic and scalable --- decades ahead of their time.
     // Here, in fact, the calculation is scaled to 1,001 decimal digits
     // of precision.
