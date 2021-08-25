@@ -325,7 +325,8 @@
                    || (std::is_same<std::int16_t, exponent_type>::value == true)
                    || (std::is_same<std::int32_t, exponent_type>::value == true)
                    || (std::is_same<std::int64_t, exponent_type>::value == true)),
-                   "Error: exponent_type (determined via the template parameter ExponentType) must be one of int8_t, int16_t, int32_t or int64_t.");
+                   "Error: exponent_type (determined via the template parameter ExponentType) "
+                   "must be one of int8_t, int16_t, int32_t or int64_t.");
 
     static constexpr std::int32_t  decwide_t_digits10       = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
     static constexpr std::int32_t  decwide_t_digits         = detail::decwide_t_helper<MyDigits10, LimbType>::digits;
@@ -351,8 +352,8 @@
     // Rebind the decwide_t allocator to the granularity of the LimbType.
     using allocator_type =
       typename std::allocator_traits<typename std::conditional<(std::is_same<AllocatorType, void>::value == true),
-                                                               std::allocator<void>,
-                                                               AllocatorType>::type>::template rebind_alloc<limb_type>;
+                                                                std::allocator<void>,
+                                                                AllocatorType>::type>::template rebind_alloc<limb_type>;
 
     // Define the array type, which is the internal
     // representation of the data field of a decwide_t.
@@ -365,7 +366,8 @@
     static_assert((   (std::is_same<std::uint8_t,  limb_type>::value == true)
                    || (std::is_same<std::uint16_t, limb_type>::value == true)
                    || (std::is_same<std::uint32_t, limb_type>::value == true)),
-                   "Error: limb_type (determined via the template parameter LimbType) must be one of uint8_t, uint16_t or uint32_t.");
+                   "Error: limb_type (determined via the template parameter LimbType) "
+                   "must be one of uint8_t, uint16_t or uint32_t.");
 
     using double_limb_type =
       typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value == true),
@@ -742,7 +744,7 @@
       typename representation_type::const_pointer p_v    = v.my_data.data();
       bool                                        b_copy = false;
       const std::int32_t                          ofs    = ((ofs_exp.get_is_neg() == false) ? +static_cast<std::int32_t>(ofs_exp.get_value_unsigned() / (unsigned_exponent_type) decwide_t_elem_digits10)
-                                                                                   : -static_cast<std::int32_t>(ofs_exp.get_value_unsigned() / (unsigned_exponent_type) decwide_t_elem_digits10));
+                                                                                            : -static_cast<std::int32_t>(ofs_exp.get_value_unsigned() / (unsigned_exponent_type) decwide_t_elem_digits10));
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       representation_type my_n_data_for_add_sub;
