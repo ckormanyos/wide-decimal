@@ -325,7 +325,7 @@
                    || (std::is_same<std::int16_t, exponent_type>::value == true)
                    || (std::is_same<std::int32_t, exponent_type>::value == true)
                    || (std::is_same<std::int64_t, exponent_type>::value == true)),
-                   "Error: exponent_type (determined via the template parameter ExponentType) "
+                   "Error: exponent_type (template parameter ExponentType) "
                    "must be one of int8_t, int16_t, int32_t or int64_t.");
 
     static constexpr std::int32_t  decwide_t_digits10       = detail::decwide_t_helper<MyDigits10, LimbType>::digits10;
@@ -366,7 +366,7 @@
     static_assert((   (std::is_same<std::uint8_t,  limb_type>::value == true)
                    || (std::is_same<std::uint16_t, limb_type>::value == true)
                    || (std::is_same<std::uint32_t, limb_type>::value == true)),
-                   "Error: limb_type (determined via the template parameter LimbType) "
+                   "Error: limb_type (template parameter LimbType) "
                    "must be one of uint8_t, uint16_t or uint32_t.");
 
     using double_limb_type =
