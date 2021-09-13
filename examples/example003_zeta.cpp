@@ -12,8 +12,26 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-namespace
+namespace local_zeta
 {
+  using dec51_t = math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
+
+  template<typename FloatType>
+  FloatType pi() { return FloatType(); }
+
+  template<>
+  float pi() { return (float) 3.14159265358979323846264338327950288419716939937510582097L; }
+
+  template<>
+  double pi() { return (double) 3.14159265358979323846264338327950288419716939937510582097L; }
+
+  template<>
+  long double pi() { return (long double) 3.14159265358979323846264338327950288419716939937510582097L; }
+
+  // N[Pi, 57]
+  template<>
+  dec51_t pi() { return dec51_t( "3.14159265358979323846264338327950288419716939937510582097"); }
+
   void compute_primes_via_square_root(std::deque<std::uint_fast16_t>& primes,
                                       const std::uint_fast16_t maximum_value)
   {
@@ -49,7 +67,6 @@ namespace
   {
     // This is a dedicated template function that computes
     // zeta(16) from an elementary series of prime powers.
-    // 1.000015282259408651871732571487636722023237388990471531...
 
     using float_type = FloatingPointType;
 
@@ -79,20 +96,24 @@ bool math::wide_decimal::example003_zeta()
 {
   std::deque<std::uint_fast16_t> primes(1U, UINT32_C(2));
 
-  // Get 1000 primes.
-  compute_primes_via_square_root(primes, UINT32_C(7920));
+  using local_zeta::dec51_t;
 
-  using dec51_t = math::wide_decimal::decwide_t<51U>;
+  // Get a table of the first 1000 primes.
+  local_zeta::compute_primes_via_square_root(primes, UINT32_C(7920));
+
+  // From https://functions.wolfram.com/ZetaFunctionsandPolylogarithms/Zeta/03/02/
+  // we find that zeta(16) = (3617 Pi^16)/325641566250
+  //                       = 1.000015282259408651871732571487636722023237388990471531...
 
   // Compute zeta(16).
-  const dec51_t r16 = zeta16<dec51_t>(primes);
+  const dec51_t r16 = local_zeta::zeta16<dec51_t>(primes);
 
   using std::fabs;
 
   // Check the closeness of the result.
   const dec51_t control
   {
-    "1.000015282259408651871732571487636722023237388990471531"
+    dec51_t(3617U * pow(local_zeta::pi<dec51_t>(), 16U)) / 325641566250ULL
   };
 
   const dec51_t closeness = fabs(1 - (r16 / control));
