@@ -191,6 +191,7 @@
     <ClCompile Include="examples\example010a_hypergeometric_1f1.cpp" />
     <ClCompile Include="examples\example010_hypergeometric_2f1.cpp" />
     <ClCompile Include="examples\example011_trig_trapezoid_integral.cpp" />
+    <ClCompile Include="examples\example012_rational_ceil.cpp" />
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
     <ClCompile Include="test\test_decwide_t_examples.cpp" />

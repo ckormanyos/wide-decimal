@@ -36,6 +36,7 @@
   bool example010_hypergeometric_2f1     ();
   bool example010a_hypergeometric_1f1    ();
   bool example011_trig_trapezoid_integral();
+  bool example012_rational_ceil          ();
 
   } } // namespace math::wide_decimal
 
