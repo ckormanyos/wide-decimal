@@ -2291,6 +2291,7 @@
 
         std::int32_t digit_count_limb_0 = 0;
 
+        // Manually count the number of base-10 digits on the zero'th limb.
         limb_type tmp_limb_0 = my_data[0U];
 
         while(tmp_limb_0 > 0U)
@@ -2302,6 +2303,7 @@
 
         const std::int32_t digit_count_limbs_1_to_n = decwide_t_max_digits10 - digit_count_limb_0;
 
+        // Find the index of the element that contains the least-significant base-10 digit.
         std::int32_t digit_idx = std::int32_t(   (digit_count_limbs_1_to_n / decwide_t_elem_digits10)
                                               + ((digit_count_limbs_1_to_n % decwide_t_elem_digits10) != 0));
 
@@ -2312,34 +2314,47 @@
         limb_type least_significant_p10;
         limb_type rounding_p10;
 
+        // Get the value of the least-significant base-10 digit.
         const std::uint8_t least_significant_digit =
-          local_digits10_helper_type::digit_at_pos_in_limb(my_data[local_size_type(digit_idx)],
-                                                            static_cast<unsigned>(decwide_t_elem_digits10 - digit_rem),
-                                                            least_significant_p10);
+          local_digits10_helper_type::digit_at_pos_in_limb
+          (
+            my_data[local_size_type(digit_idx)],
+            static_cast<unsigned>(decwide_t_elem_digits10 - digit_rem),
+            least_significant_p10
+          );
 
         static_cast<void>(least_significant_digit);
 
+        // Get the value of the rounding digit, which is one digit
+        // less significant than the least-significant base-10 digit.
         const std::uint8_t rounding_digit =
-          local_digits10_helper_type::digit_at_pos_in_limb(my_data[local_size_type((digit_rem != 0) ? digit_idx : digit_idx + 1)],
-                                                            static_cast<unsigned>((decwide_t_elem_digits10 - digit_rem) - 1),
-                                                            rounding_p10);
+          local_digits10_helper_type::digit_at_pos_in_limb
+          (
+            my_data[local_size_type((digit_rem != 0) ? digit_idx : digit_idx + 1)],
+            static_cast<unsigned>((decwide_t_elem_digits10 - digit_rem) - 1),
+            rounding_p10
+          );
 
+        // Clear the lower base-10 digits of the rounded element.
         my_data[local_size_type(digit_idx)] -= limb_type(my_data[local_size_type(digit_idx)] % least_significant_p10);
 
+        // Clear the lower base-10 limbs.
         if(local_size_type(digit_idx) < local_size_type(my_data.size() - 1U))
         {
           std::fill(my_data.begin() + local_size_type(digit_idx + 1), my_data.end(), limb_type(0U));
         }
 
+        // Perform round-to-nearest with no tie-breaking whatsoever.
         if(rounding_digit >= 5U)
         {
           my_data[local_size_type(digit_idx)] += least_significant_p10;
 
-
+          // There is a carry from rounding up.
           std::uint_fast8_t carry_out =
             ((my_data[local_size_type(digit_idx)] >= decwide_t_elem_mask) ? static_cast<std::uint_fast8_t>(1U)
                                                                           : static_cast<std::uint_fast8_t>(0U));
 
+          // Propogate the carry into the limbs of higher significance as needed.
           if(carry_out != 0U)
           {
             my_data[local_size_type(digit_idx)] -= decwide_t_elem_mask;
@@ -2360,6 +2375,9 @@
 
             if((digit_idx < 0) && (carry_out != 0U))
             {
+              // In rare cases, propagation of the carry reaches the zero'th limb
+              // of highest significance, and we must shift the data, create a new limb
+              // with the carry value of 1 and adjust the exponent accordingly.
               std::copy_backward(my_data.cbegin(),
                                  my_data.cend() - 1,
                                  my_data.end());
