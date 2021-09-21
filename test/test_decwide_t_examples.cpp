@@ -62,6 +62,7 @@ bool test_decwide_t_examples_part2__()
   result_is_ok &= math::wide_decimal::example010_hypergeometric_2f1     ();
   result_is_ok &= math::wide_decimal::example010a_hypergeometric_1f1    ();
   result_is_ok &= math::wide_decimal::example011_trig_trapezoid_integral();
+  result_is_ok &= math::wide_decimal::example012_rational_ceil          ();
 
   return result_is_ok;
 }
