@@ -156,9 +156,9 @@
     static constexpr std::int32_t elem_mask      = static_cast<std::int32_t>(pow10_maker((std::uint32_t)  elem_digits10));
     static constexpr std::int32_t elem_mask_half = static_cast<std::int32_t>(pow10_maker((std::uint32_t) (elem_digits10 / 2)));
 
-    static std::uint8_t digit_at_pos_in_limb(const LimbType u, const unsigned pos, LimbType& p10)
+    static std::uint8_t digit_at_pos_in_limb(const LimbType u, const unsigned pos)
     {
-      p10 = static_cast<LimbType>(pow10_maker(pos));
+      LimbType p10 = static_cast<LimbType>(pow10_maker(pos));
 
       return std::uint8_t(LimbType(u / p10) % LimbType(10U));
     }
@@ -178,7 +178,7 @@
   public:
     static constexpr std::int32_t digits10          = MyDigits10;
     static constexpr std::int32_t digits            = digits10;
-    static constexpr std::int32_t max_digits10      = static_cast<std::int32_t>(digits10 + 3);
+    static constexpr std::int32_t max_digits10      = static_cast<std::int32_t>(digits10 + 4);
     static constexpr std::int32_t radix             = static_cast<std::int32_t>(10);
 
     static constexpr std::int32_t elem_number_extra = 3;
