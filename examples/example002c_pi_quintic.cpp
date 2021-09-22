@@ -81,7 +81,7 @@ namespace
       - (  ((sk_squared - local_five) / 2U)
           +  sqrt(sk * (sk_squared - (sk * 2U) + local_five))) * five_pow_k;
 
-      const std::int32_t ib = (std::max)(0, -ilogb(val_pi - previous_ak));
+      const std::int32_t ib = (std::max)(std::int32_t(0), std::int32_t(-ilogb(val_pi - previous_ak)));
 
       const std::uint32_t digits10_of_iteration =
         (std::uint32_t) ((std::uint64_t) ((std::uint64_t) ib * digits10_scale) / 1000U);

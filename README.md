@@ -117,6 +117,7 @@ how to use wide-decimal.
   - ![`example010_hypergeometric_2f1.cpp`](./examples/example010_hypergeometric_2f1.cpp) calculates a <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function value using an iterative rational approximation scheme.
   - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
+  - ![`example012_rational_ceil.cpp`](./examples/example012_rational_ceil.cpp) verifies the proper representation of a wide selection of small-valued, pure integral rational quotients.
 
 ## Testing and CI
 

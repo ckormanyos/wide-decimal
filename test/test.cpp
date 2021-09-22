@@ -52,31 +52,31 @@ int main()
   start = local_clock_type::now(); const bool result_test_decwide_t_algebra_sqrt___is_ok = (test_decwide_t_algebra_sqrt____() == true); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_algebra_sqrt___is_ok: " << std::boolalpha << result_test_decwide_t_algebra_sqrt___is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
   start = local_clock_type::now(); const bool result_test_decwide_t_algebra_log____is_ok = (test_decwide_t_algebra_log_____() == true); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_algebra_log____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_log____is_ok << ", time: " << ((float) std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F << "s" << std::endl;
 
-  const float
-  t_sec
-  {
-    float(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start_all).count()) / 1000.0F
-  };
+  const float t_sec =
+    float(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start_all).count()) / 1000.0F;
 
   const bool result_is_ok =
-  (
-       result_test_decwide_t_examples_part1_is_ok
-    && result_test_decwide_t_examples_part2_is_ok
-    && result_test_decwide_t_algebra_add____is_ok
-    && result_test_decwide_t_algebra_sub____is_ok
-    && result_test_decwide_t_algebra_mul____is_ok
-    && result_test_decwide_t_algebra_div____is_ok
-    && result_test_decwide_t_algebra_sqrt___is_ok
-    && result_test_decwide_t_algebra_log____is_ok
-  );
+    bool
+    (
+         (result_test_decwide_t_examples_part1_is_ok == true)
+      && (result_test_decwide_t_examples_part2_is_ok == true)
+      && (result_test_decwide_t_algebra_add____is_ok == true)
+      && (result_test_decwide_t_algebra_sub____is_ok == true)
+      && (result_test_decwide_t_algebra_mul____is_ok == true)
+      && (result_test_decwide_t_algebra_div____is_ok == true)
+      && (result_test_decwide_t_algebra_sqrt___is_ok == true)
+      && (result_test_decwide_t_algebra_log____is_ok == true)
+    );
 
+  // Print the total results.
   std::cout << "result_is_ok:                             : "
             << std::boolalpha
             << result_is_ok
             << ", time: "
             << t_sec
             << "s"
-            << std::endl;
+            << std::endl
+            ;
 
   return (result_is_ok ? 0 : -1);
 }
