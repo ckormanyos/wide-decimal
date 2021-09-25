@@ -2309,13 +2309,13 @@
                                                     + ((digits_limb_1_to_n % decwide_t_elem_digits10) != 0));
 
         // Set the index of the element that contains the rounding base-10 digit.
-        std::int32_t round_digit_idx =
+        const std::int32_t round_digit_idx =
           std::int32_t(((digits_limb_1_to_n % decwide_t_elem_digits10) != 0)
                           ? least_digit_idx
                           : least_digit_idx + 1);
 
         // Find the base-10 order (position) of the least-significant base-10 digit.
-        std::int32_t least_digit_pos =
+        const std::int32_t least_digit_pos =
           (std::int32_t(digits_limb_1_to_n % decwide_t_elem_digits10) != 0)
             ? std::int32_t
               (
@@ -2325,21 +2325,10 @@
             : 0;
 
         // Find the base-10 order (position) of the rounding base-10 digit.
-        std::int32_t round_digit_pos =
+        const std::int32_t round_digit_pos =
           std::int32_t((least_digit_pos != 0) ? least_digit_pos - 1 : decwide_t_elem_digits10 - 1);
 
         using digit_helper_struct_type = detail::decwide_t_helper<decwide_t_elem_digits10, limb_type>;
-
-        // Get the value of the least-significant base-10 digit.
-        const std::uint8_t least_digit_value =
-          digit_helper_struct_type::digit_at_pos_in_limb
-          (
-            my_data[local_size_type(least_digit_idx)],
-            unsigned(least_digit_pos)
-          );
-
-        // TBD: Remove unused debug-helper variable.
-        static_cast<void>(least_digit_value);
 
         // Get the value of the rounding base-10 digit.
         const std::uint8_t round_digit_value =
@@ -2349,11 +2338,7 @@
              unsigned(round_digit_pos)
           );
 
-        local_limb_type least_digit_p10 = detail::pow10_maker(std::uint32_t(least_digit_pos));
-        local_limb_type round_digit_p10 = detail::pow10_maker(std::uint32_t(round_digit_pos));
-
-        // TBD: Remove unused debug-helper variable.
-        static_cast<void>(round_digit_p10);
+        const local_limb_type least_digit_p10 = detail::pow10_maker_as_runtime_value(std::uint32_t(least_digit_pos));
 
         // Clear the lower base-10 digits of the rounded element.
         my_data[local_size_type(least_digit_idx)] -= local_limb_type(my_data[local_size_type(least_digit_idx)] % least_digit_p10);
