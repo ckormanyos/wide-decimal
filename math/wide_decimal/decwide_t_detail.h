@@ -144,6 +144,29 @@
     return ((n == UINT32_C(0)) ? UINT32_C(1) : pow10_maker(n - UINT32_C(1)) * UINT32_C(10));
   }
 
+  inline std::uint32_t pow10_maker_as_runtime_value(const std::uint32_t n)
+  {
+    using local_p10_table_type = std::array<std::uint32_t, 10U>;
+
+    constexpr local_p10_table_type local_p10_table =
+    {{
+      UINT32_C(1),
+      UINT32_C(10),
+      UINT32_C(100),
+      UINT32_C(1000),
+      UINT32_C(10000),
+      UINT32_C(100000),
+      UINT32_C(1000000),
+      UINT32_C(10000000),
+      UINT32_C(100000000),
+      UINT32_C(1000000000)
+    }};
+
+    return ((n < std::uint32_t(std::tuple_size<local_p10_table_type>::value))
+             ? local_p10_table[typename local_p10_table_type::size_type(n)]
+             : local_p10_table.back());
+  }
+
   template<typename LimbType>
   struct decwide_t_helper_base
   {
@@ -158,9 +181,7 @@
 
     static std::uint8_t digit_at_pos_in_limb(const LimbType u, const unsigned pos)
     {
-      LimbType p10 = static_cast<LimbType>(pow10_maker(pos));
-
-      return std::uint8_t(LimbType(u / p10) % LimbType(10U));
+      return std::uint8_t(LimbType(u / pow10_maker_as_runtime_value(std::uint32_t(pos))) % LimbType(10U));
     }
   };
 
