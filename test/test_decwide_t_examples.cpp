@@ -62,7 +62,7 @@ bool test_decwide_t_examples_part2__()
   result_is_ok &= math::wide_decimal::example010_hypergeometric_2f1       (); std::cout << "example010_hypergeometric_2f1       : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example010a_hypergeometric_1f1      (); std::cout << "example010a_hypergeometric_1f1      : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example011_trig_trapezoid_integral  (); std::cout << "example011_trig_trapezoid_integral  : " << std::boolalpha << result_is_ok << std::endl;
-  result_is_ok &= math::wide_decimal::example012_rational_ceil            (); std::cout << "example012_rational_ceil            : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example012_rational_floor_ceil      (); std::cout << "example012_rational_floor_ceil      : " << std::boolalpha << result_is_ok << std::endl;
 
   return result_is_ok;
 }
