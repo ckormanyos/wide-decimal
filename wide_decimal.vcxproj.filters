@@ -133,7 +133,7 @@
     <ClCompile Include="examples\example009b_boost_math_standalone.cpp">
       <Filter>Source Files\examples</Filter>
     </ClCompile>
-    <ClCompile Include="examples\example012_rational_ceil.cpp">
+    <ClCompile Include="examples\example012_rational_floor_ceil.cpp">
       <Filter>Source Files\examples</Filter>
     </ClCompile>
   </ItemGroup>
