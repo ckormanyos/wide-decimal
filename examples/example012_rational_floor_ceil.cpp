@@ -37,9 +37,9 @@ namespace local
 
     bool result_is_ok = true;
 
-    for(std::int32_t lo_index = 101U; lo_index < 1010U; lo_index += 7U)
+    for(std::int32_t lo_index = INT32_C(101); lo_index < INT32_C(1010); lo_index += INT32_C(7))
     {
-      for(std::int32_t hi_index = 10001U; hi_index < 100010U; hi_index += 17U)
+      for(std::int32_t hi_index = INT32_C(10001); hi_index < INT32_C(100010); hi_index += INT32_C(17))
       {
         const bool lo_is_neg = ((dist_sign(eng) % 2U) == 0U);
         const bool hi_is_neg = ((dist_sign(eng) % 2U) == 0U);
@@ -76,9 +76,9 @@ namespace local
 
     bool result_is_ok = true;
 
-    for(std::int32_t lo_index = 101U; lo_index < 1010U; lo_index += 7U)
+    for(std::int32_t lo_index = INT32_C(101); lo_index < INT32_C(1010); lo_index += INT32_C(7))
     {
-      for(std::int32_t hi_index = 10001U; hi_index < 100010U; hi_index += 17U)
+      for(std::int32_t hi_index = INT32_C(10001); hi_index < INT32_C(100010); hi_index += INT32_C(17))
       {
         const bool lo_is_neg = ((dist_sign(eng) % 2U) == 0U);
         const bool hi_is_neg = ((dist_sign(eng) % 2U) == 0U);
