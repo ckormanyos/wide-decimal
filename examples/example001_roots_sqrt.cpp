@@ -13,14 +13,14 @@
 
 bool math::wide_decimal::example001_roots_sqrt()
 {
-  using local_limb_type = std::uint16_t;
+  using local_limb_type = std::uint32_t;
 
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(101);
 
   constexpr std::int32_t local_elem_number =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>;
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 32U>;
 
   using dec101_t = math::wide_decimal::decwide_t<wide_decimal_digits10,
                                                  local_limb_type,
@@ -30,15 +30,18 @@ bool math::wide_decimal::example001_roots_sqrt()
 
   const dec101_t s = sqrt(dec101_t(123456U) / 100);
 
-  // N[Sqrt[123456/100], 101]
+  // N[Sqrt[123456/100], 111]
+  // 35.1363060095963986639333846404180557597515182871693145281659761647177108954528909286350312191322209780537650946
   const dec101_t control
-  {
-    "35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220978"
-  };
+  (
+    "35.1363060095963986639333846404180557597515182871693145281659761647177108954528909286350312191322209780537650946"
+  );
+
+  using std::fabs;
 
   const dec101_t closeness = fabs(1 - fabs(s / control));
 
-  const bool result_is_ok = closeness < (std::numeric_limits<dec101_t>::epsilon() * 10);
+  const bool result_is_ok = (closeness < (std::numeric_limits<dec101_t>::epsilon() * 10));
 
   return result_is_ok;
 }

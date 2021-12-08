@@ -218,7 +218,6 @@
     <ClInclude Include="util\utility\util_baselexical_cast.h" />
     <ClInclude Include="util\utility\util_dynamic_array.h" />
     <ClInclude Include="util\utility\util_noncopyable.h" />
-    <ClInclude Include="util\utility\util_numeric_cast.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\wide_decimal.yml" />
