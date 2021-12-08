@@ -165,9 +165,6 @@
     <ClInclude Include="util\utility\util_noncopyable.h">
       <Filter>Source Files\util\utility</Filter>
     </ClInclude>
-    <ClInclude Include="util\utility\util_numeric_cast.h">
-      <Filter>Source Files\util\utility</Filter>
-    </ClInclude>
     <ClInclude Include="util\utility\util_baselexical_cast.h">
       <Filter>Source Files\util\utility</Filter>
     </ClInclude>
