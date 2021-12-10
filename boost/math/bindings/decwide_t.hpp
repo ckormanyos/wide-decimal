@@ -61,15 +61,13 @@
     static result_type my_compute()
     {
       // Adapted from Boost.Math.Constants (see file calculate_constants.hpp).
-      using std::ldexp;
-      using std::sqrt;
 
       result_type result;
-      result_type a = 1;
+      result_type a(1U);
       result_type b;
       result_type A(a);
-      result_type B = 0.5F;
-      result_type D = 0.25F;
+      result_type B(0.5F);
+      result_type D(0.25F);
 
       result_type lim = std::numeric_limits<result_type>::epsilon();
 
@@ -77,6 +75,9 @@
 
       do
       {
+        using std::ldexp;
+        using std::sqrt;
+
         result = A + B;
         result = ldexp(result, -2);
         b = sqrt(B);
@@ -86,13 +87,24 @@
         B = A - result;
         B = ldexp(B, 1);
         result = A - B;
-        bool neg = boost::math::sign(result) < 0;
+
+        const bool neg = (boost::math::sign(result) < 0);
+
         if(neg)
-           result = -result;
+        {
+          result = -result;
+        }
+
         if(result <= lim)
-           break;
+        {
+          break;
+        }
+
         if(neg)
-           result = -result;
+        {
+          result = -result;
+        }
+
         result = ldexp(result, k - 1);
         D -= result;
         ++k;
@@ -105,9 +117,9 @@
     }
 
   public:
-    #if (BOOST_VERSION <= 107200)
+    #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
     template<int N> static const result_type& get(const mpl::int_<N>&)
-    #elif (BOOST_VERSION <= 107500)
+    #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
     template<int N> static const result_type& get(const boost::integral_constant<int, N>&)
     #else
     template<int N> static const result_type& get(const std::integral_constant<int, N>&)
@@ -126,9 +138,9 @@
       return result;
     }
 
-    #if (BOOST_VERSION <= 107200)
+    #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
     static inline const result_type get(const mpl::int_<0>&)
-    #elif (BOOST_VERSION <= 107500)
+    #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
     static inline const result_type get(const boost::integral_constant<int, 0>&)
     #else
     static inline const result_type get(const std::integral_constant<int, 0>&)
@@ -140,7 +152,7 @@
 
   } } // namespace boost::math::constants::detail
 
-  #if (BOOST_VERSION <= 107600)
+  #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107600))
   namespace lanczos {
 
   template <typename T, typename Policy>
@@ -182,6 +194,10 @@
 
   } // namespace boost::math::lanczos
   #endif // BOOST_VERSION
+
+  #if !defined(BOOST_VERSION)
+  #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
+  #endif
 
   } } // namespace boost::math
 
