@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -1426,7 +1426,7 @@
       return *this;
     }
 
-    decwide_t& calculate_sqrt()
+    auto calculate_sqrt() -> decwide_t&
     {
       // Compute the square root of *this.
 
@@ -1481,9 +1481,9 @@
       // http://www.jjj.de/pibook/pibook.html
       // http://www.springer.com/gp/book/9783642567353
 
-      for(std::int32_t digits  = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1);
-                       digits  < (std::int32_t) (original_prec_elem * decwide_t_elem_digits10);
-                       digits *= static_cast<std::int32_t>(2))
+      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
+               digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
+               digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
         const auto new_prec_as_digits10 =
@@ -1509,7 +1509,7 @@
       return *this;
     }
 
-    decwide_t& negate()
+    auto negate() -> decwide_t&
     {
       if(!(iszero)())
       {
@@ -1519,7 +1519,7 @@
       return *this;
     }
 
-    friend inline decwide_t rootn_inverse(decwide_t x, const std::int32_t p)
+    friend inline auto rootn_inverse(decwide_t x, const std::int32_t p) -> decwide_t
     {
       decwide_t result;
 
@@ -1570,14 +1570,17 @@
 
         const decwide_t my_local_one(one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
 
-        for(std::int32_t digits  = (std::int32_t) (std::numeric_limits<InternalFloatType>::digits10 - 1);
-                         digits  < (std::int32_t) (original_prec_elem * decwide_t_elem_digits10);
-                         digits *= static_cast<std::int32_t>(2))
+        for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
+                 digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
+                 digits *= static_cast<std::int32_t>(2))
         {
           // Adjust precision of the terms.
           const std::int32_t new_prec_as_digits10 =
-              (std::int32_t) (digits * 2)
-            + (std::max)((std::int32_t) (decwide_t_elem_digits10  + 1), (std::int32_t) 9);
+            static_cast<std::int32_t>
+            (
+                static_cast<std::int32_t>(digits * 2)
+              + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10  + 1), static_cast<std::int32_t>(9))
+            );
 
           result.precision(new_prec_as_digits10);
                x.precision(new_prec_as_digits10);
@@ -1598,20 +1601,22 @@
     }
 
     // Comparison functions.
-    bool (isnan)   () const { return false; }
-    bool (isinf)   () const { return false; }
-    bool (isfinite)() const { return true; }
+    auto (isnan)   () const -> bool { return false; }
+    auto (isinf)   () const -> bool { return false; }
+    auto (isfinite)() const -> bool { return true; }
 
-    bool iszero() const
+    auto iszero() const -> bool
     {
       return (my_data[0U] == static_cast<limb_type>(0U));
     }
 
-    bool isone() const
+    auto isone() const -> bool
     {
       // Check if the value of *this is identically 1 or very close to 1.
 
       const bool not_negative = (!my_neg);
+
+      bool value_is_one = false;
 
       if(not_negative)
       {
@@ -1625,9 +1630,10 @@
                            return (d != static_cast<limb_type>(0U));
                          });
 
-          return (it_non_zero == my_data.cend());
+          value_is_one = (it_non_zero == my_data.cend());
         }
-        else if((my_data[0U] == static_cast<limb_type>(decwide_t_elem_mask - 1)) && (my_exp == static_cast<exponent_type>(-decwide_t_elem_digits10)))
+
+        if((my_data[0U] == static_cast<limb_type>(decwide_t_elem_mask - 1)) && (my_exp == static_cast<exponent_type>(-decwide_t_elem_digits10)))
         {
           const typename representation_type::const_iterator it_non_nine =
             std::find_if(my_data.cbegin(),
@@ -1637,74 +1643,89 @@
                            return (d != static_cast<limb_type>(decwide_t::decwide_t_elem_mask - 1));
                          });
 
-          return (it_non_nine == my_data.cend());
+          value_is_one = (it_non_nine == my_data.cend());
         }
       }
 
-      return false;
+      return value_is_one;
     }
 
-    bool isint() const
+    auto isint() const -> bool
     {
-      if(my_fpclass != decwide_t_finite) { return false; }
+      bool value_is_int { };
 
-      if(iszero())
+      if(my_fpclass != decwide_t_finite)
       {
-        return true;
+        value_is_int = false;
+      }
+      else
+      {
+        if(iszero())
+        {
+          value_is_int = true;
+        }
+        else
+        {
+          if(my_exp < static_cast<exponent_type>(0))
+          {
+            // Here, we have |*this| < 1, so *this can not be int.
+            value_is_int = false;
+          }
+          else
+          {
+            const typename representation_type::size_type offset_decimal_part =
+              static_cast<typename representation_type::size_type>(my_exp / decwide_t_elem_digits10) + 1U;
+
+            if(offset_decimal_part >= static_cast<typename representation_type::size_type>(decwide_t_elem_number))
+            {
+              // The number is too large to resolve the integer part.
+              // It considered to be a pure integer.
+              value_is_int = true;
+            }
+            else
+            {
+              typename representation_type::const_iterator it_non_zero =
+                std::find_if(my_data.cbegin() + static_cast<std::ptrdiff_t>(offset_decimal_part),
+                             my_data.cend(),
+                             [](const limb_type& d) -> bool
+                             {
+                               return (d != static_cast<limb_type>(0U));
+                             });
+
+              value_is_int = (it_non_zero == my_data.cend());
+            }
+          }
+        }
       }
 
-      if(my_exp < static_cast<exponent_type>(0))
-      {
-        // Here, we have |*this| < 1, so *this can not be int.
-        return false;
-      }
-
-      const typename representation_type::size_type offset_decimal_part =
-        static_cast<typename representation_type::size_type>(my_exp / decwide_t_elem_digits10) + 1U;
-
-      if(offset_decimal_part >= static_cast<typename representation_type::size_type>(decwide_t_elem_number))
-      {
-        // The number is too large to resolve the integer part.
-        // It considered to be a pure integer.
-        return true;
-      }
-
-      typename representation_type::const_iterator it_non_zero =
-        std::find_if(my_data.cbegin() + static_cast<std::ptrdiff_t>(offset_decimal_part),
-                     my_data.cend(),
-                     [](const limb_type& d) -> bool
-                     {
-                       return (d != static_cast<limb_type>(0U));
-                     });
-
-      return (it_non_zero == my_data.cend());
+      return value_is_int;
     }
 
-    bool isneg() const { return my_neg; }
-    bool ispos() const { return (!isneg()); }
+    auto isneg() const -> bool { return my_neg; }
+    auto ispos() const -> bool { return (!isneg()); }
 
     // Operators pre-increment and pre-decrement.
-    decwide_t& operator++() { return *this += one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
-    decwide_t& operator--() { return *this -= one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+    auto operator++() -> decwide_t& { return *this += one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+    auto operator--() -> decwide_t& { return *this -= one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
 
     // Operators post-increment and post-decrement.
-    decwide_t operator++(int) { const decwide_t w(*this); static_cast<void>(++(*this)); return w; }
-    decwide_t operator--(int) { const decwide_t w(*this); static_cast<void>(--(*this)); return w; }
+    auto operator++(int) -> decwide_t { const decwide_t w(*this); static_cast<void>(++(*this)); return w; }
+    auto operator--(int) -> decwide_t { const decwide_t w(*this); static_cast<void>(--(*this)); return w; }
 
     // Conversion routines.
-    void extract_parts(InternalFloatType& mantissa, exponent_type& exponent) const
+    auto extract_parts(InternalFloatType& mantissa, exponent_type& exponent) const -> void
     {
       // Extracts the mantissa as a decimal part less in magnitude
       // than 1 and the base-10 exponent parts of this decwide_t.
       // For instance 45.67e8 will be extracted as 0.4567 * e10.
 
       exponent = my_exp;
-      mantissa = InternalFloatType(0.0F);
+      mantissa = static_cast<InternalFloatType>(0.0F);
 
-      limb_type p10 = static_cast<limb_type>(1U);
+      auto p10 = static_cast<limb_type>(1U);
 
       {
-        limb_type d0  = my_data[0U];
+        auto d0  = my_data[0U];
 
         for(;;)
         {
@@ -1728,10 +1749,9 @@
               + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
                                                                     % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
 
-      for(typename representation_type::size_type
-            limb_index = 0U;
-          ((limb_index < my_data.size()) && (limb_index < typename representation_type::size_type(digit_loops)));
-          ++limb_index)
+      for(auto   limb_index = static_cast<typename representation_type::size_type>(0U);
+               ((limb_index < my_data.size()) && (limb_index < typename representation_type::size_type(digit_loops)));
+               ++limb_index)
       {
         mantissa += (static_cast<InternalFloatType>(my_data[limb_index]) * scale);
 
@@ -1744,7 +1764,7 @@
       }
     }
 
-    decwide_t extract_integer_part() const
+    auto extract_integer_part() const -> decwide_t
     {
       // Compute the signed integer part of x.
 
@@ -1775,7 +1795,7 @@
       return x;
     }
 
-    long double extract_long_double() const
+    auto extract_long_double() const -> long double
     {
       // Returns the long double conversion of a decwide_t.
 
@@ -1798,17 +1818,17 @@
       }
       else
       {
-        ld = (long double) my_data[0U];
+        ld = static_cast<long double>(my_data[0U]);
 
-        long double scale = 1.0L;
+        auto scale = static_cast<long double>(1.0L);
 
-        for(typename representation_type::size_type i  = (typename representation_type::size_type) decwide_t_elem_digits10;
-                                                    i  < (typename representation_type::size_type) (std::numeric_limits<long double>::digits10 + 3);
-                                                    i += (typename representation_type::size_type) decwide_t_elem_digits10)
+        for(auto i  = static_cast<typename representation_type::size_type>(decwide_t_elem_digits10);
+                 i  < static_cast<typename representation_type::size_type>(std::numeric_limits<long double>::digits10 + 3);
+                 i += static_cast<typename representation_type::size_type>(decwide_t_elem_digits10))
         {
-          scale /= (long double) decwide_t_elem_mask;
+          scale /= static_cast<long double>(decwide_t_elem_mask);
 
-          ld += (long double) my_data[i / decwide_t_elem_digits10] * scale;
+          ld += static_cast<long double>(my_data[i / decwide_t_elem_digits10]) * scale;
         }
 
         if(my_neg) { ld = -ld; }
@@ -1817,56 +1837,63 @@
       return ld;
     }
 
-    signed long long extract_signed_long_long() const
+    auto extract_signed_long_long() const -> signed long long // NOLINT(google-runtime-int)
     {
       // Extracts a signed long long from *this.
       // If (x > maximum of signed long long) or (x < minimum of signed long long),
       // then the maximum or minimum of signed long long is returned accordingly.
 
+      auto signed_long_long_result = static_cast<signed long long>(0); // NOLINT(google-runtime-int)
+
       if(my_exp < static_cast<exponent_type>(0))
       {
-        return static_cast<signed long long>(0);
-      }
-
-      const bool b_neg = isneg();
-
-      unsigned long long val;
-
-      if((!b_neg) && (*this > signed_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()))
-      {
-        return (std::numeric_limits<signed long long>::max)();
-      }
-      else if(b_neg &&  (*this < signed_long_long_min<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()))
-      {
-        return (std::numeric_limits<signed long long>::min)();
+        ;
       }
       else
       {
-        // Extract the data into an unsigned long long value.
-        decwide_t xn(*this);
+        const bool b_neg = isneg();
 
-        xn.eval_round_self();
-
-        xn = fabs(xn.extract_integer_part());
-
-        val = static_cast<unsigned long long>(xn.my_data[0]);
-
-        const std::int32_t imax = (std::min)(static_cast<std::int32_t>(static_cast<std::int32_t>(xn.my_exp) / decwide_t_elem_digits10), static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1)));
-
-        for(typename representation_type::size_type
-              limb_index  = static_cast<typename representation_type::size_type>(1);
-              limb_index <= static_cast<typename representation_type::size_type>(imax);
-            ++limb_index)
+        if((!b_neg) && (*this > signed_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()))
         {
-          val *= static_cast<unsigned long long>(decwide_t_elem_mask);
-          val += static_cast<unsigned long long>(xn.my_data[limb_index]);
+          signed_long_long_result = (std::numeric_limits<signed long long>::max)(); // NOLINT(google-runtime-int)
+        }
+        else
+        {
+          if(b_neg &&  (*this < signed_long_long_min<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()))
+          {
+            signed_long_long_result = (std::numeric_limits<signed long long>::min)(); // NOLINT(google-runtime-int)
+          }
+          else
+          {
+            // Extract the data of *this into an unsigned long long value.
+            decwide_t xn(*this);
+
+            xn.eval_round_self();
+
+            xn = fabs(xn.extract_integer_part());
+
+            auto val = static_cast<unsigned long long>(xn.my_data[0]); // NOLINT(google-runtime-int)
+
+            const std::int32_t imax = (std::min)(static_cast<std::int32_t>(static_cast<std::int32_t>(xn.my_exp) / decwide_t_elem_digits10), static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1)));
+
+            for(auto  limb_index  = static_cast<typename representation_type::size_type>(1);
+                      limb_index <= static_cast<typename representation_type::size_type>(imax);
+                    ++limb_index)
+            {
+              val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)
+              val += static_cast<unsigned long long>(xn.my_data[limb_index]); // NOLINT(google-runtime-int)
+            }
+
+            signed_long_long_result = ((!b_neg) ? static_cast<signed long long>(val) // NOLINT(google-runtime-int)
+                                                : static_cast<signed long long>(-static_cast<signed long long>(val))); // NOLINT(google-runtime-int)
+          }
         }
       }
 
-      return ((!b_neg) ? static_cast<signed long long>(val) : static_cast<signed long long>(-static_cast<signed long long>(val)));
+      return signed_long_long_result;
     }
 
-    unsigned long long extract_unsigned_long_long() const
+    auto extract_unsigned_long_long() const -> unsigned long long // NOLINT(google-runtime-int)
     {
       // Extracts an unsigned long long from *this.
       // If x exceeds the maximum of unsigned long long,
@@ -1874,49 +1901,53 @@
       // If x is negative, then the unsigned long long cast of
       // the signed long long extracted value is returned.
 
+      auto unsigned_long_long_result = static_cast<unsigned long long>(0U); // NOLINT(google-runtime-int)
+
       if(isneg())
       {
-        return static_cast<unsigned long long>(extract_signed_long_long());
-      }
-      else if(my_exp < static_cast<exponent_type>(0))
-      {
-        return static_cast<unsigned long long>(0U);
+        unsigned_long_long_result = static_cast<unsigned long long>(extract_signed_long_long()); // NOLINT(google-runtime-int)
       }
       else
       {
-        decwide_t xn(*this);
-
-        xn.eval_round_self();
-
-        xn = xn.extract_integer_part();
-
-        unsigned long long val;
-
-        if(xn > unsigned_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
+        if(my_exp < static_cast<exponent_type>(0))
         {
-          return (std::numeric_limits<unsigned long long>::max)();
+          unsigned_long_long_result = static_cast<unsigned long long>(0U); // NOLINT(google-runtime-int)
         }
         else
         {
-          // Extract the data into an unsigned long long value.
-          val = static_cast<unsigned long long>(xn.my_data[0]);
+          decwide_t xn(*this);
 
-          const std::int32_t imax =
-            (std::min)(static_cast<std::int32_t>(static_cast<std::int32_t>(xn.my_exp) / decwide_t_elem_digits10),
-                       static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1)));
+          xn.eval_round_self();
 
-          for(typename representation_type::size_type
-                limb_index  = static_cast<typename representation_type::size_type>(1);
-                limb_index <= static_cast<typename representation_type::size_type>(imax);
-              ++limb_index)
+          xn = xn.extract_integer_part();
+
+          if(xn > unsigned_long_long_max<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
           {
-            val *= static_cast<unsigned long long>(decwide_t_elem_mask);
-            val += static_cast<unsigned long long>(xn.my_data[limb_index]);
+            unsigned_long_long_result = (std::numeric_limits<unsigned long long>::max)(); // NOLINT(google-runtime-int)
+          }
+          else
+          {
+            // Extract the data into an unsigned long long value.
+            auto val = static_cast<unsigned long long>(xn.my_data[0]); // NOLINT(google-runtime-int)
+
+            const std::int32_t imax =
+              (std::min)(static_cast<std::int32_t>(static_cast<std::int32_t>(xn.my_exp) / decwide_t_elem_digits10),
+                         static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1)));
+
+            for(auto   limb_index  = static_cast<typename representation_type::size_type>(1);
+                       limb_index <= static_cast<typename representation_type::size_type>(imax);
+                     ++limb_index)
+            {
+              val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)
+              val += static_cast<unsigned long long>(xn.my_data[limb_index]); // NOLINT(google-runtime-int)
+            }
+
+            unsigned_long_long_result = val;
           }
         }
-
-        return val;
       }
+
+      return unsigned_long_long_result;
     }
 
     explicit operator long double       () const { return extract_long_double(); }
@@ -2104,10 +2135,10 @@
       {
         // Use school multiplication.
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        limb_type* my_school_mul_pool = new limb_type[(std::size_t) ((std::size_t) prec_elems_for_multiply * 2U)];
+        auto my_school_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(prec_elems_for_multiply) * 2U)]; // NOLINT(cppcoreguidelines-owning-memory)
         #endif
 
-        limb_type* result = my_school_mul_pool;
+        auto result = my_school_mul_pool;
 
         detail::eval_multiply_n_by_n_to_2n(result,
                                            typename std::add_const<limb_type*>::type(my_data.data()),
@@ -2121,19 +2152,19 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara),
+                    result + (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
         {
-          std::copy(result + 1,
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elems_for_kara),
+          std::copy(result + 1, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elems_for_kara), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
         // De-allocate the dynamic memory for the school multiplication arrays.
-        delete [] my_school_mul_pool;
+        delete [] my_school_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
         #endif
       }
       else if(   (prec_elems_for_multiply >= decwide_t_elems_for_kara)

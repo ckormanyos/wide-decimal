@@ -5,13 +5,20 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef DECWIDE_T_2021_02_24_HPP_
-  #define DECWIDE_T_2021_02_24_HPP_
+#ifndef DECWIDE_T_2021_02_24_HPP
+  #define DECWIDE_T_2021_02_24_HPP
 
+  #include <boost/version.hpp>
+
+  #if !defined(BOOST_VERSION)
+  #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
+  #endif
+
+  #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107600))
   #include <boost/math/bindings/detail/big_lanczos.hpp>
+  #endif
   #include <boost/math/policies/policy.hpp>
   #include <boost/math/special_functions/sign.hpp>
-  #include <boost/version.hpp>
 
   #include <math/wide_decimal/decwide_t.h>
 
@@ -59,7 +66,7 @@
       ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
   private:
-    static result_type my_compute()
+    static auto my_compute() -> result_type
     {
       // Adapted from Boost.Math.Constants (see file calculate_constants.hpp).
 
@@ -72,7 +79,7 @@
 
       result_type lim = std::numeric_limits<result_type>::epsilon();
 
-      unsigned k = 1;
+      auto k = static_cast<unsigned>(1U);
 
       do
       {
@@ -119,11 +126,11 @@
 
   public:
     #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
-    template<int N> static const result_type& get(const mpl::int_<N>&)
+    template<int N> static auto get(const mpl::int_<N>&) -> const result_type&
     #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
-    template<int N> static const result_type& get(const boost::integral_constant<int, N>&)
+    template<int N> static auto get(const boost::integral_constant<int, N>&) -> const result_type&
     #else
-    template<int N> static const result_type& get(const std::integral_constant<int, N>&)
+    template<int N> static auto get(const std::integral_constant<int, N>&) -> const result_type&
     #endif // BOOST_VERSION
     {
       static result_type result;
@@ -140,11 +147,11 @@
     }
 
     #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
-    static inline const result_type get(const mpl::int_<0>&)
+    static inline auto get(const mpl::int_<0>&) -> result_type
     #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
-    static inline const result_type get(const boost::integral_constant<int, 0>&)
+    static inline auto get(const boost::integral_constant<int, 0>&) -> result_type
     #else
-    static inline const result_type get(const std::integral_constant<int, 0>&)
+    static inline auto get(const std::integral_constant<int, 0>&) -> result_type
     #endif // BOOST_VERSION
     {
       return my_compute();
@@ -195,10 +202,6 @@
 
   } // namespace boost::math::lanczos
   #endif // BOOST_VERSION
-
-  #if !defined(BOOST_VERSION)
-  #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
-  #endif
 
   } } // namespace boost::math
 
