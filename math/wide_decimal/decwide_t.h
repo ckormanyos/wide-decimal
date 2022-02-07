@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -1014,7 +1014,7 @@
       return *this;
     }
 
-    decwide_t& operator/=(const decwide_t& v)
+    auto operator/=(const decwide_t& v) -> decwide_t&
     {
       const bool u_and_v_are_identical =
         (   (my_fpclass == v.my_fpclass)
@@ -1336,9 +1336,12 @@
 
     auto precision(const std::int32_t prec_digits) -> void
     {
-      const std::int32_t elems =
-        static_cast<std::int32_t>(    static_cast<std::int32_t>(prec_digits / decwide_t_elem_digits10)
-                                  +                          (((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0));
+      const auto elems =
+        static_cast<std::int32_t>
+        (
+             static_cast<std::int32_t>  (prec_digits / decwide_t_elem_digits10)
+          +  static_cast<std::int32_t>(((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0)
+        );
 
       my_prec_elem = (std::min)(decwide_t_elem_number, (std::max)(elems, static_cast<std::int32_t>(2)));
     }
@@ -1397,14 +1400,17 @@
       // is used. During the iterative steps, the precision of the calculation is limited
       // to the minimum required in order to minimize the run-time.
 
-      for(std::int32_t digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
-                       digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
-                       digits *= static_cast<std::int32_t>(2))
+      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
+               digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
+               digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
-        const std::int32_t new_prec_as_digits10 =
-            (std::int32_t) (digits * 2)
-          + (std::max)((std::int32_t) (decwide_t_elem_digits10  + 1), (std::int32_t) 9);
+        const auto new_prec_as_digits10 =
+          static_cast<std::int32_t>
+          (
+              static_cast<std::int32_t>(digits * 2)
+            + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10  + 1), static_cast<std::int32_t>(9))
+          );
 
           precision(new_prec_as_digits10);
         x.precision(new_prec_as_digits10);
@@ -1480,9 +1486,12 @@
                        digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
-        const std::int32_t new_prec_as_digits10 =
-            (std::int32_t) (digits * 2)
-          + (std::max)((std::int32_t) (decwide_t_elem_digits10  + 1), (std::int32_t) 9);
+        const auto new_prec_as_digits10 =
+          static_cast<std::int32_t>
+          (
+              static_cast<std::int32_t>(digits * 2)
+            + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10  + 1), static_cast<std::int32_t>(9))
+          );
 
            precision(new_prec_as_digits10);
         vi.precision(new_prec_as_digits10);
