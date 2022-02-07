@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 1999 - 2021.                 //
+//  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -14,8 +14,8 @@
 // (including Karatsuba and FFT loops), and division (but only
 // division by 1 limb).
 
-#ifndef DECWIDE_T_DETAIL_OPS_2021_04_12_H_
-  #define DECWIDE_T_DETAIL_OPS_2021_04_12_H_
+#ifndef DECWIDE_T_DETAIL_OPS_2021_04_12_H
+  #define DECWIDE_T_DETAIL_OPS_2021_04_12_H
 
   #include <cstdint>
   #include <iterator>
@@ -28,9 +28,9 @@
 
   template<typename InputIteratorLeftType,
            typename InputIteratorRightType>
-  std::int_fast8_t compare_ranges(InputIteratorLeftType a,
-                                  InputIteratorRightType b,
-                                  const std::uint_fast32_t count)
+  auto compare_ranges(      InputIteratorLeftType  a,
+                            InputIteratorRightType b,
+                      const std::uint_fast32_t     count) -> std::int_fast8_t
   {
     std::int_fast8_t n_return = 0;
 
@@ -41,8 +41,8 @@
       using value_left_type =
         typename std::iterator_traits<InputIteratorLeftType>::value_type;
 
-      if     (*it_a > value_left_type(*it_b)) { n_return =  1; break; }
-      else if(*it_a < value_left_type(*it_b)) { n_return = -1; break; }
+      if     (*it_a > static_cast<value_left_type>(*it_b)) { n_return =  1; break; }
+      else if(*it_a < static_cast<value_left_type>(*it_b)) { n_return = -1; break; }
     }
 
     return n_return;
@@ -50,11 +50,10 @@
 
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType>
-  typename std::iterator_traits<OutputLimbIteratorType>::value_type
-    eval_add_n(OutputLimbIteratorType r,
-               InputLimbIteratorType u,
-               InputLimbIteratorType v,
-               const std::int32_t count)
+  auto eval_add_n(      OutputLimbIteratorType r,
+                        InputLimbIteratorType  u,
+                        InputLimbIteratorType  v,
+                  const std::int32_t           count) -> typename std::iterator_traits<OutputLimbIteratorType>::value_type
   {
     using local_limb_type = typename std::iterator_traits<OutputLimbIteratorType>::value_type;
 
@@ -79,10 +78,10 @@
 
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType>
-  bool eval_subtract_n(OutputLimbIteratorType r,
+  auto eval_subtract_n(OutputLimbIteratorType r,
                        InputLimbIteratorType u,
                        InputLimbIteratorType v,
-                       const std::int32_t count)
+                       const std::int32_t count) -> bool
   {
     using local_limb_type        = typename std::iterator_traits<OutputLimbIteratorType>::value_type;
     using local_signed_limb_type = typename std::make_signed<local_limb_type>::type;
@@ -90,14 +89,14 @@
     constexpr local_limb_type local_elem_mask = decwide_t_helper_base<local_limb_type>::elem_mask;
 
     // Subtraction algorithm
-    std::uint_fast8_t borrow = static_cast<std::uint_fast8_t>(0U);
+    auto borrow = static_cast<std::uint_fast8_t>(0U);
 
-    for(std::uint32_t j = static_cast<std::uint32_t>(count - static_cast<std::int32_t>(1)); static_cast<std::int32_t>(j) >= static_cast<std::int32_t>(0); --j)
+    for(auto j = static_cast<std::uint32_t>(count - static_cast<std::int32_t>(1)); static_cast<std::int32_t>(j) >= static_cast<std::int32_t>(0); --j)
     {
       local_signed_limb_type t =
         static_cast<local_signed_limb_type>
         (
-          local_limb_type(u[j] + local_limb_type(local_limb_type(~local_limb_type(local_limb_type(v[j] + local_limb_type(borrow)))) + 1U))
+          static_cast<local_limb_type>(u[j] + static_cast<local_limb_type>(static_cast<local_limb_type>(~static_cast<local_limb_type>(static_cast<local_limb_type>(v[j] + static_cast<local_limb_type>(borrow)))) + 1U))
         );
 
       // Underflow? Borrow?
@@ -120,25 +119,27 @@
 
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType>
-  void eval_multiply_n_by_n_to_2n(
+  void eval_multiply_n_by_n_to_2n
+  (
     OutputLimbIteratorType r,
     InputLimbIteratorType a,
     InputLimbIteratorType b,
     const std::int_fast32_t count,
-    const typename std::enable_if<(std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint8_t>::value == true)>::type* = nullptr)
+    const typename std::enable_if<(std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint8_t>::value )>::type* = nullptr
+  )
   {
     using local_limb_type = typename std::iterator_traits<OutputLimbIteratorType>::value_type;
 
     constexpr local_limb_type local_elem_mask = decwide_t_helper_base<local_limb_type>::elem_mask;
 
     using local_double_limb_type =
-      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value == true),
+      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value ),
                                   std::uint64_t,
-                                  typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value == true),
+                                  typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value ),
                                                             std::uint32_t,
                                                             std::uint16_t>::type>::type;
 
-    std::fill(r, r + (count * 2), local_limb_type(0));
+    std::fill(r, r + (count * 2), static_cast<local_limb_type>(0));
 
     for(std::int_fast32_t i = count - 1; i >= 0; --i)
     {
@@ -155,28 +156,29 @@
         carry          = static_cast<local_double_limb_type>(carry / local_elem_mask);
       }
 
-      r[1 + i + j] = local_limb_type(carry);
+      r[1 + i + j] = static_cast<local_limb_type>(carry);
     }
   }
 
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType>
-  void eval_multiply_n_by_n_to_2n(
+  void eval_multiply_n_by_n_to_2n
+  (
     OutputLimbIteratorType r,
     InputLimbIteratorType a,
     InputLimbIteratorType b,
     const std::int_fast32_t count,
-    const typename std::enable_if<(   (std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint16_t>::value == true)
-                                   || (std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint32_t>::value == true))>::type* = nullptr)
+    const typename std::enable_if<(   (std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint16_t>::value )
+                                   || (std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint32_t>::value ))>::type* = nullptr)
   {
     using local_limb_type = typename std::iterator_traits<OutputLimbIteratorType>::value_type;
 
     constexpr local_limb_type local_elem_mask = decwide_t_helper_base<local_limb_type>::elem_mask;
 
     using local_double_limb_type =
-      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value == true),
+      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value ),
                                  std::uint64_t,
-                                 typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value == true),
+                                 typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value ),
                                                             std::uint32_t,
                                                             std::uint16_t>::type>::type;
 
@@ -184,28 +186,30 @@
 
     local_reverse_iterator_type ir(r + (count * 2));
 
-    local_double_limb_type carry = 0U;
+    auto carry = static_cast<local_double_limb_type>(0U);
 
-    for(std::int32_t j = static_cast<std::int32_t>(count - 1); j >= static_cast<std::int32_t>(1); --j)
+    for(auto j = static_cast<std::int32_t>(count - 1); j >= static_cast<std::int32_t>(1); --j)
     {
-      local_double_limb_type sum = carry;
+      auto sum = carry;
 
       for(std::int32_t i = static_cast<std::int32_t>(count - 1); i >= j; --i)
       {
-        sum += local_double_limb_type(
-                  local_double_limb_type(a[i]) * b[  static_cast<std::int32_t>(count - 1)
-                                                   - static_cast<std::int32_t>(i - j)]);
+        sum += static_cast<local_double_limb_type>
+               (
+                 local_double_limb_type(a[i]) * b[  static_cast<std::int32_t>(count - 1)
+                                                  - static_cast<std::int32_t>(i - j)]
+               );
       }
 
       carry = static_cast<local_double_limb_type>(sum / local_elem_mask);
       *ir++ = static_cast<local_limb_type>       (sum % local_elem_mask);
     }
 
-    for(std::int32_t j = static_cast<std::int32_t>(count - 1); j >= static_cast<std::int32_t>(0); --j)
+    for(auto j = static_cast<std::int32_t>(count - 1); j >= static_cast<std::int32_t>(0); --j)
     {
       local_double_limb_type sum = carry;
 
-      for(std::int32_t i = j; i >= static_cast<std::int32_t>(0); --i)
+      for(auto i = j; i >= static_cast<std::int32_t>(0); --i)
       {
         sum += static_cast<local_double_limb_type>(a[j - i] * static_cast<local_double_limb_type>(b[i]));
       }
@@ -218,19 +222,18 @@
   }
 
   template<typename LimbIteratorType>
-  typename std::iterator_traits<LimbIteratorType>::value_type mul_loop_n(
-    LimbIteratorType u,
-    typename std::iterator_traits<LimbIteratorType>::value_type n,
-    const std::int32_t p)
+  auto mul_loop_n(      LimbIteratorType                                            u,
+                        typename std::iterator_traits<LimbIteratorType>::value_type n,
+                  const std::int32_t                                                p) -> typename std::iterator_traits<LimbIteratorType>::value_type
   {
     using local_limb_type = typename std::iterator_traits<LimbIteratorType>::value_type;
 
     constexpr local_limb_type local_elem_mask = decwide_t_helper_base<local_limb_type>::elem_mask;
 
     using local_double_limb_type =
-      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value == true),
+      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value ),
                                  std::uint64_t,
-                                 typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value == true),
+                                 typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value ),
                                                             std::uint32_t,
                                                             std::uint16_t>::type>::type;
 
@@ -240,9 +243,11 @@
     for(std::int32_t j = static_cast<std::int32_t>(p - 1); j >= static_cast<std::int32_t>(0); --j)
     {
       const local_double_limb_type t =
-        static_cast<local_double_limb_type>(
+        static_cast<local_double_limb_type>
+        (
             carry
-          + static_cast<local_double_limb_type>(static_cast<local_double_limb_type>(u[j]) * n));
+          + static_cast<local_double_limb_type>(static_cast<local_double_limb_type>(u[j]) * n)
+        );
 
       carry = static_cast<local_limb_type>(t / local_elem_mask);
       u[j]  = static_cast<local_limb_type>(t % local_elem_mask);
@@ -252,19 +257,18 @@
   }
 
   template<typename LimbIteratorType>
-  typename std::iterator_traits<LimbIteratorType>::value_type div_loop_n(
-    LimbIteratorType u,
-    typename std::iterator_traits<LimbIteratorType>::value_type n,
-    const std::int32_t p)
+  auto div_loop_n(      LimbIteratorType                                            u,
+                        typename std::iterator_traits<LimbIteratorType>::value_type n,
+                  const std::int32_t                                                p) -> typename std::iterator_traits<LimbIteratorType>::value_type
   {
     using local_limb_type = typename std::iterator_traits<LimbIteratorType>::value_type;
 
     constexpr local_limb_type local_elem_mask = decwide_t_helper_base<local_limb_type>::elem_mask;
 
     using local_double_limb_type =
-      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value == true),
+      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value ),
                                  std::uint64_t,
-                                 typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value == true),
+                                 typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value ),
                                                             std::uint32_t,
                                                             std::uint16_t>::type>::type;
 
@@ -273,9 +277,11 @@
     for(std::int32_t j = static_cast<std::int32_t>(0); j < p; ++j)
     {
       const local_double_limb_type t =
-        static_cast<local_double_limb_type>(
+        static_cast<local_double_limb_type>
+        (
             u[j]
-          + static_cast<local_double_limb_type>(static_cast<local_double_limb_type>(prev) * local_elem_mask));
+          + static_cast<local_double_limb_type>(static_cast<local_double_limb_type>(prev) * local_elem_mask)
+        );
 
       u[j] = static_cast<local_limb_type>(t / n);
       prev = static_cast<local_limb_type>(t % n);
@@ -285,10 +291,9 @@
   }
 
   template<typename LimbIteratorType>
-  void eval_multiply_kara_propagate_carry(
-    LimbIteratorType t,
-    const std::uint_fast32_t n,
-    const typename std::iterator_traits<LimbIteratorType>::value_type carry)
+  auto eval_multiply_kara_propagate_carry(      LimbIteratorType                                            t,
+                                          const std::uint_fast32_t                                          n,
+                                          const typename std::iterator_traits<LimbIteratorType>::value_type carry) -> void
   {
     using local_limb_type = typename std::iterator_traits<LimbIteratorType>::value_type;
 
@@ -304,7 +309,7 @@
 
     while((carry_out != 0U) && (ri_t != rend_t))
     {
-      const local_limb_type tt = local_limb_type(*ri_t + local_limb_type(carry_out));
+      const local_limb_type tt = static_cast<local_limb_type>(*ri_t + static_cast<local_limb_type>(carry_out));
 
       carry_out = ((tt >= local_elem_mask) ? static_cast<std::uint_fast8_t>(1U)
                                            : static_cast<std::uint_fast8_t>(0U));
@@ -315,10 +320,9 @@
   }
 
   template<typename LimbIteratorType>
-  void eval_multiply_kara_propagate_borrow(
-    LimbIteratorType t,
-    const std::uint_fast32_t n,
-    const bool has_borrow)
+  auto eval_multiply_kara_propagate_borrow(      LimbIteratorType   t,
+                                           const std::uint_fast32_t n,
+                                           const bool               has_borrow) -> void
   {
     using local_limb_type = typename std::iterator_traits<LimbIteratorType>::value_type;
 
@@ -358,11 +362,11 @@
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType,
            typename TempLimbIteratorType>
-  void eval_multiply_kara_n_by_n_to_2n(OutputLimbIteratorType r,
+  auto eval_multiply_kara_n_by_n_to_2n(OutputLimbIteratorType r,
                                        InputLimbIteratorType a,
                                        InputLimbIteratorType b,
                                        const std::uint_fast32_t n,
-                                       TempLimbIteratorType t)
+                                       TempLimbIteratorType t) -> void
   {
     if(n <= 32U)
     {
@@ -482,13 +486,13 @@
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType,
            typename FftFloatIteratorType>
-  void mul_loop_fft(OutputLimbIteratorType r,
+  auto mul_loop_fft(OutputLimbIteratorType r,
                     InputLimbIteratorType u,
                     InputLimbIteratorType v,
                     FftFloatIteratorType af,
                     FftFloatIteratorType bf,
                     const std::int32_t prec_elems_for_multiply,
-                    const std::uint32_t n_fft)
+                    const std::uint32_t n_fft) -> void
   {
     using local_limb_type = typename std::iterator_traits<OutputLimbIteratorType>::value_type;
 
@@ -553,4 +557,4 @@
 
   } } }
 
-#endif // DECWIDE_T_DETAIL_OPS_2021_04_12_H_
+#endif // DECWIDE_T_DETAIL_OPS_2021_04_12_H

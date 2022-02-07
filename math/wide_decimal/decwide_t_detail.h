@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 1999 - 2021.                 //
+//  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -11,8 +11,8 @@
 
 // This file implements various details for decwide_t.
 
-#ifndef DECWIDE_T_DETAIL_2020_10_26_H_
-  #define DECWIDE_T_DETAIL_2020_10_26_H_
+#ifndef DECWIDE_T_DETAIL_2020_10_26_H
+  #define DECWIDE_T_DETAIL_2020_10_26_H
 
   #include <algorithm>
   #include <array>
@@ -25,16 +25,16 @@
   namespace math { namespace wide_decimal { namespace detail {
 
   template<typename UnsignedIntegralType>
-  constexpr typename std::enable_if<   (std::is_integral<UnsignedIntegralType>::value == true)
-                                    && (std::is_unsigned<UnsignedIntegralType>::value == true), UnsignedIntegralType>::type
+  constexpr typename std::enable_if<   (std::is_integral<UnsignedIntegralType>::value )
+                                    && (std::is_unsigned<UnsignedIntegralType>::value ), UnsignedIntegralType>::type
   negate(UnsignedIntegralType u)
   {
     return (UnsignedIntegralType) (((UnsignedIntegralType) ~u) + 1U);
   }
 
   template<typename SignedIntegralType>
-  constexpr typename std::enable_if<   (std::is_integral<SignedIntegralType>::value == true)
-                                    && (std::is_signed  <SignedIntegralType>::value == true), SignedIntegralType>::type
+  constexpr typename std::enable_if<   (std::is_integral<SignedIntegralType>::value )
+                                    && (std::is_signed  <SignedIntegralType>::value ), SignedIntegralType>::type
   negate(SignedIntegralType n)
   {
     return (SignedIntegralType) detail::negate((unsigned long long) n);
@@ -171,9 +171,9 @@
   struct decwide_t_helper_base
   {
     static constexpr std::int32_t elem_digits10     =
-      ((std::is_same<LimbType, std::uint32_t>::value == true)
+      ((std::is_same<LimbType, std::uint32_t>::value )
         ? static_cast<std::int32_t>(8)
-        : ((std::is_same<LimbType, std::uint16_t>::value == true) ? static_cast<std::int32_t>(4)
+        : ((std::is_same<LimbType, std::uint16_t>::value ) ? static_cast<std::int32_t>(4)
                                                                   : static_cast<std::int32_t>(2)));
 
     static constexpr std::int32_t elem_mask      = static_cast<std::int32_t>(pow10_maker((std::uint32_t)  elem_digits10));
@@ -448,4 +448,4 @@
 
   } } } // namespace math::wide_decimal::detail
 
-#endif // DECWIDE_T_DETAIL_2020_10_26_H_
+#endif // DECWIDE_T_DETAIL_2020_10_26_H

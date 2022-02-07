@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.
+//  Copyright Christopher Kormanyos 2020 - 2022.
 //  Distributed under the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H_
-  #define CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H_
+#ifndef CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H
+  #define CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H
 
   #include <array>
   #include <cstddef>
@@ -174,4 +174,4 @@
 
   } } //   namespace math::constants
 
-#endif // CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H_
+#endif // CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H

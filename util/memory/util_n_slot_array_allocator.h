@@ -1,5 +1,5 @@
-#ifndef UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H_
-  #define UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H_
+#ifndef UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H
+  #define UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H
 
   #include <array>
   #include <algorithm>
@@ -166,4 +166,4 @@
 
   } // namespace util
 
-#endif // UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H_
+#endif // UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H

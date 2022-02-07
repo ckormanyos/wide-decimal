@@ -21,8 +21,8 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #endif
 
-#include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/bindings/decwide_t.hpp>
+#include <boost/math/special_functions/gamma.hpp>
 
 #include <math/wide_decimal/decwide_t_examples.h>
 

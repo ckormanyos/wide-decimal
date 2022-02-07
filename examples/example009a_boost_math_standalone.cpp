@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -21,8 +21,8 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #endif
 
-#include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/bindings/decwide_t.hpp>
+#include <boost/math/special_functions/gamma.hpp>
 
 #include <math/wide_decimal/decwide_t_examples.h>
 

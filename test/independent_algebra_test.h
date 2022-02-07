@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef INDEPENDENT_ALGEBRA_TEST_2020_10_17_H_
-  #define INDEPENDENT_ALGEBRA_TEST_2020_10_17_H_
+#ifndef INDEPENDENT_ALGEBRA_TEST_2020_10_17_H
+  #define INDEPENDENT_ALGEBRA_TEST_2020_10_17_H
 
   #include <atomic>
   #include <iostream>
@@ -492,4 +492,4 @@
 
   } }
 
-#endif // INDEPENDENT_ALGEBRA_TEST_2020_10_17_H_
+#endif // INDEPENDENT_ALGEBRA_TEST_2020_10_17_H

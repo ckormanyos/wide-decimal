@@ -1,5 +1,5 @@
-#ifndef MCAL_LCD_GENERIC_ST7066_2020_05_07_H_
-  #define MCAL_LCD_GENERIC_ST7066_2020_05_07_H_
+#ifndef MCAL_LCD_GENERIC_ST7066_2020_05_07_H
+  #define MCAL_LCD_GENERIC_ST7066_2020_05_07_H
 
   #include <algorithm>
   #include <cstdint>
@@ -148,4 +148,4 @@
 
   } } // namespace mcal::lcd
 
-#endif // MCAL_LCD_GENERIC_ST7066_2020_05_07_H_
+#endif // MCAL_LCD_GENERIC_ST7066_2020_05_07_H

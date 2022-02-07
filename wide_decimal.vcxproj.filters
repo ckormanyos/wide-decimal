@@ -50,6 +50,12 @@
     <Filter Include="Source Files\boost\math\bindings">
       <UniqueIdentifier>{73323c60-6a6c-4ad9-8508-42ec0b55fc21}</UniqueIdentifier>
     </Filter>
+    <Filter Include=".tidy">
+      <UniqueIdentifier>{ac826590-0eea-4ad6-95c5-4de06412c1fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include=".tidy\make">
+      <UniqueIdentifier>{0d5eb981-f809-48f3-880d-5cb3557fd7cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -208,6 +214,15 @@
     </None>
     <None Include="README.md">
       <Filter>_doc</Filter>
+    </None>
+    <None Include=".tidy\make\make_tidy_02_files.gmk">
+      <Filter>.tidy\make</Filter>
+    </None>
+    <None Include=".tidy\make\make_tidy_03_flags.gmk">
+      <Filter>.tidy\make</Filter>
+    </None>
+    <None Include=".tidy\make\make_tidy_01_generic.gmk">
+      <Filter>.tidy\make</Filter>
     </None>
   </ItemGroup>
 </Project>

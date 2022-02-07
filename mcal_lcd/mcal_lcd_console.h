@@ -1,5 +1,5 @@
-#ifndef MCAL_LCD_CONSOLE_2020_06_10_H_
-  #define MCAL_LCD_CONSOLE_2020_06_10_H_
+#ifndef MCAL_LCD_CONSOLE_2020_06_10_H
+  #define MCAL_LCD_CONSOLE_2020_06_10_H
 
   #include <iostream>
   #include <string>
@@ -44,4 +44,4 @@
 
   } } // namespace mcal::lcd
 
-#endif // MCAL_LCD_CONSOLE_2020_06_10_H_
+#endif // MCAL_LCD_CONSOLE_2020_06_10_H

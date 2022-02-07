@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -10,7 +10,7 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-bool math::wide_decimal::example000a_multiply_pi_squared()
+auto math::wide_decimal::example000a_multiply_pi_squared() -> bool
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 

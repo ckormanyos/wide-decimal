@@ -1,5 +1,5 @@
-#ifndef MCAL_LCD_BASE_2020_06_10_H_
-  #define MCAL_LCD_BASE_2020_06_10_H_
+#ifndef MCAL_LCD_BASE_2020_06_10_H
+  #define MCAL_LCD_BASE_2020_06_10_H
 
   #include <cstdint>
 
@@ -26,4 +26,4 @@
 
   } } // namespace mcal::lcd
 
-#endif // MCAL_LCD_BASE_2020_06_10_H_
+#endif // MCAL_LCD_BASE_2020_06_10_H

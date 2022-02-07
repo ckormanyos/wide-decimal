@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2013 - 2021.                 //
+//  Copyright Christopher Kormanyos 2013 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -12,8 +12,8 @@
 // This file implements a naive FFT used for large-digit
 // FFT multiplication in decwide_t.
 
-#ifndef DECWIDE_T_DETAIL_FFT_2013_01_08_H_
-  #define DECWIDE_T_DETAIL_FFT_2013_01_08_H_
+#ifndef DECWIDE_T_DETAIL_FFT_2013_01_08_H
+  #define DECWIDE_T_DETAIL_FFT_2013_01_08_H
 
   #include <array>
   #include <cstdint>
@@ -110,7 +110,7 @@
            const bool is_forward_fft>
   float_type const_unique_wp_real_init(const std::uint32_t N,
                                        const bool = is_forward_fft,
-                                       const typename std::enable_if<(is_forward_fft == true)>::type* = nullptr)
+                                       const typename std::enable_if<(is_forward_fft )>::type* = nullptr)
   {
     return template_sin_order_1<float_type>(N);
   }
@@ -128,7 +128,7 @@
            const bool is_forward_fft>
   float_type const_unique_wp_imag(const std::uint32_t N,
                                   const bool = is_forward_fft,
-                                  const typename std::enable_if<(is_forward_fft == true)>::type* = nullptr)
+                                  const typename std::enable_if<(is_forward_fft )>::type* = nullptr)
   {
     return template_sin_order_2<float_type>(N);
   }
@@ -150,6 +150,8 @@
   template<typename float_type,
            const bool is_forward_fft>
   void danielson_lanczos_apply_4_basecase(float_type* data);
+
+  // NOLINTBEGIN(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
   template<typename float_type,
            const bool is_forward_fft>
@@ -264,7 +266,7 @@
   void rfft_lanczos_rfft(const std::uint32_t N,
                          float_type* data,
                          const bool = is_forward_fft,
-                         const typename std::enable_if<(is_forward_fft == true)>::type* = nullptr)
+                         const typename std::enable_if<(is_forward_fft )>::type* = nullptr)
   {
     fft_lanczos_fft<float_type, true>(N / 2U, data);
 
@@ -347,6 +349,11 @@
     fft_lanczos_fft<float_type, false>(N / 2U, data);
   }
 
-  } } } } // namespace math::wide_decimal::detail::fft
+  // NOLINTEND(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-#endif // DECWIDE_T_DETAIL_FFT_2013_01_08_H_
+  } // namespace fft
+  } // namespace detail
+  } // namespace wide_decimal
+  } // namespace math
+
+#endif // DECWIDE_T_DETAIL_FFT_2013_01_08_H
