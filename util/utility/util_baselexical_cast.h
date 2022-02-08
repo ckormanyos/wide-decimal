@@ -25,36 +25,40 @@
 
     unsigned_integer_type x(u);
 
-    std::ptrdiff_t index = 0;
+    auto index = static_cast<std::ptrdiff_t>(0);
 
     do
     {
-      for(std::ptrdiff_t j = index; j >= 0; --j)
+      for(auto j = index; j >= static_cast<std::ptrdiff_t>(0); --j)
       {
-        *(OutFirst + (j + 1)) = *(OutFirst + j);
+        *(OutFirst + static_cast<std::ptrdiff_t>(j + 1)) = *(OutFirst + j);
       }
 
       ++index;
 
-      output_value_type c = (output_value_type) (x % (unsigned_integer_type) BaseRepresentation);
+      auto c = static_cast<output_value_type>(x % static_cast<unsigned_integer_type>(BaseRepresentation));
 
-      x = unsigned_integer_type(x / (unsigned_integer_type) BaseRepresentation);
+      x = static_cast<unsigned_integer_type>(x / static_cast<unsigned_integer_type>(BaseRepresentation));
 
-      if(c <= (output_value_type) 9)
+      if(c <= static_cast<output_value_type>(9))
       {
-        c = (output_value_type) (c + (output_value_type) '0');
+        c = static_cast<output_value_type>(c + static_cast<output_value_type>('0'));
       }
-      else if((c >= (output_value_type) 0xA) && (c <= (output_value_type) 0xF))
+      else if((c >= static_cast<output_value_type>(0xA)) && (c <= static_cast<output_value_type>(0xF)))
       {
-        c = (output_value_type) (  (output_value_type) (UpperCase ? (output_value_type) 'A' : (output_value_type) 'a')
-                                 + (output_value_type) (c - (output_value_type) 0xA));
+        c =
+        static_cast<output_value_type>
+        (
+            static_cast<output_value_type>(UpperCase ? static_cast<output_value_type>('A') : static_cast<output_value_type>('a'))
+          + static_cast<output_value_type>(c - static_cast<output_value_type>(0xA))
+        );
       }
 
       *OutFirst = c;
     }
-    while(x != 0U);
+    while(x != static_cast<unsigned_integer_type>(0U));
 
-    return (OutputIterator) (OutFirst + index);
+    return static_cast<OutputIterator>(OutFirst + index);
   }
 
   } // namespace util

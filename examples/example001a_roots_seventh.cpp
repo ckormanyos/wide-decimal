@@ -10,7 +10,7 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-bool math::wide_decimal::example001a_roots_seventh()
+auto math::wide_decimal::example001a_roots_seventh() -> bool
 {
   using dec101_t = math::wide_decimal::decwide_t<101U>;
 

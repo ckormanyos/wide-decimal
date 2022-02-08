@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -151,7 +151,7 @@
                                                                                                                                                                                   std::int32_t p)                                                                                   ->          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto log          (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x)  ->          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto exp          (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x)  ->          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto pow          (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> b,
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto pow          (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> b, // NOLINT(misc-no-recursion)
                                                                                                                                                                                   const std::int64_t p)                                                                             ->          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto pow          (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x,
                                                                                                                                                                                   decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> a)  ->          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
@@ -978,7 +978,7 @@
         }
 
         // Is it necessary to justify the data?
-        const typename representation_type::const_iterator first_nonzero_elem =
+        const auto first_nonzero_elem = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
           std::find_if(my_data.cbegin(),
                        my_data.cbegin() + prec_elems_for_add_sub,
                        [](const limb_type& d) -> bool
@@ -2048,11 +2048,11 @@
   private:
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
-    static limb_type           my_school_mul_pool[static_cast<std::size_t>((decwide_t_elems_for_kara - 1) * 2)];
-    static limb_type           my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))];
-    static fft_float_type      my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];
-    static fft_float_type      my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];
-    static representation_type my_n_data_for_add_sub;
+    static limb_type           my_school_mul_pool[static_cast<std::size_t>((decwide_t_elems_for_kara - 1) * 2)];                                                                     // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+    static limb_type           my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+    static fft_float_type      my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+    static fft_float_type      my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+    static representation_type my_n_data_for_add_sub; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     #endif
 
     representation_type my_data;
@@ -2177,10 +2177,10 @@
 
       // Use school multiplication.
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      auto my_school_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(prec_elems_for_multiply) * 2U)]; // NOLINT(cppcoreguidelines-owning-memory)
+      auto my_school_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(prec_elems_for_multiply) * 2U)]; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-owning-memory)
       #endif
 
-      auto result = my_school_mul_pool;
+      auto result = my_school_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto)
 
       detail::eval_multiply_n_by_n_to_2n(result,
                                          typename std::add_const<limb_type*>::type(my_data.data()),
@@ -2332,7 +2332,7 @@
         auto my_school_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(prec_elems_for_multiply) * 2U)]; // NOLINT(cppcoreguidelines-owning-memory)
         #endif
 
-        auto result = my_school_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+        auto result = my_school_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
 
         detail::eval_multiply_n_by_n_to_2n(result,
                                            typename std::add_const<limb_type*>::type(my_data.data()),
@@ -2375,15 +2375,15 @@
         auto my_kara_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * 8U)]; // NOLINT(cppcoreguidelines-owning-memory)
         #endif
 
-        auto u_local = my_kara_mul_pool + (kara_elems_for_multiply * 0U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        auto v_local = my_kara_mul_pool + (kara_elems_for_multiply * 1U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        auto result  = my_kara_mul_pool + (kara_elems_for_multiply * 2U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        auto t       = my_kara_mul_pool + (kara_elems_for_multiply * 4U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        auto u_local = my_kara_mul_pool + (kara_elems_for_multiply * 0U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
+        auto v_local = my_kara_mul_pool + (kara_elems_for_multiply * 1U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
+        auto result  = my_kara_mul_pool + (kara_elems_for_multiply * 2U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
+        auto t       = my_kara_mul_pool + (kara_elems_for_multiply * 4U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
 
         std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
-        std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply, static_cast<limb_type>(0U));
-        std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply, static_cast<limb_type>(0U));
+        std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply, static_cast<limb_type>(0U)); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply, static_cast<limb_type>(0U)); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
         detail::eval_multiply_kara_n_by_n_to_2n(result,
                                                 u_local,
@@ -2439,8 +2439,8 @@
         auto my_bf_fft_mul_pool = new fft_float_type[static_cast<std::size_t>(n_fft)]; // NOLINT(cppcoreguidelines-owning-memory)
         #endif
 
-        auto af = my_af_fft_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-        auto bf = my_bf_fft_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+        auto af = my_af_fft_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
+        auto bf = my_bf_fft_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
 
         using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
@@ -2996,7 +2996,7 @@
       const bool my_uppercase = ((my_flags & std::ios::uppercase) != static_cast<std::ios::fmtflags>(0U));
 
       // Get the base-10 exponent.
-      exponent_type the_exp = ilogb(*this);
+      auto the_exp = static_cast<exponent_type>(ilogb(*this));
 
       // Get the output stream's precision and limit it to max_digits10.
       // Erroneous zero or negative precision (theoretically impossible)
@@ -3573,11 +3573,11 @@
 
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_school_mul_pool[static_cast<std::size_t>((decwide_t_elems_for_kara - 1) * 2)];
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))];
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::representation_type     decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_n_data_for_add_sub;
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_school_mul_pool[static_cast<std::size_t>((decwide_t_elems_for_kara - 1) * 2)];                                                                     // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::representation_type     decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_n_data_for_add_sub; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
   #endif
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
@@ -4274,7 +4274,7 @@
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto rootn(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x, std::int32_t p) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  auto rootn(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x, std::int32_t p) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> // NOLINT(misc-no-recursion)
   {
     decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> rtn;
 
@@ -4349,7 +4349,8 @@
     const auto lg_xx_approx =
       static_cast<float>
       (
-        ilogb(xx) * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix))
+          static_cast<float>(ilogb (xx))
+        * log  (static_cast<float>(std::numeric_limits<floating_point_type>::radix))
       );
 
     const auto lg_xx_over_lg2 = static_cast<float>(lg_xx_approx / log(2.0F));
@@ -4507,7 +4508,7 @@
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto pow(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> b, const std::int64_t p) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  auto pow(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> b, const std::int64_t p) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> // NOLINT(misc-no-recursion)
   {
     // Calculate (b ^ p).
 

@@ -8,7 +8,7 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-bool math::wide_decimal::example001b_roots_almost_integer()
+auto math::wide_decimal::example001b_roots_almost_integer() -> bool
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(5001);
 

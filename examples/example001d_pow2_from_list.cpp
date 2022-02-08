@@ -10,7 +10,7 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-bool math::wide_decimal::example001d_pow2_from_list()
+auto math::wide_decimal::example001d_pow2_from_list() -> bool
 {
   using local_limb_type = std::uint32_t;
 

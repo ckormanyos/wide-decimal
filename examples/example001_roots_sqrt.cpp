@@ -11,7 +11,7 @@
 #include <math/wide_decimal/decwide_t_examples.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 
-bool math::wide_decimal::example001_roots_sqrt()
+auto math::wide_decimal::example001_roots_sqrt() -> bool
 {
   using local_limb_type = std::uint32_t;
 

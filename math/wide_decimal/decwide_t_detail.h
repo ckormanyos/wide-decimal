@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -48,7 +48,7 @@
 
   struct a029750
   {
-    static constexpr auto a029750_as_constexpr(std::uint32_t value) -> std::uint32_t // NOLINT(readability-function-cognitive-complexity)
+    static constexpr auto a029750_as_constexpr(std::uint32_t value) noexcept -> std::uint32_t // NOLINT(readability-function-cognitive-complexity)
     {
       // Sloane's A029750 List of numbers of the form 2^k times 1, 3, 5 or 7.
       // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 91}], x]
@@ -70,7 +70,7 @@
              ((value <= UINT32_C(1048576)) ? UINT32_C(1048576) : ((value <=  UINT32_C( 1310720)) ?  UINT32_C( 1310720) : ((value <= UINT32_C( 1572864)) ? UINT32_C( 1572864) : ((value <= UINT32_C( 1835008)) ? UINT32_C( 1835008) : UINT32_C(2097152)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
     }
 
-    static auto a029750_as_runtime_value(std::uint32_t value) -> std::uint32_t
+    static auto a029750_as_runtime_value(std::uint32_t value) noexcept -> std::uint32_t
     {
       using array_type = std::array<std::uint32_t, 65U>;
 
@@ -105,7 +105,7 @@
 
   struct a000079
   {
-    static constexpr auto a000079_as_constexpr(const std::uint32_t value) -> std::uint32_t // NOLINT(readability-function-cognitive-complexity)
+    static constexpr auto a000079_as_constexpr(const std::uint32_t value) noexcept -> std::uint32_t // NOLINT(readability-function-cognitive-complexity)
     {
       // Sloane's A000079 List of numbers of powers of 2.
       // Table[2^n, {n, 0, 31, 1}]
@@ -118,7 +118,7 @@
              ((value <= UINT32_C(134217728)) ? UINT32_C(134217728) : ((value <=  UINT32_C(268435456)) ?  UINT32_C(268435456) : ((value <= UINT32_C(536870912)) ? UINT32_C(536870912) : ((value <= UINT32_C(1073741824)) ? UINT32_C(1073741824) : UINT32_C(2147483648)))))))))))))))))))))))))))));
     }
 
-    static auto a000079_as_runtime_value(const std::uint32_t value) -> std::uint32_t
+    static auto a000079_as_runtime_value(const std::uint32_t value) noexcept -> std::uint32_t
     {
       using array_type = std::array<std::uint32_t, 29U>;
 
@@ -142,13 +142,13 @@
     }
   };
 
-  constexpr inline auto pow10_maker(std::uint32_t n) -> std::uint32_t // NOLINT(misc-no-recursion)
+  constexpr inline auto pow10_maker(std::uint32_t n) noexcept -> std::uint32_t // NOLINT(misc-no-recursion)
   {
     // Make the constant power of 10^n.
     return ((n == UINT32_C(0)) ? UINT32_C(1) : pow10_maker(n - UINT32_C(1)) * UINT32_C(10));
   }
 
-  inline auto pow10_maker_as_runtime_value(std::uint32_t n) -> std::uint32_t
+  inline auto pow10_maker_as_runtime_value(std::uint32_t n) noexcept -> std::uint32_t
   {
     using local_p10_table_type = std::array<std::uint32_t, 10U>;
 
@@ -183,7 +183,7 @@
     static constexpr auto elem_mask      = static_cast<std::int32_t>(pow10_maker(static_cast<std::uint32_t>(elem_digits10)));
     static constexpr auto elem_mask_half = static_cast<std::int32_t>(pow10_maker(static_cast<std::uint32_t>(elem_digits10 / 2)));
 
-    static constexpr auto digit_at_pos_in_limb(LimbType u, unsigned pos) -> std::uint8_t
+    static constexpr auto digit_at_pos_in_limb(LimbType u, unsigned pos) noexcept -> std::uint8_t
     {
       return static_cast<std::uint8_t>(static_cast<LimbType>(u / pow10_maker_as_runtime_value(static_cast<std::uint32_t>(pos))) % static_cast<LimbType>(10U));
     }

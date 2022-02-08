@@ -168,18 +168,18 @@
 
   template<typename float_type,
            const bool is_forward_fft>
-  auto danielson_lanczos_apply(std::uint32_t N,
+  auto danielson_lanczos_apply(std::uint32_t N, // NOLINT(misc-no-recursion)
                                float_type*   data) -> void
   {
     if(N == 8U)
     {
       danielson_lanczos_apply_4_basecase<float_type, is_forward_fft>(data);
-      danielson_lanczos_apply_4_basecase<float_type, is_forward_fft>(data + N);
+      danielson_lanczos_apply_4_basecase<float_type, is_forward_fft>(data + N); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     }
     else
     {
       danielson_lanczos_apply<float_type, is_forward_fft>(N / 2U, data);
-      danielson_lanczos_apply<float_type, is_forward_fft>(N / 2U, data + N);
+      danielson_lanczos_apply<float_type, is_forward_fft>(N / 2U, data + N); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     }
 
     auto real_part = static_cast<float_type>(1);
