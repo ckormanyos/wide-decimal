@@ -337,7 +337,7 @@
       : my_neg  (other.my_neg),
         my_value(other.my_value) { }
 
-    ~unsigned_wrap() { }
+    ~unsigned_wrap() = default;
 
     auto operator=(const unsigned_wrap& other) -> unsigned_wrap&
     {
@@ -363,8 +363,8 @@
 
     auto constexpr get_is_neg        () const -> bool { return my_neg; }
 
-    bool          my_neg;   // NOLINT([misc-non-private-member-variables-in-classes)
-    unsigned_type my_value; // NOLINT([misc-non-private-member-variables-in-classes)
+    bool          my_neg;   // NOLINT(misc-non-private-member-variables-in-classes)
+    unsigned_type my_value; // NOLINT(misc-non-private-member-variables-in-classes)
 
     auto operator+=(const unsigned_wrap& other) -> unsigned_wrap&
     {

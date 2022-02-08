@@ -38,6 +38,7 @@
   auto example011_trig_trapezoid_integral() -> bool;
   auto example012_rational_floor_ceil    () -> bool;
 
-  } } // namespace math::wide_decimal
+  } // namespace wide_decimal
+  } // namespace math
 
 #endif // DECWIDE_T_EXAMPLES_2021_04_13_H

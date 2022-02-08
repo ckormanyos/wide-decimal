@@ -149,8 +149,8 @@
 
       for( ; j >= 0; --j)
       {
-        carry = local_double_limb_type(carry + local_double_limb_type(local_double_limb_type(a[i]) * b[j]));
-        carry = local_double_limb_type(carry + r[1 + (i + j)]);
+        carry = static_cast<local_double_limb_type>(carry + static_cast<local_double_limb_type>(static_cast<local_double_limb_type>(a[i]) * b[j]));
+        carry = static_cast<local_double_limb_type>(carry + r[1 + (i + j)]);
 
         r[1 + (i + j)] = static_cast<local_limb_type>       (carry % local_elem_mask);
         carry          = static_cast<local_double_limb_type>(carry / local_elem_mask);
@@ -196,8 +196,8 @@
       {
         sum += static_cast<local_double_limb_type>
                (
-                 local_double_limb_type(a[i]) * b[  static_cast<std::int32_t>(count - 1)
-                                                  - static_cast<std::int32_t>(i - j)]
+                 static_cast<local_double_limb_type>(a[i]) * b[  static_cast<std::int32_t>(count - 1)
+                                                               - static_cast<std::int32_t>(i - j)]
                );
       }
 
@@ -555,6 +555,8 @@
     }
   }
 
-  } } }
+  } // namespace detail
+  } // namespace wide_decimal
+  } // namespace math
 
 #endif // DECWIDE_T_DETAIL_OPS_2021_04_12_H
