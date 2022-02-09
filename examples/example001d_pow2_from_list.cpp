@@ -303,7 +303,7 @@ auto math::wide_decimal::example001d_pow2_from_list() -> bool
       x2 = pow(local_two, std::ptrdiff_t(std::ptrdiff_t(i) - 128));
     }
 
-    result_is_ok &= (x2 == local_pow2_data[i]);
+    result_is_ok &= (x2 == local_pow2_data[i]); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
   }
 
   return result_is_ok;

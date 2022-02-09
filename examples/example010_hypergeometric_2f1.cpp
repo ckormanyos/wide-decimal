@@ -13,10 +13,10 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-namespace local
+namespace example010_hypergeometric
 {
   template<typename T>
-  T hypergeometric_2f1(const T& AP, const T& BP, const T& CP, const T& ZM)
+  auto hypergeometric_2f1(const T& AP, const T& BP, const T& CP, const T& ZM) -> T
   {
     // Implement a rational approximation of hypergeometric_2f1.
     // This C++11 code uses a computational scheme similar to
@@ -150,9 +150,9 @@ namespace local
     // by the ratio of the final recursions of A and B.
     return A.back() / B.back();
   }
-}
+} // namespace example010_hypergeometric
 
-bool math::wide_decimal::example010_hypergeometric_2f1()
+auto math::wide_decimal::example010_hypergeometric_2f1() -> bool
 {
   using dec1001_t = math::wide_decimal::decwide_t<1001U>;
 
@@ -161,7 +161,7 @@ bool math::wide_decimal::example010_hypergeometric_2f1()
   const dec1001_t c( dec1001_t(5U) / 7U);
   const dec1001_t z(-dec1001_t(3U) / 4U);
 
-  const dec1001_t h2f1 = local::hypergeometric_2f1(a, b, c, z);
+  const dec1001_t h2f1 = example010_hypergeometric::hypergeometric_2f1(a, b, c, z);
 
   // N[Hypergeometric2F1[2/3, 4/3, 5/7, -3/4], 1003]
   const dec1001_t control

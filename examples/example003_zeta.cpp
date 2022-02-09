@@ -17,23 +17,23 @@ namespace local_zeta
   using dec51_t = math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
 
   template<typename FloatType>
-  FloatType pi() { return FloatType(); }
+  auto pi() -> FloatType { return FloatType(); }
 
   template<>
-  float pi() { return (float) 3.14159265358979323846264338327950288419716939937510582097L; }
+  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); }
 
   template<>
-  double pi() { return (double) 3.14159265358979323846264338327950288419716939937510582097L; }
+  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); }
 
   template<>
-  long double pi() { return (long double) 3.14159265358979323846264338327950288419716939937510582097L; }
+  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; }
 
   // N[Pi, 57]
   template<>
-  dec51_t pi() { return dec51_t( "3.14159265358979323846264338327950288419716939937510582097"); }
+  auto pi() -> dec51_t { return dec51_t( "3.14159265358979323846264338327950288419716939937510582097"); }
 
-  void compute_primes_via_square_root(std::deque<std::uint_fast16_t>& primes,
-                                      const std::uint_fast16_t maximum_value)
+  auto compute_primes_via_square_root(std::deque<std::uint_fast16_t>& primes,
+                                      const std::uint_fast16_t maximum_value) -> void
   {
     // This is a helper function that produces a small table of primes.
     // It uses rudimentary (and slow) trial division with denominator
@@ -41,11 +41,17 @@ namespace local_zeta
 
     for(std::uint_fast16_t i = UINT16_C(3); i <= maximum_value; i = std::uint_fast16_t(i + UINT16_C(2)))
     {
-      const std::uint_fast16_t maximum_square_root_value = static_cast<std::uint_fast16_t>(std::sqrt(static_cast<float>(i)) + 0.1F);
+      using std::sqrt;
+
+      const auto maximum_square_root_value =
+        static_cast<std::uint_fast16_t>
+        (
+          static_cast<float>(sqrt(static_cast<float>(i)) + 0.1F)
+        );
 
       bool is_prime = true;
 
-      for(std::uint_fast16_t j = UINT32_C(3); j <= maximum_square_root_value; ++j)
+      for(auto j = static_cast<std::uint_fast16_t>(3U); j <= maximum_square_root_value; ++j)
       {
         if(static_cast<std::uint_fast16_t>(i % j) == UINT32_C(0))
         {
@@ -63,7 +69,7 @@ namespace local_zeta
   }
 
   template<typename FloatingPointType>
-  FloatingPointType zeta16(const std::deque<std::uint_fast16_t>& primes)
+  auto zeta16(const std::deque<std::uint_fast16_t>& primes) -> FloatingPointType
   {
     // This is a dedicated template function that computes
     // zeta(16) from an elementary series of prime powers.
@@ -90,9 +96,9 @@ namespace local_zeta
 
     return z;
   }
-}
+} // namespace local_zeta
 
-bool math::wide_decimal::example003_zeta()
+auto math::wide_decimal::example003_zeta() -> bool
 {
   std::deque<std::uint_fast16_t> primes(1U, UINT32_C(2));
 

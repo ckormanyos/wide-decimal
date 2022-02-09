@@ -10,29 +10,26 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-namespace
+namespace example007_catalan
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
   using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
 
   template<typename FloatingPointType>
-  FloatingPointType pi()
+  auto pi() -> FloatingPointType
   {
-    return FloatingPointType(3.1415926535897932384626433832795029L);
+    return static_cast<FloatingPointType>(3.1415926535897932384626433832795029L);
   }
 
   template<>
-  dec1001_t pi()
+  auto pi() -> dec1001_t
   {
     return math::wide_decimal::pi<wide_decimal_digits10>();
   }
-}
 
-namespace local
-{
   template<typename FloatingPointType>
-  FloatingPointType catalan()
+  auto catalan() -> FloatingPointType
   {
     using floating_point_type = FloatingPointType;
 
@@ -41,17 +38,23 @@ namespace local
 
     floating_point_type k_fact (1U);
     floating_point_type tk_fact(2U);
-    floating_point_type sum    (floating_point_type(19U) / 18U);
+    floating_point_type sum    (static_cast<floating_point_type>(19U) / 18U);
 
     const floating_point_type lim = std::numeric_limits<floating_point_type>::epsilon();
 
-    for(std::uint_fast32_t k = UINT32_C(2); k < UINT32_C(10000000); ++k)
+    for(auto k = static_cast<std::uint_fast32_t>(2U); k < UINT32_C(10000000); ++k)
     {
-      const std::uint32_t tk = (std::uint32_t) (2U * k);
-      const std::uint64_t tk_plus_one_squared = (std::uint64_t) (tk + 1U) * (tk + 1U);
+      const auto tk          = static_cast<std::uint32_t>(2U * k);
+      const auto tk_plus_one = static_cast<std::uint32_t>(tk + 1U);
+
+      const auto tk_plus_one_squared =
+        static_cast<std::uint64_t>
+        (
+          static_cast<std::uint64_t>(tk_plus_one) * tk_plus_one
+        );
 
       k_fact  *= k;
-      tk_fact *= (std::uint64_t) tk * (tk - 1U);
+      tk_fact *= static_cast<std::uint64_t>(static_cast<std::uint64_t>(tk) * (tk - 1U));
 
       floating_point_type term = (k_fact * k_fact) / (tk_fact * tk_plus_one_squared);
 
@@ -63,20 +66,19 @@ namespace local
       }
     }
 
-    using ::pi;
+    using example007_catalan::pi;
     using std::log;
     using std::sqrt;
 
-    const floating_point_type result =
-      ((pi<floating_point_type>() * log(2U + sqrt(floating_point_type(3U)))) + (sum * 3U)) / 8U;
-
-    return result;
+    return (((pi<floating_point_type>() * log(2U + sqrt(static_cast<floating_point_type>(3U)))) + (sum * 3U)) / 8U);
   }
-}
+} // namespace example007_catalan
 
-bool math::wide_decimal::example007_catalan_series()
+auto math::wide_decimal::example007_catalan_series() -> bool
 {
-  const dec1001_t c = local::catalan<dec1001_t>();
+  using example007_catalan::dec1001_t;
+
+  const dec1001_t c = example007_catalan::catalan<example007_catalan::dec1001_t>();
 
   const dec1001_t control
   {

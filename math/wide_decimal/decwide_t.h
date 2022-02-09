@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -145,7 +145,7 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto ilogb        (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x)  -> typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::exponent_type;
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto sqrt         (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x)  ->          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto cbrt         (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x)  ->          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto rootn        (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x,
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto rootn        (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x, // NOLINT(misc-no-recursion)
                                                                                                                                                                                   std::int32_t p)                                                                                   ->          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto rootn_inverse(decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> x,
                                                                                                                                                                                   std::int32_t p)                                                                                   ->          decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
@@ -1900,13 +1900,19 @@
 
           auto scale = static_cast<long double>(1.0L);
 
-          for(auto i  = static_cast<typename representation_type::size_type>(decwide_t_elem_digits10);
-                   i  < static_cast<typename representation_type::size_type>(std::numeric_limits<long double>::digits10 + 3);
-                   i += static_cast<typename representation_type::size_type>(decwide_t_elem_digits10))
+          for(auto i  = static_cast<int>(decwide_t_elem_digits10);
+                   i  < (std::numeric_limits<long double>::digits10 + 3);
+                   i += static_cast<int>(decwide_t_elem_digits10))
           {
             scale /= static_cast<long double>(decwide_t_elem_mask);
 
-            ld += static_cast<long double>(my_data[i / decwide_t_elem_digits10]) * scale;
+            const auto idx =
+              static_cast<typename representation_type::size_type>
+              (
+                i / decwide_t_elem_digits10
+              );
+
+            ld += static_cast<long double>(static_cast<long double>(my_data[idx]) * scale);
           }
 
           if(my_neg) { ld = -ld; }
@@ -2553,9 +2559,18 @@
         my_data[static_cast<local_size_type>(least_digit_idx)] -= static_cast<local_limb_type>(my_data[static_cast<local_size_type>(least_digit_idx)] % least_digit_p10);
 
         // Clear the lower base-10 limbs.
-        if(static_cast<local_size_type>(least_digit_idx + 1) < my_data.size() - 1U)
         {
-          std::fill(my_data.begin() + static_cast<local_size_type>(least_digit_idx + 1), my_data.end(), static_cast<local_limb_type>(0U));
+          const auto least_digit_idx_plus_one = static_cast<std::int32_t>(least_digit_idx + 1);
+
+          const bool do_clear_lower_limbs =
+            (least_digit_idx_plus_one < static_cast<std::int32_t>(my_data.size() - 1U));
+
+          if(do_clear_lower_limbs)
+          {
+            std::fill(my_data.begin() + static_cast<local_size_type>(least_digit_idx_plus_one),
+                      my_data.end(),
+                      static_cast<local_limb_type>(0U));
+          }
         }
 
         // Perform round-to-nearest with no tie-breaking whatsoever.
@@ -3568,7 +3583,7 @@
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::initializer decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::init; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+  typename decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::initializer decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::init; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
   #endif
 
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
@@ -3787,10 +3802,8 @@
     // Note at this time that (ak = bk) = AGM(...)
     // Retrieve the value of pi and divide by (a * (2 * m)).
 
-    const floating_point_type result =
-         pi<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() / (ak * m);
-
-    return result;
+    return (  pi<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+            / (ak * m));
   }
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
