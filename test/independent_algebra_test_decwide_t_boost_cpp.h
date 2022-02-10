@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -12,7 +12,7 @@
   #include <iomanip>
   #include <sstream>
 
-  #include <boost/version.hpp>
+  #include <boost/math/bindings/decwide_t.hpp>
 
   #include <math/wide_decimal/decwide_t.h>
   #include <test/independent_algebra_test_decwide_t_base.h>
@@ -179,8 +179,8 @@
       // Note at this time that (ak = bk) = AGM(...)
       // Retrieve the value of pi, divide by (2 * a) and subtract (m * ln2).
 
-      const floating_point_type result =
-               boost::math::constants::pi<floating_point_type>() / ak
+      floating_point_type result =
+          (boost::math::constants::pi    <floating_point_type>() / ak)
         - (boost::math::constants::ln_two<floating_point_type>() * m);
 
       return ((b_negate) ? -result : result);
