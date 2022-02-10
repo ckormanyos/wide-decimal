@@ -144,10 +144,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test\independent_algebra_test_boost_cpp.h">
+    <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h">
       <Filter>Source Files\test</Filter>
     </ClInclude>
-    <ClInclude Include="test\independent_algebra_test_wide_decimal.h">
+    <ClInclude Include="test\independent_algebra_test_decwide_t_wide_decimal.h">
       <Filter>Source Files\test</Filter>
     </ClInclude>
     <ClInclude Include="test\parallel_for.h">
@@ -159,10 +159,10 @@
     <ClInclude Include="test\test_decwide_t_examples.h">
       <Filter>Source Files\test</Filter>
     </ClInclude>
-    <ClInclude Include="test\independent_algebra_test.h">
+    <ClInclude Include="test\independent_algebra_test_decwide_t.h">
       <Filter>Source Files\test</Filter>
     </ClInclude>
-    <ClInclude Include="test\independent_algebra_test_base.h">
+    <ClInclude Include="test\independent_algebra_test_decwide_t_base.h">
       <Filter>Source Files\test</Filter>
     </ClInclude>
     <ClInclude Include="util\memory\util_n_slot_array_allocator.h">

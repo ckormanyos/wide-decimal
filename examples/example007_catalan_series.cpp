@@ -78,7 +78,7 @@ auto math::wide_decimal::example007_catalan_series() -> bool
 {
   using example007_catalan::dec1001_t;
 
-  const dec1001_t c = example007_catalan::catalan<example007_catalan::dec1001_t>();
+  const auto c = example007_catalan::catalan<dec1001_t>();
 
   const dec1001_t control
   {

@@ -5,8 +5,8 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef INDEPENDENT_ALGEBRA_TEST_2020_10_17_H
-  #define INDEPENDENT_ALGEBRA_TEST_2020_10_17_H
+#ifndef INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H
+  #define INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H
 
   #include <atomic>
   #include <iostream>
@@ -14,8 +14,8 @@
 
   #include <math/wide_decimal/decwide_t.h>
 
-  #include <test/independent_algebra_test_wide_decimal.h>
-  #include <test/independent_algebra_test_boost_cpp.h>
+  #include <test/independent_algebra_test_decwide_t_boost_cpp.h>
+  #include <test/independent_algebra_test_decwide_t_wide_decimal.h>
   #include <test/parallel_for.h>
 
   namespace test { namespace independent_algebra {
@@ -32,13 +32,13 @@
       math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
   public:
-    static constexpr local_wide_decimal_type my_tol()
+    static constexpr auto my_tol() -> local_wide_decimal_type
     {
       return std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
     }
 
-    static bool eval_eq(const independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
-                        const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
+    static auto eval_eq(const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
+                        const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b) -> bool
     {
       std::string str_b;
 
@@ -72,7 +72,7 @@
 
       std::stringstream ss;
 
-      std::uint32_t u;
+      std::uint32_t u { };
 
       while(str.length() < std::string::size_type(std::numeric_limits<local_wide_decimal_type>::digits10))
       {
@@ -87,7 +87,14 @@
 
       std::uint32_t u_sign = dst_sign(eng_sign);
 
-      str += ((u_sign == 0U) ? "E+" : "E-");
+      if(u_sign == 0U)
+      {
+        str += "E+";
+      }
+      else
+      {
+        str += "E-";
+      }
 
       std::uint32_t u_exp = dst_exp(eng_exp);
 
@@ -107,32 +114,32 @@
     }
 
   private:
-    static std::ranlux24    eng_sign;
-    static std::minstd_rand eng_exp;
-    static std::mt19937     eng_mantissa;
+    static std::ranlux24    eng_sign;     // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static std::minstd_rand eng_exp;      // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static std::mt19937     eng_mantissa; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
-    static std::uniform_int_distribution<std::uint32_t> dst_sign;
-    static std::uniform_int_distribution<std::uint32_t> dst_exp;
-    static std::uniform_int_distribution<std::uint32_t> dst_mantissa;
+    static std::uniform_int_distribution<std::uint32_t> dst_sign;     // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static std::uniform_int_distribution<std::uint32_t> dst_exp;      // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static std::uniform_int_distribution<std::uint32_t> dst_mantissa; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
   };
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  std::ranlux24 control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::eng_sign;
+  std::ranlux24 control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::eng_sign; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp)
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  std::minstd_rand control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::eng_exp;
+  std::minstd_rand control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::eng_exp; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp)
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  std::mt19937 control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::eng_mantissa;
+  std::mt19937 control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::eng_mantissa; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp)
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::dst_sign(UINT32_C(0), UINT32_C(1));
+  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::dst_sign(UINT32_C(0), UINT32_C(1)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::dst_exp(UINT32_C(0), (std::uint32_t) (((unsigned long long) math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10 * 6ULL) / 10ULL));
+  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::dst_exp(UINT32_C(0), static_cast<std::uint32_t>((static_cast<unsigned long long>(math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10) * 6ULL) / 10ULL)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::dst_mantissa(UINT32_C(0), UINT32_C(99999999));
+  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::dst_mantissa(UINT32_C(0), UINT32_C(99999999)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
   template<const std::int32_t MyDigits10,
            typename LimbType,
@@ -142,14 +149,14 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  bool independent_algebra_test_add_()
+  auto independent_algebra_test_decwide_t_add_() -> bool
   {
-    using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
+    using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
-    using independent_algebra_test_control_struct =
+    using independent_algebra_test_decwide_t_control_struct =
       test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
     constexpr std::uint32_t count = CountN;
@@ -172,17 +179,17 @@
           std::string str_b;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_control_struct::get_random_float_string(str_a, j == 0U);
-          independent_algebra_test_control_struct::get_random_float_string(str_b, false);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, j == 0U);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_b, false);
           algebra_test_lock.clear();
 
-          independent_algebra_test_control_type result_ctrl;
+          independent_algebra_test_decwide_t_control_type result_ctrl;
           independent_algebra_decwide_type      result_ef;
 
-          eval_add(result_ctrl, independent_algebra_test_control_type(str_a.c_str()), independent_algebra_test_control_type(str_b.c_str()));
+          eval_add(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_add(result_ef,   independent_algebra_decwide_type     (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const bool b_ok = independent_algebra_test_control_struct::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -202,14 +209,14 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  bool independent_algebra_test_sub_()
+  auto independent_algebra_test_decwide_t_sub_() -> bool
   {
-    using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
+    using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
-    using independent_algebra_test_control_struct =
+    using independent_algebra_test_decwide_t_control_struct =
       test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
     constexpr std::uint32_t count = CountN;
@@ -232,17 +239,17 @@
           std::string str_b;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_control_struct::get_random_float_string(str_a, j == 0U);
-          independent_algebra_test_control_struct::get_random_float_string(str_b, false);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, j == 0U);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_b, false);
           algebra_test_lock.clear();
 
-          independent_algebra_test_control_type result_ctrl;
+          independent_algebra_test_decwide_t_control_type result_ctrl;
           independent_algebra_decwide_type      result_ef;
 
-          eval_sub(result_ctrl, independent_algebra_test_control_type(str_a.c_str()), independent_algebra_test_control_type(str_b.c_str()));
+          eval_sub(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_sub(result_ef,   independent_algebra_decwide_type     (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const bool b_ok = independent_algebra_test_control_struct::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -262,14 +269,14 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  bool independent_algebra_test_mul_()
+  auto independent_algebra_test_decwide_t_mul_() -> bool
   {
-    using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
+    using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
-    using independent_algebra_test_control_struct =
+    using independent_algebra_test_decwide_t_control_struct =
       test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
     constexpr std::uint32_t count = CountN;
@@ -292,17 +299,17 @@
           std::string str_b;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_control_struct::get_random_float_string(str_a, j == 0U);
-          independent_algebra_test_control_struct::get_random_float_string(str_b, false);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, j == 0U);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_b, false);
           algebra_test_lock.clear();
 
-          independent_algebra_test_control_type result_ctrl;
+          independent_algebra_test_decwide_t_control_type result_ctrl;
           independent_algebra_decwide_type      result_ef;
 
-          eval_mul(result_ctrl, independent_algebra_test_control_type(str_a.c_str()), independent_algebra_test_control_type(str_b.c_str()));
+          eval_mul(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_mul(result_ef,   independent_algebra_decwide_type     (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const bool b_ok = independent_algebra_test_control_struct::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -322,14 +329,14 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  bool independent_algebra_test_div_()
+  auto independent_algebra_test_decwide_t_div_() -> bool
   {
-    using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
+    using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
-    using independent_algebra_test_control_struct =
+    using independent_algebra_test_decwide_t_control_struct =
       test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
     constexpr std::uint32_t count = CountN;
@@ -352,17 +359,17 @@
           std::string str_b;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_control_struct::get_random_float_string(str_a, j == 0U);
-          independent_algebra_test_control_struct::get_random_float_string(str_b, false);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, j == 0U);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_b, false);
           algebra_test_lock.clear();
 
-          independent_algebra_test_control_type result_ctrl;
+          independent_algebra_test_decwide_t_control_type result_ctrl;
           independent_algebra_decwide_type      result_ef;
 
-          eval_div(result_ctrl, independent_algebra_test_control_type(str_a.c_str()), independent_algebra_test_control_type(str_b.c_str()));
+          eval_div(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_div(result_ef,   independent_algebra_decwide_type     (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const bool b_ok = independent_algebra_test_control_struct::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -382,14 +389,14 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  bool independent_algebra_test_sqrt()
+  auto independent_algebra_test_decwide_t_sqrt() -> bool
   {
-    using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
+    using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
-    using independent_algebra_test_control_struct =
+    using independent_algebra_test_decwide_t_control_struct =
       test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
     constexpr std::uint32_t count = CountN;
@@ -411,16 +418,16 @@
           std::string str_a;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_control_struct::get_random_float_string(str_a, j == 0U, true);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, j == 0U, true);
           algebra_test_lock.clear();
 
-          independent_algebra_test_control_type result_ctrl;
+          independent_algebra_test_decwide_t_control_type result_ctrl;
           independent_algebra_decwide_type      result_ef;
 
-          eval_sqrt(result_ctrl, independent_algebra_test_control_type(str_a.c_str()));
+          eval_sqrt(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()));
           eval_sqrt(result_ef,   independent_algebra_decwide_type     (str_a.c_str()));
 
-          const bool b_ok = independent_algebra_test_control_struct::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -440,14 +447,14 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  bool independent_algebra_test_log_()
+  auto independent_algebra_test_decwide_t_log_() -> bool
   {
-    using independent_algebra_test_control_type = IndependentAlgebraTestControlType;
+    using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
-    using independent_algebra_test_control_struct =
+    using independent_algebra_test_decwide_t_control_struct =
       test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
     constexpr std::uint32_t count = CountN;
@@ -469,16 +476,16 @@
           std::string str_a;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_control_struct::get_random_float_string(str_a, j == 0U, true);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, j == 0U, true);
           algebra_test_lock.clear();
 
-          independent_algebra_test_control_type result_ctrl;
+          independent_algebra_test_decwide_t_control_type result_ctrl;
           independent_algebra_decwide_type      result_ef;
 
-          eval_log(result_ctrl, independent_algebra_test_control_type(str_a.c_str()));
+          eval_log(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()));
           eval_log(result_ef,   independent_algebra_decwide_type     (str_a.c_str()));
 
-          const bool b_ok = independent_algebra_test_control_struct::eval_eq(result_ef, result_ctrl);
+          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -490,6 +497,7 @@
     return result_test_is_ok;
   }
 
-  } }
+  } // namespace independent_algebra
+  } // namespace test
 
-#endif // INDEPENDENT_ALGEBRA_TEST_2020_10_17_H
+#endif // INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H

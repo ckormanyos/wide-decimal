@@ -1,4 +1,4 @@
-﻿# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #  Copyright Christopher Kormanyos 2020 - 2022.
 #  Distributed under the Boost Software License,
 #  Version 1.0. (See accompanying file LICENSE_1_0.txt
@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++20 ]
+        standard: [ gnu++20 ]
         compiler: [ g++-11, clang++-12 ]
     steps:
       - uses: actions/checkout@v2

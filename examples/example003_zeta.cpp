@@ -112,7 +112,7 @@ auto math::wide_decimal::example003_zeta() -> bool
   //                       = 1.000015282259408651871732571487636722023237388990471531...
 
   // Compute zeta(16).
-  const dec51_t r16 = local_zeta::zeta16<dec51_t>(primes);
+  const auto r16 = local_zeta::zeta16<dec51_t>(primes);
 
   using std::fabs;
 

@@ -142,7 +142,7 @@ auto math::wide_decimal::example002c_pi_quintic() -> bool
 
   const std::clock_t start = std::clock();
 
-  const local_wide_decimal_type my_pi =
+  const auto my_pi =
     example002c_pi::pi_borwein_quintic<math::wide_decimal::decwide_t<wide_decimal_digits10>>(&std::cout);
 
   const std::clock_t stop = std::clock();

@@ -45,7 +45,7 @@
   inline constexpr auto template_half<long double>() -> long double { return 0.5L; }
 
   template<typename float_type>
-  inline constexpr auto template_fast_div_by_two(float_type a) -> float_type { static_cast<void>(a);  return float_type(); }
+  inline constexpr auto template_fast_div_by_two(float_type a) -> float_type { return static_cast<float_type>(a / 2); }
 
   template<>
   inline constexpr auto template_fast_div_by_two<float>(float a) -> float { return static_cast<float>(a / 2); }

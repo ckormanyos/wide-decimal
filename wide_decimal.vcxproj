@@ -207,10 +207,10 @@
     <ClInclude Include="mcal_lcd\mcal_lcd_base.h" />
     <ClInclude Include="mcal_lcd\mcal_lcd_console.h" />
     <ClInclude Include="mcal_lcd\mcal_lcd_generic_st7066.h" />
-    <ClInclude Include="test\independent_algebra_test.h" />
-    <ClInclude Include="test\independent_algebra_test_base.h" />
-    <ClInclude Include="test\independent_algebra_test_boost_cpp.h" />
-    <ClInclude Include="test\independent_algebra_test_wide_decimal.h" />
+    <ClInclude Include="test\independent_algebra_test_decwide_t.h" />
+    <ClInclude Include="test\independent_algebra_test_decwide_t_base.h" />
+    <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h" />
+    <ClInclude Include="test\independent_algebra_test_decwide_t_wide_decimal.h" />
     <ClInclude Include="test\parallel_for.h" />
     <ClInclude Include="test\test_decwide_t_algebra.h" />
     <ClInclude Include="test\test_decwide_t_examples.h" />

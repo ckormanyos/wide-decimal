@@ -5,8 +5,8 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef INDEPENDENT_ALGEBRA_TEST_BOOST_CPP_2020_10_17_H
-  #define INDEPENDENT_ALGEBRA_TEST_BOOST_CPP_2020_10_17_H
+#ifndef INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_BOOST_CPP_2020_10_17_H
+  #define INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_BOOST_CPP_2020_10_17_H
 
   #include <algorithm>
   #include <iomanip>
@@ -15,7 +15,7 @@
   #include <boost/version.hpp>
 
   #include <math/wide_decimal/decwide_t.h>
-  #include <test/independent_algebra_test_base.h>
+  #include <test/independent_algebra_test_decwide_t_base.h>
 
   #if (BOOST_VERSION <= 107500)
   #include <boost/serialization/nvp.hpp>
@@ -32,7 +32,7 @@
   namespace test { namespace independent_algebra {
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  class independent_algebra_test_boost_cpp : public independent_algebra_test_base
+  class independent_algebra_test_decwide_t_boost_cpp : public independent_algebra_test_decwide_t_base
   {
   public:
     using other_decwide_t_type = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
@@ -49,12 +49,12 @@
 
     local_float_type my_cpp_boost_float;
 
-    independent_algebra_test_boost_cpp() : my_cpp_boost_float() { }
+    independent_algebra_test_decwide_t_boost_cpp() : my_cpp_boost_float() { }
 
-    independent_algebra_test_boost_cpp(const char* str)
+    independent_algebra_test_decwide_t_boost_cpp(const char* str)
       : my_cpp_boost_float(str) { }
 
-    virtual ~independent_algebra_test_boost_cpp() { }
+    virtual ~independent_algebra_test_decwide_t_boost_cpp() { }
 
     virtual void get_string(std::string& str) const
     {
@@ -76,7 +76,7 @@
       // remember (in this case) to negate the result below.
       const bool b_negate = (x < 1);
 
-      const floating_point_type xx((b_negate == false) ? x : 1 / x);
+      const floating_point_type xx((!b_negate) ? x : 1 / x);
 
       // Use an AGM method to compute the logarithm of x.
       // Set a0 = 1
@@ -85,7 +85,11 @@
 
       floating_point_type ak(1U);
 
-      constexpr float n_times_factor = ((float) std::numeric_limits<floating_point_type>::digits10) * 1.67F;
+      constexpr auto n_times_factor =
+        static_cast<float>
+        (
+          static_cast<float>(std::numeric_limits<floating_point_type>::digits10) * 1.67F
+        );
 
       // Extract lg_xx = Log[mantissa * radix^ib]
       //               = Log[mantissa] + ib * Log[radix]
@@ -94,37 +98,57 @@
       using std::log;
       using std::scalbn;
 
-      const std::int32_t        ib    = ilogb(xx);
-      const floating_point_type man   = xx / scalbn(floating_point_type(1U), (int) ib);
-      const float               lg_xx =   log((float) man)
-                                        + ((float) ib * log((float) std::numeric_limits<floating_point_type>::radix));
+      const auto                ib    = static_cast<std::int32_t>(ilogb(xx));
+      const floating_point_type man   = xx / scalbn(floating_point_type(1U), static_cast<int>(ib));
+      const auto                lg_xx =
+        static_cast<float>
+        (
+            log(static_cast<float>(man))
+          + static_cast<float>(static_cast<float>(ib) * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix)))
+        );
 
       // Ensure that the resulting power is non-negative.
       // Also enforce that m >= 3.
-      const std::int32_t m =
-        (std::max)((std::int32_t) (n_times_factor - (float) (lg_xx / log(2.0F))), (std::int32_t) 3);
+      const auto m =
+        static_cast<std::int32_t>
+        (
+          (std::max)(static_cast<std::int32_t>(n_times_factor - static_cast<float>(lg_xx / log(2.0F))),
+                     static_cast<std::int32_t>(3))
+        );
 
       using std::ldexp;
 
       floating_point_type bk =
-        ldexp(floating_point_type(1U), (std::int32_t) (2 - m)) / xx;
+        ldexp(floating_point_type(1U), static_cast<std::int32_t>(2 - m)) / xx;
 
       // TBD: Tolerance should have the log of the argument added to it (usually negligible).
       constexpr std::uint32_t digits10_iteration_goal =
-          (std::uint32_t) ((std::numeric_limits<floating_point_type>::digits10 + 1) / 2)
-        + (std::uint32_t) 9U;
+        static_cast<std::uint32_t>
+        (
+            static_cast<std::uint32_t>((std::numeric_limits<floating_point_type>::digits10 + 1) / 2)
+          + static_cast<std::uint32_t>(9U)
+        );
 
-      const std::uint32_t digits10_scale =
-        (std::uint32_t) (0.5F + (1000.0F * log((float) std::numeric_limits<floating_point_type>::radix)) / log(10.0F));
+      using std::lround;
 
-      for(std::int32_t k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
+      const auto digits10_scale =
+        static_cast<std::uint32_t>
+        (
+          lround
+          (
+            static_cast<float>(1000.0F * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix))) / log(10.0F)
+          )
+        );
+
+      for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
       {
         // Check for the number of significant digits to be
         // at least half of the requested digits. If at least
         // half of the requested digits have been achieved,
         // then break after the upcoming iteration.
 
-        const std::int32_t ilogb_of_ak_minus_bk = (std::max)(std::int32_t(0), -ilogb(ak - bk));
+        const auto ilogb_of_ak_minus_bk = (std::max)(static_cast<std::int32_t>(0),
+                                                     static_cast<std::int32_t>(-ilogb(ak - bk)));
 
         const floating_point_type ak_tmp(ak);
 
@@ -132,8 +156,11 @@
 
         if(k > 4)
         {
-          const std::uint32_t digits10_of_iteration =
-            (std::uint32_t) ((std::uint64_t) ((std::uint64_t) ilogb_of_ak_minus_bk * digits10_scale) / 1000U);
+          const auto digits10_of_iteration =
+            static_cast<std::uint32_t>
+            (
+              static_cast<std::uint64_t>(static_cast<std::uint64_t>(ilogb_of_ak_minus_bk) * digits10_scale) / UINT32_C(1000)
+            );
 
           if(digits10_of_iteration > digits10_iteration_goal)
           {
@@ -156,62 +183,63 @@
                boost::math::constants::pi<floating_point_type>() / ak
         - (boost::math::constants::ln_two<floating_point_type>() * m);
 
-      return ((b_negate ) ? -result : result);
+      return ((b_negate) ? -result : result);
     }
   };
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_add(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
+  void eval_add(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
+                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
     result.my_cpp_boost_float = a.my_cpp_boost_float + b.my_cpp_boost_float;
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_sub(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
+  void eval_sub(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
+                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
     result.my_cpp_boost_float = a.my_cpp_boost_float - b.my_cpp_boost_float;
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_mul(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
+  void eval_mul(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
+                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
     result.my_cpp_boost_float = a.my_cpp_boost_float * b.my_cpp_boost_float;
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_div(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
+  void eval_div(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
+                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
   {
     result.my_cpp_boost_float = a.my_cpp_boost_float / b.my_cpp_boost_float;
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_sqrt(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                 const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a)
+  void eval_sqrt(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                 const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a)
   {
     result.my_cpp_boost_float = sqrt(a.my_cpp_boost_float);
   }
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_log(      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a)
+  void eval_log(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a)
   {
     using boost_multiprecision_type =
-      typename independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::local_float_type;
+      typename independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::local_float_type;
 
     const boost_multiprecision_type lg_a =
-      independent_algebra_test_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_log(a.my_cpp_boost_float);
+      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::my_log(a.my_cpp_boost_float);
 
     result.my_cpp_boost_float = lg_a;
   }
 
-  } }
+  } // namespace independent_algebra
+  } // namespace test
 
-#endif // INDEPENDENT_ALGEBRA_TEST_BOOST_CPP_2020_10_17_H
+#endif // INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_BOOST_CPP_2020_10_17_H
