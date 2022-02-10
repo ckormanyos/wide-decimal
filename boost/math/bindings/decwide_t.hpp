@@ -17,6 +17,7 @@
   #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107600))
   #include <boost/math/bindings/detail/big_lanczos.hpp>
   #endif
+  #include <boost/math/constants/constants.hpp>
   #include <boost/math/policies/policy.hpp>
   #include <boost/math/special_functions/sign.hpp>
 
@@ -40,14 +41,14 @@
 
     using precision_type = typename ThisPolicy::precision_type;
 
-    using local_digits_2 = digits2<(((long long) std::numeric_limits<local_wide_decimal_type>::digits10 + 1LL) * 1000LL) / 301LL>;
+    using local_digits_2 = digits2<((static_cast<long long>(std::numeric_limits<local_wide_decimal_type>::digits10) + 1LL) * 1000LL) / 301LL>; // NOLINT(google-runtime-int)
 
     using type = typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
                                             local_digits_2,
                                             precision_type>::type;
   };
 
-  } // namespace boost::math::policies
+  } // namespace policies
 
   namespace constants { namespace detail {
 
@@ -126,17 +127,17 @@
 
   public:
     #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
-    template<int N> static auto get(const mpl::int_<N>&) -> const result_type&
+    template<int N> static auto get(const mpl::int_<N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
-    template<int N> static auto get(const boost::integral_constant<int, N>&) -> const result_type&
+    template<int N> static auto get(const boost::integral_constant<int, N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #else
-    template<int N> static auto get(const std::integral_constant<int, N>&) -> const result_type&
+    template<int N> static auto get(const std::integral_constant<int, N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #endif // BOOST_VERSION
     {
       static result_type result;
       static bool        has_init = false;
 
-      if(has_init == false)
+      if(!has_init)
       {
         has_init = true;
 
@@ -147,18 +148,19 @@
     }
 
     #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
-    static inline auto get(const mpl::int_<0>&) -> result_type
+    static inline auto get(const mpl::int_<0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
-    static inline auto get(const boost::integral_constant<int, 0>&) -> result_type
+    static inline auto get(const boost::integral_constant<int, 0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #else
-    static inline auto get(const std::integral_constant<int, 0>&) -> result_type
+    static inline auto get(const std::integral_constant<int, 0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #endif // BOOST_VERSION
     {
       return my_compute();
     }
   };
 
-  } } // namespace boost::math::constants::detail
+  } // namespace detail
+  } // namespace constants
 
   #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107600))
   namespace lanczos {
@@ -200,9 +202,10 @@
                                                           undefined_lanczos>::type>::type;
   };
 
-  } // namespace boost::math::lanczos
+  } // namespace lanczos
   #endif // BOOST_VERSION
 
-  } } // namespace boost::math
+  } // namespace math
+  } // namespace boost
 
-#endif // DECWIDE_T_2021_02_24_HPP_
+#endif // DECWIDE_T_2021_02_24_HPP

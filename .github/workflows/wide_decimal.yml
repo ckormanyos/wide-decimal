@@ -14,6 +14,45 @@ on:
   schedule:
     - cron: '15 0 * * *' # run at 00:15 AM UTC
 jobs:
+  gnumake-clang-tidy-12-native:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        standard: [ c++20 ]
+        compiler: [ g++-11, clang++-12 ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: update-tools
+        run: sudo apt install gcc-11 g++-11 clang-12 clang-tidy-12
+      - name: clone-submods-bootstrap-headers-boost-develop
+        run: |
+          git clone -b develop --depth 1 https://github.com/boostorg/boost.git ../boost-root
+          cd ../boost-root
+          git submodule update --init tools
+          git submodule update --init libs/config
+          git submodule update --init libs/math
+          git submodule update --init libs/multiprecision
+          ./bootstrap.sh
+          ./b2 headers
+      - name: gnumake-clang-tidy-12-native
+        run: |
+          grep BOOST_VERSION ../boost-root/boost/version.hpp
+          cd .tidy/make
+          echo "running clang-tidy"
+          echo "make prepare -f make_tidy_01_generic.gmk MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}"
+          echo
+          make prepare -f make_tidy_01_generic.gmk MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}
+          echo "make tidy -f make_tidy_01_generic.gmk --jobs=8 MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}"
+          make tidy -f make_tidy_01_generic.gmk --jobs=8 MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}
+          echo
+          echo "verify empty word count of ./tmp/all.tidy_txt"
+          wc ./tmp/all.tidy_txt | grep '0 0 0'
   gcc-clang-native:
     runs-on: ubuntu-20.04
     defaults:
@@ -329,7 +368,7 @@ jobs:
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
   msvc-release-x64:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
         with:
@@ -355,7 +394,7 @@ jobs:
           dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
           %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
   mingw-winhost-x64:
-    runs-on: windows-latest
+    runs-on: windows-2019
     strategy:
       fail-fast: false
       matrix:

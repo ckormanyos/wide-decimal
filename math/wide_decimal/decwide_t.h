@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -75,7 +75,7 @@
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t,
            typename FftFloatType = double>
-  auto pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&;
+  auto pi(auto(*pfn_callback_to_report_digits10)(const std::uint32_t) -> void = nullptr) -> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&;
   #else
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
@@ -83,7 +83,7 @@
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t,
            typename FftFloatType = double>
-  auto pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  auto pi(auto(*pfn_callback_to_report_digits10)(const std::uint32_t) -> void = nullptr) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   #endif
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
@@ -110,7 +110,7 @@
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t,
            typename FftFloatType = double>
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  auto calc_pi(auto(*pfn_callback_to_report_digits10)(const std::uint32_t) -> void = nullptr) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
@@ -384,7 +384,7 @@
            typename InternalFloatType,
            typename ExponentType,
            typename FftFloatType>
-  class decwide_t
+  class decwide_t // NOLINT(clang-analyzer-optin.performance.Padding)
   {
   public:
     // Define the decwide_t digits characteristics.
@@ -1752,7 +1752,7 @@
             }
             else
             {
-              const auto it_non_zero =
+              const auto it_non_zero = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
                 std::find_if(my_data.cbegin() + static_cast<std::ptrdiff_t>(offset_decimal_part),
                              my_data.cend(),
                              [](const limb_type& d) -> bool
@@ -3057,7 +3057,11 @@
       // Ascertain the number of digits requested from decwide_t.
       auto the_number_of_digits_i_want_from_decwide_t = static_cast<std::uint_fast32_t>(0U);
 
-      const auto max10_plus_one = static_cast<std::uint_fast32_t>(decwide_t_max_digits10 + 1);
+      const auto max10_plus_one =
+        static_cast<std::uint_fast32_t>
+        (
+          static_cast<std::uint_fast32_t>(decwide_t_max_digits10) + 1U
+        );
 
       if(use_scientific)
       {
@@ -3077,7 +3081,7 @@
           // If the number is larger than 1 in absolute value, then the number of
           // digits is given by the width of the integer part plus the ostream's
           // precision, not to exceed (max_digits10 + 1).
-          const auto exp_plus_one                   = static_cast<std::uint_fast32_t>(the_exp + 1);
+          const auto exp_plus_one                   = static_cast<std::uint_fast32_t>(static_cast<exponent_type>(the_exp + 1));
           const auto exp_plus_one_plus_my_precision = static_cast<std::uint_fast32_t>(exp_plus_one + os_precision);
 
           the_number_of_digits_i_want_from_decwide_t = (std::min)(exp_plus_one_plus_my_precision, max10_plus_one);
@@ -3271,7 +3275,7 @@
       else
       {
         // Insert the decimal point.
-        const auto my_exp_plus_one = static_cast<std::uint_fast32_t>(the_exp + 1);
+        const auto my_exp_plus_one = static_cast<std::uint_fast32_t>(static_cast<exponent_type>(the_exp + 1));
 
         // The number string is not large enough to hold the integer part of the number.
         // Zero extend the integer part of the string.
@@ -3596,7 +3600,7 @@
   #endif
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  auto calc_pi(auto(*pfn_callback_to_report_digits10)(const std::uint32_t) -> void) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
     // Description : Compute pi using the quadratically convergent Gauss AGM,
     //               in particular the Schoenhage variant.
@@ -3808,7 +3812,7 @@
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&
+  auto pi(auto(*pfn_callback_to_report_digits10)(const std::uint32_t) -> void) -> const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&
   {
     static_cast<void>(pfn_callback_to_report_digits10);
 
@@ -3816,7 +3820,7 @@
   }
   #else
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  auto pi(auto(*pfn_callback_to_report_digits10)(const std::uint32_t) -> void) -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
     return calc_pi<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(pfn_callback_to_report_digits10);
   }
@@ -4469,8 +4473,12 @@
       // implemented as a hypergeometric function, |r| is bounded by
       // ln2 / p2.
 
-      // Compute ln2 as a constant value.
-      const floating_point_type ln2 = ln_two<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+      // Get (compute beforehad) ln2 as a constant or constant reference value.
+      #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
+      const floating_point_type& ln2 = ln_two<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+      #else
+      const floating_point_type  ln2 = ln_two<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+      #endif
 
       const auto nf = static_cast<std::uint32_t>(xx / ln2);
 

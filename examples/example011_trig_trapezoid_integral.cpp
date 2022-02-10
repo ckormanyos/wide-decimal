@@ -12,46 +12,46 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-namespace local
+namespace example011_trig
 {
   using dec51_t = math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
 
-  dec51_t sin(dec51_t x);
-  dec51_t cos(dec51_t x);
+  auto sin(const dec51_t& x) -> dec51_t;
+  auto cos(const dec51_t& x) -> dec51_t;
 
   template<typename FloatType>
-  FloatType pi() { return FloatType(); }
+  auto pi() -> FloatType { return FloatType(); }
 
   template<>
-  float pi() { return (float) 3.14159265358979323846264338327950288419716939937510582097L; }
+  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); }
 
   template<>
-  double pi() { return (double) 3.14159265358979323846264338327950288419716939937510582097L; }
+  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); }
 
   template<>
-  long double pi() { return (long double) 3.14159265358979323846264338327950288419716939937510582097L; }
+  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; }
 
   // N[Pi, 57]
   template<>
-  dec51_t pi() { return dec51_t( "3.14159265358979323846264338327950288419716939937510582097"); }
+  auto pi() -> dec51_t { return dec51_t( "3.14159265358979323846264338327950288419716939937510582097"); }
 
   template<typename FloatType>
-  FloatType pi_half() { return FloatType(); }
+  auto pi_half() -> FloatType { return FloatType(); }
 
   template<>
-  float pi_half() { return (float) 1.57079632679489661923132169163975144209858469968755291049L; }
+  auto pi_half() -> float { return static_cast<float>(1.57079632679489661923132169163975144209858469968755291049L); }
 
   template<>
-  double pi_half() { return (double) 1.57079632679489661923132169163975144209858469968755291049L; }
+  auto pi_half() -> double { return static_cast<double>(1.57079632679489661923132169163975144209858469968755291049L); }
 
   template<>
-  long double pi_half() { return (long double) 1.57079632679489661923132169163975144209858469968755291049L; }
+  auto pi_half() -> long double { return 1.57079632679489661923132169163975144209858469968755291049L; }
 
   // N[Pi/2, 57]
   template<>
-  dec51_t pi_half() { return dec51_t("1.57079632679489661923132169163975144209858469968755291049"); }
+  auto pi_half() -> dec51_t { return dec51_t("1.57079632679489661923132169163975144209858469968755291049"); }
 
-  dec51_t sin_pade(dec51_t x)
+  auto sin_pade(const dec51_t& x) -> dec51_t
   {
     // PadeApproximant[Sin[x], {x, 0, {17,16}}]
     // FullSimplify[%]
@@ -121,7 +121,7 @@ namespace local
     return (x * top) / (bot * 153U);
   }
 
-  dec51_t cos_pade(dec51_t x)
+  auto cos_pade(const dec51_t& x) -> dec51_t
   {
     // PadeApproximant[Cos[x] - 1, {x, 0, {16,16}}]
     // FullSimplify[%]
@@ -189,7 +189,7 @@ namespace local
     return 1U + (((x2 * 4080U) * top) / bot);
   }
 
-  dec51_t sin(dec51_t x)
+  auto sin(const dec51_t& x) -> dec51_t // NOLINT(misc-no-recursion)
   {
     dec51_t s;
 
@@ -210,15 +210,15 @@ namespace local
       // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
       // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-      const std::uint32_t      k = (std::uint32_t) (x / pi_half<dec51_t>());
-      const std::uint_fast32_t n = (std::uint_fast32_t) (k % 4U);
+      const auto k = static_cast<std::uint32_t>     (x / pi_half<dec51_t>());
+      const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
       dec51_t r = x - (pi_half<dec51_t>() * k);
 
       const bool is_neg =  (n > 1U);
       const bool is_cos = ((n == 1U) || (n == 3U));
 
-      std::uint_fast32_t n_angle_identity = 0U;
+      auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
       static const dec51_t two_tenths = dec51_t(2U) / 10U;
 
@@ -233,7 +233,7 @@ namespace local
       s = (is_cos ? cos_pade(r) : sin_pade(r));
 
       // Rescale the result with the triple angle identity for sine.
-      for(std::uint_fast32_t t = 0U; t < n_angle_identity; ++t)
+      for(auto t = static_cast<std::uint_fast32_t>(0U); t < n_angle_identity; ++t)
       {
         s = (s * 3U) - (((s * s) * s) * 4U);
       }
@@ -253,7 +253,7 @@ namespace local
     return s;
   }
 
-  dec51_t cos(dec51_t x)
+  auto cos(const dec51_t& x) -> dec51_t // NOLINT(misc-no-recursion)
   {
     dec51_t c;
 
@@ -274,15 +274,15 @@ namespace local
       // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
       // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-      const std::uint32_t      k = (std::uint32_t) (x / pi_half<dec51_t>());
-      const std::uint_fast32_t n = (std::uint_fast32_t) (k % 4U);
+      const auto k = static_cast<std::uint32_t>     (x / pi_half<dec51_t>());
+      const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
       dec51_t r = x - (pi_half<dec51_t>() * k);
 
       const bool is_neg = ((n == 1U) || (n == 2U));
       const bool is_sin = ((n == 1U) || (n == 3U));
 
-      std::uint_fast32_t n_angle_identity = 0U;
+      auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
       static const dec51_t two_tenths = dec51_t(2U) / 10U;
 
@@ -297,7 +297,7 @@ namespace local
       c = (is_sin ? sin_pade(r) : cos_pade(r));
 
       // Rescale the result with the triple angle identity for cosine.
-      for(std::uint_fast32_t t = 0U; t < n_angle_identity; ++t)
+      for(auto t = static_cast<std::uint_fast32_t>(0U); t < n_angle_identity; ++t)
       {
         c = (((c * c) * c) * 4U) - (c * 3U);
       }
@@ -318,27 +318,31 @@ namespace local
   }
 
   template<typename real_value_type,
-            typename real_function_type>
-  real_value_type integral(const real_value_type& a,
-                           const real_value_type& b,
-                           const real_value_type& tol,
-                           real_function_type real_function)
+           typename real_function_type>
+  auto integral(const real_value_type&   a,
+                const real_value_type&   b,
+                const real_value_type&   tol,
+                      real_function_type real_function) -> real_value_type
   {
-    std::uint_fast32_t n2(1);
+    auto n2 = static_cast<std::uint_fast32_t>(1);
 
     real_value_type step = ((b - a) / 2U);
 
     real_value_type result = (real_function(a) + real_function(b)) * step;
 
-    const std::uint_fast8_t k_max = UINT8_C(32);
+    const auto k_max = static_cast<std::uint_fast8_t>(32U);
 
-    for(std::uint_fast8_t k = UINT8_C(0); k < k_max; ++k)
+    for(auto k = static_cast<std::uint_fast8_t>(0U); k < k_max; ++k)
     {
       real_value_type sum(0);
 
-      for(std::uint_fast32_t j(0U); j < n2; ++j)
+      for(auto j = static_cast<std::uint_fast32_t>(0U); j < n2; ++j)
       {
-        const std::uint_fast32_t two_j_plus_one = (j * UINT32_C(2)) + UINT32_C(1);
+        const auto two_j_plus_one =
+          static_cast<std::uint_fast32_t>
+          (
+            static_cast<std::uint_fast32_t>(j * UINT32_C(2)) + UINT32_C(1)
+          );
 
         sum += real_function(a + (step * two_j_plus_one));
       }
@@ -367,8 +371,8 @@ namespace local
   }
 
   template<typename float_type>
-  float_type cyl_bessel_j(const std::uint_fast8_t n,
-                          const float_type& x)
+  auto cyl_bessel_j(      std::uint_fast8_t n,
+                    const float_type&       x) -> float_type
   {
     const float_type epsilon = std::numeric_limits<float_type>::epsilon();
 
@@ -376,8 +380,8 @@ namespace local
     using std::sin;
     using std::sqrt;
 
-    using local::cos;
-    using local::sin;
+    using example011_trig::cos;
+    using example011_trig::sin;
 
     const float_type tol = sqrt(epsilon);
 
@@ -389,19 +393,17 @@ namespace local
                                                      return cos(x * sin(t) - (t * n));
                                                    });
 
-    const float_type jn = integration_result / pi<float_type>();
-
-    return jn;
+    return integration_result / pi<float_type>();
   }
-}
+} // namespace example011_trig
 
-bool math::wide_decimal::example011_trig_trapezoid_integral()
+auto math::wide_decimal::example011_trig_trapezoid_integral() -> bool
 {
-  using local::dec51_t;
+  using example011_trig::dec51_t;
 
-  const dec51_t j2 = local::cyl_bessel_j(2U, dec51_t(123U) / 100U);
-  const dec51_t j3 = local::cyl_bessel_j(3U, dec51_t(456U) / 100U);
-  const dec51_t j4 = local::cyl_bessel_j(4U, dec51_t(789U) / 100U);
+  const dec51_t j2 = example011_trig::cyl_bessel_j(2U, dec51_t(123U) / 100U);
+  const dec51_t j3 = example011_trig::cyl_bessel_j(3U, dec51_t(456U) / 100U);
+  const dec51_t j4 = example011_trig::cyl_bessel_j(4U, dec51_t(789U) / 100U);
 
   using std::fabs;
 

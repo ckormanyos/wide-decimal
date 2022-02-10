@@ -31,7 +31,7 @@ namespace math { namespace wide_decimal {
 namespace detail {
 
 template<typename FloatingPointType>
-FloatingPointType sin_series(const FloatingPointType& x)
+auto sin_series(const FloatingPointType& x) -> FloatingPointType
 {
         FloatingPointType term        = x;
   const FloatingPointType x2          = x * x;
@@ -58,7 +58,7 @@ FloatingPointType sin_series(const FloatingPointType& x)
 }
 
 template<typename FloatingPointType>
-FloatingPointType cos_series(const FloatingPointType& x)
+auto cos_series(const FloatingPointType& x) -> FloatingPointType
 {
   const FloatingPointType x2          = x * x;
         FloatingPointType term        = x2 / 2U;
@@ -84,10 +84,10 @@ FloatingPointType cos_series(const FloatingPointType& x)
   return 1U - sum;
 }
 
-}
+} // namespace detail
 
 template<typename FloatingPointType>
-FloatingPointType sin(const FloatingPointType& x)
+auto sin(const FloatingPointType& x) -> FloatingPointType // NOLINT(misc-no-recursion)
 {
   using floating_point_type = FloatingPointType;
 
@@ -110,15 +110,15 @@ FloatingPointType sin(const FloatingPointType& x)
     // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
     // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-    const std::uint32_t      k = (std::uint32_t) (x / boost::math::constants::half_pi<floating_point_type>());
-    const std::uint_fast32_t n = (std::uint_fast32_t) (k % 4U);
+    const auto k = static_cast<std::uint32_t>     (x / boost::math::constants::half_pi<floating_point_type>());
+    const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
     floating_point_type r = x - (boost::math::constants::half_pi<floating_point_type>() * k);
 
     const bool is_neg =  (n > 1U);
     const bool is_cos = ((n == 1U) || (n == 3U));
 
-    std::uint_fast32_t n_angle_identity = 0U;
+    auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
     static const floating_point_type one_tenth = floating_point_type(1U) / 10U;
 
@@ -133,7 +133,7 @@ FloatingPointType sin(const FloatingPointType& x)
     s = (is_cos ? detail::cos_series(r) : detail::sin_series(r));
 
     // Rescale the result with the triple angle identity for sine.
-    for(std::uint_fast32_t t = 0U; t < n_angle_identity; ++t)
+    for(auto t = static_cast<std::uint_fast32_t>(0U); t < n_angle_identity; ++t)
     {
       s = (s * 3U) - (((s * s) * s) * 4U);
     }
@@ -154,7 +154,7 @@ FloatingPointType sin(const FloatingPointType& x)
 }
 
 template<typename FloatingPointType>
-FloatingPointType cos(const FloatingPointType& x)
+auto cos(const FloatingPointType& x) -> FloatingPointType // NOLINT(misc-no-recursion)
 {
   using floating_point_type = FloatingPointType;
 
@@ -177,15 +177,15 @@ FloatingPointType cos(const FloatingPointType& x)
     // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
     // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-    const std::uint32_t      k = (std::uint32_t) (x / boost::math::constants::half_pi<floating_point_type>());
-    const std::uint_fast32_t n = (std::uint_fast32_t) (k % 4U);
+    const auto k = static_cast<std::uint32_t>     (x / boost::math::constants::half_pi<floating_point_type>());
+    const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
     floating_point_type r = x - (boost::math::constants::half_pi<floating_point_type>() * k);
 
     const bool is_neg = ((n == 1U) || (n == 2U));
     const bool is_sin = ((n == 1U) || (n == 3U));
 
-    std::uint_fast32_t n_angle_identity = 0U;
+    auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
     static const floating_point_type one_tenth = floating_point_type(1U) / 10U;
 
@@ -200,7 +200,7 @@ FloatingPointType cos(const FloatingPointType& x)
     c = (is_sin ? detail::sin_series(r) : detail::cos_series(r));
 
     // Rescale the result with the triple angle identity for cosine.
-    for(std::uint_fast32_t t = 0U; t < n_angle_identity; ++t)
+    for(auto t = static_cast<std::uint_fast32_t>(0U); t < n_angle_identity; ++t)
     {
       c = (((c * c) * c) * 4U) - (c * 3U);
     }
@@ -220,12 +220,13 @@ FloatingPointType cos(const FloatingPointType& x)
   return c;
 }
 
-} }
+} // namespace wide_decimal
+} // namespace math
 
-namespace local
+namespace example009b_boost
 {
   template<class T>
-  bool test_tgamma()
+  auto test_tgamma() -> bool
   {
      // N[Gamma[5/2], 120]
      const T control_tgamma_2_and_half("1.32934038817913702047362561250585888709816209209179034616035584238968346344327413603121299255390849906217011771821192800");
@@ -246,17 +247,17 @@ namespace local
 
      return result_is_ok;
   }
-}
+} // namespace example009b_boost
 
-bool math::wide_decimal::example009b_boost_math_standalone()
+auto math::wide_decimal::example009b_boost_math_standalone() -> bool
 {
   using wide_decimal_010_type = math::wide_decimal::decwide_t< 10U, std::uint32_t, void>;
   using wide_decimal_035_type = math::wide_decimal::decwide_t< 35U, std::uint32_t, void>;
   using wide_decimal_105_type = math::wide_decimal::decwide_t<105U, std::uint32_t, void>;
 
-  const bool result_010_is_ok = local::test_tgamma<wide_decimal_010_type>();
-  const bool result_035_is_ok = local::test_tgamma<wide_decimal_035_type>();
-  const bool result_105_is_ok = local::test_tgamma<wide_decimal_105_type>();
+  const bool result_010_is_ok = example009b_boost::test_tgamma<wide_decimal_010_type>();
+  const bool result_035_is_ok = example009b_boost::test_tgamma<wide_decimal_035_type>();
+  const bool result_105_is_ok = example009b_boost::test_tgamma<wide_decimal_105_type>();
 
   const bool result_is_ok = (   result_010_is_ok
                              && result_035_is_ok

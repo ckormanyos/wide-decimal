@@ -22,7 +22,7 @@
   #endif
 #endif
 
-bool test_decwide_t_examples_part1__()
+auto test_decwide_t_examples_part1__() -> bool
 {
   bool result_is_ok = true;
 
@@ -44,7 +44,7 @@ bool test_decwide_t_examples_part1__()
   return result_is_ok;
 }
 
-bool test_decwide_t_examples_part2__()
+auto test_decwide_t_examples_part2__() -> bool
 {
   bool result_is_ok = true;
 

@@ -33,7 +33,7 @@ namespace example008_bernoulli
   }
 
 
-  util::dynamic_array<wide_decimal_type> bernoulli_table((std::uint_fast32_t) ((float) std::numeric_limits<wide_decimal_type>::digits10 * 0.95F));
+  util::dynamic_array<wide_decimal_type> bernoulli_table(static_cast<std::uint_fast32_t>(static_cast<float>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95F)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
   template<typename FloatingPointType>
   auto bernoulli_b(FloatingPointType* bn, std::uint32_t n) -> void
@@ -77,17 +77,17 @@ namespace example008_bernoulli
 
       const bool  b_neg = ((two_i % 4U) == 0U);
 
-      bn[two_i] = ((!b_neg) ? b : -b);
+      bn[two_i] = ((!b_neg) ? b : -b); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
       two_pow_two_m *= 4U;
     }
 
-    bn[0U] =  1U;
-    bn[1U] = floating_point_type(-1) / 2U;
+    bn[0U] =  1U;                          // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    bn[1U] = floating_point_type(-1) / 2U; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   }
 
   template<typename FloatingPointType>
-  auto tgamma(FloatingPointType x) -> FloatingPointType
+  auto tgamma(const FloatingPointType& x) -> FloatingPointType
   {
     using floating_point_type = FloatingPointType;
 
@@ -100,7 +100,7 @@ namespace example008_bernoulli
 
     static const floating_point_type min_arg_x = floating_point_type(min_arg_n);
 
-    const std::uint32_t n_recur =
+    const auto n_recur =
       static_cast<std::uint32_t>
       (
         (x < min_arg_x) ? static_cast<std::uint32_t>(static_cast<std::uint32_t>(min_arg_n - static_cast<std::int32_t>(x)) + 1U)
@@ -134,8 +134,9 @@ namespace example008_bernoulli
       // Limit fx to the range 8 <= fx <= 10^16, where 8 is chosen to
       // ensure that (log(fx) - 1.0F) remains positive and 10^16 is
       // selected arbitrarily, yet ensured to be rather large.
-      const float fx = (float) (std::min)((std::max)(floating_point_type(8U), xx),
-                                          floating_point_type(UINT64_C(10000000000000000)));
+      auto fx_max = (std::max)(static_cast<floating_point_type>(8U), xx);
+
+      auto fx = (std::min)(fx_max, static_cast<floating_point_type>(UINT64_C(10000000000000000)));
 
       tol *= static_cast<float>(fx * (log(fx) - 1.0F));
     }
@@ -237,7 +238,7 @@ auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
     using std::fabs;
     using std::sqrt;
 
-    const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * ratios[i].first) / ratios[i].second;
+    const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * ratios[i].first) / ratios[i].second; // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
     const wide_decimal_type closeness = fabs(1 - (g / control));
 

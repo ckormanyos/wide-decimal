@@ -8,11 +8,11 @@
 #ifndef TEST_DECWIDE_T_ALGEBRA_2020_11_05_H
   #define TEST_DECWIDE_T_ALGEBRA_2020_11_05_H
 
-  bool test_decwide_t_algebra_add_____();
-  bool test_decwide_t_algebra_sub_____();
-  bool test_decwide_t_algebra_mul_____();
-  bool test_decwide_t_algebra_div_____();
-  bool test_decwide_t_algebra_sqrt____();
-  bool test_decwide_t_algebra_log_____();
+  auto test_decwide_t_algebra_add_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_sub_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_mul_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_div_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_sqrt____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_log_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
 #endif // TEST_DECWIDE_T_ALGEBRA_2020_11_05_H

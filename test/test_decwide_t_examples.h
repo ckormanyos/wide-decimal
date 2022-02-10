@@ -8,7 +8,7 @@
 #ifndef TEST_DECWIDE_T_EXAMPLES_2020_11_05_H
   #define TEST_DECWIDE_T_EXAMPLES_2020_11_05_H
 
-  bool test_decwide_t_examples_part1__();
-  bool test_decwide_t_examples_part2__();
+  auto test_decwide_t_examples_part1__() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_examples_part2__() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
 #endif // TEST_DECWIDE_T_EXAMPLES_2020_11_05_H
