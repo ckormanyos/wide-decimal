@@ -22,8 +22,7 @@ STD                 := $(MY_STD)
 endif
 
 CXX_FLAGS    = $(CC)                                      \
-               -march=native                              \
-               -mtune=native                              \
+               -m64                                       \
                -O3                                        \
                -Wall                                      \
                -Wextra                                    \
@@ -31,7 +30,7 @@ CXX_FLAGS    = $(CC)                                      \
                -Wsign-conversion                          \
                -std=$(STD)
 
-C_DEFINES    =
+C_DEFINES    = _GLIBCXX_USE_FLOAT128
 
 C_INCLUDES   = $(PATH_SRC)                                          \
                $(BOOST_ROOT_FOR_TIDY)
