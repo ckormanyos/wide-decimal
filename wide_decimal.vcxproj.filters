@@ -207,6 +207,9 @@
     <ClInclude Include="math\wide_decimal\decwide_t_examples.h">
       <Filter>Source Files\math\wide_decimal</Filter>
     </ClInclude>
+    <ClInclude Include="test\independent_algebra_test_decwide_t_constants.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\wide_decimal.yml">

@@ -7,7 +7,7 @@
 
 BOOST_ROOT_FOR_TIDY = /mnt/c/boost/boost_1_78_0
 CC                  = clang++
-STD                 = gnu++11
+STD                 = c++11
 
 ifneq ($(MY_BOOST_ROOT),)
 BOOST_ROOT_FOR_TIDY := $(MY_BOOST_ROOT)
@@ -30,7 +30,7 @@ CXX_FLAGS    = $(CC)                                      \
                -Wsign-conversion                          \
                -std=$(STD)
 
-C_DEFINES    = _GLIBCXX_USE_FLOAT128
+C_DEFINES    =
 
 C_INCLUDES   = $(PATH_SRC)                                          \
                $(BOOST_ROOT_FOR_TIDY)

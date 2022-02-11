@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ gnu++20 ]
+        standard: [ c++11 ]
         compiler: [ g++-11, clang++-12 ]
     steps:
       - uses: actions/checkout@v2

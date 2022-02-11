@@ -210,6 +210,7 @@
     <ClInclude Include="test\independent_algebra_test_decwide_t.h" />
     <ClInclude Include="test\independent_algebra_test_decwide_t_base.h" />
     <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h" />
+    <ClInclude Include="test\independent_algebra_test_decwide_t_constants.h" />
     <ClInclude Include="test\independent_algebra_test_decwide_t_wide_decimal.h" />
     <ClInclude Include="test\parallel_for.h" />
     <ClInclude Include="test\test_decwide_t_algebra.h" />

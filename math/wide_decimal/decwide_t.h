@@ -3656,7 +3656,7 @@
         )
       );
 
-    for(unsigned k = 0U; k < 48U; ++k)
+    for(auto k = static_cast<unsigned>(0U); k < 48U; ++k)
     {
       using std::sqrt;
 
@@ -3678,7 +3678,7 @@
       // Test the number of precise digits from this iteration.
       // If it is there are enough precise digits, then the calculation
       // is finished.
-      const std::int32_t ib =
+      const auto ib =
         (std::max)
         (
           static_cast<std::int32_t>(0),
@@ -3743,7 +3743,12 @@
 
     // Ensure that the resulting power is non-negative.
     // Also enforce that m >= 3.
-    const auto m = (std::max)(static_cast<std::int32_t>(n_times_factor), static_cast<std::int32_t>(3));
+    const auto m =
+      (std::max)
+      (
+        static_cast<std::int32_t>(n_times_factor),
+        static_cast<std::int32_t>(3)
+      );
 
     floating_point_type bk =
       ldexp(one<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), static_cast<std::int32_t>(2 - m));

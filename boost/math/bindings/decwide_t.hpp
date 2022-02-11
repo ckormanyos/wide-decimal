@@ -10,6 +10,8 @@
 
   #include <boost/version.hpp>
 
+  #include <math/wide_decimal/decwide_t.h>
+
   #if !defined(BOOST_VERSION)
   #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
   #endif
@@ -20,8 +22,6 @@
   #include <boost/math/constants/constants.hpp>
   #include <boost/math/policies/policy.hpp>
   #include <boost/math/special_functions/sign.hpp>
-
-  #include <math/wide_decimal/decwide_t.h>
 
   namespace boost { namespace math {
 
@@ -122,6 +122,7 @@
       while(true);
 
       result = B / D;
+
       return result;
     }
 
