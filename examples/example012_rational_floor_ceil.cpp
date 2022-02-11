@@ -1,5 +1,5 @@
-///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+﻿///////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -15,18 +15,23 @@
 #include <math/wide_decimal/decwide_t_examples.h>
 #include <util/utility/util_baselexical_cast.h>
 
-namespace local
+namespace example012_rational
 {
-   std::minstd_rand0 eng(static_cast<std::minstd_rand0::result_type>(std::clock()));
+  auto dist_sign() -> unsigned
+  {
+    static std::minstd_rand0 my_eng(static_cast<std::minstd_rand0::result_type>(std::clock()));
 
-   std::uniform_int_distribution<unsigned> dist_sign
-   (
+    static std::uniform_int_distribution<unsigned> my_dist_sign
+    (
       0U,
       1U
-   );
+    );
+
+    return my_dist_sign(my_eng);
+  }
 
   template<typename DecimalType>
-  bool test_rational_floor()
+  auto test_rational_floor() -> bool
   {
     using decimal_type = DecimalType;
 
@@ -41,20 +46,20 @@ namespace local
     {
       for(std::int32_t hi_index = INT32_C(10001); hi_index < INT32_C(100010); hi_index += INT32_C(17))
       {
-        const bool lo_is_neg = ((dist_sign(eng) % 2U) == 0U);
-        const bool hi_is_neg = ((dist_sign(eng) % 2U) == 0U);
+        const bool lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
+        const bool hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
 
-        const std::int32_t lo = ((lo_is_neg == false) ? lo_index : -lo_index);
-        const std::int32_t hi = ((hi_is_neg == false) ? hi_index : -hi_index);
+        const auto lo = static_cast<std::int32_t>((!lo_is_neg) ? lo_index : -lo_index);
+        const auto hi = static_cast<std::int32_t>((!hi_is_neg) ? hi_index : -hi_index);
 
-        const std::int32_t lo_hi = lo * hi;
+        const auto lo_hi = static_cast<std::int32_t>(lo * hi);
 
         const decimal_type a = decimal_type { lo_hi } / decimal_type { lo };
         const decimal_type b = floor(a);
 
         result_is_ok &= (static_cast<std::int32_t>(a) == b);
 
-        if(result_is_ok == false)
+        if(!result_is_ok)
         {
           break;
         }
@@ -65,7 +70,7 @@ namespace local
   }
 
   template<typename DecimalType>
-  bool test_rational_ceil()
+  auto test_rational_ceil() -> bool
   {
     using decimal_type = DecimalType;
 
@@ -80,20 +85,20 @@ namespace local
     {
       for(std::int32_t hi_index = INT32_C(10001); hi_index < INT32_C(100010); hi_index += INT32_C(17))
       {
-        const bool lo_is_neg = ((dist_sign(eng) % 2U) == 0U);
-        const bool hi_is_neg = ((dist_sign(eng) % 2U) == 0U);
+        const bool lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
+        const bool hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
 
-        const std::int32_t lo = ((lo_is_neg == false) ? lo_index : -lo_index);
-        const std::int32_t hi = ((hi_is_neg == false) ? hi_index : -hi_index);
+        const auto lo = static_cast<std::int32_t>((!lo_is_neg) ? lo_index : -lo_index);
+        const auto hi = static_cast<std::int32_t>((!hi_is_neg) ? hi_index : -hi_index);
 
-        const std::int32_t lo_hi = lo * hi;
+        const auto lo_hi = static_cast<std::int32_t>(lo * hi);
 
         const decimal_type a = decimal_type { lo_hi } / decimal_type { lo };
         const decimal_type b = floor(a);
 
         result_is_ok &= (static_cast<std::int32_t>(a) == b);
 
-        if(result_is_ok == false)
+        if(!result_is_ok)
         {
           break;
         }
@@ -102,9 +107,9 @@ namespace local
 
     return result_is_ok;
   }
-}
+} // namespace example012_rational
 
-bool math::wide_decimal::example012_rational_floor_ceil()
+auto math::wide_decimal::example012_rational_floor_ceil() -> bool
 {
   bool result_is_ok = true;
 
@@ -112,16 +117,16 @@ bool math::wide_decimal::example012_rational_floor_ceil()
   {
     using decimal_type = math::wide_decimal::decwide_t<10U, std::uint32_t, void>;
 
-    result_is_ok &= local::test_rational_floor<decimal_type>();
-    result_is_ok &= local::test_rational_ceil <decimal_type>();
+    result_is_ok &= example012_rational::test_rational_floor<decimal_type>();
+    result_is_ok &= example012_rational::test_rational_ceil <decimal_type>();
   }
 
   // Test floor/ceil for 12 decimal digits.
   {
     using decimal_type = math::wide_decimal::decwide_t<12U, std::uint32_t, void>;
 
-    result_is_ok &= local::test_rational_floor<decimal_type>();
-    result_is_ok &= local::test_rational_ceil <decimal_type>();
+    result_is_ok &= example012_rational::test_rational_floor<decimal_type>();
+    result_is_ok &= example012_rational::test_rational_ceil <decimal_type>();
   }
 
   return result_is_ok;

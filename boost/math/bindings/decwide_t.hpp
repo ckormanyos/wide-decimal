@@ -1,18 +1,27 @@
-///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2021.                        //
+﻿///////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2021 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef DECWIDE_T_2021_02_24_HPP_
-  #define DECWIDE_T_2021_02_24_HPP_
+#ifndef DECWIDE_T_2021_02_24_HPP
+  #define DECWIDE_T_2021_02_24_HPP
 
-  #include <boost/math/bindings/detail/big_lanczos.hpp>
-  #include <boost/math/policies/policy.hpp>
   #include <boost/version.hpp>
 
   #include <math/wide_decimal/decwide_t.h>
+
+  #if !defined(BOOST_VERSION)
+  #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
+  #endif
+
+  #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107600))
+  #include <boost/math/bindings/detail/big_lanczos.hpp>
+  #endif
+  #include <boost/math/constants/constants.hpp>
+  #include <boost/math/policies/policy.hpp>
+  #include <boost/math/special_functions/sign.hpp>
 
   namespace boost { namespace math {
 
@@ -32,14 +41,14 @@
 
     using precision_type = typename ThisPolicy::precision_type;
 
-    using local_digits_2 = digits2<(((long long) std::numeric_limits<local_wide_decimal_type>::digits10 + 1LL) * 1000LL) / 301LL>;
+    using local_digits_2 = digits2<((static_cast<long long>(std::numeric_limits<local_wide_decimal_type>::digits10) + 1LL) * 1000LL) / 301LL>; // NOLINT(google-runtime-int)
 
     using type = typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
                                             local_digits_2,
                                             precision_type>::type;
   };
 
-  } // namespace boost::math::policies
+  } // namespace policies
 
   namespace constants { namespace detail {
 
@@ -58,7 +67,7 @@
       ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
   private:
-    static result_type my_compute()
+    static auto my_compute() -> result_type
     {
       // Adapted from Boost.Math.Constants (see file calculate_constants.hpp).
 
@@ -71,7 +80,7 @@
 
       result_type lim = std::numeric_limits<result_type>::epsilon();
 
-      unsigned k = 1;
+      auto k = static_cast<unsigned>(1U);
 
       do
       {
@@ -113,22 +122,23 @@
       while(true);
 
       result = B / D;
+
       return result;
     }
 
   public:
     #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
-    template<int N> static const result_type& get(const mpl::int_<N>&)
+    template<int N> static auto get(const mpl::int_<N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
-    template<int N> static const result_type& get(const boost::integral_constant<int, N>&)
+    template<int N> static auto get(const boost::integral_constant<int, N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #else
-    template<int N> static const result_type& get(const std::integral_constant<int, N>&)
+    template<int N> static auto get(const std::integral_constant<int, N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #endif // BOOST_VERSION
     {
       static result_type result;
       static bool        has_init = false;
 
-      if(has_init == false)
+      if(!has_init)
       {
         has_init = true;
 
@@ -139,18 +149,19 @@
     }
 
     #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
-    static inline const result_type get(const mpl::int_<0>&)
+    static inline auto get(const mpl::int_<0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
-    static inline const result_type get(const boost::integral_constant<int, 0>&)
+    static inline auto get(const boost::integral_constant<int, 0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #else
-    static inline const result_type get(const std::integral_constant<int, 0>&)
+    static inline auto get(const std::integral_constant<int, 0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #endif // BOOST_VERSION
     {
       return my_compute();
     }
   };
 
-  } } // namespace boost::math::constants::detail
+  } // namespace detail
+  } // namespace constants
 
   #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107600))
   namespace lanczos {
@@ -192,13 +203,10 @@
                                                           undefined_lanczos>::type>::type;
   };
 
-  } // namespace boost::math::lanczos
+  } // namespace lanczos
   #endif // BOOST_VERSION
 
-  #if !defined(BOOST_VERSION)
-  #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
-  #endif
+  } // namespace math
+  } // namespace boost
 
-  } } // namespace boost::math
-
-#endif // DECWIDE_T_2021_02_24_HPP_
+#endif // DECWIDE_T_2021_02_24_HPP

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -10,7 +10,7 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-bool math::wide_decimal::example001d_pow2_from_list()
+auto math::wide_decimal::example001d_pow2_from_list() -> bool
 {
   using local_limb_type = std::uint32_t;
 
@@ -303,7 +303,7 @@ bool math::wide_decimal::example001d_pow2_from_list()
       x2 = pow(local_two, std::ptrdiff_t(std::ptrdiff_t(i) - 128));
     }
 
-    result_is_ok &= (x2 == local_pow2_data[i]);
+    result_is_ok &= (x2 == local_pow2_data[i]); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
   }
 
   return result_is_ok;

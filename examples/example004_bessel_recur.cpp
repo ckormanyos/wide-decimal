@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -12,27 +12,27 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-namespace
+namespace example004_bessel
 {
   template<typename FloatingPointType>
-  FloatingPointType bisect(FloatingPointType (*pfn)(const FloatingPointType),
-                           const FloatingPointType x_lo,
-                           const FloatingPointType x_hi)
+  auto bisect(      FloatingPointType (*pfn)(FloatingPointType),
+              const FloatingPointType x_lo,
+              const FloatingPointType x_hi) -> FloatingPointType
   {
     using floating_point_type = FloatingPointType;
 
     const floating_point_type f_lo = pfn(x_lo);
     const floating_point_type f_hi = pfn(x_hi);
 
-    const bool f_lo_is_neg = (f_lo < floating_point_type(0.0L));
-    const bool f_hi_is_neg = (f_hi < floating_point_type(0.0L));
+    const bool f_lo_is_neg = (f_lo < static_cast<floating_point_type>(0.0L));
+    const bool f_hi_is_neg = (f_hi < static_cast<floating_point_type>(0.0L));
 
     // Make sure that there is at least one root in the interval.
     if(f_lo_is_neg == f_hi_is_neg)
     {
       // Bisection interval has no root or it has multiple roots!
 
-      return floating_point_type(0);
+      return static_cast<floating_point_type>(0);
     }
 
     // Orient the search such that f > 0 lies at x + dx.
@@ -58,7 +58,7 @@ namespace
       const floating_point_type xmid = rtb + dx;
       const floating_point_type fmid = pfn(xmid);
 
-      if(fmid <= floating_point_type(0.0L))
+      if(fmid <= static_cast<floating_point_type>(0.0L))
       {
         rtb = xmid;
       }
@@ -66,7 +66,7 @@ namespace
       // Test for convergence.
       using std::fabs;
 
-      if(   (fabs(dx)   < floating_point_type(0.5L))
+      if(   (fabs(dx)   < static_cast<floating_point_type>(0.5L))
          || (fabs(fmid) < std::numeric_limits<floating_point_type>::epsilon()))
       {
         // Return root.
@@ -80,14 +80,14 @@ namespace
 
   struct Jn_algo
   {
-    static constexpr float e_half() { return float(1.359140914229522617680143735676331248879L); }
-    static constexpr float two_pi() { return float(6.283185307179586476925286766559005768394L); }
+    static constexpr auto e_half() -> float { return static_cast<float>(1.359140914229522617680143735676331248879L); }
+    static constexpr auto two_pi() -> float { return static_cast<float>(6.283185307179586476925286766559005768394L); }
 
-    static float        m_z;
-    static float        m_n;
-    static std::int32_t m_p;
+    static float        m_z; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static float        m_n; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static std::int32_t m_p; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
-    static float fn_mstart1(const float m)
+    static auto fn_mstart1(float m) -> float
     {
       // This equation corresponds to | Jm(z) | = 10^(-p)
 
@@ -105,7 +105,7 @@ namespace
              + (  m  * log10(e_half() * m_z / m));
     }
 
-    static float fn_mstart2(const float m)
+    static auto fn_mstart2(float m) -> float
     {
       // This equation corresponds to | Jm(z) | = 10^(-p / 2) * | Jn(z)|
 
@@ -125,43 +125,40 @@ namespace
              - (m_n  * log10(e_half() * m_z / m_n));
     }
 
-    static std::uint32_t mstart1(const float x, const std::uint32_t digits)
+    static auto mstart1(float x, std::uint32_t digits) -> std::uint32_t
     {
       m_z = (std::max)(x, 0.1F);
-      m_p = (std::int32_t) digits;
+      m_p = static_cast<std::int32_t>(digits);
 
       // Get the starting order for recursion.
-      const float         f_order = bisect(fn_mstart1, 0.1F, x + 100000.0F);
-      const std::uint32_t n_order = static_cast<std::uint32_t>(f_order);
+      const auto f_order = bisect(fn_mstart1, 0.1F, x + 100000.0F);
+      const auto n_order = static_cast<std::uint32_t>(f_order);
 
       // Make sure the return value is an odd integer.
       return ((((n_order % 2U) == 0U) && (n_order > 0U)) ? n_order - 1U : n_order);
     }
 
-    static std::uint32_t mstart2(const float x, const float dn, const std::uint32_t digits)
+    static auto mstart2(float x, float dn, std::uint32_t digits) -> std::uint32_t
     {
       m_z = (std::max)(x, 0.1F);
       m_n = dn;
-      m_p = (std::int32_t) digits;
+      m_p = static_cast<std::int32_t>(digits);
 
       // Get the starting order for recursion.
-      const float         f_order = bisect(fn_mstart2, 0.1F, x + 100000.0F);
-      const std::uint32_t n_order = static_cast<std::uint32_t>(f_order);
+      const auto f_order = bisect(fn_mstart2, 0.1F, x + 100000.0F);
+      const auto n_order = static_cast<std::uint32_t>(f_order);
 
       // Make sure the return value is an odd integer.
       return ((((n_order % 2U) == 0U) && (n_order > 0U)) ? n_order - 1U : n_order);
     }
   };
 
-  float         Jn_algo::m_z;
-  float         Jn_algo::m_n;
-  std::int32_t  Jn_algo::m_p;
-}
+  float         Jn_algo::m_z; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+  float         Jn_algo::m_n; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+  std::int32_t  Jn_algo::m_p; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
-namespace local
-{
   template<typename FloatingPointType>
-  FloatingPointType cyl_bessel_j(const std::int32_t n, const FloatingPointType x)
+  auto cyl_bessel_j(std::int32_t n, FloatingPointType x) -> FloatingPointType
   {
     using floating_point_type = FloatingPointType;
 
@@ -175,16 +172,25 @@ namespace local
     floating_point_type jn_p1    (1U);
     floating_point_type norm_half(1U);
 
-    const std::uint32_t d10 = static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10);
+    const auto d10 = static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10);
 
-    // Get the starting order for recursive calculations.
-    const std::int32_t n_start1 = (std::int32_t) Jn_algo::mstart1((float) x,                  d10);
-    const std::int32_t n_start2 = (std::int32_t) Jn_algo::mstart2((float) x, (float) (n - 1), d10);
+    // Get the candidates for the starting order(s) for recursive calculations.
+    const auto n_start1 =
+      static_cast<std::int32_t>
+      (
+        Jn_algo::mstart1(static_cast<float>(x), d10)
+      );
 
-    const std::int32_t n_start = (std::max)(n_start2, n_start1);
+    const auto n_start2 =
+      static_cast<std::int32_t>
+      (
+        Jn_algo::mstart2(static_cast<float>(x), static_cast<float>(n - 1), d10)
+      );
+
+    const auto n_start = (std::max)(n_start2, n_start1);
 
     // Do the recursion. The direction of the recursion is downward.
-    for(std::int32_t m = n_start; m >= 0; --m)
+    for(auto m = n_start; m >= static_cast<std::int32_t>(0); --m)
     {
       //                                 Jn+1(x)
       // Downward recursion is:  Jn(x) = ------- * [2 * (m + 1)] - Jn+2(x)
@@ -213,9 +219,9 @@ namespace local
 
     return my_jn_result / (norm_half * 2);
   }
-}
+} // namespace example004_bessel
 
-bool math::wide_decimal::example004_bessel_recur()
+auto math::wide_decimal::example004_bessel_recur() -> bool
 {
   // Calculate 1,001 decimal digits of the value of a cylindrical Bessel function.
   // N[BesselJ[9, 123456789/10000000], 1001]
@@ -226,7 +232,7 @@ bool math::wide_decimal::example004_bessel_recur()
   // the normalization factor.
   const dec1001_t x(dec1001_t(123456789UL) / 10000000UL);
 
-  const dec1001_t j9 = local::cyl_bessel_j(9, x);
+  const dec1001_t j9 = example004_bessel::cyl_bessel_j(9, x);
 
   const dec1001_t control
   {

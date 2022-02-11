@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -12,10 +12,13 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-namespace local
+namespace local_polylog
 {
   template<typename FloatingPointType>
-  FloatingPointType polylog(const std::int32_t s, const FloatingPointType& x)
+  auto polylog(const std::int32_t s, const FloatingPointType& x) -> FloatingPointType;
+
+  template<typename FloatingPointType>
+  auto polylog(const std::int32_t s, const FloatingPointType& x) -> FloatingPointType
   {
     using floating_point_type = FloatingPointType;
 
@@ -41,15 +44,15 @@ namespace local
 
     return sum;
   }
-}
+} // namespace local_polylog
 
-bool math::wide_decimal::example005_polylog_series()
+auto math::wide_decimal::example005_polylog_series() -> bool
 {
   using dec101_t = math::wide_decimal::decwide_t<101U>;
 
   using std::fabs;
 
-  const dec101_t poly = local::polylog(7U, dec101_t(17U) / 71U);
+  const dec101_t poly = local_polylog::polylog(7U, dec101_t(17U) / 71U);
 
   // N[PolyLog[7, 17/71], 101]
   const dec101_t control

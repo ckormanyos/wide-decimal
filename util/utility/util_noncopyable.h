@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2007 - 2021.
+//  Copyright Christopher Kormanyos 2007 - 2022.
 //  Distributed under the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef UTIL_NONCOPYABLE_2008_12_16_H_
-  #define UTIL_NONCOPYABLE_2008_12_16_H_
+#ifndef UTIL_NONCOPYABLE_2008_12_16_H
+  #define UTIL_NONCOPYABLE_2008_12_16_H
 
   // Taken (with slight modification) from boost::noncopyable.
 
@@ -30,4 +30,4 @@
     using noncopyable = my_noncopyable_namespace::noncopyable;
   }
 
-#endif // UTIL_NONCOPYABLE_2008_12_16_H_
+#endif // UTIL_NONCOPYABLE_2008_12_16_H

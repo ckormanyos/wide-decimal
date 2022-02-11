@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -10,7 +10,7 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-bool math::wide_decimal::example006_logarithm()
+auto math::wide_decimal::example006_logarithm() -> bool
 {
   // Compute 1,000 values of Log[(123456789/1000000) * (3^n)],
   // the result of which is Log[(123456789/1000000)] + (n Log[3])
@@ -58,7 +58,7 @@ bool math::wide_decimal::example006_logarithm()
   const std::clock_t stop = std::clock();
 
   std::cout << "Time example006_logarithm(): "
-            << (float) (stop - start) / (float) CLOCKS_PER_SEC
+            << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 
   return result_is_ok;

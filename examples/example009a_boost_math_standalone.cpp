@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -21,24 +21,24 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #endif
 
-#include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/bindings/decwide_t.hpp>
+#include <boost/math/special_functions/gamma.hpp>
 
 #include <math/wide_decimal/decwide_t_examples.h>
 
-namespace
+namespace example009a_boost
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
   using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
-}
+} // namespace example009a_boost
 
 namespace math { namespace wide_decimal {
 
 namespace detail {
 
 template<typename FloatingPointType>
-FloatingPointType sin_series(const FloatingPointType& x)
+auto sin_series(const FloatingPointType& x) -> FloatingPointType
 {
         FloatingPointType term        = x;
   const FloatingPointType x2          = x * x;
@@ -65,7 +65,7 @@ FloatingPointType sin_series(const FloatingPointType& x)
 }
 
 template<typename FloatingPointType>
-FloatingPointType cos_series(const FloatingPointType& x)
+auto cos_series(const FloatingPointType& x) -> FloatingPointType
 {
   const FloatingPointType x2          = x * x;
         FloatingPointType term        = x2 / 2U;
@@ -91,9 +91,11 @@ FloatingPointType cos_series(const FloatingPointType& x)
   return 1U - sum;
 }
 
-}
+} // namespace detail
 
-dec1001_t sin(const dec1001_t& x)
+using example009a_boost::dec1001_t;
+
+auto sin(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
 {
   dec1001_t s;
 
@@ -114,15 +116,15 @@ dec1001_t sin(const dec1001_t& x)
     // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
     // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-    const std::uint32_t      k = (std::uint32_t) (x / boost::math::constants::half_pi<dec1001_t>());
-    const std::uint_fast32_t n = (std::uint_fast32_t) (k % 4U);
+    const auto k = static_cast<std::uint32_t>     (x / boost::math::constants::half_pi<dec1001_t>());
+    const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
     dec1001_t r = x - (boost::math::constants::half_pi<dec1001_t>() * k);
 
     const bool is_neg =  (n > 1U);
     const bool is_cos = ((n == 1U) || (n == 3U));
 
-    std::uint_fast32_t n_angle_identity = 0U;
+    auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
     static const dec1001_t one_tenth = dec1001_t(1U) / 10U;
 
@@ -137,7 +139,7 @@ dec1001_t sin(const dec1001_t& x)
     s = (is_cos ? detail::cos_series(r) : detail::sin_series(r));
 
     // Rescale the result with the triple angle identity for sine.
-    for(std::uint_fast32_t t = 0U; t < n_angle_identity; ++t)
+    for(auto t = static_cast<std::uint_fast32_t>(0U); t < n_angle_identity; ++t)
     {
       s = (s * 3U) - (((s * s) * s) * 4U);
     }
@@ -157,7 +159,7 @@ dec1001_t sin(const dec1001_t& x)
   return s;
 }
 
-dec1001_t cos(const dec1001_t& x)
+auto cos(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
 {
   dec1001_t c;
 
@@ -178,15 +180,15 @@ dec1001_t cos(const dec1001_t& x)
     // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
     // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-    const std::uint32_t      k = (std::uint32_t) (x / boost::math::constants::half_pi<dec1001_t>());
-    const std::uint_fast32_t n = (std::uint_fast32_t) (k % 4U);
+    const auto k = static_cast<std::uint32_t>     (x / boost::math::constants::half_pi<dec1001_t>());
+    const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
     dec1001_t r = x - (boost::math::constants::half_pi<dec1001_t>() * k);
 
     const bool is_neg = ((n == 1U) || (n == 2U));
     const bool is_sin = ((n == 1U) || (n == 3U));
 
-    std::uint_fast32_t n_angle_identity = 0U;
+    auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
     static const dec1001_t one_tenth = dec1001_t(1U) / 10U;
 
@@ -201,7 +203,7 @@ dec1001_t cos(const dec1001_t& x)
     c = (is_sin ? detail::sin_series(r) : detail::cos_series(r));
 
     // Rescale the result with the triple angle identity for cosine.
-    for(std::uint_fast32_t t = 0U; t < n_angle_identity; ++t)
+    for(auto t = static_cast<std::uint_fast32_t>(0U); t < n_angle_identity; ++t)
     {
       c = (((c * c) * c) * 4U) - (c * 3U);
     }
@@ -221,12 +223,10 @@ dec1001_t cos(const dec1001_t& x)
   return c;
 }
 
-dec1001_t tan(const dec1001_t& x)
-{
-  return sin(x) / cos(x);
-}
-
-dec1001_t hypergeometric_2f1(const dec1001_t& a, const dec1001_t& b, const dec1001_t& c, const dec1001_t& x)
+auto hypergeometric_2f1(const dec1001_t& a,
+                        const dec1001_t& b,
+                        const dec1001_t& c,
+                        const dec1001_t& x) -> dec1001_t
 {
   // Compute the series representation of hypergeometric_2f1
   // taken from Abramowitz and Stegun 15.1.1.
@@ -245,7 +245,7 @@ dec1001_t hypergeometric_2f1(const dec1001_t& a, const dec1001_t& b, const dec10
   const dec1001_t tol = std::numeric_limits<dec1001_t>::epsilon() * x;
 
   // Series expansion of hyperg_2f1(a, b; c; x).
-  for(std::int32_t n = INT32_C(2); n < INT32_C(100000); ++n)
+  for(auto n = static_cast<std::int32_t>(2); n < INT32_C(100000); ++n)
   {
     x_pow_n_div_n_fact *= x;
     x_pow_n_div_n_fact /= n;
@@ -267,24 +267,28 @@ dec1001_t hypergeometric_2f1(const dec1001_t& a, const dec1001_t& b, const dec10
   return h2f1;
 }
 
-dec1001_t hypergeometric_2f1_regularized(const dec1001_t& a, const dec1001_t& b, const dec1001_t& c, const dec1001_t& x)
+auto hypergeometric_2f1_regularized(const dec1001_t& a,
+                                    const dec1001_t& b,
+                                    const dec1001_t& c,
+                                    const dec1001_t& x) -> dec1001_t
 {
   return hypergeometric_2f1(a, b, c, x) / boost::math::tgamma(c);
 }
 
-dec1001_t pochhammer(const dec1001_t& x, const dec1001_t& a)
+auto pochhammer(const dec1001_t& x, const dec1001_t& a) -> dec1001_t
 {
   return boost::math::tgamma(x + a) / boost::math::tgamma(x);
 }
 
-} }
+} // namespace wide_decimal
+} // namespace math
 
-namespace local
+namespace example009a_boost
 {
   template<typename FloatingPointType>
-  FloatingPointType legendre_pvu(const FloatingPointType& v,
-                                 const FloatingPointType& u,
-                                 const FloatingPointType& x)
+  auto legendre_pvu(const FloatingPointType& v,
+                    const FloatingPointType& u,
+                    const FloatingPointType& x) -> FloatingPointType
   {
     using std::pow;
 
@@ -305,9 +309,9 @@ namespace local
   }
 
   template<typename FloatingPointType>
-  FloatingPointType legendre_qvu(const FloatingPointType& v,
-                                 const FloatingPointType& u,
-                                 const FloatingPointType& x)
+  auto legendre_qvu(const FloatingPointType& v,
+                    const FloatingPointType& u,
+                    const FloatingPointType& x) -> FloatingPointType
   {
     using std::cos;
     using std::pow;
@@ -337,9 +341,9 @@ namespace local
 
     return (boost::math::constants::half_pi<FloatingPointType>() * (term1 - term2)) / sin_u_pi;
   }
-}
+} // namespace example009a_boost
 
-bool math::wide_decimal::example009a_boost_math_standalone()
+auto math::wide_decimal::example009a_boost_math_standalone() -> bool
 {
   using std::fabs;
 
@@ -348,8 +352,8 @@ bool math::wide_decimal::example009a_boost_math_standalone()
   // Compute some values of the Legendre function of the second kind
   // on the real axis within the unit circle.
 
-  const dec1001_t lpvu = local::legendre_pvu(dec1001_t(1U) / 3, dec1001_t(1U) / 7, x);
-  const dec1001_t lqvu = local::legendre_qvu(dec1001_t(1U) / 3, dec1001_t(1U) / 7, x);
+  const dec1001_t lpvu = example009a_boost::legendre_pvu(dec1001_t(1U) / 3, dec1001_t(1U) / 7, x);
+  const dec1001_t lqvu = example009a_boost::legendre_qvu(dec1001_t(1U) / 3, dec1001_t(1U) / 7, x);
 
   // N[LegendreP[1/3, 1/7, 2, 789/1000], 1001]
   const dec1001_t control_lpvu

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -21,22 +21,22 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #endif
 
-#include <boost/math/constants/constants.hpp>
-#include <boost/math/special_functions/cbrt.hpp>
-#include <boost/math/special_functions/sign.hpp>
 #include <boost/math/bindings/decwide_t.hpp>
+#include <boost/math/special_functions/cbrt.hpp>
 
 #include <math/wide_decimal/decwide_t_examples.h>
 
-namespace
+namespace example009_boost
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
   using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
-}
+} // namespace example009_boost
 
-bool math::wide_decimal::example009_boost_math_standalone()
+auto math::wide_decimal::example009_boost_math_standalone() -> bool
 {
+  using example009_boost::dec1001_t;
+
   const dec1001_t x = dec1001_t(UINT32_C(123456789)) / 100U;
 
   using std::cbrt;
@@ -45,7 +45,7 @@ bool math::wide_decimal::example009_boost_math_standalone()
   // Compare wide-decimal's cube root function with that of Boost.Math.
   // Also exercise several different interpretations of the constant pi.
 
-  const dec1001_t c       = cbrt(x / math::wide_decimal::pi<wide_decimal_digits10, typename dec1001_t::limb_type, std::allocator<void>, double>());
+  const dec1001_t c       = cbrt(x / math::wide_decimal::pi<example009_boost::wide_decimal_digits10, typename dec1001_t::limb_type, std::allocator<void>, double>());
 
   const dec1001_t control = boost::math::cbrt(x / boost::math::constants::pi<dec1001_t>());
 

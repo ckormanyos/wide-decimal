@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2021.                 //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -22,7 +22,7 @@
 #include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_baselexical_cast.h>
 
-bool math::wide_decimal::example002b_pi_100k()
+auto math::wide_decimal::example002b_pi_100k() -> bool
 {
   using local_limb_type = std::uint32_t;
 
@@ -47,7 +47,7 @@ bool math::wide_decimal::example002b_pi_100k()
   const std::clock_t stop = std::clock();
 
   std::cout << "Time example002b_pi_100k(): "
-            << (float) (stop - start) / (float) CLOCKS_PER_SEC
+            << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 
   const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
@@ -56,8 +56,16 @@ bool math::wide_decimal::example002b_pi_100k()
 
   using const_iterator_type = typename local_wide_decimal_type::representation_type::const_iterator;
 
-  const_iterator_type fi(my_pi.crepresentation().cbegin() + (std::uint32_t) (  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
-                                                                             - (std::uint32_t) math::constants::const_pi_control_tail_32_100001.size()));
+  const_iterator_type
+    fi
+    (
+        my_pi.crepresentation().cbegin()
+      + static_cast<std::uint32_t>
+        (
+            static_cast<std::uint32_t>(1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
+          - static_cast<std::uint32_t>(math::constants::const_pi_control_tail_32_100001.size())
+        )
+    );
 
   const bool tail_is_ok = std::equal(fi,
                                      fi + math::constants::const_pi_control_tail_32_100001.size(),

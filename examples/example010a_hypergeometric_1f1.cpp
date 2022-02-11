@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2018 - 2021.                 //
+//  Copyright Christopher Kormanyos 2018 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -13,10 +13,10 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
-namespace local
+namespace example010a_hypergeometric
 {
   template<typename T>
-  T hypergeometric_1f1(const T& AP, const T& CP, const T& ZM)
+  auto hypergeometric_1f1(const T& AP, const T& CP, const T& ZM) -> T
   {
     // Implement a rational approximation of hypergeometric_1f1.
     // This C++11 code uses a computational scheme similar to
@@ -151,9 +151,9 @@ namespace local
     // by the ratio of the final recursions of A and B.
     return ((N[0U] < UINT16_C(10000)) ? (A.back() / B.back()) : T(0U));
   }
-}
+} // namespace example010a_hypergeometric
 
-bool math::wide_decimal::example010a_hypergeometric_1f1()
+auto math::wide_decimal::example010a_hypergeometric_1f1() -> bool
 {
   using dec1001_t = math::wide_decimal::decwide_t<1001U>;
 
@@ -161,7 +161,7 @@ bool math::wide_decimal::example010a_hypergeometric_1f1()
   const dec1001_t b( dec1001_t(4U) / 3U);
   const dec1001_t z(-dec1001_t(3U) / 4U);
 
-  const dec1001_t h1f1 = local::hypergeometric_1f1(a, b, z);
+  const dec1001_t h1f1 = example010a_hypergeometric::hypergeometric_1f1(a, b, z);
 
   // N[Hypergeometric1F1[2/3, 4/3, -3/4], 1003]
   const dec1001_t control
