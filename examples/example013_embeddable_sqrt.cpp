@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2022.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -60,7 +60,7 @@ auto math::wide_decimal::example013_embeddable_sqrt() -> bool
 // Enable this if you would like to activate this main() as a standalone example.
 #if defined(WIDE_DECIMAL_STANDALONE_EXAMPLE013_EMBEDDABLE_SQRT)
 
-#if !defined(WIDE_INTEGER_DISABLE_IOSTREAM)
+#if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
 #include <iomanip>
 #include <iostream>
 #endif
@@ -69,7 +69,7 @@ int main()
 {
   const bool result_is_ok = math::wide_decimal::example013_embeddable_sqrt();
 
-  #if !defined(WIDE_INTEGER_DISABLE_IOSTREAM)
+  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
   #endif
 
