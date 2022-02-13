@@ -76,4 +76,15 @@ int main()
   return (result_is_ok ? 0 : -1);
 }
 
+#if defined(__GNUC__) && defined(__AVR__)
+void  operator delete(void*)        noexcept;
+void  operator delete(void*, void*) noexcept;
+
+void operator delete(void*)              noexcept { }
+void operator delete(void*, void*)       noexcept { }
+#if(__cplusplus >= 201400L)
+void operator delete(void*, std::size_t) noexcept { }
+#endif
+#endif
+
 #endif // WIDE_DECIMAL_STANDALONE_EXAMPLE013_EMBEDDABLE_SQRT
