@@ -142,6 +142,12 @@
     <ClCompile Include="examples\example012_rational_floor_ceil.cpp">
       <Filter>Source Files\examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example013_embeddable_sqrt.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example013a_embeddable_agm.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h">

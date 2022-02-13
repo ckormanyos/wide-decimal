@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -63,6 +63,8 @@ auto test_decwide_t_examples_part2__() -> bool
   result_is_ok &= math::wide_decimal::example010a_hypergeometric_1f1      (); std::cout << "example010a_hypergeometric_1f1      : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example011_trig_trapezoid_integral  (); std::cout << "example011_trig_trapezoid_integral  : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example012_rational_floor_ceil      (); std::cout << "example012_rational_floor_ceil      : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example013_embeddable_sqrt          (); std::cout << "example013_embeddable_sqrt          : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example013a_embeddable_agm          (); std::cout << "example013a_embeddable_agm          : " << std::boolalpha << result_is_ok << std::endl;
 
   return result_is_ok;
 }

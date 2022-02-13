@@ -1,4 +1,4 @@
-# ------------------------------------------------------------------------------
+﻿# ------------------------------------------------------------------------------
 #  Copyright Christopher Kormanyos 2022.
 #  Distributed under the Boost Software License,
 #  Version 1.0. (See accompanying file LICENSE_1_0.txt
@@ -32,4 +32,6 @@ FILES_PRJ  =   $(PATH_SRC)/test/test                                       \
                $(PATH_SRC)/examples/example010_hypergeometric_2f1          \
                $(PATH_SRC)/examples/example010a_hypergeometric_1f1         \
                $(PATH_SRC)/examples/example011_trig_trapezoid_integral     \
-               $(PATH_SRC)/examples/example012_rational_floor_ceil
+               $(PATH_SRC)/examples/example012_rational_floor_ceil         \
+               $(PATH_SRC)/examples/example013_embeddable_sqrt             \
+               $(PATH_SRC)/examples/example013a_embeddable_agm

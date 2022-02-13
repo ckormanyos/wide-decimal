@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2021.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -37,6 +37,8 @@
   auto example010a_hypergeometric_1f1    () -> bool;
   auto example011_trig_trapezoid_integral() -> bool;
   auto example012_rational_floor_ceil    () -> bool;
+  auto example013_embeddable_sqrt        () -> bool;
+  auto example013a_embeddable_agm        () -> bool;
 
   } // namespace wide_decimal
   } // namespace math
