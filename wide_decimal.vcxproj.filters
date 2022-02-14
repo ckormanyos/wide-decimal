@@ -56,6 +56,9 @@
     <Filter Include=".tidy\make">
       <UniqueIdentifier>{0d5eb981-f809-48f3-880d-5cb3557fd7cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\util\stdcpp">
+      <UniqueIdentifier>{3e4c74ff-74d1-4bee-b6d4-b06c5c455a43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -147,6 +150,9 @@
     </ClCompile>
     <ClCompile Include="examples\example013a_embeddable_agm.cpp">
       <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="util\stdcpp\stdcpp_patch.cpp">
+      <Filter>Source Files\util\stdcpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

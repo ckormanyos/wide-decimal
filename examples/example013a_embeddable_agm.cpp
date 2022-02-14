@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2022.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -104,16 +104,5 @@ int main()
 
   return (result_is_ok ? 0 : -1);
 }
-
-#if defined(__GNUC__) && defined(__AVR__)
-void  operator delete(void*)        noexcept;
-void  operator delete(void*, void*) noexcept;
-
-void operator delete(void*)              noexcept { }
-void operator delete(void*, void*)       noexcept { }
-#if(__cplusplus >= 201400L)
-void operator delete(void*, std::size_t) noexcept { }
-#endif
-#endif
 
 #endif // WIDE_DECIMAL_STANDALONE_EXAMPLE013A_EMBEDDABLE_AGM

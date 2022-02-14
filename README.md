@@ -5,7 +5,7 @@ Wide-decimal\
 Wide-decimal implements a generic C++ template for extended precision decimal float types.
 
 This C++ template header-only library implements drop-in big decimal float types,
-such as `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
+such as `dec51_t`, `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
 that can be used essentially like regular built-in floating-point types.
 Wide-decimal supports decimal float types having digit counts ranging
 roughly from about
@@ -40,7 +40,7 @@ value of `d` to the console.
 
 In particular,
 
-```C
+```cpp
 #include <iomanip>
 #include <iostream>
 
@@ -65,7 +65,7 @@ the default limb type is 32 bits in width and unsigned.
 
 The template signature of the `decwide_t` class is shown below.
 
-```C
+```cpp
 template<const std::int32_t MyDigits10,
          typename LimbType = std::uint32_t,
          typename AllocatorType = std::allocator<void>,
@@ -118,6 +118,7 @@ how to use wide-decimal.
   - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
   - ![`example012_rational_floor_ceil.cpp`](./examples/example012_rational_floor_ceil.cpp) verifies the proper representation of a wide selection of small-valued, pure integral rational quotients.
+  - ![`example013_embeddable_sqrt.cpp`](./examples/example013_embeddable_sqrt.cpp) and ![`example013a_embeddable_agm.cpp`](./examples/example013a_embeddable_agm.cpp) exercise calculations that also run on tiny bare-metal embedded systems, featuring a <img src="https://render.githubusercontent.com/render/math?math=101"> digit square root calculation and a <img src="https://render.githubusercontent.com/render/math?math=53"> digit AGM iteration for <img src="https://render.githubusercontent.com/render/math?math=\pi">.
 
 ## Testing and CI
 
@@ -159,7 +160,7 @@ and
 <img src="https://render.githubusercontent.com/render/math?math=\log(2)">
 can optionally be disabled with the compiler switches:
 
-```C
+```cpp
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
@@ -174,9 +175,12 @@ simultaneously disallows using `decwide_t` in a multithreaded application.
 So if PC-based or other kinds of multithreading are used, then dynamic memory
 allocation is needed and can not be disabled. In other words,
 
-```C
-// Deactivate the disabling of dynamic memory for multithreaded PC work.
-//#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
+```cpp
+// Activate/Deactivate the disable of dynamic memory.
+// For most multithreaded PC work, comment out or remove
+// this line entirely (i.e., thereby enable dynamic memory).
+
+#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 ```
 
 ## Detailed examples
@@ -186,7 +190,7 @@ The example below calculates the square root of the decimal representation of
 the result of which is approximately
 <img src="https://render.githubusercontent.com/render/math?math=35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220\ldots">.
 
-```C
+```cpp
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
@@ -228,7 +232,7 @@ In this example, note how a specialized custom allocator called
 of a certain number of temporary storages of mega-digit numbers
 (tuned to 18 in this particular example).
 
-```C
+```cpp
 #include <iomanip>
 #include <iostream>
 
@@ -274,8 +278,16 @@ int main()
 
   using const_iterator_type = typename local_wide_decimal_type::array_type::const_iterator;
 
-  const_iterator_type fi(my_pi.crepresentation().cbegin() + (std::uint32_t) (  (std::uint32_t) (1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
-                                                                             - (std::uint32_t) math::constants::const_pi_control_tail_32_1000001.size()));
+  const_iterator_type
+    fi
+    (
+        my_pi.crepresentation().cbegin()
+      + static_cast<std::uint32_t>
+        (
+            static_cast<std::uint32_t>(1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
+          - static_cast<std::uint32_t>(math::constants::const_pi_control_tail_32_1000001.size())
+        )
+    );
 
   const bool tail_is_ok = std::equal(fi,
                                      fi + math::constants::const_pi_control_tail_32_1000001.size(),
