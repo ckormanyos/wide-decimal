@@ -1,4 +1,4 @@
-﻿Wide-decimal\
+Wide-decimal\
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
 ==================
 
@@ -176,8 +176,11 @@ So if PC-based or other kinds of multithreading are used, then dynamic memory
 allocation is needed and can not be disabled. In other words,
 
 ```cpp
-// Deactivate the disabling of dynamic memory for multithreaded PC work.
-//#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
+// Activate/Deactivate the disable of dynamic memory.
+// For most multithreaded PC work, comment out or remove
+// this line entirely (i.e., thereby enable dynamic memory).
+
+#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 ```
 
 ## Detailed examples
