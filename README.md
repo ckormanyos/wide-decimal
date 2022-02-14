@@ -5,7 +5,7 @@ Wide-decimal\
 Wide-decimal implements a generic C++ template for extended precision decimal float types.
 
 This C++ template header-only library implements drop-in big decimal float types,
-such as `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
+such as `dec51_t`, `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
 that can be used essentially like regular built-in floating-point types.
 Wide-decimal supports decimal float types having digit counts ranging
 roughly from about
@@ -118,6 +118,7 @@ how to use wide-decimal.
   - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
   - ![`example012_rational_floor_ceil.cpp`](./examples/example012_rational_floor_ceil.cpp) verifies the proper representation of a wide selection of small-valued, pure integral rational quotients.
+  - ![`example013_embeddable_sqrt.cpp`](./examples/example013_embeddable_sqrt.cpp) and [`example013a_embeddable_agm.cpp`](./examples/example013a_embeddable_agm.cpp) exercise calculations for/on tiny bare-metal embedded systems with a <img src="https://render.githubusercontent.com/render/math?math=1,01"> digit square root calculation and a <img src="https://render.githubusercontent.com/render/math?math=53"> digit AGM iteration for <img src="https://render.githubusercontent.com/render/math?math=\pi">.
 
 ## Testing and CI
 
