@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -30,6 +30,11 @@ auto main() -> int
 
   time_point_type stop;
   time_point_type start;
+
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using namespace WIDE_DECIMAL_NAMESPACE;
+  #else
+  #endif
 
   start = local_clock_type::now(); const bool result_test_decwide_t_examples_part1_is_ok = (test_decwide_t_examples_part1__() ); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_examples_part1_is_ok: " << std::boolalpha << result_test_decwide_t_examples_part1_is_ok << ", time: " << (static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())) / 1000.0F << "s" << std::endl; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   start = local_clock_type::now(); const bool result_test_decwide_t_examples_part2_is_ok = (test_decwide_t_examples_part2__() ); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_examples_part2_is_ok: " << std::boolalpha << result_test_decwide_t_examples_part2_is_ok << ", time: " << (static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())) / 1000.0F << "s" << std::endl; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)

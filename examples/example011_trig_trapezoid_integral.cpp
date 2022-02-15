@@ -14,7 +14,11 @@
 
 namespace example011_trig
 {
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec51_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
+  #else
   using dec51_t = math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
+  #endif
 
   auto sin(const dec51_t& x) -> dec51_t;
   auto cos(const dec51_t& x) -> dec51_t;
@@ -397,7 +401,11 @@ namespace example011_trig
   }
 } // namespace example011_trig
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example011_trig_trapezoid_integral() -> bool
+#else
 auto math::wide_decimal::example011_trig_trapezoid_integral() -> bool
+#endif
 {
   using example011_trig::dec51_t;
 

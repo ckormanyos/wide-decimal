@@ -152,7 +152,11 @@ namespace example010_hypergeometric
   }
 } // namespace example010_hypergeometric
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example010_hypergeometric_2f1() -> bool
+#else
 auto math::wide_decimal::example010_hypergeometric_2f1() -> bool
+#endif
 {
   using dec1001_t = math::wide_decimal::decwide_t<1001U>;
 

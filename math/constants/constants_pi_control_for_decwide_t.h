@@ -12,6 +12,10 @@
   #include <cstddef>
   #include <cstdint>
 
+  #include <math/wide_decimal/decwide_t_detail_namespace.h>
+
+  WIDE_DECIMAL_NAMESPACE_BEGIN
+
   namespace math { namespace constants {
 
   constexpr std::array<std::uint32_t, 7U + 1U> const_pi_control_head_32
@@ -174,5 +178,7 @@
 
   } // namespace constants
   } // namespace math
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H

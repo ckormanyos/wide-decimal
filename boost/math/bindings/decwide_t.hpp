@@ -34,10 +34,19 @@
            typename InternalFloatType,
            typename ExponentType,
            typename ThisPolicy>
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  struct precision<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>, ThisPolicy>
+  #else
   struct precision<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>, ThisPolicy>
+  #endif
   {
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    using local_wide_decimal_type =
+      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+    #else
     using local_wide_decimal_type =
       ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+    #endif
 
     using precision_type = typename ThisPolicy::precision_type;
 
@@ -60,11 +69,20 @@
            typename AllocatorType,
            typename InternalFloatType,
            typename ExponentType>
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  struct constant_pi<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>>
+  #else
   struct constant_pi<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>>
+  #endif
   {
   public:
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    using result_type =
+      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+    #else
     using result_type =
       ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+    #endif
 
   private:
     static auto my_compute() -> result_type
@@ -176,7 +194,11 @@
            typename ExponentType,
            typename FftFloatType,
            typename Policy>
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  struct lanczos<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10,
+  #else
   struct lanczos<::math::wide_decimal::decwide_t<MyDigits10,
+  #endif
                                                  LimbType,
                                                  AllocatorType,
                                                  InternalFloatType,
@@ -185,7 +207,11 @@
                  Policy>
   {
     using local_backend_type =
+      #if defined(WIDE_DECIMAL_NAMESPACE)
+      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10,
+      #else
       ::math::wide_decimal::decwide_t<MyDigits10,
+      #endif
                                       LimbType,
                                       AllocatorType,
                                       InternalFloatType,

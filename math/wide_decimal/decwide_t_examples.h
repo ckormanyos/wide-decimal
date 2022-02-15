@@ -1,5 +1,5 @@
-﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2021.                        //
+///////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2021 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -9,6 +9,10 @@
   #define DECWIDE_T_EXAMPLES_2021_04_13_H
 
   // This file contains function prototypes of the decwide_t examples.
+
+  #include <math/wide_decimal/decwide_t_detail_namespace.h>
+
+  WIDE_DECIMAL_NAMESPACE_BEGIN
 
   namespace math { namespace wide_decimal {
 
@@ -42,5 +46,7 @@
 
   } // namespace wide_decimal
   } // namespace math
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // DECWIDE_T_EXAMPLES_2021_04_13_H

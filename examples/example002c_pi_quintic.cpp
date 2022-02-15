@@ -128,7 +128,11 @@ auto pi_borwein_quintic(std::ostream* p_ostream) -> FloatingPointType
 
 } // namespace example002c_pi
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example002c_pi_quintic() -> bool
+#else
 auto math::wide_decimal::example002c_pi_quintic() -> bool
+#endif
 {
   using local_limb_type = std::uint32_t;
 

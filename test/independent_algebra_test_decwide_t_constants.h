@@ -13,6 +13,8 @@
   #include <cstdint>
   #include <limits>
 
+  WIDE_DECIMAL_NAMESPACE_BEGIN
+
   namespace test { namespace independent_algebra {
 
   template<typename FloatingPointType>
@@ -241,5 +243,7 @@
 
   } // namespace independent_algebra
   } // namespace test
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_CONSTANTS_2022_02_11_H

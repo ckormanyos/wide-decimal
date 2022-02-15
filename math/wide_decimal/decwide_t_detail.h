@@ -22,6 +22,10 @@
 
   #include <util/utility/util_dynamic_array.h>
 
+  #include <math/wide_decimal/decwide_t_detail_namespace.h>
+
+  WIDE_DECIMAL_NAMESPACE_BEGIN
+
   namespace math { namespace wide_decimal { namespace detail {
 
   template<typename UnsignedIntegralType>
@@ -439,5 +443,7 @@
   } // namespace detail
   } // namespace wide_decimal
   } // namespace math
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // DECWIDE_T_DETAIL_2020_10_26_H

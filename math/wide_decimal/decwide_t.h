@@ -20,6 +20,7 @@
   //#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
   //#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
   //#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
+  //#define WIDE_DECIMAL_NAMESPACE=something_unique // (best if done on the command line)
 
   #include <algorithm>
   #include <cmath>
@@ -43,6 +44,8 @@
   #if defined(__GNUC__) && defined(__RL78__)
   namespace std { using ::ilogb; }
   #endif
+
+  WIDE_DECIMAL_NAMESPACE_BEGIN
 
   namespace math { namespace wide_decimal {
 
@@ -4161,6 +4164,8 @@
   } // namespace wide_decimal
   } // namespace math
 
+  WIDE_DECIMAL_NAMESPACE_END
+
   // Specialization of std::numeric_limits<decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>.
   namespace std
   {
@@ -4170,11 +4175,20 @@
              typename InternalFloatType,
              typename ExponentType,
              typename FftFloatType>
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    class numeric_limits<WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
+    #else
     class numeric_limits<math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
+    #endif
     {
     public:
+      #if defined(WIDE_DECIMAL_NAMESPACE)
+      using local_wide_decimal_type =
+        WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      #else
       using local_wide_decimal_type =
         math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      #endif
 
       using local_exponent_type =
         typename local_wide_decimal_type::exponent_type;
@@ -4186,6 +4200,16 @@
       static constexpr bool                    is_bounded        = true;
       static constexpr bool                    is_modulo         = false;
       static constexpr bool                    is_iec559         = false;
+      #if defined(WIDE_DECIMAL_NAMESPACE)
+      static constexpr std::int32_t            digits            = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_digits;       // Type differs from int.
+      static constexpr std::int32_t            digits10          = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_digits10;     // Type differs from int.
+      static constexpr std::int32_t            max_digits10      = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_max_digits10; // Type differs from int.
+      static constexpr local_exponent_type     min_exponent      = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_min_exp;      // Type differs from int.
+      static constexpr local_exponent_type     min_exponent10    = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_min_exp10;    // Type differs from int.
+      static constexpr local_exponent_type     max_exponent      = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_max_exp;      // Type differs from int.
+      static constexpr local_exponent_type     max_exponent10    = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_max_exp10;    // Type differs from int.
+      static constexpr int                     radix             = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_radix;
+      #else
       static constexpr std::int32_t            digits            = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_digits;       // Type differs from int.
       static constexpr std::int32_t            digits10          = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_digits10;     // Type differs from int.
       static constexpr std::int32_t            max_digits10      = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_max_digits10; // Type differs from int.
@@ -4194,6 +4218,7 @@
       static constexpr local_exponent_type     max_exponent      = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_max_exp;      // Type differs from int.
       static constexpr local_exponent_type     max_exponent10    = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_max_exp10;    // Type differs from int.
       static constexpr int                     radix             = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_radix;
+      #endif
       static constexpr std::float_round_style  round_style       = std::round_to_nearest;
       static constexpr bool                    has_infinity      = false;
       static constexpr bool                    has_quiet_NaN     = false;
@@ -4205,15 +4230,29 @@
 
       static constexpr auto (min)        () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_min(); }
       static constexpr auto (max)        () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_max(); }
+      #if defined(WIDE_DECIMAL_NAMESPACE)
+      static constexpr auto lowest       () -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      #else
       static constexpr auto lowest       () -> local_wide_decimal_type { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      #endif
       static constexpr auto epsilon      () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_eps(); }
+      #if defined(WIDE_DECIMAL_NAMESPACE)
+      static constexpr auto round_error  () -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      static constexpr auto infinity     () -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      static constexpr auto quiet_NaN    () -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      static constexpr auto signaling_NaN() -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      static constexpr auto denorm_min   () -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      #else
       static constexpr auto round_error  () -> local_wide_decimal_type { return math::wide_decimal::half<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       static constexpr auto infinity     () -> local_wide_decimal_type { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       static constexpr auto quiet_NaN    () -> local_wide_decimal_type { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       static constexpr auto signaling_NaN() -> local_wide_decimal_type { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       static constexpr auto denorm_min   () -> local_wide_decimal_type { return math::wide_decimal::zero<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      #endif
     };
   } // namespace std
+
+  WIDE_DECIMAL_NAMESPACE_BEGIN
 
   namespace math { namespace wide_decimal {
 
@@ -4580,5 +4619,7 @@
 
   } // namespace wide_decimal
   } // namespace math
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // DECWIDE_T_2004_06_01_H

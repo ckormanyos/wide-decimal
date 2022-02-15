@@ -22,7 +22,11 @@
 #include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_baselexical_cast.h>
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example002b_pi_100k() -> bool
+#else
 auto math::wide_decimal::example002b_pi_100k() -> bool
+#endif
 {
   using local_limb_type = std::uint32_t;
 

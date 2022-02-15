@@ -10,7 +10,11 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example006_logarithm() -> bool
+#else
 auto math::wide_decimal::example006_logarithm() -> bool
+#endif
 {
   // Compute 1,000 values of Log[(123456789/1000000) * (3^n)],
   // the result of which is Log[(123456789/1000000)] + (n Log[3])

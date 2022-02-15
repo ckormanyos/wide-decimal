@@ -46,7 +46,11 @@ namespace local_polylog
   }
 } // namespace local_polylog
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example005_polylog_series() -> bool
+#else
 auto math::wide_decimal::example005_polylog_series() -> bool
+#endif
 {
   using dec101_t = math::wide_decimal::decwide_t<101U>;
 

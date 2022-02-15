@@ -18,6 +18,8 @@
   #include <array>
   #include <cstdint>
 
+  WIDE_DECIMAL_NAMESPACE_BEGIN
+
   namespace math { namespace wide_decimal { namespace detail { namespace fft {
 
   template<typename float_type>
@@ -372,5 +374,7 @@
   } // namespace detail
   } // namespace wide_decimal
   } // namespace math
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // DECWIDE_T_DETAIL_FFT_2013_01_08_H

@@ -221,7 +221,11 @@ namespace example004_bessel
   }
 } // namespace example004_bessel
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example004_bessel_recur() -> bool
+#else
 auto math::wide_decimal::example004_bessel_recur() -> bool
+#endif
 {
   // Calculate 1,001 decimal digits of the value of a cylindrical Bessel function.
   // N[BesselJ[9, 123456789/10000000], 1001]
