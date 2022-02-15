@@ -37,12 +37,21 @@
       math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
 
     #if defined(DECWIDE_T_TEST_OPTION_TEST_CPP_DEC_FLOAT)
+    using local_float_backend_type =
+      boost::multiprecision::cpp_dec_float<std::numeric_limits<other_decwide_t_type>::digits10 + 3,
+                                           std::int64_t,
+                                           std::allocator<std::uint32_t>>;
+
     using local_float_type =
-      boost::multiprecision::number<boost::multiprecision::cpp_dec_float<std::numeric_limits<other_decwide_t_type>::digits10 + 3>,
-                                    boost::multiprecision::et_off>;
+      boost::multiprecision::number<local_float_backend_type, boost::multiprecision::et_off>;
     #else
+    using local_float_backend_type =
+      boost::multiprecision::cpp_bin_float<std::numeric_limits<other_decwide_t_type>::digits10 + 3,
+                                           boost::multiprecision::backends::digit_base_10,
+                                           std::allocator<boost::multiprecision::limb_type>>;
+
     using local_float_type =
-      boost::multiprecision::number<boost::multiprecision::cpp_bin_float<std::numeric_limits<other_decwide_t_type>::digits10 + 3>,
+      boost::multiprecision::number<local_float_backend_type,
                                     boost::multiprecision::et_off>;
     #endif
 
