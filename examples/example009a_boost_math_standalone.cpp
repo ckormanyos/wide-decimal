@@ -30,8 +30,14 @@ namespace example009a_boost
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #else
   using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #endif
 } // namespace example009a_boost
+
+WIDE_DECIMAL_NAMESPACE_BEGIN
 
 namespace math { namespace wide_decimal {
 
@@ -283,6 +289,8 @@ auto pochhammer(const dec1001_t& x, const dec1001_t& a) -> dec1001_t
 } // namespace wide_decimal
 } // namespace math
 
+WIDE_DECIMAL_NAMESPACE_END
+
 namespace example009a_boost
 {
   template<typename FloatingPointType>
@@ -343,9 +351,15 @@ namespace example009a_boost
   }
 } // namespace example009a_boost
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009a_boost_math_standalone() -> bool
+#else
 auto math::wide_decimal::example009a_boost_math_standalone() -> bool
+#endif
 {
   using std::fabs;
+
+  using example009a_boost::dec1001_t;
 
   const dec1001_t x = dec1001_t(UINT32_C(789)) / 1000U;
 

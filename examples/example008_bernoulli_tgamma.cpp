@@ -18,7 +18,11 @@ namespace example008_bernoulli
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #else
   using wide_decimal_type = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #endif
 
   template<typename FloatingPointType>
   auto pi() -> FloatingPointType
@@ -29,9 +33,12 @@ namespace example008_bernoulli
   template<>
   auto pi() -> wide_decimal_type
   {
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<wide_decimal_digits10>();
+    #else
     return math::wide_decimal::pi<wide_decimal_digits10>();
+    #endif
   }
-
 
   util::dynamic_array<wide_decimal_type> bernoulli_table(static_cast<std::uint_fast32_t>(static_cast<float>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95F)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
@@ -178,7 +185,11 @@ namespace example008_bernoulli
   }
 } // namespace example008_bernoulli
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example008_bernoulli_tgamma() -> bool
+#else
 auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
+#endif
 {
   const std::clock_t start = std::clock();
 

@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -50,7 +50,11 @@ namespace test_decwide_t
   #endif
 } // namespace test_decwide_t
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_add_____() -> bool
+#else
 auto test_decwide_t_algebra_add_____() -> bool
+#endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =
     test::independent_algebra::independent_algebra_test_decwide_t_boost_cpp<test_decwide_t::wide_decimal_digits10,
@@ -72,7 +76,11 @@ auto test_decwide_t_algebra_add_____() -> bool
   return result_is_ok;
 }
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_sub_____() -> bool
+#else
 auto test_decwide_t_algebra_sub_____() -> bool
+#endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =
     test::independent_algebra::independent_algebra_test_decwide_t_boost_cpp<test_decwide_t::wide_decimal_digits10,
@@ -94,7 +102,11 @@ auto test_decwide_t_algebra_sub_____() -> bool
   return result_is_ok;
 }
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_mul_____() -> bool
+#else
 auto test_decwide_t_algebra_mul_____() -> bool
+#endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =
     test::independent_algebra::independent_algebra_test_decwide_t_boost_cpp<test_decwide_t::wide_decimal_digits10,
@@ -116,8 +128,17 @@ auto test_decwide_t_algebra_mul_____() -> bool
   return result_is_ok;
 }
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_div_____() -> bool
+#else
 auto test_decwide_t_algebra_div_____() -> bool
+#endif
 {
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using namespace WIDE_DECIMAL_NAMESPACE;
+  #else
+  #endif
+
   using independent_algebra_test_decwide_t_boost_cpp_type =
     test::independent_algebra::independent_algebra_test_decwide_t_boost_cpp<test_decwide_t::wide_decimal_digits10,
                                                                             test_decwide_t::local_limb_type,
@@ -138,7 +159,11 @@ auto test_decwide_t_algebra_div_____() -> bool
   return result_is_ok;
 }
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_sqrt____() -> bool
+#else
 auto test_decwide_t_algebra_sqrt____() -> bool
+#endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =
     test::independent_algebra::independent_algebra_test_decwide_t_boost_cpp<test_decwide_t::wide_decimal_digits10,
@@ -160,7 +185,11 @@ auto test_decwide_t_algebra_sqrt____() -> bool
   return result_is_ok;
 }
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_log_____() -> bool
+#else
 auto test_decwide_t_algebra_log_____() -> bool
+#endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =
     test::independent_algebra::independent_algebra_test_decwide_t_boost_cpp<test_decwide_t::wide_decimal_digits10,

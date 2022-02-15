@@ -24,6 +24,8 @@
   #include <math/wide_decimal/decwide_t_detail.h>
   #include <math/wide_decimal/decwide_t_detail_fft.h>
 
+  WIDE_DECIMAL_NAMESPACE_BEGIN
+
   namespace math { namespace wide_decimal { namespace detail {
 
   template<typename InputIteratorLeftType,
@@ -563,5 +565,7 @@
   } // namespace detail
   } // namespace wide_decimal
   } // namespace math
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // DECWIDE_T_DETAIL_OPS_2021_04_12_H

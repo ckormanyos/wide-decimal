@@ -10,6 +10,10 @@
 
   #include <string>
 
+  #include <math/wide_decimal/decwide_t.h>
+
+  WIDE_DECIMAL_NAMESPACE_BEGIN
+
   namespace test { namespace independent_algebra {
 
   class independent_algebra_test_decwide_t_base
@@ -24,5 +28,7 @@
   };
 
   } }
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_BASE_2020_10_17_H

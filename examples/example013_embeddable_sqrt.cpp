@@ -19,7 +19,11 @@
 #include <math/wide_decimal/decwide_t_examples.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example013_embeddable_sqrt() -> bool
+#else
 auto math::wide_decimal::example013_embeddable_sqrt() -> bool
+#endif
 {
   using local_limb_type = std::uint16_t;
 

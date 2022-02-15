@@ -210,6 +210,7 @@
     <ClInclude Include="math\wide_decimal\decwide_t.h" />
     <ClInclude Include="math\wide_decimal\decwide_t_detail_fft.h" />
     <ClInclude Include="math\wide_decimal\decwide_t_detail.h" />
+    <ClInclude Include="math\wide_decimal\decwide_t_detail_namespace.h" />
     <ClInclude Include="math\wide_decimal\decwide_t_detail_ops.h" />
     <ClInclude Include="math\wide_decimal\decwide_t_examples.h" />
     <ClInclude Include="mcal_lcd\mcal_lcd_base.h" />

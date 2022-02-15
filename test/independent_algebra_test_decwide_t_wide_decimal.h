@@ -14,6 +14,8 @@
   #include <math/wide_decimal/decwide_t.h>
   #include <test/independent_algebra_test_decwide_t_base.h>
 
+  WIDE_DECIMAL_NAMESPACE_BEGIN
+
   namespace test { namespace independent_algebra {
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
@@ -91,5 +93,7 @@
   }
 
   } }
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_WIDE_DECIMAL_2020_10_17_H

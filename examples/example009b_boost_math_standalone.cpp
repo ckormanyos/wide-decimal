@@ -26,6 +26,8 @@
 
 #include <math/wide_decimal/decwide_t_examples.h>
 
+WIDE_DECIMAL_NAMESPACE_BEGIN
+
 namespace math { namespace wide_decimal {
 
 namespace detail {
@@ -223,6 +225,8 @@ auto cos(const FloatingPointType& x) -> FloatingPointType // NOLINT(misc-no-recu
 } // namespace wide_decimal
 } // namespace math
 
+WIDE_DECIMAL_NAMESPACE_END
+
 namespace example009b_boost
 {
   template<class T>
@@ -249,7 +253,11 @@ namespace example009b_boost
   }
 } // namespace example009b_boost
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009b_boost_math_standalone() -> bool
+#else
 auto math::wide_decimal::example009b_boost_math_standalone() -> bool
+#endif
 {
   using wide_decimal_010_type = math::wide_decimal::decwide_t< 10U, std::uint32_t, void>;
   using wide_decimal_035_type = math::wide_decimal::decwide_t< 35U, std::uint32_t, void>;

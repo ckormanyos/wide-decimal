@@ -14,7 +14,11 @@ namespace example007_catalan
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #else
   using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #endif
 
   template<typename FloatingPointType>
   auto pi() -> FloatingPointType
@@ -25,7 +29,11 @@ namespace example007_catalan
   template<>
   auto pi() -> dec1001_t
   {
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<wide_decimal_digits10>();
+    #else
     return math::wide_decimal::pi<wide_decimal_digits10>();
+    #endif
   }
 
   template<typename FloatingPointType>
@@ -74,7 +82,11 @@ namespace example007_catalan
   }
 } // namespace example007_catalan
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example007_catalan_series() -> bool
+#else
 auto math::wide_decimal::example007_catalan_series() -> bool
+#endif
 {
   using example007_catalan::dec1001_t;
 

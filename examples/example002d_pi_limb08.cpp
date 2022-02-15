@@ -44,8 +44,11 @@ auto example002d_pi_limb8_digits10_callback(const std::uint32_t d10) -> void
   example002d_pi::lcd0().write(p_str.data(), static_cast<std::uint_fast8_t>(p_end - p_str.data()), 0U);
 }
 
-
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example002d_pi_limb08() -> bool
+#else
 auto math::wide_decimal::example002d_pi_limb08() -> bool
+#endif
 {
   using local_limb_type = std::uint8_t;
 

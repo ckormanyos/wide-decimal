@@ -14,7 +14,11 @@
 
 namespace local_zeta
 {
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec51_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
+  #else
   using dec51_t = math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
+  #endif
 
   template<typename FloatType>
   auto pi() -> FloatType { return FloatType(); }
@@ -98,7 +102,11 @@ namespace local_zeta
   }
 } // namespace local_zeta
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example003_zeta() -> bool
+#else
 auto math::wide_decimal::example003_zeta() -> bool
+#endif
 {
   std::deque<std::uint_fast16_t> primes(1U, UINT32_C(2));
 

@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -109,7 +109,11 @@ namespace example012_rational
   }
 } // namespace example012_rational
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example012_rational_floor_ceil() -> bool
+#else
 auto math::wide_decimal::example012_rational_floor_ceil() -> bool
+#endif
 {
   bool result_is_ok = true;
 

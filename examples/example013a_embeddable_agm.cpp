@@ -34,7 +34,11 @@ using std::array;
 } // namespace memory
 } // namespace mcal
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example013a_embeddable_agm() -> bool
+#else
 auto math::wide_decimal::example013a_embeddable_agm() -> bool
+#endif
 {
   // N[Pi, 106] and truncate the final digit.
   using local_limb_type = std::uint16_t;

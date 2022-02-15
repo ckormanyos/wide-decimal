@@ -18,6 +18,8 @@
   #include <test/independent_algebra_test_decwide_t_wide_decimal.h>
   #include <test/parallel_for.h>
 
+  WIDE_DECIMAL_NAMESPACE_BEGIN
+
   namespace test { namespace independent_algebra {
 
   template<const std::int32_t MyDigits10,
@@ -499,5 +501,7 @@
 
   } // namespace independent_algebra
   } // namespace test
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H

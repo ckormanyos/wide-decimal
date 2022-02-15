@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -22,7 +22,11 @@
   #endif
 #endif
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_examples_part1__() -> bool
+#else
 auto test_decwide_t_examples_part1__() -> bool
+#endif
 {
   bool result_is_ok = true;
 
@@ -44,7 +48,11 @@ auto test_decwide_t_examples_part1__() -> bool
   return result_is_ok;
 }
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_examples_part2__() -> bool
+#else
 auto test_decwide_t_examples_part2__() -> bool
+#endif
 {
   bool result_is_ok = true;
 

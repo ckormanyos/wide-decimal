@@ -8,7 +8,13 @@
 #ifndef TEST_DECWIDE_T_EXAMPLES_2020_11_05_H
   #define TEST_DECWIDE_T_EXAMPLES_2020_11_05_H
 
+  #include <math/wide_decimal/decwide_t_detail_namespace.h>
+
+  WIDE_DECIMAL_NAMESPACE_BEGIN
+
   auto test_decwide_t_examples_part1__() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   auto test_decwide_t_examples_part2__() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // TEST_DECWIDE_T_EXAMPLES_2020_11_05_H

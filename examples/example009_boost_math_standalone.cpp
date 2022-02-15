@@ -30,10 +30,18 @@ namespace example009_boost
 {
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #else
   using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #endif
 } // namespace example009_boost
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009_boost_math_standalone() -> bool
+#else
 auto math::wide_decimal::example009_boost_math_standalone() -> bool
+#endif
 {
   using example009_boost::dec1001_t;
 

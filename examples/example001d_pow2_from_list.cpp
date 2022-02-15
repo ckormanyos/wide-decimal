@@ -10,7 +10,11 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example001d_pow2_from_list() -> bool
+#else
 auto math::wide_decimal::example001d_pow2_from_list() -> bool
+#endif
 {
   using local_limb_type = std::uint32_t;
 

@@ -10,7 +10,11 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_decimal/decwide_t_examples.h>
 
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example001a_roots_seventh() -> bool
+#else
 auto math::wide_decimal::example001a_roots_seventh() -> bool
+#endif
 {
   using dec101_t = math::wide_decimal::decwide_t<101U>;
 

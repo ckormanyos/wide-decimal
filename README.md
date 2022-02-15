@@ -1,4 +1,4 @@
-Wide-decimal\
+﻿Wide-decimal\
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
 ==================
 
@@ -165,6 +165,7 @@ can optionally be disabled with the compiler switches:
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
 #define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
+#define WIDE_DECIMAL_NAMESPACE
 ```
 
 Each one of these compiler switches has an intuitive name
@@ -182,6 +183,45 @@ allocation is needed and can not be disabled. In other words,
 
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 ```
+
+Let's consider also the macro `WIDE_DECIMAL_NAMESPACE` in greater detail.
+
+```cpp
+#define WIDE_DECIMAL_NAMESPACE
+```
+
+This is an advanced macro intended to be used in strict, exacting applications for which
+using the unqualified, global namespace `math` (i.e., `namespace` `::math`) is undesired or inacceptable.
+We recall that all parts of the wide-integer implementation,
+such as the `decwide_t` class and its associated implementation
+details reside within `namespace` `::math::wide_decimal`
+
+Defining the macro `WIDE_DECIMAL_NAMESPACE` to be something like,
+for instance,
+
+```sh
+-DWIDE_INTEGER_NAMESPACE=something_unique
+```
+
+places all parts of the wide-integer implementation and its details
+within the prepended outer namespace `something_unique` ---
+as in
+
+```cpp
+namespace something_unique::math::wide_decimal
+{
+  // ...
+}
+```
+
+When utilizing the `WIDE_DECIMAL_NAMESPACE` option,
+vary the actual name or nesting depth of the desired prepended
+outer namespace if/as needed for your particular project.
+
+By default the macro `WIDE_DECIMAL_NAMESPACE` is not defined.
+In this default state, `namespace` `::math::wide_decimal` is used
+and the `decwide_t` class and its associated implementation
+details reside therein.
 
 ## Detailed examples
 

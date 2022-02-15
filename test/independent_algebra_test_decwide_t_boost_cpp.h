@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -26,6 +26,8 @@
   #if defined(BOOST_VERSION) && (BOOST_VERSION <= 107500)
   #include <boost/serialization/nvp.hpp>
   #endif
+
+  WIDE_DECIMAL_NAMESPACE_BEGIN
 
   namespace test { namespace independent_algebra {
 
@@ -273,5 +275,7 @@
 
   } // namespace independent_algebra
   } // namespace test
+
+  WIDE_DECIMAL_NAMESPACE_END
 
 #endif // INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_BOOST_CPP_2020_10_17_H
