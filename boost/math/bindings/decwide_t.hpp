@@ -33,19 +33,20 @@
            typename AllocatorType,
            typename InternalFloatType,
            typename ExponentType,
+           typename FftFloatType,
            typename ThisPolicy>
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  struct precision<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>, ThisPolicy>
+  struct precision<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>, ThisPolicy>
   #else
-  struct precision<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>, ThisPolicy>
+  struct precision<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>, ThisPolicy>
   #endif
   {
     #if defined(WIDE_DECIMAL_NAMESPACE)
     using local_wide_decimal_type =
-      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
     #else
     using local_wide_decimal_type =
-      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
     #endif
 
     using precision_type = typename ThisPolicy::precision_type;
@@ -68,20 +69,21 @@
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
-           typename ExponentType>
+           typename ExponentType,
+           typename FftFloatType>
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  struct constant_pi<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>>
+  struct constant_pi<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #else
-  struct constant_pi<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>>
+  struct constant_pi<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #endif
   {
   public:
     #if defined(WIDE_DECIMAL_NAMESPACE)
     using result_type =
-      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
     #else
     using result_type =
-      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
     #endif
 
   private:

@@ -12,6 +12,14 @@
 
   #include <math/wide_decimal/decwide_t_detail_namespace.h>
 
+  #if !defined(WIDE_DECIMAL_NAMESPACE_BEGIN)
+  #error WIDE_DECIMAL_NAMESPACE_BEGIN is not defined. Ensure that <decwide_t_detail_namespace.h> is properly included.
+  #endif
+
+  #if !defined(WIDE_DECIMAL_NAMESPACE_END)
+  #error WIDE_DECIMAL_NAMESPACE_END is not defined. Ensure that <decwide_t_detail_namespace.h> is properly included.
+  #endif
+
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
   namespace math { namespace wide_decimal {

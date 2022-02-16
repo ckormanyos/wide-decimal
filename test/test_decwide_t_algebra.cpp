@@ -61,7 +61,8 @@ auto test_decwide_t_algebra_add_____() -> bool
                                                                             test_decwide_t::local_limb_type,
                                                                             std::allocator<void>,
                                                                             double,
-                                                                            std::int32_t>;
+                                                                            std::int32_t,
+                                                                            double>;
 
   const bool result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_add_<test_decwide_t::wide_decimal_digits10,
@@ -69,6 +70,7 @@ auto test_decwide_t_algebra_add_____() -> bool
                                                                        std::allocator<void>,
                                                                        double,
                                                                        std::int32_t,
+                                                                       double,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_count,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_round,
                                                                        independent_algebra_test_decwide_t_boost_cpp_type>();
@@ -87,7 +89,8 @@ auto test_decwide_t_algebra_sub_____() -> bool
                                                                             test_decwide_t::local_limb_type,
                                                                             std::allocator<void>,
                                                                             double,
-                                                                            std::int32_t>;
+                                                                            std::int32_t,
+                                                                            double>;
 
   const bool result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_sub_<test_decwide_t::wide_decimal_digits10,
@@ -95,6 +98,7 @@ auto test_decwide_t_algebra_sub_____() -> bool
                                                                        std::allocator<void>,
                                                                        double,
                                                                        std::int32_t,
+                                                                       double,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_count,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_round,
                                                                        independent_algebra_test_decwide_t_boost_cpp_type>();
@@ -113,7 +117,8 @@ auto test_decwide_t_algebra_mul_____() -> bool
                                                                             test_decwide_t::local_limb_type,
                                                                             std::allocator<void>,
                                                                             double,
-                                                                            std::int32_t>;
+                                                                            std::int32_t,
+                                                                            double>;
 
   const bool result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_mul_<test_decwide_t::wide_decimal_digits10,
@@ -121,6 +126,7 @@ auto test_decwide_t_algebra_mul_____() -> bool
                                                                        std::allocator<void>,
                                                                        double,
                                                                        std::int32_t,
+                                                                       double,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_count,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_round,
                                                                        independent_algebra_test_decwide_t_boost_cpp_type>();
@@ -144,7 +150,8 @@ auto test_decwide_t_algebra_div_____() -> bool
                                                                             test_decwide_t::local_limb_type,
                                                                             std::allocator<void>,
                                                                             double,
-                                                                            std::int32_t>;
+                                                                            std::int32_t,
+                                                                            double>;
 
   const bool result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_div_<test_decwide_t::wide_decimal_digits10,
@@ -152,6 +159,7 @@ auto test_decwide_t_algebra_div_____() -> bool
                                                                        std::allocator<void>,
                                                                        double,
                                                                        std::int32_t,
+                                                                       double,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_count,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_round,
                                                                        independent_algebra_test_decwide_t_boost_cpp_type>();
@@ -170,7 +178,8 @@ auto test_decwide_t_algebra_sqrt____() -> bool
                                                                             test_decwide_t::local_limb_type,
                                                                             std::allocator<void>,
                                                                             double,
-                                                                            std::int32_t>;
+                                                                            std::int32_t,
+                                                                            double>;
 
   const bool result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_sqrt<test_decwide_t::wide_decimal_digits10,
@@ -178,6 +187,7 @@ auto test_decwide_t_algebra_sqrt____() -> bool
                                                                        std::allocator<void>,
                                                                        double,
                                                                        std::int32_t,
+                                                                       double,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_count,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_round,
                                                                        independent_algebra_test_decwide_t_boost_cpp_type>();
@@ -196,7 +206,8 @@ auto test_decwide_t_algebra_log_____() -> bool
                                                                             test_decwide_t::local_limb_type,
                                                                             std::allocator<void>,
                                                                             double,
-                                                                            std::int32_t>;
+                                                                            std::int32_t,
+                                                                            double>;
 
   const bool result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_log_<test_decwide_t::wide_decimal_digits10,
@@ -204,6 +215,7 @@ auto test_decwide_t_algebra_log_____() -> bool
                                                                        std::allocator<void>,
                                                                        double,
                                                                        std::int32_t,
+                                                                       double,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_count_for_log,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_round,
                                                                        independent_algebra_test_decwide_t_boost_cpp_type>();
