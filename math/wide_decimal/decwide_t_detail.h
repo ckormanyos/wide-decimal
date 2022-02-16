@@ -179,9 +179,9 @@
   struct decwide_t_helper_base
   {
     static constexpr std::int32_t elem_digits10     =
-      ((std::is_same<LimbType, std::uint32_t>::value )
+      ((std::is_same<LimbType, std::uint32_t>::value)
         ? static_cast<std::int32_t>(8)
-        : ((std::is_same<LimbType, std::uint16_t>::value ) ? static_cast<std::int32_t>(4)
+        : ((std::is_same<LimbType, std::uint16_t>::value) ? static_cast<std::int32_t>(4)
                                                            : static_cast<std::int32_t>(2)));
 
     static constexpr auto elem_mask      = static_cast<std::int32_t>(pow10_maker(static_cast<std::uint32_t>(elem_digits10)));

@@ -27,7 +27,8 @@
     independent_algebra_test_decwide_t_base() { }
   };
 
-  } }
+  } // namespace independent_algebra
+  } // namespace test
 
   WIDE_DECIMAL_NAMESPACE_END
 

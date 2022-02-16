@@ -18,11 +18,11 @@
 
   namespace test { namespace independent_algebra {
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   class independent_algebra_test_decwide_t_decwide_t : public independent_algebra_test_decwide_t_base
   {
   public:
-    using float_type = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>;
+    using float_type = math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     float_type my_decwide_t;
 
@@ -46,53 +46,54 @@
     }
   };
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_add(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
-                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  void eval_add(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b)
   {
     result.my_decwide_t = a.my_decwide_t + b.my_decwide_t;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_sub(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
-                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  void eval_sub(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b)
   {
     result.my_decwide_t = a.my_decwide_t - b.my_decwide_t;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_mul(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
-                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  void eval_mul(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b)
   {
     result.my_decwide_t = a.my_decwide_t * b.my_decwide_t;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_div(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a,
-                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& b)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  void eval_div(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b)
   {
     result.my_decwide_t = a.my_decwide_t / b.my_decwide_t;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_sqrt(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                 const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  void eval_sqrt(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                 const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a)
   {
     result.my_decwide_t = sqrt(a.my_decwide_t);
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType>
-  void eval_log(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& result,
-                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>& a)
+  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  void eval_log(      independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a)
   {
     result.my_decwide_t = log(a.my_decwide_t);
   }
 
-  } }
+  } // namespace independent_algebra
+  } // namespace test
 
   WIDE_DECIMAL_NAMESPACE_END
 
