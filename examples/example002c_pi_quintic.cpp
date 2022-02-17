@@ -52,7 +52,7 @@ auto pi_borwein_quintic(std::ostream* p_ostream) -> FloatingPointType
   const floating_point_type local_one (1U);
   const floating_point_type local_five(5U);
 
-  floating_point_type sk = (sqrt(local_five) - floating_point_type(2U)) * 5U; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  floating_point_type sk = (sqrt(local_five) - floating_point_type(2U)) * 5U; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   // Determine the requested precision of the upcoming iteration in units of digits10.
   const std::uint32_t required_precision_fifth =
@@ -111,9 +111,9 @@ auto pi_borwein_quintic(std::ostream* p_ostream) -> FloatingPointType
       break;
     }
 
-    sk = floating_point_type(25U) / (sk * (term * term)); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    sk = floating_point_type(25U) / (sk * (term * term)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    five_pow_k *= 5U; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    five_pow_k *= 5U; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   }
 
   if(p_ostream != nullptr)

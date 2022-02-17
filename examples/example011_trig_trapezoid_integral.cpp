@@ -27,13 +27,13 @@ namespace example011_trig
   auto pi() -> FloatType { return FloatType(); }
 
   template<>
-  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   template<>
-  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   template<>
-  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   // N[Pi, 57]
   template<>
@@ -43,13 +43,13 @@ namespace example011_trig
   auto pi_half() -> FloatType { return FloatType(); }
 
   template<>
-  auto pi_half() -> float { return static_cast<float>(1.57079632679489661923132169163975144209858469968755291049L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  auto pi_half() -> float { return static_cast<float>(1.57079632679489661923132169163975144209858469968755291049L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   template<>
-  auto pi_half() -> double { return static_cast<double>(1.57079632679489661923132169163975144209858469968755291049L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  auto pi_half() -> double { return static_cast<double>(1.57079632679489661923132169163975144209858469968755291049L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   template<>
-  auto pi_half() -> long double { return 1.57079632679489661923132169163975144209858469968755291049L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  auto pi_half() -> long double { return 1.57079632679489661923132169163975144209858469968755291049L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   // N[Pi/2, 57]
   template<>
@@ -122,7 +122,7 @@ namespace example011_trig
                                 * x2 + coef_sin_bot_1)
                                 * x2 + coef_sin_bot_0);
 
-    return (x * top) / (bot * 153U); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    return (x * top) / (bot * 153U); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   }
 
   auto cos_pade(const dec51_t& x) -> dec51_t
@@ -190,7 +190,7 @@ namespace example011_trig
                                 * x2 + coef_cos_bot_1)
                                 * x2 + coef_cos_bot_0);
 
-    return 1U + (((x2 * 4080U) * top) / bot); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    return 1U + (((x2 * 4080U) * top) / bot); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   }
 
   auto sin(const dec51_t& x) -> dec51_t // NOLINT(misc-no-recursion)

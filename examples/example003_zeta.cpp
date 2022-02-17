@@ -24,13 +24,13 @@ namespace local_zeta
   auto pi() -> FloatType { return FloatType(); }
 
   template<>
-  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   template<>
-  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   template<>
-  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   // N[Pi, 57]
   template<>
@@ -80,11 +80,11 @@ namespace local_zeta
 
     using float_type = FloatingPointType;
 
-    float_type z = float_type(65536U) / 65535U; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    float_type z = float_type(65536U) / 65535U; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     for(auto i = 1U; i < primes.size(); ++i)
     {
-      float_type p16 = pow(float_type(primes.at(i)), 16); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+      float_type p16 = pow(float_type(primes.at(i)), 16); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       const float_type term = 1 / (1 - (1 / p16));
 

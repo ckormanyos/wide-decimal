@@ -63,24 +63,24 @@ namespace example010_hypergeometric
 
     const T CT1(2U * CP1);
 
-    B[2U] = my_one + ((ABZ2 / CT1) * (my_one + ABZ1 / ((-T(6U)) + (CT1 * 3U)))); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    B[2U] = my_one + ((ABZ2 / CT1) * (my_one + ABZ1 / ((-T(6U)) + (CT1 * 3U)))); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     A[2U] = B[2U]  - ((ABZ  / CP)  * (my_one + ((ABZ2 - ABZ1) / CT1)));
 
     SABZ /= 4U;
 
     const T Z2(Z / 2U);
 
-    std::array<T, 9U> D; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    std::array<T, 9U> D; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    D[0U] = (((T(7U) / 2U) - AB) * Z2) - SABZ; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    D[1U] = ABZ1 / 4U;                         // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    D[2U] = D[1U] - (SABZ * 2U);               // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    D[3U] = CP1 + my_one;                      // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    D[4U] = CP1 * D[3U];                       // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    D[5U] = CP  * D[4U];                       // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    D[6U] = T(3U) / 2U;                        // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    D[7U] = T(3U) / 4U;                        // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    D[8U] = D[7U] * Z;                         // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    D[0U] = (((T(7U) / 2U) - AB) * Z2) - SABZ; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    D[1U] = ABZ1 / 4U;                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    D[2U] = D[1U] - (SABZ * 2U);               // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    D[3U] = CP1 + my_one;                      // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    D[4U] = CP1 * D[3U];                       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    D[5U] = CP  * D[4U];                       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    D[6U] = T(3U) / 2U;                        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    D[7U] = T(3U) / 4U;                        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    D[8U] = D[7U] * Z;                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     std::array<T, 3U> G;
 
@@ -91,15 +91,15 @@ namespace example010_hypergeometric
 
     for(std::uint_fast16_t XI = UINT16_C(3); XI < UINT16_C(10000); ++XI)
     {
-      G[2U]  = (D[2U] * D[1U]) / (D[7U] * D[5U]);             // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      D[1U] += (D[8U] + SABZ);                                // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      D[2U] += (D[8U] - SABZ);                                // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      G[2U] *= (D[1U] / D[6U]);                               // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      G[0U]  =  my_one + ((D[1U] + D[0U]) / (D[6U] * D[3U])); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      G[1U]  =  D[1U] / (D[4U] * D[6U]);                      // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      D[7U] += (D[6U] * 2U);                                  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      ++D[6U];                                                // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      G[1U] *= ((CP1 - XI) - ((D[2U] + D[0U]) / D[6U]));      // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+      G[2U]  = (D[2U] * D[1U]) / (D[7U] * D[5U]);             // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      D[1U] += (D[8U] + SABZ);                                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      D[2U] += (D[8U] - SABZ);                                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      G[2U] *= (D[1U] / D[6U]);                               // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      G[0U]  =  my_one + ((D[1U] + D[0U]) / (D[6U] * D[3U])); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      G[1U]  =  D[1U] / (D[4U] * D[6U]);                      // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      D[7U] += (D[6U] * 2U);                                  // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      ++D[6U];                                                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      G[1U] *= ((CP1 - XI) - ((D[2U] + D[0U]) / D[6U]));      // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       // C -----------------------------------------------------------------
       // C THE RECURRENCE RELATIONS FOR A(I) and B(I) ARE AS FOLLOWS
@@ -138,10 +138,10 @@ namespace example010_hypergeometric
       std::copy(A.cbegin() + 1U, A.cend(), A.begin());
       std::copy(B.cbegin() + 1U, B.cend(), B.begin());
 
-      D[8U] +=  Z2;          // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      D[0U] += (D[8U] * 2U); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      D[5U] += (D[4U] * 3U); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-      D[4U] += (D[3U] * 2U); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+      D[8U] +=  Z2;          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      D[0U] += (D[8U] * 2U); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      D[5U] += (D[4U] * 3U); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      D[4U] += (D[3U] * 2U); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       ++D[3U];
     }

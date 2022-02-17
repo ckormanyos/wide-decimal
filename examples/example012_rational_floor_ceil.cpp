@@ -35,7 +35,7 @@ namespace example012_rational
   {
     using decimal_type = DecimalType;
 
-    static_assert(std::numeric_limits<decimal_type>::digits10 < 16, // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    static_assert(std::numeric_limits<decimal_type>::digits10 < 16, // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                   "Error: This test is designed for less than 16 decimal digits");
 
     using decimal_type = DecimalType;
@@ -74,7 +74,7 @@ namespace example012_rational
   {
     using decimal_type = DecimalType;
 
-    static_assert(std::numeric_limits<decimal_type>::digits10 < 16, // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    static_assert(std::numeric_limits<decimal_type>::digits10 < 16, // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                   "Error: This test is designed for less than 16 decimal digits");
 
     using decimal_type = DecimalType;
