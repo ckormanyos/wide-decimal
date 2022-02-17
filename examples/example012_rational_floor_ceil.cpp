@@ -35,7 +35,7 @@ namespace example012_rational
   {
     using decimal_type = DecimalType;
 
-    static_assert(std::numeric_limits<decimal_type>::digits10 < 16,
+    static_assert(std::numeric_limits<decimal_type>::digits10 < 16, // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                   "Error: This test is designed for less than 16 decimal digits");
 
     using decimal_type = DecimalType;
@@ -74,7 +74,7 @@ namespace example012_rational
   {
     using decimal_type = DecimalType;
 
-    static_assert(std::numeric_limits<decimal_type>::digits10 < 16,
+    static_assert(std::numeric_limits<decimal_type>::digits10 < 16, // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                   "Error: This test is designed for less than 16 decimal digits");
 
     using decimal_type = DecimalType;
@@ -119,7 +119,7 @@ auto math::wide_decimal::example012_rational_floor_ceil() -> bool
 
   // Test floor/ceil for 10 decimal digits.
   {
-    using decimal_type = math::wide_decimal::decwide_t<10U, std::uint32_t, void>;
+    using decimal_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(10)), std::uint32_t, void>;
 
     result_is_ok &= example012_rational::test_rational_floor<decimal_type>();
     result_is_ok &= example012_rational::test_rational_ceil <decimal_type>();
@@ -127,7 +127,7 @@ auto math::wide_decimal::example012_rational_floor_ceil() -> bool
 
   // Test floor/ceil for 12 decimal digits.
   {
-    using decimal_type = math::wide_decimal::decwide_t<12U, std::uint32_t, void>;
+    using decimal_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(12)), std::uint32_t, void>;
 
     result_is_ok &= example012_rational::test_rational_floor<decimal_type>();
     result_is_ok &= example012_rational::test_rational_ceil <decimal_type>();

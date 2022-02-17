@@ -14,7 +14,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace test { namespace independent_algebra {
+  #if(__cplusplus >= 201703L)
+  namespace test::independent_algebra {
+  #else
+  namespace test { namespace independent_algebra { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   class independent_algebra_test_decwide_t_base
   {
@@ -27,8 +31,12 @@
     independent_algebra_test_decwide_t_base() { }
   };
 
+  #if(__cplusplus >= 201703L)
+  } // namespace test::independent_algebra
+  #else
   } // namespace independent_algebra
   } // namespace test
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 

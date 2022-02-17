@@ -23,7 +23,11 @@
   #include <boost/math/policies/policy.hpp>
   #include <boost/math/special_functions/sign.hpp>
 
-  namespace boost { namespace math {
+  #if(__cplusplus >= 201703L)
+  namespace boost::math {
+  #else
+  namespace boost { namespace math { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   namespace policies {
 
@@ -60,7 +64,11 @@
 
   } // namespace policies
 
-  namespace constants { namespace detail {
+  #if(__cplusplus >= 201703L)
+  namespace constants::detail {
+  #else
+  namespace constants { namespace detail { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   template <class T>
   struct constant_pi;
@@ -180,8 +188,12 @@
     }
   };
 
+  #if(__cplusplus >= 201703L)
+  } // namespace constants::detail
+  #else
   } // namespace detail
   } // namespace constants
+  #endif
 
   #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107600))
   namespace lanczos {
@@ -234,7 +246,11 @@
   } // namespace lanczos
   #endif // BOOST_VERSION
 
+  #if(__cplusplus >= 201703L)
+  } // namespace boost::math
+  #else
   } // namespace math
   } // namespace boost
+  #endif
 
 #endif // DECWIDE_T_2021_02_24_HPP

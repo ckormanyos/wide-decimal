@@ -6,7 +6,11 @@
 
   #include <mcal_lcd/mcal_lcd_base.h>
 
-  namespace mcal { namespace lcd {
+  #if(__cplusplus >= 201703L)
+  namespace mcal::lcd {
+  #else
+  namespace mcal { namespace lcd { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   class lcd_console : public mcal::lcd::lcd_base
   {
@@ -42,6 +46,11 @@
     virtual bool init() { return true; }
   };
 
-  } } // namespace mcal::lcd
+  #if(__cplusplus >= 201703L)
+  } // namespace mcal::lcd
+  #else
+  } // namespace lcd
+  } // namespace mcal
+  #endif
 
 #endif // MCAL_LCD_CONSOLE_2020_06_10_H

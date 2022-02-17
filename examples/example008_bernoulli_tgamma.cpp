@@ -27,7 +27,7 @@ namespace example008_bernoulli
   template<typename FloatingPointType>
   auto pi() -> FloatingPointType
   {
-    return static_cast<FloatingPointType>(3.1415926535897932384626433832795029L);
+    return static_cast<FloatingPointType>(3.1415926535897932384626433832795029L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   }
 
   template<>
@@ -40,7 +40,7 @@ namespace example008_bernoulli
     #endif
   }
 
-  util::dynamic_array<wide_decimal_type> bernoulli_table(static_cast<std::uint_fast32_t>(static_cast<float>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95F)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
+  util::dynamic_array<wide_decimal_type> bernoulli_table(static_cast<std::uint_fast32_t>(static_cast<float>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95F)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,cppcoreguidelines-avoid-non-const-global-variables,readability-magic-numbers,cert-err58-cpp)
 
   template<typename FloatingPointType>
   auto bernoulli_b(FloatingPointType* bn, std::uint32_t n) -> void
@@ -130,7 +130,7 @@ namespace example008_bernoulli
 
     using std::log;
 
-    if(xx > 8U)
+    if(xx > 8U) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     {
       // In the following code sequence, we extract the approximate logarithm
       // of the argument x and use the leading term of Stirling's approximation,
@@ -141,7 +141,7 @@ namespace example008_bernoulli
       // Limit fx to the range 8 <= fx <= 10^16, where 8 is chosen to
       // ensure that (log(fx) - 1.0F) remains positive and 10^16 is
       // selected arbitrarily, yet ensured to be rather large.
-      auto fx_max = (std::max)(static_cast<floating_point_type>(8U), xx);
+      auto fx_max = (std::max)(static_cast<floating_point_type>(8U), xx); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       auto fx = (std::min)(fx_max, static_cast<floating_point_type>(UINT64_C(10000000000000000)));
 
@@ -159,7 +159,7 @@ namespace example008_bernoulli
 
       using std::fabs;
 
-      if((n2 > 6U) && (fabs(term) < tol))
+      if((n2 > 6U) && (fabs(term) < tol)) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       {
         break;
       }

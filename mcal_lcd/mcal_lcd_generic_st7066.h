@@ -10,7 +10,11 @@
 
   #include <util/utility/util_time.h>
 
-  namespace mcal { namespace lcd {
+  #if(__cplusplus >= 201703L)
+  namespace mcal::lcd {
+  #else
+  namespace mcal { namespace lcd { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   template<typename port_pin_rs__type,
            typename port_pin_rw__type,
@@ -146,6 +150,11 @@
     }
   };
 
-  } } // namespace mcal::lcd
+  #if(__cplusplus >= 201703L)
+  } // namespace mcal::lcd
+  #else
+  } // namespace lcd
+  } // namespace mcal
+  #endif
 
 #endif // MCAL_LCD_GENERIC_ST7066_2020_05_07_H

@@ -39,7 +39,11 @@ namespace example009a_boost
 
 WIDE_DECIMAL_NAMESPACE_BEGIN
 
-namespace math { namespace wide_decimal {
+#if(__cplusplus >= 201703L)
+namespace math::wide_decimal {
+#else
+namespace math { namespace wide_decimal { // NOLINT(modernize-concat-nested-namespaces)
+#endif
 
 namespace detail {
 
@@ -262,7 +266,7 @@ auto hypergeometric_2f1(const dec1001_t& a,
 
     const dec1001_t term = ((pochham_a * pochham_b) / pochham_c) * x_pow_n_div_n_fact;
 
-    if((n > 11) && (fabs(term) < tol))
+    if((n > static_cast<std::int32_t>(INT32_C(11))) && (fabs(term) < tol))
     {
       break;
     }
@@ -286,8 +290,12 @@ auto pochhammer(const dec1001_t& x, const dec1001_t& a) -> dec1001_t
   return boost::math::tgamma(x + a) / boost::math::tgamma(x);
 }
 
+#if(__cplusplus >= 201703L)
+} // namespace math::wide_decimal
+#else
 } // namespace wide_decimal
 } // namespace math
+#endif
 
 WIDE_DECIMAL_NAMESPACE_END
 

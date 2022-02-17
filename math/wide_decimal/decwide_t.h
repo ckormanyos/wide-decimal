@@ -57,7 +57,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace math { namespace wide_decimal {
+  #if(__cplusplus >= 201703L)
+  namespace math::wide_decimal {
+  #else
+  namespace math { namespace wide_decimal { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   // Forward declaration of the decwide_t template class.
   template<const std::int32_t MyDigits10,
@@ -2146,10 +2150,10 @@
                    static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
       std::copy(tmp.cbegin(),
-                tmp.cbegin() + std::ptrdiff_t((std::min)(i, copy_limit)),
+                tmp.cbegin() + static_cast<std::ptrdiff_t>((std::min)(i, copy_limit)),
                 my_data.begin());
 
-      std::fill(my_data.begin() + std::ptrdiff_t((std::min)(i, copy_limit)),
+      std::fill(my_data.begin() + static_cast<std::ptrdiff_t>((std::min)(i, copy_limit)),
                 my_data.end(),
                 static_cast<limb_type>(0U));
     }
@@ -4187,8 +4191,12 @@
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> auto operator>=(ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) >= static_cast<std::int_fast8_t>(0)); }
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> auto operator> (ArithmeticType u, const decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) >  static_cast<std::int_fast8_t>(0)); }
 
+  #if(__cplusplus >= 201703L)
+  } // namespace math::wide_decimal
+  #else
   } // namespace wide_decimal
   } // namespace math
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 
@@ -4280,7 +4288,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace math { namespace wide_decimal {
+  #if(__cplusplus >= 201703L)
+  namespace math::wide_decimal {
+  #else
+  namespace math { namespace wide_decimal { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr auto unsigned_long_long_max() -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>((std::numeric_limits<unsigned long long>::max)()); } // NOLINT(google-runtime-int)
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr auto signed_long_long_min  () -> decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> { return decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>((std::numeric_limits<signed long long>::min)()); }   // NOLINT(google-runtime-int)
@@ -4643,8 +4655,12 @@
     return result;
   }
 
+  #if(__cplusplus >= 201703L)
+  } // namespace math::wide_decimal
+  #else
   } // namespace wide_decimal
   } // namespace math
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 

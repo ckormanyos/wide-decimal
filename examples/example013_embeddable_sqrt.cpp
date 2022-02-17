@@ -32,7 +32,7 @@ auto math::wide_decimal::example013_embeddable_sqrt() -> bool
   constexpr std::int32_t local_elem_number =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 14U>;
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 14U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   using dec101_t = math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, float>;
 
@@ -47,7 +47,7 @@ auto math::wide_decimal::example013_embeddable_sqrt() -> bool
 
   typename dec101_t::representation_type rep
   (
-    { 35U, 1363U, 600U, 9596U, 3986U, 6393U, 3384U, 6404U, 1805U, 5759U, 7515U, 1828U, 7169U, 3145U, 2816U, 5976U, 1647U, 1771U, 895U, 4528U, 9092U, 8635U, 312U, 1913U, 2220U, 9780U }
+    { 35U, 1363U, 600U, 9596U, 3986U, 6393U, 3384U, 6404U, 1805U, 5759U, 7515U, 1828U, 7169U, 3145U, 2816U, 5976U, 1647U, 1771U, 895U, 4528U, 9092U, 8635U, 312U, 1913U, 2220U, 9780U } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   );
 
   std::copy(rep.cbegin(), rep.cend(), control.representation().begin());

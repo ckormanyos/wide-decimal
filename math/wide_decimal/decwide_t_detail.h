@@ -26,7 +26,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace math { namespace wide_decimal { namespace detail {
+  #if(__cplusplus >= 201703L)
+  namespace math::wide_decimal::detail {
+  #else
+  namespace math { namespace wide_decimal { namespace detail { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   template<typename UnsignedIntegralType>
   constexpr auto negate(UnsignedIntegralType u) -> typename std::enable_if<(   (std::is_integral<UnsignedIntegralType>::value)
@@ -440,9 +444,13 @@
   template<typename UnsignedIntegerType, typename SignedIntegerType> inline auto operator+(const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& a, const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& b) -> unsigned_wrap<UnsignedIntegerType, SignedIntegerType> { return unsigned_wrap<UnsignedIntegerType, SignedIntegerType>(a) += b; }
   template<typename UnsignedIntegerType, typename SignedIntegerType> inline auto operator-(const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& a, const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& b) -> unsigned_wrap<UnsignedIntegerType, SignedIntegerType> { return unsigned_wrap<UnsignedIntegerType, SignedIntegerType>(a) -= b; }
 
+  #if(__cplusplus >= 201703L)
+  } // namespace math::wide_decimal::detail
+  #else
   } // namespace detail
   } // namespace wide_decimal
   } // namespace math
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 

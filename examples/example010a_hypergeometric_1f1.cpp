@@ -159,7 +159,7 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example010a_hypergeometric_1f1(
 auto math::wide_decimal::example010a_hypergeometric_1f1() -> bool
 #endif
 {
-  using dec1001_t = math::wide_decimal::decwide_t<1001U>;
+  using dec1001_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001))>;
 
   const dec1001_t a( dec1001_t(2U) / 3U);
   const dec1001_t b( dec1001_t(4U) / 3U);
