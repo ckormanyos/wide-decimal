@@ -16,7 +16,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace test { namespace independent_algebra {
+  #if(__cplusplus >= 201703L)
+  namespace test::independent_algebra {
+  #else
+  namespace test { namespace independent_algebra { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   class independent_algebra_test_decwide_t_decwide_t : public independent_algebra_test_decwide_t_base
@@ -92,8 +96,12 @@
     result.my_decwide_t = log(a.my_decwide_t);
   }
 
+  #if(__cplusplus >= 201703L)
+  } // namespace test::independent_algebra
+  #else
   } // namespace independent_algebra
   } // namespace test
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 

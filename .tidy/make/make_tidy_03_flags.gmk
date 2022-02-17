@@ -42,12 +42,9 @@ C_INCLUDES  :=$(addprefix -I,$(C_INCLUDES))
 TIDY_CHECKS  = "*,                                                                \
                 -altera-struct-pack-align,                                        \
                 -altera-unroll-loops,                                             \
-                -cppcoreguidelines-avoid-magic-numbers,                           \
                 -fuchsia-*,                                                       \
                 -llvmlibc-*,                                                      \
                 -llvm-header-guard,                                               \
-                -modernize-concat-nested-namespaces,                              \
-                -readability-avoid-const-params-in-decls,                         \
                 -readability-identifier-naming,                                   \
                 -readability-magic-numbers"
 

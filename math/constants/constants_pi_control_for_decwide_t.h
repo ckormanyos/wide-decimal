@@ -16,7 +16,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace math { namespace constants {
+  #if(__cplusplus >= 201703L)
+  namespace math::constants {
+  #else
+  namespace math { namespace constants { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   constexpr std::array<std::uint32_t, 7U + 1U> const_pi_control_head_32
   {
@@ -176,8 +180,12 @@
     static_cast<std::uint8_t>(UINT8_C(79)), static_cast<std::uint8_t>(UINT8_C(45)), static_cast<std::uint8_t>(UINT8_C(81)), static_cast<std::uint8_t>(UINT8_C(51))
   };
 
+  #if(__cplusplus >= 201703L)
+  } // namespace math::constants
+  #else
   } // namespace constants
   } // namespace math
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 

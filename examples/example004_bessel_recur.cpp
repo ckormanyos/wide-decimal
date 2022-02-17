@@ -51,7 +51,7 @@ namespace example004_bessel
     }
 
     // Bisection iteration loop, maximum 64 times.
-    for(std::uint_fast8_t i = 0U; i < 64U; ++i)
+    for(auto i = static_cast<std::uint_fast8_t>(0U); i < UINT8_C(64); ++i) // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     {
       dx /= 2;
 
@@ -66,7 +66,7 @@ namespace example004_bessel
       // Test for convergence.
       using std::fabs;
 
-      if(   (fabs(dx)   < static_cast<floating_point_type>(0.5L))
+      if(   (fabs(dx)   < static_cast<floating_point_type>(0.5L)) // NOLINT(cppcoreguidelines-avoid-magic-numbers)
          || (fabs(fmid) < std::numeric_limits<floating_point_type>::epsilon()))
       {
         // Return root.
@@ -80,8 +80,8 @@ namespace example004_bessel
 
   struct Jn_algo
   {
-    static constexpr auto e_half() -> float { return static_cast<float>(1.359140914229522617680143735676331248879L); }
-    static constexpr auto two_pi() -> float { return static_cast<float>(6.283185307179586476925286766559005768394L); }
+    static constexpr auto e_half() -> float { return static_cast<float>(1.359140914229522617680143735676331248879L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    static constexpr auto two_pi() -> float { return static_cast<float>(6.283185307179586476925286766559005768394L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
     static float        m_z; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     static float        m_n; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
@@ -101,7 +101,7 @@ namespace example004_bessel
       using std::log10;
 
       return   static_cast<float>(m_p)
-             - (0.5F * log10(two_pi() * m))
+             - (0.5F * log10(two_pi() * m)) // NOLINT(cppcoreguidelines-avoid-magic-numbers)
              + (  m  * log10(e_half() * m_z / m));
     }
 
@@ -118,16 +118,16 @@ namespace example004_bessel
 
       using std::log10;
 
-      return   (static_cast<float>(m_p) / 2.0F)
-             - (0.5F * log10(two_pi() * m))
+      return   (static_cast<float>(m_p) / 2.0F)      // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+             - (0.5F * log10(two_pi() * m))          // NOLINT(cppcoreguidelines-avoid-magic-numbers)
              + (  m  * log10(e_half() * m_z / m))
-             + (0.5F * log10(two_pi() * m_n))
+             + (0.5F * log10(two_pi() * m_n))        // NOLINT(cppcoreguidelines-avoid-magic-numbers)
              - (m_n  * log10(e_half() * m_z / m_n));
     }
 
     static auto mstart1(float x, std::uint32_t digits) -> std::uint32_t
     {
-      m_z = (std::max)(x, 0.1F);
+      m_z = (std::max)(x, 0.1F); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
       m_p = static_cast<std::int32_t>(digits);
 
       // Get the starting order for recursion.
@@ -140,7 +140,7 @@ namespace example004_bessel
 
     static auto mstart2(float x, float dn, std::uint32_t digits) -> std::uint32_t
     {
-      m_z = (std::max)(x, 0.1F);
+      m_z = (std::max)(x, 0.1F); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
       m_n = dn;
       m_p = static_cast<std::int32_t>(digits);
 
@@ -230,7 +230,7 @@ auto math::wide_decimal::example004_bessel_recur() -> bool
   // Calculate 1,001 decimal digits of the value of a cylindrical Bessel function.
   // N[BesselJ[9, 123456789/10000000], 1001]
 
-  using dec1001_t = math::wide_decimal::decwide_t<1001U, std::uint32_t, void>;
+  using dec1001_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001)), std::uint32_t, void>;
 
   // Downward recursion and simultaneous summation of
   // the normalization factor.

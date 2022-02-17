@@ -22,7 +22,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace math { namespace wide_decimal {
+  #if(__cplusplus >= 201703L)
+  namespace math::wide_decimal {
+  #else
+  namespace math { namespace wide_decimal { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   auto example000_multiply_nines         () -> bool;
   auto example000a_multiply_pi_squared   () -> bool;
@@ -52,8 +56,12 @@
   auto example013_embeddable_sqrt        () -> bool;
   auto example013a_embeddable_agm        () -> bool;
 
+  #if(__cplusplus >= 201703L)
+  } // namespace math::wide_decimal
+  #else
   } // namespace wide_decimal
   } // namespace math
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 

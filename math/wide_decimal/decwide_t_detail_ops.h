@@ -26,7 +26,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace math { namespace wide_decimal { namespace detail {
+  #if(__cplusplus >= 201703L)
+  namespace math::wide_decimal::detail {
+  #else
+  namespace math { namespace wide_decimal { namespace detail { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   template<typename InputIteratorLeftType,
            typename InputIteratorRightType>
@@ -562,9 +566,13 @@
     }
   }
 
+  #if(__cplusplus >= 201703L)
+  } // namespace math::wide_decimal::detail
+  #else
   } // namespace detail
   } // namespace wide_decimal
   } // namespace math
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 

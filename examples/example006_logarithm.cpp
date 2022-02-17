@@ -19,7 +19,7 @@ auto math::wide_decimal::example006_logarithm() -> bool
   // Compute 1,000 values of Log[(123456789/1000000) * (3^n)],
   // the result of which is Log[(123456789/1000000)] + (n Log[3])
 
-  using dec1001_t = math::wide_decimal::decwide_t<1001U>;
+  using dec1001_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001))>;
 
   const dec1001_t control_base
   {
@@ -46,7 +46,7 @@ auto math::wide_decimal::example006_logarithm() -> bool
 
   const std::clock_t start = std::clock();
 
-  for(unsigned i = 0U; i < 1000U; ++i)
+  for(auto i = static_cast<unsigned>(0U); i < static_cast<unsigned>(UINT32_C(1000)); ++i)
   {
     const dec1001_t lg = log(x);
 

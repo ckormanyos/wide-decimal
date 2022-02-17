@@ -35,7 +35,7 @@ namespace example002_pi
 
 auto example002_pi_digits10_callback(const std::uint32_t d10) -> void
 {
-  std::array<char, 10U> p_str { };
+  std::array<char, static_cast<std::size_t>(UINT32_C(10))> p_str { };
 
   p_str.fill(static_cast<char>(0));
 
@@ -60,7 +60,7 @@ auto math::wide_decimal::example002_pi() -> bool
   constexpr std::int32_t local_elem_digits10 =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   using local_wide_decimal_type =
     math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type>;

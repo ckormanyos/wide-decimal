@@ -28,7 +28,11 @@
 
 WIDE_DECIMAL_NAMESPACE_BEGIN
 
-namespace math { namespace wide_decimal {
+#if(__cplusplus >= 201703L)
+namespace math::wide_decimal {
+#else
+namespace math { namespace wide_decimal { // NOLINT(modernize-concat-nested-namespaces)
+#endif
 
 namespace detail {
 
@@ -222,8 +226,12 @@ auto cos(const FloatingPointType& x) -> FloatingPointType // NOLINT(misc-no-recu
   return c;
 }
 
+#if(__cplusplus >= 201703L)
+} // namespace math::wide_decimal
+#else
 } // namespace wide_decimal
 } // namespace math
+#endif
 
 WIDE_DECIMAL_NAMESPACE_END
 
@@ -259,9 +267,9 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009b_boost_math_standalo
 auto math::wide_decimal::example009b_boost_math_standalone() -> bool
 #endif
 {
-  using wide_decimal_010_type = math::wide_decimal::decwide_t< 10U, std::uint32_t, void>;
-  using wide_decimal_035_type = math::wide_decimal::decwide_t< 35U, std::uint32_t, void>;
-  using wide_decimal_105_type = math::wide_decimal::decwide_t<105U, std::uint32_t, void>;
+  using wide_decimal_010_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 10)), std::uint32_t, void>;
+  using wide_decimal_035_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 35)), std::uint32_t, void>;
+  using wide_decimal_105_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(105)), std::uint32_t, void>;
 
   const bool result_010_is_ok = example009b_boost::test_tgamma<wide_decimal_010_type>();
   const bool result_035_is_ok = example009b_boost::test_tgamma<wide_decimal_035_type>();

@@ -23,7 +23,7 @@ namespace example007_catalan
   template<typename FloatingPointType>
   auto pi() -> FloatingPointType
   {
-    return static_cast<FloatingPointType>(3.1415926535897932384626433832795029L);
+    return static_cast<FloatingPointType>(3.1415926535897932384626433832795029L); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
   }
 
   template<>
@@ -46,7 +46,7 @@ namespace example007_catalan
 
     floating_point_type k_fact (1U);
     floating_point_type tk_fact(2U);
-    floating_point_type sum    (static_cast<floating_point_type>(19U) / 18U);
+    floating_point_type sum    (static_cast<floating_point_type>(19U) / 18U); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
     const floating_point_type lim = std::numeric_limits<floating_point_type>::epsilon();
 
@@ -78,7 +78,7 @@ namespace example007_catalan
     using std::log;
     using std::sqrt;
 
-    return (((pi<floating_point_type>() * log(2U + sqrt(static_cast<floating_point_type>(3U)))) + (sum * 3U)) / 8U);
+    return (((pi<floating_point_type>() * log(2U + sqrt(static_cast<floating_point_type>(3U)))) + (sum * 3U)) / 8U); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
   }
 } // namespace example007_catalan
 

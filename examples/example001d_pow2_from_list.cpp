@@ -24,7 +24,9 @@ auto math::wide_decimal::example001d_pow2_from_list() -> bool
 
   // Column[Table[N[2^n, 100], {n, -128, 127, 1}]]
   // ... and copy as plain text.
-  static const std::array<wide_decimal_type, 256U> local_pow2_data =
+  using local_pow2_data_type = std::array<wide_decimal_type, static_cast<std::size_t>(UINT32_C(256))>;
+
+  static const local_pow2_data_type local_pow2_data =
   {{
     wide_decimal_type("2.938735877055718769921841343055614194546663891930218803771879265696043148636817932128906250000000000E-39"),
     wide_decimal_type("5.877471754111437539843682686111228389093327783860437607543758531392086297273635864257812500000000000E-39"),
@@ -286,28 +288,28 @@ auto math::wide_decimal::example001d_pow2_from_list() -> bool
 
   bool result_is_ok = true;
 
-  const wide_decimal_type local_half(wide_decimal_type(1U) / 2U);
-  const wide_decimal_type local_one (1U);
-  const wide_decimal_type local_two (2U);
+  wide_decimal_type local_half(wide_decimal_type(1U) / 2U);
+  wide_decimal_type local_one (1U);
+  wide_decimal_type local_two (2U);
 
-  for(std::size_t i = 0U; i < local_pow2_data.size(); ++i)
+  for(auto i = static_cast<std::ptrdiff_t>(0); i < static_cast<std::ptrdiff_t>(local_pow2_data.size()); ++i)
   {
     wide_decimal_type x2;
 
-    if(i <= 127U)
+    if(i <= static_cast<std::ptrdiff_t>(INT32_C(127)))
     {
-      x2 = pow(local_half, std::ptrdiff_t(128 - std::ptrdiff_t(i)));
+      x2 = pow(local_half, static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / 2U) - i));
     }
-    else if(i == 128U)
+    else if(i == static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / 2U))
     {
       x2 = local_one;
     }
     else
     {
-      x2 = pow(local_two, std::ptrdiff_t(std::ptrdiff_t(i) - 128));
+      x2 = pow(local_two, static_cast<std::ptrdiff_t>(i - static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / 2U)));
     }
 
-    result_is_ok &= (x2 == local_pow2_data[i]); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
+    result_is_ok &= (x2 == local_pow2_data[static_cast<std::size_t>(i)]); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
   }
 
   return result_is_ok;

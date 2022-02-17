@@ -17,7 +17,7 @@ namespace example011_trig
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec51_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
   #else
-  using dec51_t = math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
+  using dec51_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
   #endif
 
   auto sin(const dec51_t& x) -> dec51_t;
@@ -27,13 +27,13 @@ namespace example011_trig
   auto pi() -> FloatType { return FloatType(); }
 
   template<>
-  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); }
+  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   template<>
-  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); }
+  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   template<>
-  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; }
+  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   // N[Pi, 57]
   template<>
@@ -43,13 +43,13 @@ namespace example011_trig
   auto pi_half() -> FloatType { return FloatType(); }
 
   template<>
-  auto pi_half() -> float { return static_cast<float>(1.57079632679489661923132169163975144209858469968755291049L); }
+  auto pi_half() -> float { return static_cast<float>(1.57079632679489661923132169163975144209858469968755291049L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   template<>
-  auto pi_half() -> double { return static_cast<double>(1.57079632679489661923132169163975144209858469968755291049L); }
+  auto pi_half() -> double { return static_cast<double>(1.57079632679489661923132169163975144209858469968755291049L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   template<>
-  auto pi_half() -> long double { return 1.57079632679489661923132169163975144209858469968755291049L; }
+  auto pi_half() -> long double { return 1.57079632679489661923132169163975144209858469968755291049L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   // N[Pi/2, 57]
   template<>
@@ -122,7 +122,7 @@ namespace example011_trig
                                 * x2 + coef_sin_bot_1)
                                 * x2 + coef_sin_bot_0);
 
-    return (x * top) / (bot * 153U);
+    return (x * top) / (bot * 153U); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
   }
 
   auto cos_pade(const dec51_t& x) -> dec51_t
@@ -190,7 +190,7 @@ namespace example011_trig
                                 * x2 + coef_cos_bot_1)
                                 * x2 + coef_cos_bot_0);
 
-    return 1U + (((x2 * 4080U) * top) / bot);
+    return 1U + (((x2 * 4080U) * top) / bot); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
   }
 
   auto sin(const dec51_t& x) -> dec51_t // NOLINT(misc-no-recursion)

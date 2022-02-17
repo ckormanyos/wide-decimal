@@ -28,7 +28,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace test { namespace independent_algebra {
+  #if(__cplusplus >= 201703L)
+  namespace test::independent_algebra {
+  #else
+  namespace test { namespace independent_algebra { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   template<const std::int32_t MyDigits10,
            typename LimbType = std::uint32_t,
@@ -522,8 +526,12 @@
     return result_test_is_ok;
   }
 
+  #if(__cplusplus >= 201703L)
+  } // namespace test::independent_algebra
+  #else
   } // namespace independent_algebra
   } // namespace test
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 

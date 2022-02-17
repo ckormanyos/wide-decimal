@@ -26,13 +26,21 @@
 #include <math/wide_decimal/decwide_t_examples.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 
-namespace mcal { namespace memory { namespace progmem {
+#if(__cplusplus >= 201703L)
+namespace mcal::memory::progmem {
+#else
+namespace mcal { namespace memory { namespace progmem { // NOLINT(modernize-concat-nested-namespaces)
+#endif
 
 using std::array;
 
+#if(__cplusplus >= 201703L)
+} // namespace mcal::memory::progmem
+#else
 } // namespace progmem
 } // namespace memory
 } // namespace mcal
+#endif
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example013a_embeddable_agm() -> bool
@@ -48,7 +56,7 @@ auto math::wide_decimal::example013a_embeddable_agm() -> bool
   constexpr std::int32_t local_elem_number =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   using dec53_t = math::wide_decimal::decwide_t<wide_decimal_digits10,
                                                 local_limb_type,

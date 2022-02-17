@@ -15,7 +15,11 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  namespace test { namespace independent_algebra {
+  #if(__cplusplus >= 201703L)
+  namespace test::independent_algebra {
+  #else
+  namespace test { namespace independent_algebra { // NOLINT(modernize-concat-nested-namespaces)
+  #endif
 
   template<typename FloatingPointType>
   struct constants;
@@ -241,8 +245,12 @@
   template<typename FloatingPointType>
   typename constants<FloatingPointType>::initializer constants<FloatingPointType>::init;
 
+  #if(__cplusplus >= 201703L)
+  } // namespace test::independent_algebra
+  #else
   } // namespace independent_algebra
   } // namespace test
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_END
 

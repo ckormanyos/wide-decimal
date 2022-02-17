@@ -15,10 +15,10 @@
 namespace local_polylog
 {
   template<typename FloatingPointType>
-  auto polylog(const std::int32_t s, const FloatingPointType& x) -> FloatingPointType;
+  auto polylog(std::int32_t s, const FloatingPointType& x) -> FloatingPointType;
 
   template<typename FloatingPointType>
-  auto polylog(const std::int32_t s, const FloatingPointType& x) -> FloatingPointType
+  auto polylog(std::int32_t s, const FloatingPointType& x) -> FloatingPointType
   {
     using floating_point_type = FloatingPointType;
 
@@ -52,7 +52,7 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example005_polylog_series() -> 
 auto math::wide_decimal::example005_polylog_series() -> bool
 #endif
 {
-  using dec101_t = math::wide_decimal::decwide_t<101U>;
+  using dec101_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(101))>;
 
   using std::fabs;
 

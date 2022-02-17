@@ -17,20 +17,20 @@ namespace local_zeta
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec51_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
   #else
-  using dec51_t = math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
+  using dec51_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
   #endif
 
   template<typename FloatType>
   auto pi() -> FloatType { return FloatType(); }
 
   template<>
-  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); }
+  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   template<>
-  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); }
+  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   template<>
-  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; }
+  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
   // N[Pi, 57]
   template<>
@@ -80,11 +80,11 @@ namespace local_zeta
 
     using float_type = FloatingPointType;
 
-    float_type z = float_type(65536U) / 65535U;
+    float_type z = float_type(65536U) / 65535U; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
     for(auto i = 1U; i < primes.size(); ++i)
     {
-      float_type p16 = pow(float_type(primes.at(i)), 16);
+      float_type p16 = pow(float_type(primes.at(i)), 16); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
       const float_type term = 1 / (1 - (1 / p16));
 
