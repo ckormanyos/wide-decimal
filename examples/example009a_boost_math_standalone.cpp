@@ -24,7 +24,7 @@
 #include <boost/math/bindings/decwide_t.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 
-#include <math/wide_decimal/decwide_t_examples.h>
+#include <examples/example_decwide_t.h>
 
 namespace example009a_boost
 {
