@@ -2097,8 +2097,22 @@
       // and optional sign flag.
       decwide_t a;
 
-      a.my_data = representation_type(limb_values.size());
-      std::copy(limb_values.begin(), limb_values.end(), a.my_data.begin());
+      if(limb_values.size() < a.my_data.size())
+      {
+        std::copy(limb_values.begin(),
+                  limb_values.end(),
+                  a.my_data.begin());
+
+        std::fill(a.my_data.begin() + limb_values.size(),
+                  a.my_data.end(),
+                  static_cast<limb_type>(0U));
+      }
+      else
+      {
+        std::copy(limb_values.begin(),
+                  limb_values.begin() + a.my_data.size(),
+                  a.my_data.begin());
+      }
 
       a.my_exp       = e;
       a.my_neg       = is_neg;

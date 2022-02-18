@@ -14,6 +14,48 @@ on:
   schedule:
     - cron: '15 0 * * *' # run at 00:15 AM UTC
 jobs:
+  cmake-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [ g++, clang++ ]
+        include:
+          - compiler: g++
+            clang_tidy: ""
+            container: johnmcfarlane/cnl_ci:gcc-11
+          - compiler: clang++
+            clang_tidy: "clang-tidy"
+            container: johnmcfarlane/cnl_ci:clang-13-libcpp
+
+    runs-on: ubuntu-20.04
+    container: ${{matrix.container}}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: create build directory
+        run: mkdir $GITHUB_WORKSPACE/build
+
+      - name: install Boost
+        run: |
+          apt-get update --quiet
+          apt-get install --no-install-recommends --quiet --yes libboost-dev
+
+      - name: build
+        working-directory: build
+        run: |
+          cmake \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_CXX_STANDARD=20 \
+              -DCMAKE_CXX_CLANG_TIDY="${{matrix.clang_tidy}}" \
+              -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/.github/toolchains/gcc.cmake \
+              -GNinja \
+              $GITHUB_WORKSPACE
+          cmake --build .
+
+      - name: test
+        working-directory: build
+        run: ctest --verbose --output-on-failure
+
   gnumake-clang-tidy-12-native:
     runs-on: ubuntu-20.04
     defaults:

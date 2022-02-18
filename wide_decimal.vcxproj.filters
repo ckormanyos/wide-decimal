@@ -242,5 +242,15 @@
     <None Include=".tidy\make\make_tidy_01_generic.gmk">
       <Filter>.tidy\make</Filter>
     </None>
+    <None Include=".clang-tidy" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="examples\CMakeLists.txt">
+      <Filter>Source Files\examples</Filter>
+    </Text>
+    <Text Include="test\CMakeLists.txt">
+      <Filter>Source Files\test</Filter>
+    </Text>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>
