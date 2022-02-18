@@ -46,6 +46,7 @@ jobs:
           cmake \
               -DCMAKE_BUILD_TYPE=Release \
               -DCMAKE_CXX_STANDARD=11 \
+              -DCMAKE_CXX_EXTENSIONS=FALSE \
               -DCMAKE_CXX_CLANG_TIDY="${{matrix.clang_tidy}}" \
               -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/.github/toolchains/gcc.cmake \
               -GNinja \
