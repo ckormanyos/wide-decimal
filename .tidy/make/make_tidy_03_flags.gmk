@@ -47,6 +47,6 @@ TIDY_CHECKS  = "*,                                                              
                 -llvmlibc-*"
 
 TIDY_FLAGS   = --extra-arg-before=--driver-mode=g++                 \
-               --header-filter=uintwide_t                           \
+               --header-filter=decwide_t                            \
                -warnings-as-errors=*                                \
                -checks=$(TIDY_CHECKS)

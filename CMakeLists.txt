@@ -25,4 +25,4 @@ install(
 install(EXPORT WideDecimalTargets
   FILE WideDecimalConfig.cmake
   NAMESPACE WideDecimal::
-  DESTINATION lib/cmake/wide-integer)
+  DESTINATION lib/cmake/wide-decimal)
