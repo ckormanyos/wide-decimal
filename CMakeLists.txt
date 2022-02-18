@@ -1,4 +1,4 @@
-project(wide-decimal)
+﻿project(wide-decimal)
 
 cmake_minimum_required(VERSION 3.16.3)
 
@@ -9,6 +9,8 @@ if (Boost_FOUND)
   add_subdirectory("examples")
   add_subdirectory("test")
 endif()
+
+set(CMAKE_CXX_EXTENSIONS FALSE)
 
 add_library(WideDecimal INTERFACE)
 target_compile_features(WideDecimal INTERFACE cxx_std_11)

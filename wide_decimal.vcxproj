@@ -231,6 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-tidy" />
+    <None Include=".github\toolchains\gcc.cmake" />
     <None Include=".github\workflows\wide_decimal.yml" />
     <None Include=".tidy\make\make_tidy_01_generic.gmk" />
     <None Include=".tidy\make\make_tidy_02_files.gmk" />
