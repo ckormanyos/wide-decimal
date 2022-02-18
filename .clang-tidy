@@ -1,10 +1,13 @@
 ﻿---
 Checks: >
   *,
-  -altera-struct-pack-align,
-  -altera-unroll-loops,
+  -altera-*,
+  -cppcoreguidelines-avoid-magic-numbers,
   -fuchsia-*,
-  -llvmlibc-*
+  -llvm-header-guard,
+  -llvmlibc-*,
+  -readability-magic-numbers
+
 
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
