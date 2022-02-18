@@ -5,8 +5,8 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef DECWIDE_T_EXAMPLES_2021_04_13_H
-  #define DECWIDE_T_EXAMPLES_2021_04_13_H
+#ifndef EXAMPLE_DECWIDE_T_2021_04_13_H
+  #define EXAMPLE_DECWIDE_T_2021_04_13_H
 
   // This file contains function prototypes of the decwide_t examples.
 
@@ -65,4 +65,4 @@
 
   WIDE_DECIMAL_NAMESPACE_END
 
-#endif // DECWIDE_T_EXAMPLES_2021_04_13_H
+#endif // EXAMPLE_DECWIDE_T_2021_04_13_H

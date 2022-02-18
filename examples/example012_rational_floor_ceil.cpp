@@ -11,8 +11,8 @@
 #include <iostream>
 #include <random>
 
+#include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
-#include <math/wide_decimal/decwide_t_examples.h>
 #include <util/utility/util_baselexical_cast.h>
 
 namespace example012_rational

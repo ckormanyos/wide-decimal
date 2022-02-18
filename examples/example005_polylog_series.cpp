@@ -9,8 +9,8 @@
 #include <cstdint>
 #include <deque>
 
+#include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
-#include <math/wide_decimal/decwide_t_examples.h>
 
 namespace local_polylog
 {

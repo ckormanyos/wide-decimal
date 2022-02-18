@@ -40,15 +40,20 @@
   {
     std::int_fast8_t n_return = 0;
 
-    InputIteratorRightType it_b(b);
+    InputIteratorRightType it_b    (b);
+    InputIteratorLeftType  it_a    (a);
+    InputIteratorRightType it_a_end(a + count);
 
-    for(InputIteratorLeftType it_a(a); it_a != InputIteratorLeftType(a + count); ++it_a, ++it_b)
+    while(it_a != it_a_end)
     {
       using value_left_type =
         typename std::iterator_traits<InputIteratorLeftType>::value_type;
 
       if(*it_a > static_cast<value_left_type>(*it_b)) { n_return =  1; break; }
       if(*it_a < static_cast<value_left_type>(*it_b)) { n_return = -1; break; }
+
+      ++it_a;
+      ++it_b;
     }
 
     return n_return;
@@ -70,7 +75,11 @@
 
     for(auto j = static_cast<std::int32_t>(count - static_cast<std::int32_t>(1)); j >= static_cast<std::int32_t>(0); --j)
     {
-      const auto t = static_cast<local_limb_type>(static_cast<local_limb_type>(u[j] + v[j]) + carry);
+      const auto t =
+        static_cast<local_limb_type>
+        (
+          static_cast<local_limb_type>(u[j] + v[j]) + carry
+        );
 
       carry = ((t >= static_cast<local_limb_type>(local_elem_mask)) ? static_cast<std::uint_fast8_t>(1U)
                                                                     : static_cast<std::uint_fast8_t>(0U));
@@ -99,10 +108,23 @@
 
     for(auto j = static_cast<std::uint32_t>(count - static_cast<std::int32_t>(1)); static_cast<std::int32_t>(j) >= static_cast<std::int32_t>(0); --j)
     {
+      const auto vjb =
+        static_cast<local_limb_type>
+        (
+          v[j] + static_cast<local_limb_type>(borrow)
+        );
+
       auto t =
         static_cast<local_signed_limb_type>
         (
-          static_cast<local_limb_type>(u[j] + static_cast<local_limb_type>(static_cast<local_limb_type>(~static_cast<local_limb_type>(static_cast<local_limb_type>(v[j] + static_cast<local_limb_type>(borrow)))) + 1U))
+          static_cast<local_limb_type>
+          (
+              u[j]
+            + static_cast<local_limb_type>
+              (
+                static_cast<local_limb_type>(~vjb) + 1U
+              )
+          )
         );
 
       // Underflow? Borrow?
@@ -120,7 +142,7 @@
       r[j] = static_cast<local_limb_type>(t);
     }
 
-    return (borrow != 0U);
+    return (borrow != static_cast<std::uint_fast8_t>(0U));
   }
 
   template<typename InputLimbIteratorType,
