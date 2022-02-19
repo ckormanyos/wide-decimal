@@ -94,7 +94,7 @@
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType>
   auto eval_subtract_n(OutputLimbIteratorType r,
-                       InputLimbIteratorType u,
+                       InputLimbIteratorType u, // NOLINT(bugprone-easily-swappable-parameters)
                        InputLimbIteratorType v,
                        const std::int32_t count) -> bool
   {
@@ -518,7 +518,7 @@
            typename OutputLimbIteratorType,
            typename FftFloatIteratorType>
   auto mul_loop_fft(OutputLimbIteratorType r,
-                    InputLimbIteratorType u,
+                    InputLimbIteratorType u, // NOLINT(bugprone-easily-swappable-parameters)
                     InputLimbIteratorType v,
                     FftFloatIteratorType af,
                     FftFloatIteratorType bf,

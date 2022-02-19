@@ -18,7 +18,7 @@
            typename OutputIterator,
            const std::uint_fast8_t BaseRepresentation = 10U,
            const bool UpperCase = true>
-  OutputIterator baselexical_cast(const UnsignedIntegerType& u, OutputIterator OutFirst)
+  auto baselexical_cast(const UnsignedIntegerType& u, OutputIterator out_first) -> OutputIterator
   {
     using unsigned_integer_type = UnsignedIntegerType;
     using output_value_type     = typename std::iterator_traits<OutputIterator>::value_type;
@@ -31,7 +31,7 @@
     {
       for(auto j = index; j >= static_cast<std::ptrdiff_t>(0); --j)
       {
-        *(OutFirst + static_cast<std::ptrdiff_t>(j + 1)) = *(OutFirst + j);
+        *(out_first + static_cast<std::ptrdiff_t>(j + 1)) = *(out_first + j);
       }
 
       ++index;
@@ -54,11 +54,11 @@
         );
       }
 
-      *OutFirst = c;
+      *out_first = c;
     }
     while(x != static_cast<unsigned_integer_type>(0U));
 
-    return static_cast<OutputIterator>(OutFirst + index);
+    return static_cast<OutputIterator>(out_first + index);
   }
 
   } // namespace util
