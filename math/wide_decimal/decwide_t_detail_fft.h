@@ -113,10 +113,10 @@
 
   // TBD: Use constexpr functions here, depending on availability.
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto const_unique_wp_real_init(const std::uint32_t N,
-                                 const bool          my_fwd = is_forward_fft,
-                                 const typename std::enable_if<(is_forward_fft)>::type* p_nullparam = nullptr) -> float_type
+                                 const bool          my_fwd = IsForwardFft,
+                                 const typename std::enable_if<(IsForwardFft)>::type* p_nullparam = nullptr) -> float_type
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
@@ -125,10 +125,10 @@
   }
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto const_unique_wp_real_init(       std::uint32_t N,
-                                        bool          my_fwd = is_forward_fft,
-                                 const typename std::enable_if<(!is_forward_fft)>::type* p_nullparam = nullptr) -> float_type
+                                        bool          my_fwd = IsForwardFft,
+                                 const typename std::enable_if<(!IsForwardFft)>::type* p_nullparam = nullptr) -> float_type
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
@@ -137,10 +137,10 @@
   }
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto const_unique_wp_imag(      std::uint32_t N,
-                                  bool          my_fwd = is_forward_fft,
-                            const typename std::enable_if<(is_forward_fft)>::type* p_nullparam = nullptr) -> float_type
+                                  bool          my_fwd = IsForwardFft,
+                            const typename std::enable_if<(IsForwardFft)>::type* p_nullparam = nullptr) -> float_type
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
@@ -149,10 +149,10 @@
   }
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto const_unique_wp_imag(      std::uint32_t N,
-                                  bool          my_fwd = is_forward_fft,
-                            const typename std::enable_if<(!is_forward_fft)>::type* p_nullparam = nullptr) -> float_type
+                                  bool          my_fwd = IsForwardFft,
+                            const typename std::enable_if<(!IsForwardFft)>::type* p_nullparam = nullptr) -> float_type
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
@@ -161,31 +161,31 @@
   }
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto const_unique_wp_real(std::uint32_t N) -> float_type
   {
-    return static_cast<float_type>(static_cast<float_type>(-2) * (  const_unique_wp_real_init<float_type, is_forward_fft>(N)
-                                                                  * const_unique_wp_real_init<float_type, is_forward_fft>(N)));
+    return static_cast<float_type>(static_cast<float_type>(-2) * (  const_unique_wp_real_init<float_type, IsForwardFft>(N)
+                                                                  * const_unique_wp_real_init<float_type, IsForwardFft>(N)));
   }
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   void danielson_lanczos_apply_4_basecase(float_type* data);
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto danielson_lanczos_apply(std::uint32_t N, // NOLINT(misc-no-recursion)
                                float_type*   data) -> void
   {
     if(N == 8U)
     {
-      danielson_lanczos_apply_4_basecase<float_type, is_forward_fft>(data);
-      danielson_lanczos_apply_4_basecase<float_type, is_forward_fft>(data + N); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      danielson_lanczos_apply_4_basecase<float_type, IsForwardFft>(data);
+      danielson_lanczos_apply_4_basecase<float_type, IsForwardFft>(data + N); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     }
     else
     {
-      danielson_lanczos_apply<float_type, is_forward_fft>(N / 2U, data);
-      danielson_lanczos_apply<float_type, is_forward_fft>(N / 2U, data + N); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      danielson_lanczos_apply<float_type, IsForwardFft>(N / 2U, data);
+      danielson_lanczos_apply<float_type, IsForwardFft>(N / 2U, data + N); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     }
 
     auto real_part = static_cast<float_type>(1);
@@ -204,13 +204,13 @@
 
       tmp_real = real_part;
 
-      real_part += (((tmp_real  * const_unique_wp_real<float_type, is_forward_fft>(N)) - (imag_part * const_unique_wp_imag<float_type, is_forward_fft>(N))));
-      imag_part += (((imag_part * const_unique_wp_real<float_type, is_forward_fft>(N)) + (tmp_real  * const_unique_wp_imag<float_type, is_forward_fft>(N))));
+      real_part += (((tmp_real  * const_unique_wp_real<float_type, IsForwardFft>(N)) - (imag_part * const_unique_wp_imag<float_type, IsForwardFft>(N))));
+      imag_part += (((imag_part * const_unique_wp_real<float_type, IsForwardFft>(N)) + (tmp_real  * const_unique_wp_imag<float_type, IsForwardFft>(N))));
     }
   }
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto danielson_lanczos_apply_4_basecase(float_type* data) -> void
   {
     const auto tmp_real_2_0 = data[2U]; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -238,8 +238,8 @@
     data[0U] += tmp_real; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     data[1U] += tmp_imag; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-    const auto real_part = static_cast<float_type>(const_unique_wp_real<float_type, is_forward_fft>(4U) + template_one<float_type>());
-    const auto imag_part = static_cast<float_type>(const_unique_wp_imag<float_type, is_forward_fft>(4U));
+    const auto real_part = static_cast<float_type>(const_unique_wp_real<float_type, IsForwardFft>(4U) + template_one<float_type>());
+    const auto imag_part = static_cast<float_type>(const_unique_wp_imag<float_type, IsForwardFft>(4U));
 
     tmp_real = (real_part * data[6U]) - (imag_part * data[7U]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     tmp_imag = (real_part * data[7U]) + (imag_part * data[6U]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -252,7 +252,7 @@
   }
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto fft_lanczos_fft(std::uint32_t N,
                        float_type*   data) -> void
   {
@@ -277,15 +277,15 @@
       j += m;
     }
 
-    danielson_lanczos_apply<float_type, is_forward_fft>(N, data);
+    danielson_lanczos_apply<float_type, IsForwardFft>(N, data);
   }
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto rfft_lanczos_rfft(      std::uint32_t N,
                                float_type*   data,
-                               bool          my_fwd = is_forward_fft,
-                         const typename std::enable_if<(is_forward_fft )>::type* p_nullparam = nullptr) -> void
+                               bool          my_fwd = IsForwardFft,
+                         const typename std::enable_if<(IsForwardFft )>::type* p_nullparam = nullptr) -> void
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
@@ -329,11 +329,11 @@
   }
 
   template<typename float_type,
-           const bool is_forward_fft>
+           const bool IsForwardFft>
   auto rfft_lanczos_rfft(      std::uint32_t N,
                                float_type*   data,
-                               bool          my_fwd = is_forward_fft,
-                         const typename std::enable_if<(!is_forward_fft)>::type* p_nullparam = nullptr) -> void
+                               bool          my_fwd = IsForwardFft,
+                         const typename std::enable_if<(!IsForwardFft)>::type* p_nullparam = nullptr) -> void
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
