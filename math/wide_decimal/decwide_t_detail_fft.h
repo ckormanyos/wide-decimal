@@ -63,11 +63,11 @@
   inline constexpr auto template_fast_div_by_two<long double>(long double a) -> long double { return static_cast<long double>(a / 2); }
 
   template<typename float_type>
-  auto template_sin_order_1(std::uint32_t NumPoints) -> float_type
+  auto template_sin_order_1(std::uint32_t num_points) -> float_type
   {
     // TBD: Use constexpr functions here, depending on availability.
     // Mathematica command: Table[N[Sin[Pi / (2^n)], 41], {n, 1, 31, 1}]
-    switch(NumPoints)
+    switch(num_points)
     {
       default:
       case 0UL       : return static_cast<float_type>(0.0L);                                            // Pi        : as uint64_t --> UINT64_C(0x0000000000000000)
@@ -106,66 +106,66 @@
   }
 
   template<typename float_type>
-  auto template_sin_order_2(std::uint32_t NumPoints) -> float_type
+  auto template_sin_order_2(std::uint32_t num_points) -> float_type
   {
-    return template_sin_order_1<float_type>(NumPoints / 2U);
+    return template_sin_order_1<float_type>(num_points / 2U);
   }
 
   // TBD: Use constexpr functions here, depending on availability.
   template<typename float_type,
            const bool IsForwardFft>
-  auto const_unique_wp_real_init(const std::uint32_t N,
+  auto const_unique_wp_real_init(const std::uint32_t num_points,
                                  const bool          my_fwd = IsForwardFft,
                                  const typename std::enable_if<(IsForwardFft)>::type* p_nullparam = nullptr) -> float_type
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
 
-    return template_sin_order_1<float_type>(N);
+    return template_sin_order_1<float_type>(num_points);
   }
 
   template<typename float_type,
            const bool IsForwardFft>
-  auto const_unique_wp_real_init(       std::uint32_t N,
+  auto const_unique_wp_real_init(       std::uint32_t num_points,
                                         bool          my_fwd = IsForwardFft,
                                  const typename std::enable_if<(!IsForwardFft)>::type* p_nullparam = nullptr) -> float_type
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
 
-    return -template_sin_order_1<float_type>(N);
+    return -template_sin_order_1<float_type>(num_points);
   }
 
   template<typename float_type,
            const bool IsForwardFft>
-  auto const_unique_wp_imag(      std::uint32_t N,
+  auto const_unique_wp_imag(      std::uint32_t num_points,
                                   bool          my_fwd = IsForwardFft,
                             const typename std::enable_if<(IsForwardFft)>::type* p_nullparam = nullptr) -> float_type
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
 
-    return template_sin_order_2<float_type>(N);
+    return template_sin_order_2<float_type>(num_points);
   }
 
   template<typename float_type,
            const bool IsForwardFft>
-  auto const_unique_wp_imag(      std::uint32_t N,
+  auto const_unique_wp_imag(      std::uint32_t num_points,
                                   bool          my_fwd = IsForwardFft,
                             const typename std::enable_if<(!IsForwardFft)>::type* p_nullparam = nullptr) -> float_type
   {
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
 
-    return -template_sin_order_2<float_type>(N);
+    return -template_sin_order_2<float_type>(num_points);
   }
 
   template<typename float_type,
            const bool IsForwardFft>
-  auto const_unique_wp_real(std::uint32_t N) -> float_type
+  auto const_unique_wp_real(std::uint32_t num_points) -> float_type
   {
-    return static_cast<float_type>(static_cast<float_type>(-2) * (  const_unique_wp_real_init<float_type, IsForwardFft>(N)
-                                                                  * const_unique_wp_real_init<float_type, IsForwardFft>(N)));
+    return static_cast<float_type>(static_cast<float_type>(-2) * (  const_unique_wp_real_init<float_type, IsForwardFft>(num_points)
+                                                                  * const_unique_wp_real_init<float_type, IsForwardFft>(num_points)));
   }
 
   template<typename float_type,
@@ -174,38 +174,38 @@
 
   template<typename float_type,
            const bool IsForwardFft>
-  auto danielson_lanczos_apply(std::uint32_t N, // NOLINT(misc-no-recursion)
+  auto danielson_lanczos_apply(std::uint32_t num_points, // NOLINT(misc-no-recursion)
                                float_type*   data) -> void
   {
-    if(N == 8U)
+    if(num_points == 8U)
     {
       danielson_lanczos_apply_4_basecase<float_type, IsForwardFft>(data);
-      danielson_lanczos_apply_4_basecase<float_type, IsForwardFft>(data + N); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      danielson_lanczos_apply_4_basecase<float_type, IsForwardFft>(data + num_points); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     }
     else
     {
-      danielson_lanczos_apply<float_type, IsForwardFft>(N / 2U, data);
-      danielson_lanczos_apply<float_type, IsForwardFft>(N / 2U, data + N); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      danielson_lanczos_apply<float_type, IsForwardFft>(num_points / 2U, data);
+      danielson_lanczos_apply<float_type, IsForwardFft>(num_points / 2U, data + num_points); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     }
 
     auto real_part = static_cast<float_type>(1);
     auto imag_part = static_cast<float_type>(0);
 
-    for(auto i = static_cast<std::uint32_t>(0U); i < N; i += 2U)
+    for(auto i = static_cast<std::uint32_t>(0U); i < num_points; i += 2U)
     {
-            auto tmp_real = static_cast<float_type>((real_part * data[i + (N + 0U)]) - (imag_part * data[i + (N + 1U)])); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      const auto tmp_imag = static_cast<float_type>((real_part * data[i + (N + 1U)]) + (imag_part * data[i + (N + 0U)])); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+            auto tmp_real = static_cast<float_type>((real_part * data[i + (num_points + 0U)]) - (imag_part * data[i + (num_points + 1U)])); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      const auto tmp_imag = static_cast<float_type>((real_part * data[i + (num_points + 1U)]) + (imag_part * data[i + (num_points + 0U)])); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-      data[i + (N + 0U)] = data[i + 0U] - tmp_real; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      data[i + (N + 1U)] = data[i + 1U] - tmp_imag; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      data[i + (num_points + 0U)] = data[i + 0U] - tmp_real; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      data[i + (num_points + 1U)] = data[i + 1U] - tmp_imag; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
       data[i + 0U] += tmp_real; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       data[i + 1U] += tmp_imag; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
       tmp_real = real_part;
 
-      real_part += (((tmp_real  * const_unique_wp_real<float_type, IsForwardFft>(N)) - (imag_part * const_unique_wp_imag<float_type, IsForwardFft>(N))));
-      imag_part += (((imag_part * const_unique_wp_real<float_type, IsForwardFft>(N)) + (tmp_real  * const_unique_wp_imag<float_type, IsForwardFft>(N))));
+      real_part += (((tmp_real  * const_unique_wp_real<float_type, IsForwardFft>(num_points)) - (imag_part * const_unique_wp_imag<float_type, IsForwardFft>(num_points))));
+      imag_part += (((imag_part * const_unique_wp_real<float_type, IsForwardFft>(num_points)) + (tmp_real  * const_unique_wp_imag<float_type, IsForwardFft>(num_points))));
     }
   }
 
@@ -253,12 +253,12 @@
 
   template<typename float_type,
            const bool IsForwardFft>
-  auto fft_lanczos_fft(std::uint32_t N,
+  auto fft_lanczos_fft(std::uint32_t num_points,
                        float_type*   data) -> void
   {
     auto j = static_cast<std::uint32_t>(1U);
 
-    for(auto i = static_cast<std::uint32_t>(1U); i < static_cast<std::uint32_t>(N << 1U); i += 2U)
+    for(auto i = static_cast<std::uint32_t>(1U); i < static_cast<std::uint32_t>(num_points << 1U); i += 2U)
     {
       if(j > i)
       {
@@ -266,7 +266,7 @@
         std::swap(data[j],      data[i]);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       }
 
-      std::uint32_t m = N;
+      std::uint32_t m = num_points;
 
       while((m > static_cast<std::uint32_t>(1U)) && (j > m))
       {
@@ -277,12 +277,12 @@
       j += m;
     }
 
-    danielson_lanczos_apply<float_type, IsForwardFft>(N, data);
+    danielson_lanczos_apply<float_type, IsForwardFft>(num_points, data);
   }
 
   template<typename float_type,
            const bool IsForwardFft>
-  auto rfft_lanczos_rfft(      std::uint32_t N,
+  auto rfft_lanczos_rfft(      std::uint32_t num_points,
                                float_type*   data,
                                bool          my_fwd = IsForwardFft,
                          const typename std::enable_if<(IsForwardFft )>::type* p_nullparam = nullptr) -> void
@@ -290,15 +290,15 @@
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
 
-    fft_lanczos_fft<float_type, true>(N / 2U, data);
+    fft_lanczos_fft<float_type, true>(num_points / 2U, data);
 
-    auto real_part = static_cast<float_type>(static_cast<float_type>(1) + const_unique_wp_real<float_type, true>(N));
-    auto imag_part = static_cast<float_type>(                             const_unique_wp_imag<float_type, true>(N));
+    auto real_part = static_cast<float_type>(static_cast<float_type>(1) + const_unique_wp_real<float_type, true>(num_points));
+    auto imag_part = static_cast<float_type>(                             const_unique_wp_imag<float_type, true>(num_points));
 
-    for(auto i = static_cast<std::uint32_t>(1U); i < static_cast<std::uint32_t>(N >> 2U); ++i)
+    for(auto i = static_cast<std::uint32_t>(1U); i < static_cast<std::uint32_t>(num_points >> 2U); ++i)
     {
-      const auto i1 = static_cast<std::uint32_t>(i + i);
-      const auto i3 = static_cast<std::uint32_t>(N - i1);
+      const auto i1 = static_cast<std::uint32_t>(i          + i);
+      const auto i3 = static_cast<std::uint32_t>(num_points - i1);
 
       const auto i2 = static_cast<std::uint32_t>(1U + i1);
       const auto i4 = static_cast<std::uint32_t>(1U + i3);
@@ -318,8 +318,8 @@
 
       const auto tmp_real = real_part;
 
-      real_part += (((tmp_real  * const_unique_wp_real<float_type, true>(N)) - (imag_part * const_unique_wp_imag<float_type, true>(N))));
-      imag_part += (((imag_part * const_unique_wp_real<float_type, true>(N)) + (tmp_real  * const_unique_wp_imag<float_type, true>(N))));
+      real_part += (((tmp_real  * const_unique_wp_real<float_type, true>(num_points)) - (imag_part * const_unique_wp_imag<float_type, true>(num_points))));
+      imag_part += (((imag_part * const_unique_wp_real<float_type, true>(num_points)) + (tmp_real  * const_unique_wp_imag<float_type, true>(num_points))));
     }
 
     const auto f0_tmp = data[0U]; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -330,7 +330,7 @@
 
   template<typename float_type,
            const bool IsForwardFft>
-  auto rfft_lanczos_rfft(      std::uint32_t N,
+  auto rfft_lanczos_rfft(      std::uint32_t num_points,
                                float_type*   data,
                                bool          my_fwd = IsForwardFft,
                          const typename std::enable_if<(!IsForwardFft)>::type* p_nullparam = nullptr) -> void
@@ -338,13 +338,13 @@
     static_cast<void>(my_fwd);
     static_cast<void>(p_nullparam);
 
-    auto real_part = static_cast<float_type>(static_cast<float_type>(1) + const_unique_wp_real<float_type, false>(N));
-    auto imag_part = static_cast<float_type>(                             const_unique_wp_imag<float_type, false>(N));
+    auto real_part = static_cast<float_type>(static_cast<float_type>(1) + const_unique_wp_real<float_type, false>(num_points));
+    auto imag_part = static_cast<float_type>(                             const_unique_wp_imag<float_type, false>(num_points));
 
-    for(auto i = static_cast<std::uint32_t>(1U); i < static_cast<std::uint32_t>(N >> 2U); ++i)
+    for(auto i = static_cast<std::uint32_t>(1U); i < static_cast<std::uint32_t>(num_points >> 2U); ++i)
     {
-      const auto i1 = static_cast<std::uint32_t>(i + i);
-      const auto i3 = static_cast<std::uint32_t>(N - i1);
+      const auto i1 = static_cast<std::uint32_t>(i          + i);
+      const auto i3 = static_cast<std::uint32_t>(num_points - i1);
 
       const auto i2 = static_cast<std::uint32_t>(1U + i1);
       const auto i4 = static_cast<std::uint32_t>(1U + i3);
@@ -362,8 +362,8 @@
 
       const auto tmp_real = real_part;
 
-      real_part += (((tmp_real  * const_unique_wp_real<float_type, false>(N)) - (imag_part * const_unique_wp_imag<float_type, false>(N))));
-      imag_part += (((imag_part * const_unique_wp_real<float_type, false>(N)) + (tmp_real  * const_unique_wp_imag<float_type, false>(N))));
+      real_part += (((tmp_real  * const_unique_wp_real<float_type, false>(num_points)) - (imag_part * const_unique_wp_imag<float_type, false>(num_points))));
+      imag_part += (((imag_part * const_unique_wp_real<float_type, false>(num_points)) + (tmp_real  * const_unique_wp_imag<float_type, false>(num_points))));
     }
 
     const auto f0_tmp = data[0U]; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -371,7 +371,7 @@
     data[0U] = template_fast_div_by_two(f0_tmp + data[1U]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     data[1U] = template_fast_div_by_two(f0_tmp - data[1U]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-    fft_lanczos_fft<float_type, false>(N / 2U, data);
+    fft_lanczos_fft<float_type, false>(num_points / 2U, data);
   }
 
   #if(__cplusplus >= 201703L)
