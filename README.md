@@ -66,7 +66,7 @@ the default limb type is 32 bits in width and unsigned.
 The template signature of the `decwide_t` class is shown below.
 
 ```cpp
-template<const std::int32_t MY_DIGITS10,
+template<const std::int32_t MyDigitsBase10,
          typename LimbType = std::uint32_t,
          typename AllocatorType = std::allocator<void>,
          typename InternalFloatType = double,
