@@ -81,11 +81,11 @@
 
       for(std::size_t i = 0U; i < slot_count; ++i)
       {
-        if(slot_flags[i] == 0U)
+        if(slot_flags[i] == 0U) // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
         {
-          slot_flags[i] = 1U;
+          slot_flags[i] = 1U; // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
-          p = static_cast<pointer>(slot_array_memory[i].data());
+          p = static_cast<pointer>(slot_array_memory[i].data()); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
           if(i > slot_max_index)
           {
@@ -121,9 +121,9 @@
 
       for(std::size_t i = 0U; i < slot_count; ++i)
       {
-        if(p_slot == static_cast<pointer>(slot_array_memory[i].data()))
+        if(p_slot == static_cast<pointer>(slot_array_memory[i].data())) // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
         {
-          slot_flags[i] = 0U;
+          slot_flags[i] = 0U; // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
           break;
         }
@@ -139,19 +139,19 @@
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  std::array<typename n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_type, n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_count>
-  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_memory; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+  std::array<typename n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_type, n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_count> // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_memory; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  std::array<std::uint8_t, n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_count>
-  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_flags; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+  std::array<std::uint8_t, n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_count> // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_flags; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  std::size_t n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_max_index; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+  std::size_t n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_max_index; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   // Global comparison operators (required by the standard).
   template<typename T,
