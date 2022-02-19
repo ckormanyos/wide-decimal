@@ -1,8 +1,8 @@
 #ifndef UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H
   #define UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H
 
-  #include <array>
   #include <algorithm>
+  #include <array>
   #include <cstddef>
   #include <cstdint>
 
@@ -20,9 +20,9 @@
   class n_slot_array_allocator<void, SlotWidth, SlotCount>
   {
   public:
-    typedef void              value_type;
-    typedef value_type*       pointer;
-    typedef const value_type* const_pointer;
+    using value_type    = void;
+    using pointer       = value_type*;
+    using const_pointer = const value_type*;
 
     template<typename U>
     struct rebind
@@ -34,7 +34,7 @@
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  class n_slot_array_allocator
+  class n_slot_array_allocator // NOLINT(cppcoreguidelines-special-member-functions,hicpp-special-member-functions)
   {
   private:
     static constexpr std::uint_fast32_t slot_width = SlotWidth;
@@ -60,17 +60,23 @@
       using other = n_slot_array_allocator<U, SlotWidth, SlotCount>;
     };
 
-    size_type max_size() const
+    auto max_size() const -> size_type
     {
       return sizeof(slot_array_type) * slot_count;
     }
 
-          pointer address(      reference x) const { return &x; }
-    const_pointer address(const_reference x) const { return &x; }
+    auto address(      reference x) const ->       pointer { return &x; }
+    auto address(const_reference x) const -> const_pointer { return &x; }
 
-    pointer allocate(size_type, // count
-                     typename n_slot_array_allocator<void, slot_width, slot_count>::const_pointer = nullptr)
+    auto allocate
+    (
+      size_type                                                                    count,
+      typename n_slot_array_allocator<void, slot_width, slot_count>::const_pointer p_hint = nullptr
+    ) -> pointer
     {
+      static_cast<void>(count);
+      static_cast<void>(p_hint);
+
       pointer p = nullptr;
 
       for(std::size_t i = 0U; i < slot_count; ++i)
@@ -85,7 +91,7 @@
           {
             slot_max_index = i;
 
-            (void) slot_max_index;
+            static_cast<void>(slot_max_index);
           }
 
           break;
@@ -95,7 +101,7 @@
       return p;
     }
 
-    void construct(pointer p, const value_type& x)
+    auto construct(pointer p, const value_type& x) -> void
     {
       // The memory in the n-slot allocator already exists
       // in an uninitialized form. Construction can safely
@@ -104,12 +110,12 @@
       *p = x;
     }
 
-    void destroy(pointer p)
+    auto destroy(pointer p) -> void
     {
-      (void) p;
+      static_cast<void>(p);
     }
 
-    void deallocate(pointer p_slot, size_type)
+    auto deallocate(pointer p_slot, size_type) -> void
     {
       for(std::size_t i = 0U; i < slot_count; ++i)
       {
@@ -123,16 +129,16 @@
     }
 
   private:
-    static slot_array_type                      slot_array_memory[slot_count];
-    static std::array<std::uint8_t, slot_count> slot_flags;
-    static std::size_t                          slot_max_index;
+    static std::array<slot_array_type, slot_count> slot_array_memory;
+    static std::array<std::uint8_t, slot_count>    slot_flags;
+    static std::size_t                             slot_max_index;
   };
 
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  typename n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_type
-  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_memory[n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_count];
+  std::array<typename n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_type, n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_count>
+  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_memory;
 
   template<typename T,
            const std::uint_fast32_t SlotWidth,
@@ -149,8 +155,8 @@
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  bool operator==(const n_slot_array_allocator<T, SlotWidth, SlotCount>&,
-                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&)
+  auto operator==(const n_slot_array_allocator<T, SlotWidth, SlotCount>&,
+                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&) -> bool
   {
     return true;
   }
@@ -158,8 +164,8 @@
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  bool operator!=(const n_slot_array_allocator<T, SlotWidth, SlotCount>&,
-                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&)
+  auto operator!=(const n_slot_array_allocator<T, SlotWidth, SlotCount>&,
+                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&) -> bool
   {
     return false;
   }
