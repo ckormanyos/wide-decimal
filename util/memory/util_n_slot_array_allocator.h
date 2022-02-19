@@ -85,7 +85,7 @@
         {
           slot_flags[i] = 1U;
 
-          p = (pointer) slot_array_memory[i].data();
+          p = static_cast<pointer>(slot_array_memory[i].data());
 
           if(i > slot_max_index)
           {
@@ -140,18 +140,18 @@
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
   std::array<typename n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_type, n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_count>
-  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_memory;
+  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_memory; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
   std::array<std::uint8_t, n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_count>
-  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_flags;
+  n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_flags; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  std::size_t n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_max_index;
+  std::size_t n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_max_index; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
   // Global comparison operators (required by the standard).
   template<typename T,
