@@ -1,4 +1,4 @@
-#ifndef UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H
+﻿#ifndef UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H
   #define UTIL_N_SLOT_ARRAY_ALLOCATOR_2020_10_25_H
 
   #include <algorithm>
@@ -115,11 +115,13 @@
       static_cast<void>(p);
     }
 
-    auto deallocate(pointer p_slot, size_type) -> void
+    auto deallocate(pointer p_slot, size_type sz) -> void
     {
+      static_cast<void>(sz);
+
       for(std::size_t i = 0U; i < slot_count; ++i)
       {
-        if(p_slot == (pointer) slot_array_memory[i].data())
+        if(p_slot == static_cast<pointer>(slot_array_memory[i].data()))
         {
           slot_flags[i] = 0U;
 
@@ -129,9 +131,9 @@
     }
 
   private:
-    static std::array<slot_array_type, slot_count> slot_array_memory;
-    static std::array<std::uint8_t, slot_count>    slot_flags;
-    static std::size_t                             slot_max_index;
+    static std::array<slot_array_type, slot_count> slot_array_memory; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static std::array<std::uint8_t, slot_count>    slot_flags;        // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static std::size_t                             slot_max_index;    // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
   };
 
   template<typename T,
@@ -155,18 +157,24 @@
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  auto operator==(const n_slot_array_allocator<T, SlotWidth, SlotCount>&,
-                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&) -> bool
+  auto operator==(const n_slot_array_allocator<T, SlotWidth, SlotCount>& left,
+                  const n_slot_array_allocator<T, SlotWidth, SlotCount>& right) -> bool
   {
+    static_cast<void>(left.max_size());
+    static_cast<void>(right.max_size());
+
     return true;
   }
 
   template<typename T,
            const std::uint_fast32_t SlotWidth,
            const std::size_t SlotCount>
-  auto operator!=(const n_slot_array_allocator<T, SlotWidth, SlotCount>&,
-                  const n_slot_array_allocator<T, SlotWidth, SlotCount>&) -> bool
+  auto operator!=(const n_slot_array_allocator<T, SlotWidth, SlotCount>& left,
+                  const n_slot_array_allocator<T, SlotWidth, SlotCount>& right) -> bool
   {
+    static_cast<void>(left.max_size());
+    static_cast<void>(right.max_size());
+
     return false;
   }
 
