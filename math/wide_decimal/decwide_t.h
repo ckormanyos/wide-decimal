@@ -16,6 +16,9 @@
 #ifndef DECWIDE_T_2004_06_01_H
   #define DECWIDE_T_2004_06_01_H
 
+  // NOLINTBEGIN(hicpp-uppercase-literal-suffix)
+  // NOLINTBEGIN(readability-uppercase-literal-suffix)
+
   //#define WIDE_DECIMAL_DISABLE_IOSTREAM
   //#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
   //#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
@@ -4677,5 +4680,8 @@
   #endif
 
   WIDE_DECIMAL_NAMESPACE_END
+
+  // NOLINTEND(readability-uppercase-literal-suffix)
+  // NOLINTEND(hicpp-uppercase-literal-suffix)
 
 #endif // DECWIDE_T_2004_06_01_H
