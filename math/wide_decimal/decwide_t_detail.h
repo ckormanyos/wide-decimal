@@ -201,7 +201,7 @@
   template<typename LimbType> constexpr std::int32_t decwide_t_helper_base<LimbType>::elem_mask;
   template<typename LimbType> constexpr std::int32_t decwide_t_helper_base<LimbType>::elem_mask_half;
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t MY_DIGITS10,
            typename LimbType>
   struct decwide_t_helper : decwide_t_helper_base<LimbType>
   {
@@ -209,7 +209,7 @@
     using base_class_type = decwide_t_helper_base<LimbType>;
 
   public:
-    static constexpr std::int32_t digits10          = MyDigits10;
+    static constexpr std::int32_t digits10          = MY_DIGITS10;
     static constexpr std::int32_t digits            = digits10;
     static constexpr std::int32_t max_digits10      = static_cast<std::int32_t>(digits10 + 4);
     static constexpr std::int32_t radix             = static_cast<std::int32_t>(10);
@@ -218,12 +218,12 @@
     static constexpr std::int32_t elem_number       = static_cast<std::int32_t>(((digits10 / base_class_type::elem_digits10) + (((digits10 % base_class_type::elem_digits10) != 0) ? 1 : 0)) + elem_number_extra);
   };
 
-  template<const std::int32_t MyDigits10, typename LimbType> constexpr std::int32_t decwide_t_helper<MyDigits10, LimbType>::digits10;
-  template<const std::int32_t MyDigits10, typename LimbType> constexpr std::int32_t decwide_t_helper<MyDigits10, LimbType>::digits;
-  template<const std::int32_t MyDigits10, typename LimbType> constexpr std::int32_t decwide_t_helper<MyDigits10, LimbType>::max_digits10;
-  template<const std::int32_t MyDigits10, typename LimbType> constexpr std::int32_t decwide_t_helper<MyDigits10, LimbType>::radix;
-  template<const std::int32_t MyDigits10, typename LimbType> constexpr std::int32_t decwide_t_helper<MyDigits10, LimbType>::elem_number_extra;
-  template<const std::int32_t MyDigits10, typename LimbType> constexpr std::int32_t decwide_t_helper<MyDigits10, LimbType>::elem_number;
+  template<const std::int32_t MY_DIGITS10, typename LimbType> constexpr std::int32_t decwide_t_helper<MY_DIGITS10, LimbType>::digits10;
+  template<const std::int32_t MY_DIGITS10, typename LimbType> constexpr std::int32_t decwide_t_helper<MY_DIGITS10, LimbType>::digits;
+  template<const std::int32_t MY_DIGITS10, typename LimbType> constexpr std::int32_t decwide_t_helper<MY_DIGITS10, LimbType>::max_digits10;
+  template<const std::int32_t MY_DIGITS10, typename LimbType> constexpr std::int32_t decwide_t_helper<MY_DIGITS10, LimbType>::radix;
+  template<const std::int32_t MY_DIGITS10, typename LimbType> constexpr std::int32_t decwide_t_helper<MY_DIGITS10, LimbType>::elem_number_extra;
+  template<const std::int32_t MY_DIGITS10, typename LimbType> constexpr std::int32_t decwide_t_helper<MY_DIGITS10, LimbType>::elem_number;
 
   template<typename MyType,
            const size_t MySize,
