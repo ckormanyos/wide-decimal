@@ -20,12 +20,12 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  auto test_decwide_t_algebra_add_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_sub_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_mul_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_div_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_sqrt____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_log_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_add_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_sub_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_mul_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_div_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_sqrt____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_log_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
   WIDE_DECIMAL_NAMESPACE_END
 

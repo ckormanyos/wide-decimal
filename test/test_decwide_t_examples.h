@@ -20,8 +20,8 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  auto test_decwide_t_examples_part1__() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_examples_part2__() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_examples_part1__() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_examples_part2__() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
   WIDE_DECIMAL_NAMESPACE_END
 

@@ -61,9 +61,8 @@
                                     boost::multiprecision::et_off>;
     #endif
 
-    local_float_type my_cpp_boost_float;
+    local_float_type my_cpp_boost_float; // NOLINT(misc-non-private-member-variables-in-classes)
 
-  public:
     independent_algebra_test_decwide_t_boost_cpp() : my_cpp_boost_float() { }
 
     explicit independent_algebra_test_decwide_t_boost_cpp(const char* str)
@@ -75,7 +74,7 @@
     independent_algebra_test_decwide_t_boost_cpp(independent_algebra_test_decwide_t_boost_cpp&& other) noexcept
       : my_cpp_boost_float(other.my_cpp_boost_float) { }
 
-    virtual ~independent_algebra_test_decwide_t_boost_cpp() = default;
+    ~independent_algebra_test_decwide_t_boost_cpp() override = default;
 
     auto operator=(const independent_algebra_test_decwide_t_boost_cpp& other) -> independent_algebra_test_decwide_t_boost_cpp&
     {
@@ -94,7 +93,7 @@
       return *this;
     }
 
-    virtual auto get_string(std::string& str) const -> void
+    auto get_string(std::string& str) const -> void override
     {
       std::stringstream ss;
 

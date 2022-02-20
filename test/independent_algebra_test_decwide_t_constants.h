@@ -42,7 +42,7 @@
       auto do_nothing() -> void { }
     };
 
-    static initializer init;
+    static initializer init; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
   public:
     static auto my_value_pi() -> const floating_point_type&
@@ -69,7 +69,7 @@
       floating_point_type a(1U);
 
       // Initialize bB to 0.5.
-      floating_point_type bB(0.5F);
+      floating_point_type bB(0.5F); // NOLINT(readability-identifier-naming)
 
       // Initialize t to 0.375.
       floating_point_type t(static_cast<floating_point_type>(3U) / 8U);
@@ -243,7 +243,7 @@
   };
 
   template<typename FloatingPointType>
-  typename constants<FloatingPointType>::initializer constants<FloatingPointType>::init;
+  typename constants<FloatingPointType>::initializer constants<FloatingPointType>::init; // NOLINT(cert-err58-cpp)
 
   #if(__cplusplus >= 201703L)
   } // namespace test::independent_algebra
