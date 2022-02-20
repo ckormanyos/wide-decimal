@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -233,7 +233,7 @@ auto cos(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
   return c;
 }
 
-auto hypergeometric_2f1(const dec1001_t& a,
+auto hypergeometric_2f1(const dec1001_t& a, // NOLINT(bugprone-easily-swappable-parameters)
                         const dec1001_t& b,
                         const dec1001_t& c,
                         const dec1001_t& x) -> dec1001_t
@@ -302,7 +302,7 @@ WIDE_DECIMAL_NAMESPACE_END
 namespace example009a_boost
 {
   template<typename FloatingPointType>
-  auto legendre_pvu(const FloatingPointType& v,
+  auto legendre_pvu(const FloatingPointType& v, // NOLINT(bugprone-easily-swappable-parameters)
                     const FloatingPointType& u,
                     const FloatingPointType& x) -> FloatingPointType
   {
@@ -326,7 +326,7 @@ namespace example009a_boost
 
   template<typename FloatingPointType>
   auto legendre_qvu(const FloatingPointType& v,
-                    const FloatingPointType& u,
+                    const FloatingPointType& u, // NOLINT(bugprone-easily-swappable-parameters)
                     const FloatingPointType& x) -> FloatingPointType
   {
     using std::cos;

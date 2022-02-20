@@ -102,9 +102,9 @@
       result_type result;
       result_type a(1U);
       result_type b;
-      result_type A(a);
-      result_type B(0.5F);
-      result_type D(0.25F);
+      result_type A(a);     // NOLINT(readability-identifier-naming)
+      result_type B(0.5F);  // NOLINT(readability-identifier-naming)
+      result_type D(0.25F); // NOLINT(readability-identifier-naming)
 
       result_type lim = std::numeric_limits<result_type>::epsilon();
 
