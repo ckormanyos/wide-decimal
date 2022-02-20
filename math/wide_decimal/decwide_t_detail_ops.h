@@ -399,7 +399,7 @@
                                        const std::uint_fast32_t n,
                                        TempLimbIteratorType t) -> void
   {
-    if(n <= 32U)
+    if(n <= 32U) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     {
       static_cast<void>(t);
 

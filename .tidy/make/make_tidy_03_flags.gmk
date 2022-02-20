@@ -43,10 +43,8 @@ C_INCLUDES  :=$(addprefix -I,$(C_INCLUDES))
 TIDY_CHECKS  = "*,                                                             \
                -altera-struct-pack-align,                                      \
                -altera-unroll-loops,                                           \
-               -cppcoreguidelines-avoid-magic-numbers,                         \
                -fuchsia-*,                                                     \
-               -llvmlibc-*,                                                    \
-               -readability-magic-numbers"
+               -llvmlibc-*"
 
 TIDY_FLAGS   = --extra-arg-before=--driver-mode=g++                            \
                --header-filter=decwide_t                                       \

@@ -114,7 +114,7 @@
 
     static auto a029750_as_runtime_value(std::uint32_t value) noexcept -> std::uint32_t
     {
-      using array_type = std::array<std::uint32_t, 65U>;
+      using array_type = std::array<std::uint32_t, 65U>; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       // Sloane's A029750 List of numbers of the form 2^k times 1, 3, 5 or 7.
       // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 91}], x]
@@ -162,7 +162,7 @@
 
     static auto a000079_as_runtime_value(const std::uint32_t value) noexcept -> std::uint32_t
     {
-      using array_type = std::array<std::uint32_t, 29U>;
+      using array_type = std::array<std::uint32_t, 29U>; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       // Sloane's A000079 List of numbers of powers of 2.
       // Table[2^n, {n, 0, 31, 1}]
@@ -192,7 +192,7 @@
 
   inline auto pow10_maker_as_runtime_value(std::uint32_t n) noexcept -> std::uint32_t
   {
-    using local_p10_table_type = std::array<std::uint32_t, 10U>;
+    using local_p10_table_type = std::array<std::uint32_t, 10U>; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     constexpr local_p10_table_type local_p10_table =
     {{
@@ -227,7 +227,15 @@
 
     static constexpr auto digit_at_pos_in_limb(LimbType u, unsigned pos) noexcept -> std::uint8_t
     {
-      return static_cast<std::uint8_t>(static_cast<LimbType>(u / pow10_maker_as_runtime_value(static_cast<std::uint32_t>(pos))) % static_cast<LimbType>(10U));
+      return
+        static_cast<std::uint8_t>
+        (
+          static_cast<LimbType>
+          (
+              static_cast<LimbType>(u / pow10_maker_as_runtime_value(static_cast<std::uint32_t>(pos)))
+            % static_cast<LimbType>(10U) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+          )
+        );
     }
   };
 

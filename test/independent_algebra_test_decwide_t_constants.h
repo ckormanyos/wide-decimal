@@ -69,10 +69,10 @@
       floating_point_type a(1U);
 
       // Initialize bB to 0.5.
-      floating_point_type bB(0.5F); // NOLINT(readability-identifier-naming)
+      floating_point_type bB(0.5F); // NOLINT(readability-identifier-naming,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       // Initialize t to 0.375.
-      floating_point_type t(static_cast<floating_point_type>(3U) / 8U);
+      floating_point_type t(static_cast<floating_point_type>(3U) / 8U); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       floating_point_type s(bB);
 
@@ -100,7 +100,7 @@
           )
         );
 
-      for(auto k = static_cast<unsigned>(0U); k < 48U; ++k)
+      for(auto k = static_cast<unsigned>(0U); k < 48U; ++k) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       {
         using std::sqrt;
 
@@ -200,7 +200,7 @@
           )
         );
 
-      for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
+      for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       {
         using std::ilogb;
 

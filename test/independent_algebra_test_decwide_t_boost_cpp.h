@@ -177,7 +177,7 @@
           )
         );
 
-      for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
+      for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       {
         // Check for the number of significant digits to be
         // at least half of the requested digits. If at least

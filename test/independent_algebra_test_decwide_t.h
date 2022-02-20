@@ -57,7 +57,7 @@
   public:
     static constexpr auto my_tol() -> local_wide_decimal_type
     {
-      return std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
+      return std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     }
 
     static auto eval_eq(const independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
@@ -101,7 +101,7 @@
       {
         u = dst_mantissa(eng_mantissa);
 
-        ss << std::setw(8) << std::setfill('0') << u;
+        ss << std::setw(8) << std::setfill('0') << u; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
         str += ss.str();
 
