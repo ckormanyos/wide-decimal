@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -78,7 +78,7 @@ namespace example004_bessel
     return floating_point_type(0);
   }
 
-  struct Jn_algo
+  struct jn_algo
   {
     static constexpr auto e_half() -> float { return static_cast<float>(1.359140914229522617680143735676331248879L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     static constexpr auto two_pi() -> float { return static_cast<float>(6.283185307179586476925286766559005768394L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -125,7 +125,7 @@ namespace example004_bessel
              - (m_n  * log10(e_half() * m_z / m_n));
     }
 
-    static auto mstart1(float x, std::uint32_t digits) -> std::uint32_t
+    static auto mstart1(float x, std::uint32_t digits) -> std::uint32_t // NOLINT(bugprone-easily-swappable-parameters)
     {
       m_z = (std::max)(x, 0.1F); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       m_p = static_cast<std::int32_t>(digits);
@@ -138,7 +138,7 @@ namespace example004_bessel
       return ((((n_order % 2U) == 0U) && (n_order > 0U)) ? n_order - 1U : n_order);
     }
 
-    static auto mstart2(float x, float dn, std::uint32_t digits) -> std::uint32_t
+    static auto mstart2(float x, float dn, std::uint32_t digits) -> std::uint32_t // NOLINT(bugprone-easily-swappable-parameters)
     {
       m_z = (std::max)(x, 0.1F); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       m_n = dn;
@@ -153,9 +153,9 @@ namespace example004_bessel
     }
   };
 
-  float         Jn_algo::m_z; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-  float         Jn_algo::m_n; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-  std::int32_t  Jn_algo::m_p; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+  float         jn_algo::m_z; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+  float         jn_algo::m_n; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+  std::int32_t  jn_algo::m_p; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
   template<typename FloatingPointType>
   auto cyl_bessel_j(std::int32_t n, FloatingPointType x) -> FloatingPointType
@@ -178,13 +178,13 @@ namespace example004_bessel
     const auto n_start1 =
       static_cast<std::int32_t>
       (
-        Jn_algo::mstart1(static_cast<float>(x), d10)
+        jn_algo::mstart1(static_cast<float>(x), d10)
       );
 
     const auto n_start2 =
       static_cast<std::int32_t>
       (
-        Jn_algo::mstart2(static_cast<float>(x), static_cast<float>(n - 1), d10)
+        jn_algo::mstart2(static_cast<float>(x), static_cast<float>(n - 1), d10)
       );
 
     const auto n_start = (std::max)(n_start2, n_start1);
