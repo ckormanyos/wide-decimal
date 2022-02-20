@@ -236,7 +236,7 @@
   public:
     static constexpr auto static_size() -> typename base_class_type::size_type { return MySize; }
 
-    explicit fixed_dynamic_array(const typename base_class_type::size_type       s = MySize,
+    explicit fixed_dynamic_array(const typename base_class_type::size_type       s = MySize, // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
                                  const typename base_class_type::value_type&     v = typename base_class_type::value_type(),
                                  const typename base_class_type::allocator_type& a = typename base_class_type::allocator_type())
       : base_class_type(MySize, typename base_class_type::value_type(), a)

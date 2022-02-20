@@ -10,24 +10,28 @@
 
   // Taken (with slight modification) from boost::noncopyable.
 
-  namespace util
+  namespace util {
+  namespace my_noncopyable_namespace {
+
+  class noncopyable
   {
-    namespace my_noncopyable_namespace
-    {
-      class noncopyable
-      {
-      protected:
-        noncopyable() = default;
-        ~noncopyable() = default;
+  protected:
+    noncopyable() = default;
+    ~noncopyable() = default;
 
-      private:
-        // Emphasize: The following members are private.
-        noncopyable(const noncopyable&) = delete;
-        noncopyable& operator=(const noncopyable&) = delete;
-      };
-    }
+  private:
+    // Emphasize: The following members are private.
+    noncopyable(const noncopyable&) = delete; // NOLINT(hicpp-use-equals-delete,modernize-use-equals-delete)
+    noncopyable(noncopyable&&)      = delete; // NOLINT(hicpp-use-equals-delete,modernize-use-equals-delete)
 
-    using noncopyable = my_noncopyable_namespace::noncopyable;
-  }
+    auto operator=(const noncopyable&) -> noncopyable& = delete; // NOLINT(hicpp-use-equals-delete,modernize-use-equals-delete)
+    auto operator=(noncopyable&&)      -> noncopyable& = delete; // NOLINT(hicpp-use-equals-delete,modernize-use-equals-delete)
+  };
+
+  } // namespace my_noncopyable_namespace
+
+  using noncopyable = my_noncopyable_namespace::noncopyable;
+
+  } // namespace util
 
 #endif // UTIL_NONCOPYABLE_2008_12_16_H

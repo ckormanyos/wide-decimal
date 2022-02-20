@@ -19,9 +19,9 @@
 
     virtual ~lcd_console() = default;
 
-    virtual bool write(const char* pstr,
-                       const std::uint_fast8_t length,
-                       const std::uint_fast8_t line_index)
+    virtual auto write(const char*             pstr,
+                             std::uint_fast8_t length,
+                             std::uint_fast8_t line_index) -> bool
     {
       static_cast<void>(line_index);
 
@@ -43,7 +43,7 @@
       return write_is_ok;
     }
 
-    virtual bool init() { return true; }
+    virtual auto init() -> bool { return true; }
   };
 
   #if(__cplusplus >= 201703L)
