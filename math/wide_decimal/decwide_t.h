@@ -2218,10 +2218,10 @@
 
       // Use school multiplication.
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      auto my_school_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(prec_elems_for_multiply) * 2U)]; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-owning-memory,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
+      auto my_school_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(prec_elems_for_multiply) * 2U)]; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-owning-memory)
       #endif
 
-      auto result = my_school_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+      auto result = my_school_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
 
       using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
