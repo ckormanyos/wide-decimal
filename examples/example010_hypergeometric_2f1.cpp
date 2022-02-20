@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2018 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -56,7 +56,7 @@ namespace example010_hypergeometric
     B[0U] = my_one;
     A[0U] = my_one;
 
-    const T CP1(CP + my_one);
+    const T CP1(CP + my_one); // NOLINT(readability-identifier-naming)
 
     B[1U] = my_one + (ABZ1 / (CP * 2U));
     A[1U] = B[1U]  - (ABZ  / CP);

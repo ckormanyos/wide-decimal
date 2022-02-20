@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2021.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -324,7 +324,7 @@ namespace example011_trig
   template<typename real_value_type,
            typename real_function_type>
   auto integral(const real_value_type&   a,
-                const real_value_type&   b,
+                const real_value_type&   b, // NOLINT(bugprone-easily-swappable-parameters)
                 const real_value_type&   tol,
                       real_function_type real_function) -> real_value_type
   {
