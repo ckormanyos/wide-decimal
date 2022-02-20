@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef DECWIDE_T_2021_02_24_HPP
+#ifndef DECWIDE_T_2021_02_24_HPP // NOLINT(llvm-header-guard)
   #define DECWIDE_T_2021_02_24_HPP
 
   #include <boost/version.hpp>
@@ -32,7 +32,7 @@
   namespace policies {
 
   // Specialization of the precision structure.
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
@@ -40,17 +40,17 @@
            typename FftFloatType,
            typename ThisPolicy>
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  struct precision<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>, ThisPolicy>
+  struct precision<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>, ThisPolicy>
   #else
-  struct precision<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>, ThisPolicy>
+  struct precision<::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>, ThisPolicy>
   #endif
   {
     #if defined(WIDE_DECIMAL_NAMESPACE)
     using local_wide_decimal_type =
-      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
     #else
     using local_wide_decimal_type =
-      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      ::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
     #endif
 
     using precision_type = typename ThisPolicy::precision_type;
@@ -73,25 +73,25 @@
   template <class T>
   struct constant_pi;
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
            typename ExponentType,
            typename FftFloatType>
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  struct constant_pi<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
+  struct constant_pi<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #else
-  struct constant_pi<::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
+  struct constant_pi<::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #endif
   {
   public:
     #if defined(WIDE_DECIMAL_NAMESPACE)
     using result_type =
-      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
     #else
     using result_type =
-      ::math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      ::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
     #endif
 
   private:
@@ -102,9 +102,9 @@
       result_type result;
       result_type a(1U);
       result_type b;
-      result_type A(a);
-      result_type B(0.5F);
-      result_type D(0.25F);
+      result_type A(a);     // NOLINT(readability-identifier-naming)
+      result_type B(0.5F);  // NOLINT(readability-identifier-naming)
+      result_type D(0.25F); // NOLINT(readability-identifier-naming)
 
       result_type lim = std::numeric_limits<result_type>::epsilon();
 
@@ -201,7 +201,7 @@
   template <typename T, typename Policy>
   struct lanczos;
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
@@ -209,9 +209,9 @@
            typename FftFloatType,
            typename Policy>
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  struct lanczos<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10,
+  struct lanczos<::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<ParamDigitsBaseTen,
   #else
-  struct lanczos<::math::wide_decimal::decwide_t<MyDigits10,
+  struct lanczos<::math::wide_decimal::decwide_t<ParamDigitsBaseTen,
   #endif
                                                  LimbType,
                                                  AllocatorType,
@@ -222,9 +222,9 @@
   {
     using local_backend_type =
       #if defined(WIDE_DECIMAL_NAMESPACE)
-      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<MyDigits10,
+      ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<ParamDigitsBaseTen,
       #else
-      ::math::wide_decimal::decwide_t<MyDigits10,
+      ::math::wide_decimal::decwide_t<ParamDigitsBaseTen,
       #endif
                                       LimbType,
                                       AllocatorType,

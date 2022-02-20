@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef TEST_DECWIDE_T_ALGEBRA_2020_11_05_H
+#ifndef TEST_DECWIDE_T_ALGEBRA_2020_11_05_H // NOLINT(llvm-header-guard)
   #define TEST_DECWIDE_T_ALGEBRA_2020_11_05_H
 
   #include <math/wide_decimal/decwide_t_detail_namespace.h>
@@ -20,12 +20,12 @@
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
-  auto test_decwide_t_algebra_add_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_sub_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_mul_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_div_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_sqrt____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  auto test_decwide_t_algebra_log_____() -> bool; // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_add_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_sub_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_mul_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_div_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_sqrt____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  auto test_decwide_t_algebra_log_____() -> bool; // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
   WIDE_DECIMAL_NAMESPACE_END
 

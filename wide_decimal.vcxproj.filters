@@ -59,6 +59,9 @@
     <Filter Include="Source Files\util\stdcpp">
       <UniqueIdentifier>{3e4c74ff-74d1-4bee-b6d4-b06c5c455a43}</UniqueIdentifier>
     </Filter>
+    <Filter Include=".github\toolchains">
+      <UniqueIdentifier>{14a4c145-a484-4c81-a33d-8b4246647a39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -242,5 +245,18 @@
     <None Include=".tidy\make\make_tidy_01_generic.gmk">
       <Filter>.tidy\make</Filter>
     </None>
+    <None Include=".clang-tidy" />
+    <None Include=".github\toolchains\gcc.cmake">
+      <Filter>.github\toolchains</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="examples\CMakeLists.txt">
+      <Filter>Source Files\examples</Filter>
+    </Text>
+    <Text Include="test\CMakeLists.txt">
+      <Filter>Source Files\test</Filter>
+    </Text>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>

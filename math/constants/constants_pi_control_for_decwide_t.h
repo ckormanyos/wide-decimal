@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H
+#ifndef CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H // NOLINT(llvm-header-guard)
   #define CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H
 
   #include <array>

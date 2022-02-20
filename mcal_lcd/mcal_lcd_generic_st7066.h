@@ -1,4 +1,11 @@
-#ifndef MCAL_LCD_GENERIC_ST7066_2020_05_07_H
+///////////////////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2020 - 2022.
+//  Distributed under the Boost Software License,
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt
+//  or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+#ifndef MCAL_LCD_GENERIC_ST7066_2020_05_07_H // NOLINT(llvm-header-guard)
   #define MCAL_LCD_GENERIC_ST7066_2020_05_07_H
 
   #include <algorithm>
@@ -78,9 +85,9 @@
       return write_clear_lines_is_ok;
     }
 
-    virtual bool write_n(const char* pstr,
-                         const std::uint_fast8_t length,
-                         const std::uint_fast8_t line_index)
+    virtual bool write_n(const char*             pstr,
+                               std::uint_fast8_t length,
+                               std::uint_fast8_t line_index)
     {
       std::uint_fast8_t char_index = 0U;
 

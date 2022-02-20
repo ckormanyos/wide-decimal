@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H
+#ifndef INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H // NOLINT(llvm-header-guard)
   #define INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H
 
   #include <atomic>
@@ -34,7 +34,7 @@
   namespace test { namespace independent_algebra { // NOLINT(modernize-concat-nested-namespaces)
   #endif
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType = std::uint32_t,
            typename AllocatorType = std::allocator<void>,
            typename InternalFloatType = double,
@@ -42,7 +42,7 @@
            typename FftFloatType = double>
   struct control;
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
@@ -52,7 +52,7 @@
   {
   private:
     using local_wide_decimal_type =
-      math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
   public:
     static constexpr auto my_tol() -> local_wide_decimal_type
@@ -60,8 +60,8 @@
       return std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
     }
 
-    static auto eval_eq(const independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
-                        const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> bool
+    static auto eval_eq(const independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                        const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> bool
     {
       std::string str_b;
 
@@ -146,25 +146,25 @@
     static std::uniform_int_distribution<std::uint32_t> dst_mantissa; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
   };
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::ranlux24 control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_sign; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  std::ranlux24 control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_sign; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::minstd_rand control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_exp; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  std::minstd_rand control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_exp; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::mt19937 control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_mantissa; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  std::mt19937 control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_mantissa; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_sign(UINT32_C(0), UINT32_C(1)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  std::uniform_int_distribution<std::uint32_t> control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_sign(UINT32_C(0), UINT32_C(1)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_exp(UINT32_C(0), static_cast<std::uint32_t>((static_cast<unsigned long long>(math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10) * 6ULL) / 10ULL)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  std::uniform_int_distribution<std::uint32_t> control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_exp(UINT32_C(0), static_cast<std::uint32_t>((static_cast<std::uintmax_t>(math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10) * UINTMAX_C(6)) / UINTMAX_C(10))); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::uniform_int_distribution<std::uint32_t> control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_mantissa(UINT32_C(0), UINT32_C(99999999)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  std::uniform_int_distribution<std::uint32_t> control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_mantissa(UINT32_C(0), UINT32_C(99999999)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
@@ -173,15 +173,15 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  auto independent_algebra_test_decwide_t_add_() -> bool
+  auto independent_algebra_test_decwide_t_add_() -> bool // NOLINT(readability-identifier-naming)
   {
     using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     using independent_algebra_test_decwide_t_control_struct =
-      test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
@@ -225,7 +225,7 @@
     return result_test_is_ok;
   }
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
@@ -234,15 +234,15 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  auto independent_algebra_test_decwide_t_sub_() -> bool
+  auto independent_algebra_test_decwide_t_sub_() -> bool // NOLINT(readability-identifier-naming)
   {
     using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     using independent_algebra_test_decwide_t_control_struct =
-      test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
@@ -286,7 +286,7 @@
     return result_test_is_ok;
   }
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
@@ -295,15 +295,15 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  auto independent_algebra_test_decwide_t_mul_() -> bool
+  auto independent_algebra_test_decwide_t_mul_() -> bool // NOLINT(readability-identifier-naming)
   {
     using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     using independent_algebra_test_decwide_t_control_struct =
-      test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
@@ -347,7 +347,7 @@
     return result_test_is_ok;
   }
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
@@ -356,15 +356,15 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  auto independent_algebra_test_decwide_t_div_() -> bool
+  auto independent_algebra_test_decwide_t_div_() -> bool // NOLINT(readability-identifier-naming)
   {
     using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     using independent_algebra_test_decwide_t_control_struct =
-      test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
@@ -408,7 +408,7 @@
     return result_test_is_ok;
   }
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
@@ -422,10 +422,10 @@
     using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     using independent_algebra_test_decwide_t_control_struct =
-      test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;
@@ -467,7 +467,7 @@
     return result_test_is_ok;
   }
 
-  template<const std::int32_t MyDigits10,
+  template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
            typename AllocatorType,
            typename InternalFloatType,
@@ -476,15 +476,15 @@
            const std::uint32_t CountN,
            const std::uint32_t RoundN,
            typename IndependentAlgebraTestControlType>
-  auto independent_algebra_test_decwide_t_log_() -> bool
+  auto independent_algebra_test_decwide_t_log_() -> bool // NOLINT(readability-identifier-naming)
   {
     using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
 
     using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     using independent_algebra_test_decwide_t_control_struct =
-      test::independent_algebra::control<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      test::independent_algebra::control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     constexpr std::uint32_t count = CountN;
     constexpr std::uint32_t round = RoundN;

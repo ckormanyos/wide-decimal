@@ -230,11 +230,18 @@
     <ClInclude Include="util\utility\util_noncopyable.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".clang-tidy" />
+    <None Include=".github\toolchains\gcc.cmake" />
     <None Include=".github\workflows\wide_decimal.yml" />
     <None Include=".tidy\make\make_tidy_01_generic.gmk" />
     <None Include=".tidy\make\make_tidy_02_files.gmk" />
     <None Include=".tidy\make\make_tidy_03_flags.gmk" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+    <Text Include="examples\CMakeLists.txt" />
+    <Text Include="test\CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

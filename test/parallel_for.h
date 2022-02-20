@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef PARALLEL_FOR_2017_12_18_H
+#ifndef PARALLEL_FOR_2017_12_18_H // NOLINT(llvm-header-guard)
   #define PARALLEL_FOR_2017_12_18_H
 
   #include <algorithm>
@@ -21,24 +21,26 @@
                       callable_function_type parallel_function)
     {
       // Estimate the number of threads available.
-      static const unsigned int number_of_threads_hint = std::thread::hardware_concurrency();
+      static const unsigned number_of_threads_hint = std::thread::hardware_concurrency();
 
-      static const unsigned int number_of_threads =
+      static const unsigned number_of_threads =
         ((number_of_threads_hint == 0U) ? 4U : number_of_threads_hint);
 
       // Set the size of a slice for the range functions.
-      index_type n = index_type(end - start) + index_type(1);
+      const auto n =
+        static_cast<index_type>
+        (
+          static_cast<index_type>(end - start) + static_cast<index_type>(1)
+        );
 
-      index_type slice =
-        static_cast<index_type>(std::round(n / static_cast<double> (number_of_threads)));
-
-      slice = (std::max)(slice, index_type(1));
+      const auto slice = (std::max)(static_cast<index_type>(std::round(n / static_cast<double> (number_of_threads))),
+                                    static_cast<index_type>(1));
 
       // Inner loop.
       auto launch_range =
         [&parallel_function](index_type index_lo, index_type index_hi)
         {
-          for(index_type i = index_lo; i < index_hi; ++i)
+          for(auto i = index_lo; i < index_hi; ++i)
           {
             parallel_function(i);
           }
@@ -49,16 +51,18 @@
 
       pool.reserve(number_of_threads);
 
-      index_type i1 = start;
-      index_type i2 = (std::min)(index_type(start + slice), end);
+      auto i1 = start;
+      auto i2 = (std::min)(static_cast<index_type>(start + static_cast<index_type>(slice)), end);
 
-      for(unsigned i = 0U; ((index_type(i + 1) < number_of_threads) && (i1 < end)); ++i)
+      for(auto   i = static_cast<unsigned>(0U);
+                   ((static_cast<unsigned>(static_cast<index_type>(i) + 1) < number_of_threads) && (i1 < end));
+               ++i)
       {
         pool.emplace_back(launch_range, i1, i2);
 
         i1 = i2;
 
-        i2 = (std::min)(index_type(i2 + slice), end);
+        i2 = (std::min)(static_cast<index_type>(i2 + slice), end);
       }
 
       if(i1 < end)

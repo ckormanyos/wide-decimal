@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_BOOST_CPP_2020_10_17_H
+#ifndef INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_BOOST_CPP_2020_10_17_H // NOLINT(llvm-header-guard)
   #define INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_BOOST_CPP_2020_10_17_H
 
   #include <iomanip>
@@ -35,12 +35,12 @@
   namespace test { namespace independent_algebra { // NOLINT(modernize-concat-nested-namespaces)
   #endif
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   class independent_algebra_test_decwide_t_boost_cpp : public independent_algebra_test_decwide_t_base
   {
   public:
     using other_decwide_t_type =
-      math::wide_decimal::decwide_t<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     #if defined(DECWIDE_T_TEST_OPTION_TEST_CPP_DEC_FLOAT)
     using local_float_backend_type =
@@ -61,9 +61,8 @@
                                     boost::multiprecision::et_off>;
     #endif
 
-    local_float_type my_cpp_boost_float;
+    local_float_type my_cpp_boost_float; // NOLINT(misc-non-private-member-variables-in-classes)
 
-  public:
     independent_algebra_test_decwide_t_boost_cpp() : my_cpp_boost_float() { }
 
     explicit independent_algebra_test_decwide_t_boost_cpp(const char* str)
@@ -75,7 +74,7 @@
     independent_algebra_test_decwide_t_boost_cpp(independent_algebra_test_decwide_t_boost_cpp&& other) noexcept
       : my_cpp_boost_float(other.my_cpp_boost_float) { }
 
-    virtual ~independent_algebra_test_decwide_t_boost_cpp() = default;
+    ~independent_algebra_test_decwide_t_boost_cpp() override = default;
 
     auto operator=(const independent_algebra_test_decwide_t_boost_cpp& other) -> independent_algebra_test_decwide_t_boost_cpp&
     {
@@ -94,7 +93,7 @@
       return *this;
     }
 
-    virtual auto get_string(std::string& str) const -> void
+    auto get_string(std::string& str) const -> void override
     {
       std::stringstream ss;
 
@@ -160,7 +159,7 @@
         ldexp(floating_point_type(1U), static_cast<std::int32_t>(2 - m)) / xx;
 
       // TBD: Tolerance should have the log of the argument added to it (usually negligible).
-      constexpr std::uint32_t digits10_iteration_goal =
+      constexpr auto digits10_iteration_goal =
         static_cast<std::uint32_t>
         (
             static_cast<std::uint32_t>((std::numeric_limits<floating_point_type>::digits10 + 1) / 2)
@@ -225,54 +224,54 @@
     }
   };
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto eval_add(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
-                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
-                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> void
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto eval_add(      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> void
   {
     result.my_cpp_boost_float = a.my_cpp_boost_float + b.my_cpp_boost_float;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto eval_sub(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
-                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
-                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> void
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto eval_sub(      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> void
   {
     result.my_cpp_boost_float = a.my_cpp_boost_float - b.my_cpp_boost_float;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto eval_mul(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
-                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
-                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> void
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto eval_mul(      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> void
   {
     result.my_cpp_boost_float = a.my_cpp_boost_float * b.my_cpp_boost_float;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto eval_div(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
-                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
-                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> void
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto eval_div(      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> void
   {
     result.my_cpp_boost_float = a.my_cpp_boost_float / b.my_cpp_boost_float;
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto eval_sqrt(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
-                 const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a) -> void
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto eval_sqrt(      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                 const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a) -> void
   {
     result.my_cpp_boost_float = sqrt(a.my_cpp_boost_float);
   }
 
-  template<const std::int32_t MyDigits10, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto eval_log(      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
-                const independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a) -> void
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto eval_log(      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a) -> void
   {
     using boost_multiprecision_type =
-      typename independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_float_type;
+      typename independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_float_type;
 
     const boost_multiprecision_type lg_a =
-      independent_algebra_test_decwide_t_boost_cpp<MyDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_log(a.my_cpp_boost_float);
+      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_log(a.my_cpp_boost_float);
 
     result.my_cpp_boost_float = lg_a;
   }

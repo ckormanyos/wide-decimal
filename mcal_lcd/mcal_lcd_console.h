@@ -1,4 +1,11 @@
-#ifndef MCAL_LCD_CONSOLE_2020_06_10_H
+///////////////////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2020 - 2022.
+//  Distributed under the Boost Software License,
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt
+//  or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+#ifndef MCAL_LCD_CONSOLE_2020_06_10_H // NOLINT(llvm-header-guard)
   #define MCAL_LCD_CONSOLE_2020_06_10_H
 
   #include <iostream>
@@ -12,24 +19,24 @@
   namespace mcal { namespace lcd { // NOLINT(modernize-concat-nested-namespaces)
   #endif
 
-  class lcd_console : public mcal::lcd::lcd_base
+  class lcd_console : public mcal::lcd::lcd_base // NOLINT(cppcoreguidelines-special-member-functions,hicpp-special-member-functions)
   {
   public:
     lcd_console() = default;
 
-    virtual ~lcd_console() = default;
+    ~lcd_console() override = default;
 
-    virtual bool write(const char* pstr,
-                       const std::uint_fast8_t length,
-                       const std::uint_fast8_t line_index)
+    auto write(const char*             pstr,
+                     std::uint_fast8_t length, // NOLINT(bugprone-easily-swappable-parameters)
+                     std::uint_fast8_t line_index) -> bool override
     {
       static_cast<void>(line_index);
 
-      bool write_is_ok;
+      bool write_is_ok { };
 
       if((pstr != nullptr) && (length > 0U))
       {
-        const std::string str(pstr, pstr + length);
+        const std::string str(pstr, pstr + length); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
         std::cout << str << std::endl;
 
@@ -43,7 +50,7 @@
       return write_is_ok;
     }
 
-    virtual bool init() { return true; }
+    auto init() -> bool override { return true; }
   };
 
   #if(__cplusplus >= 201703L)
