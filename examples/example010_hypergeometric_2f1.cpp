@@ -16,7 +16,7 @@
 namespace example010_hypergeometric
 {
   template<typename T>
-  auto hypergeometric_2f1(const T& AP, const T& BP, const T& CP, const T& ZM) -> T
+  auto hypergeometric_2f1(const T& AP, const T& BP, const T& CP, const T& ZM) -> T // NOLINT(readability-identifier-naming,bugprone-easily-swappable-parameters)
   {
     // Implement a rational approximation of hypergeometric_2f1.
     // This C++11 code uses a computational scheme similar to
@@ -35,7 +35,7 @@ namespace example010_hypergeometric
     // Retain some stylistic elements and comments from Luke's
     // original Fortran77 coding style.
 
-    const T Z(-ZM);
+    const T Z(-ZM); // NOLINT(readability-identifier-naming)
 
     const T my_zero(0U);
     const T my_one (1U);
@@ -44,14 +44,14 @@ namespace example010_hypergeometric
     // C INITIALIZATION :
     // C
 
-          T SABZ((AP + BP) * Z);
-    const T AB   (AP * BP);
-    const T ABZ  (AB * Z);
-    const T ABZ1((Z + ABZ) + SABZ);
-    const T ABZ2((ABZ1 + SABZ) + (3U * Z));
+          T SABZ((AP + BP) * Z);            // NOLINT(readability-identifier-naming)
+    const T AB   (AP * BP);                 // NOLINT(readability-identifier-naming)
+    const T ABZ  (AB * Z);                  // NOLINT(readability-identifier-naming)
+    const T ABZ1((Z + ABZ) + SABZ);         // NOLINT(readability-identifier-naming)
+    const T ABZ2((ABZ1 + SABZ) + (3U * Z)); // NOLINT(readability-identifier-naming)
 
-    std::array<T, 4U> A;
-    std::array<T, 4U> B;
+    std::array<T, 4U> A; // NOLINT(readability-identifier-naming)
+    std::array<T, 4U> B; // NOLINT(readability-identifier-naming)
 
     B[0U] = my_one;
     A[0U] = my_one;
@@ -61,16 +61,16 @@ namespace example010_hypergeometric
     B[1U] = my_one + (ABZ1 / (CP * 2U));
     A[1U] = B[1U]  - (ABZ  / CP);
 
-    const T CT1(2U * CP1);
+    const T CT1(2U * CP1); // NOLINT(readability-identifier-naming)
 
     B[2U] = my_one + ((ABZ2 / CT1) * (my_one + ABZ1 / ((-T(6U)) + (CT1 * 3U)))); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     A[2U] = B[2U]  - ((ABZ  / CP)  * (my_one + ((ABZ2 - ABZ1) / CT1)));
 
     SABZ /= 4U;
 
-    const T Z2(Z / 2U);
+    const T Z2(Z / 2U); // NOLINT(readability-identifier-naming)
 
-    std::array<T, 9U> D; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    std::array<T, 9U> D; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,readability-identifier-naming)
 
     D[0U] = (((T(7U) / 2U) - AB) * Z2) - SABZ; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     D[1U] = ABZ1 / 4U;                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -82,14 +82,14 @@ namespace example010_hypergeometric
     D[7U] = T(3U) / 4U;                        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     D[8U] = D[7U] * Z;                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    std::array<T, 3U> G;
+    std::array<T, 3U> G; // NOLINT(readability-identifier-naming)
 
     // C
     // C FOR I=3,...,N , THE VALUES A(I) AND B(I) ARE CALCULATED
     // C USING THE RECURRENCE RELATIONS BELOW.
     // C
 
-    for(std::uint_fast16_t XI = UINT16_C(3); XI < UINT16_C(10000); ++XI)
+    for(std::uint_fast16_t XI = UINT16_C(3); XI < UINT16_C(10000); ++XI) // NOLINT(readability-identifier-naming)
     {
       G[2U]  = (D[2U] * D[1U]) / (D[7U] * D[5U]);             // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       D[1U] += (D[8U] + SABZ);                                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

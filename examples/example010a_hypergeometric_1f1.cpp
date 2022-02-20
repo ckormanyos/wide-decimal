@@ -16,7 +16,7 @@
 namespace example010a_hypergeometric
 {
   template<typename T>
-  auto hypergeometric_1f1(const T& AP, const T& CP, const T& ZM) -> T
+  auto hypergeometric_1f1(const T& AP, const T& CP, const T& ZM) -> T // NOLINT(readability-identifier-naming,bugprone-easily-swappable-parameters)
   {
     // Implement a rational approximation of hypergeometric_1f1.
     // This C++11 code uses a computational scheme similar to
@@ -35,24 +35,24 @@ namespace example010a_hypergeometric
     // Retain some stylistic elements and comments from Luke's
     // original Fortran77 coding style.
 
-    const T Z(-ZM);
+    const T Z(-ZM); // NOLINT(readability-identifier-naming)
 
     // C
     // C INITIALIZATION :
     // C
 
-    const T Z2(Z / 2U);
+    const T Z2(Z / 2U); // NOLINT(readability-identifier-naming)
 
     const T my_zero(0U);
     const T my_one (1U);
     const T my_two (2U);
 
-    std::array<T, 4U> A;
-    std::array<T, 4U> B;
+    std::array<T, 4U> A; // NOLINT(readability-identifier-naming)
+    std::array<T, 4U> B; // NOLINT(readability-identifier-naming)
 
     {
-      const T CT1X((AP * Z) / CP);
-      const T CT2X(Z2 / (1U + CP));
+      const T CT1X((AP * Z) / CP);  // NOLINT(readability-identifier-naming)
+      const T CT2X(Z2 / (1U + CP)); // NOLINT(readability-identifier-naming)
 
       A[0U] = my_one;
       B[0U] = my_one;
@@ -62,25 +62,27 @@ namespace example010a_hypergeometric
       A[2U] = B[2U] - ((my_one + CT2X) * CT1X);
     }
 
-    std::uint_fast16_t CT1 = UINT16_C(3);
-    T CT2;
+    std::uint_fast16_t CT1 = UINT16_C(3); // NOLINT(readability-identifier-naming)
+    T CT2;                                // NOLINT(readability-identifier-naming)
 
-    std::array<std::uint_fast16_t, 4U> N =
-    {{
-      UINT16_C(3),
-      UINT16_C(2),
-      UINT16_C(1),
-      UINT16_C(0)
-    }};
+    std::array<std::uint_fast16_t, 4U> N // NOLINT(readability-identifier-naming)
+    {
+      {
+        UINT16_C(3),
+        UINT16_C(2),
+        UINT16_C(1),
+        UINT16_C(0)
+      }
+    };
 
-    std::array<T, 3U> G;
+    std::array<T, 3U> G; // NOLINT(readability-identifier-naming)
 
     // C
     // C FOR I=3,...,N , THE VALUES A(I) AND B(I) ARE CALCULATED
     // C USING THE RECURRENCE RELATIONS BELOW.
     // C
 
-    const T Z2Z2 = (Z2 * Z2);
+    const T Z2Z2 = (Z2 * Z2); // NOLINT(readability-identifier-naming)
 
     for( ; N[0U] < UINT16_C(10000); ++N[0U])
     {
