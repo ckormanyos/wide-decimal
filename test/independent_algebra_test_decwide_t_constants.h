@@ -243,7 +243,7 @@
   };
 
   template<typename FloatingPointType>
-  typename constants<FloatingPointType>::initializer constants<FloatingPointType>::init; // NOLINT(cert-err58-cpp)
+  typename constants<FloatingPointType>::initializer constants<FloatingPointType>::init; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
   #if(__cplusplus >= 201703L)
   } // namespace test::independent_algebra

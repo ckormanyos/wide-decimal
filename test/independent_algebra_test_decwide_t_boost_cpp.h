@@ -159,7 +159,7 @@
         ldexp(floating_point_type(1U), static_cast<std::int32_t>(2 - m)) / xx;
 
       // TBD: Tolerance should have the log of the argument added to it (usually negligible).
-      constexpr std::uint32_t digits10_iteration_goal =
+      constexpr auto digits10_iteration_goal =
         static_cast<std::uint32_t>
         (
             static_cast<std::uint32_t>((std::numeric_limits<floating_point_type>::digits10 + 1) / 2)
