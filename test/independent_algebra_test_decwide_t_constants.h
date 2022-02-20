@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_CONSTANTS_2022_02_11_H
+#ifndef INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_CONSTANTS_2022_02_11_H // NOLINT(llvm-header-guard)
   #define INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_CONSTANTS_2022_02_11_H
 
   #include <algorithm>

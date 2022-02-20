@@ -12,7 +12,7 @@
 // This file implements a naive FFT used for large-digit
 // FFT multiplication in decwide_t.
 
-#ifndef DECWIDE_T_DETAIL_FFT_2013_01_08_H
+#ifndef DECWIDE_T_DETAIL_FFT_2013_01_08_H // NOLINT(llvm-header-guard)
   #define DECWIDE_T_DETAIL_FFT_2013_01_08_H
 
   #include <array>

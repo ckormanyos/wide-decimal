@@ -14,7 +14,7 @@
 // (including Karatsuba and FFT loops), and division (but only
 // division by 1 limb).
 
-#ifndef DECWIDE_T_DETAIL_OPS_2021_04_12_H
+#ifndef DECWIDE_T_DETAIL_OPS_2021_04_12_H // NOLINT(llvm-header-guard)
   #define DECWIDE_T_DETAIL_OPS_2021_04_12_H
 
   #include <cstdint>

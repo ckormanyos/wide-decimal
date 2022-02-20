@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef DECWIDE_T_2021_02_24_HPP
+#ifndef DECWIDE_T_2021_02_24_HPP // NOLINT(llvm-header-guard)
   #define DECWIDE_T_2021_02_24_HPP
 
   #include <boost/version.hpp>

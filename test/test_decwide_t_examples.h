@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef TEST_DECWIDE_T_EXAMPLES_2020_11_05_H
+#ifndef TEST_DECWIDE_T_EXAMPLES_2020_11_05_H // NOLINT(llvm-header-guard)
   #define TEST_DECWIDE_T_EXAMPLES_2020_11_05_H
 
   #include <math/wide_decimal/decwide_t_detail_namespace.h>

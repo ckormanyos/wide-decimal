@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef UTIL_NONCOPYABLE_2008_12_16_H
+#ifndef UTIL_NONCOPYABLE_2008_12_16_H // NOLINT(llvm-header-guard)
   #define UTIL_NONCOPYABLE_2008_12_16_H
 
   // Taken (with slight modification) from boost::noncopyable.

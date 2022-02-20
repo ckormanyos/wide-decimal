@@ -11,7 +11,7 @@
 
 // This file implements various details for decwide_t.
 
-#ifndef DECWIDE_T_DETAIL_2020_10_26_H
+#ifndef DECWIDE_T_DETAIL_2020_10_26_H // NOLINT(llvm-header-guard)
   #define DECWIDE_T_DETAIL_2020_10_26_H
 
   #include <algorithm>
@@ -23,6 +23,40 @@
   #include <util/utility/util_dynamic_array.h>
 
   #include <math/wide_decimal/decwide_t_detail_namespace.h>
+
+  #if defined(_MSC_VER)
+    #if (_MSC_VER >= 1900) && defined(_HAS_CXX20) && (_HAS_CXX20 != 0)
+      #define WIDE_DECIMAL_NODISCARD [[nodiscard]]           // NOLINT(cppcoreguidelines-macro-usage)
+    #else
+      #define WIDE_DECIMAL_NODISCARD
+    #endif
+  #else
+    #if (defined(__cplusplus) && (__cplusplus >= 201402L))
+      #if defined(__AVR__) && (!defined(__GNUC__) || (defined(__GNUC__) && (__GNUC__ > 6)))
+      #define WIDE_DECIMAL_NODISCARD [[nodiscard]]           // NOLINT(cppcoreguidelines-macro-usage)
+      #elif (defined(__cpp_lib_constexpr_algorithms) && (__cpp_lib_constexpr_algorithms>=201806))
+        #if defined(__clang__)
+          #if (__clang_major__ > 9)
+          #define WIDE_DECIMAL_NODISCARD [[nodiscard]]           // NOLINT(cppcoreguidelines-macro-usage)
+          #else
+          #define WIDE_DECIMAL_NODISCARD
+          #endif
+        #else
+        #define WIDE_DECIMAL_NODISCARD [[nodiscard]]           // NOLINT(cppcoreguidelines-macro-usage)
+        #endif
+      #elif (defined(__clang__) && (__clang_major__ >= 10)) && (defined(__cplusplus) && (__cplusplus > 201703L))
+        #if defined(__x86_64__)
+        #define WIDE_DECIMAL_NODISCARD [[nodiscard]]           // NOLINT(cppcoreguidelines-macro-usage)
+        #else
+        #define WIDE_DECIMAL_NODISCARD
+        #endif
+      #else
+      #define WIDE_DECIMAL_NODISCARD
+      #endif
+    #else
+      #define WIDE_DECIMAL_NODISCARD
+    #endif
+  #endif
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
@@ -197,9 +231,9 @@
     }
   };
 
-  template<typename LimbType> constexpr std::int32_t decwide_t_helper_base<LimbType>::elem_digits10;
-  template<typename LimbType> constexpr std::int32_t decwide_t_helper_base<LimbType>::elem_mask;
-  template<typename LimbType> constexpr std::int32_t decwide_t_helper_base<LimbType>::elem_mask_half;
+  template<typename LimbType> constexpr std::int32_t decwide_t_helper_base<LimbType>::elem_digits10;  // NOLINT(readability-redundant-declaration)
+  template<typename LimbType> constexpr std::int32_t decwide_t_helper_base<LimbType>::elem_mask;      // NOLINT(readability-redundant-declaration)
+  template<typename LimbType> constexpr std::int32_t decwide_t_helper_base<LimbType>::elem_mask_half; // NOLINT(readability-redundant-declaration)
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType>
@@ -218,12 +252,12 @@
     static constexpr std::int32_t elem_number       = static_cast<std::int32_t>(((digits10 / base_class_type::elem_digits10) + (((digits10 % base_class_type::elem_digits10) != 0) ? 1 : 0)) + elem_number_extra);
   };
 
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::digits10;          // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::digits;            // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::max_digits10;      // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::radix;             // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::elem_number_extra; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::elem_number;       // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::digits10;          // NOLINT(readability-redundant-declaration,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::digits;            // NOLINT(readability-redundant-declaration,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::max_digits10;      // NOLINT(readability-redundant-declaration,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::radix;             // NOLINT(readability-redundant-declaration,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::elem_number_extra; // NOLINT(readability-redundant-declaration,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType> constexpr std::int32_t decwide_t_helper<ParamDigitsBaseTen, LimbType>::elem_number;       // NOLINT(readability-redundant-declaration,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<typename MyType,
            const size_t MySize,
@@ -366,10 +400,10 @@
       return *this;
     }
 
-    auto constexpr get_value_unsigned() const -> unsigned_type { return my_value; }
-    auto constexpr get_value_signed  () const ->   signed_type { return ((!my_neg) ? static_cast<signed_type>(my_value) : -static_cast<signed_type>(my_value)); }
+    WIDE_DECIMAL_NODISCARD auto constexpr get_value_unsigned() const -> unsigned_type { return my_value; }
+    WIDE_DECIMAL_NODISCARD auto constexpr get_value_signed  () const ->   signed_type { return ((!my_neg) ? static_cast<signed_type>(my_value) : -static_cast<signed_type>(my_value)); }
 
-    auto constexpr get_is_neg        () const -> bool { return my_neg; }
+    WIDE_DECIMAL_NODISCARD auto constexpr get_is_neg        () const -> bool { return my_neg; }
 
     bool          my_neg;   // NOLINT(misc-non-private-member-variables-in-classes)
     unsigned_type my_value; // NOLINT(misc-non-private-member-variables-in-classes)

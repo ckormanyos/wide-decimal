@@ -1,11 +1,11 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2021 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#ifndef EXAMPLE_DECWIDE_T_2021_04_13_H
+#ifndef EXAMPLE_DECWIDE_T_2021_04_13_H // NOLINT(llvm-header-guard)
   #define EXAMPLE_DECWIDE_T_2021_04_13_H
 
   // This file contains function prototypes of the decwide_t examples.
