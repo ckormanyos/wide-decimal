@@ -55,7 +55,7 @@
 
     using precision_type = typename ThisPolicy::precision_type;
 
-    using local_digits_2 = digits2<((static_cast<long long>(std::numeric_limits<local_wide_decimal_type>::digits10) + 1LL) * 1000LL) / 301LL>; // NOLINT(google-runtime-int)
+    using local_digits_2 = digits2<((static_cast<long long>(std::numeric_limits<local_wide_decimal_type>::digits10) + 1LL) * 1000LL) / 301LL>; // NOLINT(google-runtime-int,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     using type = typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
                                             local_digits_2,
@@ -103,8 +103,8 @@
       result_type a(1U);
       result_type b;
       result_type A(a);     // NOLINT(readability-identifier-naming)
-      result_type B(0.5F);  // NOLINT(readability-identifier-naming)
-      result_type D(0.25F); // NOLINT(readability-identifier-naming)
+      result_type B(0.5F);  // NOLINT(readability-identifier-naming,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      result_type D(0.25F); // NOLINT(readability-identifier-naming,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       result_type lim = std::numeric_limits<result_type>::epsilon();
 
@@ -236,9 +236,9 @@
       typename boost::math::policies::precision<local_backend_type, Policy>::type;
 
     using type =
-      typename std::conditional<precision_type::value && (precision_type::value <= 73),
+      typename std::conditional<precision_type::value && (precision_type::value <= 73), // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                                 lanczos13UDT,
-                                typename std::conditional<precision_type::value && (precision_type::value <= 122),
+                                typename std::conditional<precision_type::value && (precision_type::value <= 122), // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                                                           lanczos22UDT,
                                                           undefined_lanczos>::type>::type;
   };

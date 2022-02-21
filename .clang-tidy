@@ -2,11 +2,9 @@
 Checks: >
   *,
   -altera-*,
-  -cppcoreguidelines-avoid-magic-numbers,
   -fuchsia-*,
   -llvm-header-guard,
-  -llvmlibc-*,
-  -readability-magic-numbers
+  -llvmlibc-*
 
 
 WarningsAsErrors: '*'

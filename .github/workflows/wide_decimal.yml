@@ -12,7 +12,7 @@ on:
       - '**'
   pull_request:
   schedule:
-    - cron: '15 0 * * *' # run at 00:15 AM UTC
+    - cron: '30 0 * * *' # run at 00:30 AM UTC
 jobs:
   cmake-linux:
     strategy:

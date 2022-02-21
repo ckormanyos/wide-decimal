@@ -1381,7 +1381,7 @@
     }
 
     // Specific special values.
-    static constexpr auto my_value_max() -> decwide_t { return from_lst( { static_cast<limb_type>(9U) }, decwide_t_max_exp10 ); }
+    static constexpr auto my_value_max() -> decwide_t { return from_lst( { static_cast<limb_type>(9U) }, decwide_t_max_exp10 ); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     static constexpr auto my_value_min() -> decwide_t { return from_lst( { static_cast<limb_type>(1U) }, decwide_t_min_exp10 ); }
     static constexpr auto my_value_eps() -> decwide_t
     {
@@ -1544,7 +1544,7 @@
       if((ne % 2) != static_cast<exponent_type>(0))
       {
         ++ne;
-        dd /= static_cast<InternalFloatType>(10);
+        dd /= static_cast<InternalFloatType>(10); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       }
 
       using std::sqrt;
@@ -1558,7 +1558,7 @@
       *this = decwide_t(sqd, static_cast<exponent_type>(ne / 2));
 
       // Estimate 1.0 / (2.0 * x0) using simple manipulations.
-      decwide_t vi(static_cast<InternalFloatType>(0.5F) / sqd, static_cast<exponent_type>(static_cast<exponent_type>(-ne) / 2));
+      decwide_t vi(static_cast<InternalFloatType>(0.5F) / sqd, static_cast<exponent_type>(static_cast<exponent_type>(-ne) / 2)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       // Compute the square root of x. Coupled Newton iteration
       // as described in "Pi Unleashed" is used. During the
@@ -1644,7 +1644,7 @@
         while(ne % static_cast<exponent_type>(p))
         {
           ++ne;
-          dd /= static_cast<InternalFloatType>(10.0L);
+          dd /= static_cast<InternalFloatType>(10.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         }
 
         const std::int32_t original_prec_elem = x.my_prec_elem;
@@ -1818,14 +1818,14 @@
 
         for(;;)
         {
-          d0 = static_cast<limb_type>(d0 / static_cast<limb_type>(10U));
+          d0 = static_cast<limb_type>(d0 / static_cast<limb_type>(10U)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
           if(d0 == static_cast<limb_type>(0U))
           {
             break;
           }
 
-          p10 = static_cast<limb_type>(p10 * static_cast<limb_type>(10U));
+          p10 = static_cast<limb_type>(p10 * static_cast<limb_type>(10U)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
           ++exponent;
         }
@@ -1919,7 +1919,7 @@
         {
           ld = static_cast<long double>(my_data[0U]);
 
-          auto scale = static_cast<long double>(1.0L);
+          auto scale = static_cast<long double>(1.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
           for(auto i  = static_cast<int>(decwide_t_elem_digits10);
                    i  < (std::numeric_limits<long double>::digits10 + 3);
@@ -2076,7 +2076,7 @@
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
     static limb_type           my_school_mul_pool[static_cast<std::size_t>((decwide_t_elems_for_kara - 1) * 2)];                                                                     // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
-    static limb_type           my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+    static limb_type           my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     static fft_float_type      my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
     static fft_float_type      my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
     static representation_type my_n_data_for_add_sub; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
@@ -2313,7 +2313,7 @@
           detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        auto my_kara_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * 8U)]; // NOLINT(cppcoreguidelines-owning-memory,llvm-qualified-auto,readability-qualified-auto)
+        auto my_kara_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * 8U)]; // NOLINT(cppcoreguidelines-owning-memory,llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         #endif
 
         auto u_local = my_kara_mul_pool + (kara_elems_for_multiply * 0U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -2419,7 +2419,7 @@
                      std::uint32_t(detail::a029750::a029750_as_runtime_value(decwide_t_elems_for_fft - 1) * 8UL));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        auto my_kara_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * 8U)]; // NOLINT(cppcoreguidelines-owning-memory)
+        auto my_kara_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * 8U)]; // NOLINT(cppcoreguidelines-owning-memory,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         #endif
 
         auto u_local = my_kara_mul_pool + (kara_elems_for_multiply * 0U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
@@ -2541,7 +2541,7 @@
         // Manually count the number of base-10 digits on the zero'th limb.
         while(tmp_limb_0 > 0U)
         {
-          tmp_limb_0 /= 10U;
+          tmp_limb_0 /= 10U; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
           ++digits_limb_0;
         }
@@ -2615,7 +2615,7 @@
         }
 
         // Perform round-to-nearest with no tie-breaking whatsoever.
-        if(round_digit_value >= 5U)
+        if(round_digit_value >= 5U) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         {
           my_data[static_cast<local_size_type>(least_digit_idx)] += least_digit_p10;
 
@@ -2691,10 +2691,11 @@
 
           char* ptr_end; // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,cppcoreguidelines-init-variables)
 
-          my_exp = static_cast<exponent_type>
-                   (
-                     std::strtoll(static_cast<const char*>(str.c_str() + (pos + 1U)), &ptr_end, 10) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                   );
+          my_exp =
+            static_cast<exponent_type>
+            (
+              std::strtoll(static_cast<const char*>(str.c_str() + (pos + 1U)), &ptr_end, 10) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+            );
         }
 
         str = str.substr(static_cast<std::size_t>(0U), pos);
@@ -2915,7 +2916,7 @@
         my_data[static_cast<typename representation_type::size_type>(0U)] =
           static_cast<limb_type>
           (
-            std::strtoul(str.substr(static_cast<std::ptrdiff_t>(0), pos).c_str(), &ptr_end, 10)
+            std::strtoul(str.substr(static_cast<std::ptrdiff_t>(0), pos).c_str(), &ptr_end, 10) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
           );
       }
 
@@ -2949,7 +2950,7 @@
 
           char* ptr_end { }; // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
-          my_data[i1] = static_cast<limb_type>(std::strtoul(str_i1.c_str(), &ptr_end, 10));
+          my_data[i1] = static_cast<limb_type>(std::strtoul(str_i1.c_str(), &ptr_end, 10)); // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         }
       }
 
@@ -2968,7 +2969,7 @@
                    static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
       // Extract the remaining digits from decwide_t after the decimal point.
-      std::array<char, 10U> ptr_str { };
+      std::array<char, 10U> ptr_str { }; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       ptr_str.fill(static_cast<char>(0));
 
@@ -2979,7 +2980,7 @@
       // Extract all of the digits from decwide_t, beginning with the first data element.
       for(auto i = static_cast<std::uint_fast32_t>(1U); i < number_of_elements; i++)
       {
-        using data_element_rep_type = typename std::conditional<(std::numeric_limits<limb_type>::digits <= 32),
+        using data_element_rep_type = typename std::conditional<(std::numeric_limits<limb_type>::digits <= 32), // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                                                                  std::uint32_t,
                                                                  limb_type>::type;
 
@@ -3006,12 +3007,12 @@
         // Truncate the string
         str = str.substr(static_cast<std::uint_fast32_t>(0U), number_of_digits);
 
-        if(round >= static_cast<std::uint32_t>(5U))
+        if(round >= static_cast<std::uint32_t>(5U)) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         {
           auto ix = static_cast<std::string::size_type>(str.length() - 1U);
 
           // Every trailing 9 must be rounded up.
-          while((ix != 0U) && ((static_cast<int>(str.at(ix)) - '0') == 9))
+          while((ix != 0U) && ((static_cast<int>(str.at(ix)) - '0') == 9)) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
           {
             str.at(ix) = static_cast<char>('0');
 
@@ -3021,7 +3022,7 @@
           if(ix == 0U)
           {
             // There were nothing but trailing nines.
-            if((static_cast<int>(str.at(ix)) - 0x30) == 9)
+            if((static_cast<int>(str.at(ix)) - 0x30) == 9) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
             {
               // Increment up to the next order and adjust exponent.
               str.at(ix) = static_cast<char>('1');
@@ -3265,7 +3266,7 @@
         str += "+";
       }
 
-      std::array<char, 20U> ptr_str { };
+      std::array<char, 20U> ptr_str { }; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       ptr_str.fill(static_cast<char>(0));
 
@@ -3552,9 +3553,9 @@
 
       std::int_fast16_t n10 = 0;
 
-      while(static_cast<limb_type>(xx + 5U) > 10U)
+      while(static_cast<limb_type>(xx + 5U) > 10U) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       {
-        xx /= 10U;
+        xx /= 10U; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
         ++n10;
       }
@@ -3640,7 +3641,7 @@
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_school_mul_pool[static_cast<std::size_t>((decwide_t_elems_for_kara - 1) * 2)];                                                                     // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::representation_type     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_n_data_for_add_sub;                                                                                                                       // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
@@ -3674,7 +3675,7 @@
     floating_point_type bB(half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()); // NOLINT(readability-identifier-naming)
 
     // Initialize t to 0.375.
-    floating_point_type t(static_cast<floating_point_type>(3U) / 8U);
+    floating_point_type t(static_cast<floating_point_type>(3U) / 8U); // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     floating_point_type s(bB);
 
@@ -3703,7 +3704,7 @@
         )
       );
 
-    for(auto k = static_cast<unsigned>(0U); k < 48U; ++k)
+    for(auto k = static_cast<unsigned>(0U); k < 48U; ++k) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     {
       using std::sqrt;
 
@@ -3820,7 +3821,7 @@
         )
       );
 
-    for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k)
+    for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     {
       using std::ilogb;
 
@@ -4332,11 +4333,11 @@
     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> ldexp_result = v;
 
     if(e == 0) { }
-    else if((e > 0) && (e < 64))
+    else if((e > 0) && (e < 64)) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     {
       ldexp_result *= static_cast<std::uint64_t>(1ULL << static_cast<unsigned>(e));
     }
-    else if((e > -64) && (e < 0))
+    else if((e > -64) && (e < 0)) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     {
       ldexp_result /= static_cast<std::uint64_t>(1ULL << static_cast<unsigned>(-e));
     }
@@ -4496,7 +4497,7 @@
         )
       );
 
-    for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(128); ++k)
+    for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(128); ++k) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     {
       // Check for the number of significant digits to be
       // at least half of the requested digits. If at least
