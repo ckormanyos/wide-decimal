@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.
 //  Distributed under the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt
@@ -16,7 +16,7 @@
 
   template<typename UnsignedIntegerType,
            typename OutputIterator,
-           const std::uint_fast8_t BaseRepresentation = 10U,
+           const std::uint_fast8_t BaseRepresentation = 10U, // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
            const bool UpperCase = true>
   auto baselexical_cast(const UnsignedIntegerType& u, OutputIterator out_first) -> OutputIterator
   {
@@ -40,17 +40,17 @@
 
       x = static_cast<unsigned_integer_type>(x / static_cast<unsigned_integer_type>(BaseRepresentation));
 
-      if(c <= static_cast<output_value_type>(9))
+      if(c <= static_cast<output_value_type>(9)) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       {
         c = static_cast<output_value_type>(c + static_cast<output_value_type>('0'));
       }
-      else if((c >= static_cast<output_value_type>(0xA)) && (c <= static_cast<output_value_type>(0xF)))
+      else if((c >= static_cast<output_value_type>(0xA)) && (c <= static_cast<output_value_type>(0xF))) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       {
         c =
         static_cast<output_value_type>
         (
             static_cast<output_value_type>(UpperCase ? static_cast<output_value_type>('A') : static_cast<output_value_type>('a'))
-          + static_cast<output_value_type>(c - static_cast<output_value_type>(0xA))
+          + static_cast<output_value_type>(c - static_cast<output_value_type>(0xA)) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         );
       }
 
