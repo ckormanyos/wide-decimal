@@ -236,9 +236,9 @@
       typename boost::math::policies::precision<local_backend_type, Policy>::type;
 
     using type =
-      typename std::conditional<precision_type::value && (precision_type::value <= 73),
+      typename std::conditional<precision_type::value && (precision_type::value <= 73), // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                                 lanczos13UDT,
-                                typename std::conditional<precision_type::value && (precision_type::value <= 122),
+                                typename std::conditional<precision_type::value && (precision_type::value <= 122), // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                                                           lanczos22UDT,
                                                           undefined_lanczos>::type>::type;
   };
