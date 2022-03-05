@@ -157,27 +157,8 @@
     // Move assignment operator.
     auto operator=(dynamic_array&& other) noexcept -> dynamic_array&
     {
-      // Destroy the elements and deallocate the range.
-      pointer p = elems; // NOLINT(altera-id-dependent-backward-branch)
-
-      using local_allocator_traits_type = std::allocator_traits<allocator_type>;
-
-      allocator_type my_a;
-
-      while(p != elems + elem_count) // NOLINT(altera-id-dependent-backward-branch)
-      {
-        local_allocator_traits_type::destroy(my_a, p);
-
-        ++p;
-      }
-
-      local_allocator_traits_type::deallocate(my_a, elems, elem_count);
-
-      elem_count = other.elem_count;
-      elems      = other.elems;
-
-      other.elem_count = 0U;
-      other.elems      = nullptr;
+      std::swap(elem_count, other.elem_count);
+      std::swap(elems,      other.elems);
 
       return *this;
     }

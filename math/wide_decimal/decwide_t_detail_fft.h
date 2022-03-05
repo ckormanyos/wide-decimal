@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2013 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -213,30 +213,30 @@
            const bool IsForwardFft>
   auto danielson_lanczos_apply_4_basecase(float_type* data) -> void
   {
-    const auto tmp_real_2_0 = data[2U]; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    const auto tmp_imag_2_0 = data[3U]; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    const auto tmp_real_2_0 = data[2U];            // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    const auto tmp_imag_2_0 = data[3U];            // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-    data[2U]  = data[0U] - tmp_real_2_0; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    data[3U]  = data[1U] - tmp_imag_2_0; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    data[0U] += tmp_real_2_0; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    data[1U] += tmp_imag_2_0; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[2U]  = data[0U] - tmp_real_2_0;           // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[3U]  = data[1U] - tmp_imag_2_0;           // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[0U] += tmp_real_2_0;                      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[1U] += tmp_imag_2_0;                      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-    const auto tmp_real_2_4 = data[2U + 4U]; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    const auto tmp_imag_2_4 = data[3U + 4U]; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    const auto tmp_real_2_4 = data[2U + 4U];       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    const auto tmp_imag_2_4 = data[3U + 4U];       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
     data[2U + 4U]  = data[0U + 4U] - tmp_real_2_4; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     data[3U + 4U]  = data[1U + 4U] - tmp_imag_2_4; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    data[0U + 4U] += tmp_real_2_4; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    data[1U + 4U] += tmp_imag_2_4; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[0U + 4U] += tmp_real_2_4;                 // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[1U + 4U] += tmp_imag_2_4;                 // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-    auto tmp_real = data[4U]; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    auto tmp_imag = data[5U]; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    auto tmp_real = data[4U];                      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    auto tmp_imag = data[5U];                      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    data[4U] = data[0U] - tmp_real; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    data[5U] = data[1U] - tmp_imag; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    data[4U] = data[0U] - tmp_real;                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[5U] = data[1U] - tmp_imag;                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    data[0U] += tmp_real; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    data[1U] += tmp_imag; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[0U] += tmp_real;                          // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[1U] += tmp_imag;                          // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
     const auto real_part = static_cast<float_type>(const_unique_wp_real<float_type, IsForwardFft>(4U) + template_one<float_type>());
     const auto imag_part = static_cast<float_type>(const_unique_wp_imag<float_type, IsForwardFft>(4U));
@@ -244,11 +244,11 @@
     tmp_real = (real_part * data[6U]) - (imag_part * data[7U]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     tmp_imag = (real_part * data[7U]) + (imag_part * data[6U]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    data[6U] = data[2U] - tmp_real; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    data[7U] = data[3U] - tmp_imag; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    data[6U] = data[2U] - tmp_real;                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    data[7U] = data[3U] - tmp_imag;                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    data[2U] += tmp_real; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    data[3U] += tmp_imag; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[2U] += tmp_real;                          // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    data[3U] += tmp_imag;                          // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   }
 
   template<typename float_type,
@@ -310,10 +310,10 @@
         const auto h2r = template_fast_div_by_two(data[i2] + data[i4]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         const auto h2i = template_fast_div_by_two(data[i1] - data[i3]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-        data[i1] = (+h1r + (real_part * h2r)) + (imag_part * h2i); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        data[i2] = (+h1i - (real_part * h2i)) + (imag_part * h2r); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        data[i3] = (+h1r - (real_part * h2r)) - (imag_part * h2i); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        data[i4] = (-h1i - (real_part * h2i)) + (imag_part * h2r); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        data[i1] = (+h1r + (real_part * h2r)) + (imag_part * h2i);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        data[i2] = (+h1i - (real_part * h2i)) + (imag_part * h2r);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        data[i3] = (+h1r - (real_part * h2r)) - (imag_part * h2i);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        data[i4] = (-h1i - (real_part * h2i)) + (imag_part * h2r);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       }
 
       const auto tmp_real = real_part;
@@ -355,10 +355,10 @@
       const auto h2r = template_fast_div_by_two(data[i2] + data[i4]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       const auto h2i = template_fast_div_by_two(data[i1] - data[i3]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-      data[i1] = (+h1r - (real_part * h2r)) - (imag_part * h2i); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      data[i2] = (+h1i + (real_part * h2i)) - (imag_part * h2r); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      data[i3] = (+h1r + (real_part * h2r)) + (imag_part * h2i); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-      data[i4] = (-h1i + (real_part * h2i)) - (imag_part * h2r); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      data[i1] = (+h1r - (real_part * h2r)) - (imag_part * h2i);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      data[i2] = (+h1i + (real_part * h2i)) - (imag_part * h2r);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      data[i3] = (+h1r + (real_part * h2r)) + (imag_part * h2i);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      data[i4] = (-h1i + (real_part * h2i)) - (imag_part * h2r);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
       const auto tmp_real = real_part;
 
