@@ -16,7 +16,7 @@
   #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
   #endif
 
-  #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107600))
+  #if (BOOST_VERSION <= 107600)
   #include <boost/math/bindings/detail/big_lanczos.hpp>
   #endif
   #include <boost/math/constants/constants.hpp>
@@ -55,11 +55,12 @@
 
     using precision_type = typename ThisPolicy::precision_type;
 
-    using local_digits_2 = digits2<((static_cast<long long>(std::numeric_limits<local_wide_decimal_type>::digits10) + 1LL) * 1000LL) / 301LL>; // NOLINT(google-runtime-int,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    using local_digits_2 = digits2<((static_cast<std::intmax_t>(std::numeric_limits<local_wide_decimal_type>::digits10) + INTMAX_C(1)) * INTMAX_C(1000)) / INTMAX_C(301)>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    using type = typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
-                                            local_digits_2,
-                                            precision_type>::type;
+    using type =
+      typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
+                                  local_digits_2,
+                                  precision_type>::type;
   };
 
   } // namespace policies
@@ -155,9 +156,9 @@
     }
 
   public:
-    #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
+    #if (BOOST_VERSION <= 107200)
     template<int N> static auto get(const mpl::int_<N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
-    #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
+    #elif (BOOST_VERSION <= 107500)
     template<int N> static auto get(const boost::integral_constant<int, N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #else
     template<int N> static auto get(const std::integral_constant<int, N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
@@ -176,9 +177,9 @@
       return result;
     }
 
-    #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107200))
+    #if (BOOST_VERSION <= 107200)
     static inline auto get(const mpl::int_<0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
-    #elif (defined(BOOST_VERSION) && (BOOST_VERSION <= 107500))
+    #elif (BOOST_VERSION <= 107500)
     static inline auto get(const boost::integral_constant<int, 0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #else
     static inline auto get(const std::integral_constant<int, 0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
@@ -195,7 +196,7 @@
   } // namespace constants
   #endif
 
-  #if (defined(BOOST_VERSION) && (BOOST_VERSION <= 107600))
+  #if (BOOST_VERSION <= 107600)
   namespace lanczos {
 
   template <typename T, typename Policy>
