@@ -288,8 +288,8 @@
                 v);
     }
 
-    constexpr fixed_dynamic_array(const fixed_dynamic_array& other_array)
-      : base_class_type(static_cast<const base_class_type&>(other_array)) { }
+    constexpr fixed_dynamic_array(const fixed_dynamic_array& other)
+      : base_class_type(static_cast<const base_class_type&>(other)) { }
 
     fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
@@ -299,19 +299,22 @@
                 base_class_type::begin());
     }
 
-    constexpr fixed_dynamic_array(fixed_dynamic_array&& other_array) noexcept
-      : base_class_type(static_cast<base_class_type&&>(other_array)) { }
+    constexpr fixed_dynamic_array(fixed_dynamic_array&& other) noexcept
+      : base_class_type(static_cast<base_class_type&&>(other)) { }
 
-    auto operator=(const fixed_dynamic_array& other_array) -> fixed_dynamic_array& // NOLINT(cert-oop54-cpp)
+    auto operator=(const fixed_dynamic_array& other) -> fixed_dynamic_array& // NOLINT(cert-oop54-cpp)
     {
-      base_class_type::operator=(static_cast<const base_class_type&>(other_array));
+      if(this != &other)
+      {
+        base_class_type::operator=(static_cast<const base_class_type&>(other));
+      }
 
       return *this;
     }
 
-    auto operator=(fixed_dynamic_array&& other_array) noexcept -> fixed_dynamic_array&
+    auto operator=(fixed_dynamic_array&& other) noexcept -> fixed_dynamic_array&
     {
-      base_class_type::operator=(static_cast<base_class_type&&>(other_array));
+      base_class_type::operator=(static_cast<base_class_type&&>(other));
 
       return *this;
     }
@@ -350,6 +353,30 @@
 
     fixed_static_array(const fixed_static_array&) = default;
     fixed_static_array(fixed_static_array&&) noexcept = default;
+
+    fixed_static_array(std::initializer_list<typename base_class_type::value_type> lst)
+    {
+      const auto size_to_copy =
+        (std::min)(static_cast<size_type>(lst.size()),
+                   static_cast<size_type>(MySize));
+
+      if(size_to_copy < static_cast<size_type>(base_class_type::size()))
+      {
+        std::copy(lst.begin(),
+                  lst.begin() + size_to_copy,
+                  base_class_type::begin());
+
+        std::fill(base_class_type::begin() + size_to_copy,
+                  base_class_type::end(),
+                  static_cast<typename base_class_type::value_type>(0U));
+      }
+      else
+      {
+        std::copy(lst.begin(),
+                  lst.begin() + size_to_copy,
+                  base_class_type::begin());
+      }
+    }
 
     ~fixed_static_array() = default;
 
