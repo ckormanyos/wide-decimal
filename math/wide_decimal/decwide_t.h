@@ -4582,86 +4582,81 @@
   {
     using floating_point_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
-    using std::isfinite;
-    using math::wide_decimal::isfinite;
-
     if(x.iszero())
     {
       return one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
     }
-    else
+
+    const bool b_neg = (x < 0);
+
+    const floating_point_type xx = ((!b_neg) ? x : -x);
+
+    // The algorithm for exp has been taken from MPFUN.
+    // exp(t) = [ (1 + r + r^2/2! + r^3/3! + r^4/4! ...)^p2 ] * 2^n
+    // where p2 is a power of 2 such as 2048, r = t_prime / p2, and
+    // t_prime = t - n*ln2, with n chosen to minimize the absolute
+    // value of t_prime. In the resulting Taylor series, which is
+    // implemented as a hypergeometric function, |r| is bounded by
+    // ln2 / p2.
+
+    // Get (compute beforehad) ln2 as a constant or constant reference value.
+    #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
+    const floating_point_type& ln2 = ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+    #else
+    const floating_point_type  ln2 = ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+    #endif
+
+    const auto nf = static_cast<std::uint32_t>(xx / ln2);
+
+    // Compute the exponential series of the scaled argument.
+    // The scaling is 2^11 = 2048.
+    const auto p2 = static_cast<std::uint32_t>(1ULL << 11U);
+
+    // Compute the series representation of Hypergeometric0F0 taken from
+    // http://functions.wolfram.com/HypergeometricFunctions/Hypergeometric0F0/06/01/
+    // There are no checks on input range or parameter boundaries.
+
+    const floating_point_type xh((xx - (nf * ln2)) / p2);
+
+    floating_point_type x_pow_n_div_n_fact(xh);
+
+    floating_point_type h0f0 =
+        one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+      + x_pow_n_div_n_fact;
+
+    const floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
+
+    // Series expansion of hypergeometric_0f0(; ; x).
+    for(auto   n = static_cast<std::uint32_t>(2U);
+                n < static_cast<std::uint32_t>(UINT32_C(100000));
+              ++n)
     {
-      const bool b_neg = (x < 0);
+      x_pow_n_div_n_fact *= xh;
+      x_pow_n_div_n_fact /= n;
 
-      const floating_point_type xx = ((!b_neg) ? x : -x);
+      using std::fabs;
 
-      // The algorithm for exp has been taken from MPFUN.
-      // exp(t) = [ (1 + r + r^2/2! + r^3/3! + r^4/4! ...)^p2 ] * 2^n
-      // where p2 is a power of 2 such as 2048, r = t_prime / p2, and
-      // t_prime = t - n*ln2, with n chosen to minimize the absolute
-      // value of t_prime. In the resulting Taylor series, which is
-      // implemented as a hypergeometric function, |r| is bounded by
-      // ln2 / p2.
-
-      // Get (compute beforehad) ln2 as a constant or constant reference value.
-      #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
-      const floating_point_type& ln2 = ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
-      #else
-      const floating_point_type  ln2 = ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
-      #endif
-
-      const auto nf = static_cast<std::uint32_t>(xx / ln2);
-
-      // Compute the exponential series of the scaled argument.
-      // The scaling is 2^11 = 2048.
-      const auto p2 = static_cast<std::uint32_t>(1ULL << 11U);
-
-      // Compute the series representation of Hypergeometric0F0 taken from
-      // http://functions.wolfram.com/HypergeometricFunctions/Hypergeometric0F0/06/01/
-      // There are no checks on input range or parameter boundaries.
-
-      const floating_point_type xh((xx - (nf * ln2)) / p2);
-
-      floating_point_type x_pow_n_div_n_fact(xh);
-
-      floating_point_type h0f0 =
-          one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
-        + x_pow_n_div_n_fact;
-
-      const floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
-
-      // Series expansion of hypergeometric_0f0(; ; x).
-      for(auto   n = static_cast<std::uint32_t>(2U);
-                 n < static_cast<std::uint32_t>(UINT32_C(100000));
-               ++n)
+      // TBD: Consider using a tolerance check via iblog/digits10-scale,
+      // as is done in logarithm's AGM iteration (instead of fabs/tol).
+      if((n > static_cast<std::uint32_t>(4U)) && (fabs(x_pow_n_div_n_fact) < tol))
       {
-        x_pow_n_div_n_fact *= xh;
-        x_pow_n_div_n_fact /= n;
-
-        using std::fabs;
-
-        // TBD: Consider using a tolerance check via iblog/digits10-scale,
-        // as is done in logarithm's AGM iteration (instead of fabs/tol).
-        if((n > static_cast<std::uint32_t>(4U)) && (fabs(x_pow_n_div_n_fact) < tol))
-        {
-          break;
-        }
-
-        h0f0 += x_pow_n_div_n_fact;
+        break;
       }
 
-      using std::ldexp;
-      using std::pow;
-
-      const floating_point_type pow_term = pow(h0f0, p2);
-
-      floating_point_type exp_result =
-        ((nf == static_cast<std::uint32_t>(UINT8_C(0)))
-          ?       pow_term
-          : ldexp(pow_term, static_cast<int>(nf)));
-
-      return ((!b_neg) ? exp_result : exp_result.calculate_inv());
+      h0f0 += x_pow_n_div_n_fact;
     }
+
+    using std::ldexp;
+    using std::pow;
+
+    const floating_point_type pow_term = pow(h0f0, p2);
+
+    floating_point_type exp_result =
+      ((nf == static_cast<std::uint32_t>(UINT8_C(0)))
+        ?       pow_term
+        : ldexp(pow_term, static_cast<int>(nf)));
+
+    return ((!b_neg) ? exp_result : exp_result.calculate_inv());
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
