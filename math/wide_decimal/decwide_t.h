@@ -734,11 +734,11 @@
 
       if(mantissa_is_iszero)
       {
-        my_data.fill(static_cast<limb_type>(0));
+        my_data.fill(static_cast<limb_type>(UINT8_C(0)));
 
         if(exponent == static_cast<exponent_type>(0))
         {
-          my_data[0U] = static_cast<limb_type>(1U);
+          my_data[0U] = static_cast<limb_type>(UINT8_C(1));
         }
       }
       else
@@ -748,7 +748,7 @@
         InternalFloatType d = ((!b_neg) ? mantissa : -mantissa);
         exponent_type     e = exponent;
 
-        constexpr InternalFloatType f10(10U);
+        constexpr InternalFloatType f10(static_cast<std::uint_fast8_t>(UINT8_C(10)));
 
         while(d > f10)                                  { d /= f10; ++e; }
         while(d < static_cast<InternalFloatType>(1.0F)) { d *= f10; --e; }
@@ -785,7 +785,7 @@
           d                   *= static_cast<InternalFloatType>(decwide_t_elem_mask);
         }
 
-        std::fill(my_data.begin() + limb_index, my_data.end(), static_cast<limb_type>(0));
+        std::fill(my_data.begin() + limb_index, my_data.end(), static_cast<limb_type>(UINT8_C(0)));
       }
     }
 
@@ -919,16 +919,24 @@
         if(b_copy)
         {
           std::copy(my_n_data_for_add_sub.cbegin(),
-                    my_n_data_for_add_sub.cbegin() + prec_elems_for_add_sub,
+                    my_n_data_for_add_sub.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_data.begin());
+
           my_exp  = v.my_exp;
         }
 
         // There needs to be a carry into the element -1 of the array data
         if(carry != static_cast<limb_type>(0U))
         {
+          const auto offset_to_end =
+            static_cast<std::ptrdiff_t>
+            (
+                static_cast<std::int32_t>(static_cast<std::int32_t>(my_data.size()) - prec_elems_for_add_sub)
+              + static_cast<std::int32_t>(INT32_C(1))
+            );
+
           std::copy_backward(my_data.cbegin(),
-                             my_data.cend() - static_cast<std::uint_fast32_t>((static_cast<std::int32_t>(my_data.size()) - prec_elems_for_add_sub) + 1),
+                             my_data.cend() - offset_to_end,
                              my_data.end());
 
           my_data[0U] = carry;
@@ -1011,7 +1019,7 @@
                        my_data.cbegin() + prec_elems_for_add_sub,
                        [](const limb_type& d) -> bool
                        {
-                         return (d != static_cast<limb_type>(0U));
+                         return (d != static_cast<limb_type>(UINT8_C(0)));
                        });
 
         if(first_nonzero_elem != my_data.cbegin())
@@ -1084,7 +1092,7 @@
         {
           operator=(my_value_max());
         }
-        else if((result_exp.get_is_neg() ) && (result_exp.get_value_unsigned() >= decwide_t_max_exp10))
+        else if((result_exp.get_is_neg()) && (result_exp.get_value_unsigned() >= decwide_t_max_exp10))
         {
           operator=(my_value_min());
         }
@@ -1098,7 +1106,11 @@
                 : detail::negate(static_cast<exponent_type>(result_exp.get_value_unsigned()))
             );
 
-          const std::int32_t prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
+          const auto prec_elems_for_multiply =
+            static_cast<std::int32_t>
+            (
+              (std::min)(my_prec_elem, v.my_prec_elem)
+            );
 
           eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
         }
@@ -1676,8 +1688,6 @@
         // Set the result equal to the initial guess.
         result = decwide_t(one_over_rtn_d, static_cast<exponent_type>(-ne / p));
 
-        const decwide_t my_local_one(one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
-
         for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
                  digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
                  digits *= static_cast<std::int32_t>(2))
@@ -1694,7 +1704,12 @@
                x.precision(new_prec_as_digits10);
 
           // Perform the next iteration.
-          decwide_t term = (((-pow(result, p) * x) + my_local_one) / p) + my_local_one;
+          decwide_t
+            term
+            (
+                (((-pow(result, p) * x) + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) / p)
+              + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+            );
 
           term.precision(new_prec_as_digits10);
 
@@ -1781,8 +1796,12 @@
           }
           else
           {
-            const typename representation_type::size_type offset_decimal_part =
-              static_cast<typename representation_type::size_type>(my_exp / decwide_t_elem_digits10) + 1U;
+            const auto offset_decimal_part =
+              static_cast<typename representation_type::size_type>
+              (
+                  static_cast<typename representation_type::size_type>(my_exp / decwide_t_elem_digits10)
+                + static_cast<typename representation_type::size_type>(UINT8_C(1))
+              );
 
             if(offset_decimal_part >= static_cast<typename representation_type::size_type>(decwide_t_elem_number))
             {
@@ -2055,9 +2074,12 @@
             // Extract the data into an unsigned long long value.
             auto val = static_cast<unsigned long long>(xn.my_data[0]); // NOLINT(google-runtime-int)
 
-            const std::int32_t imax =
-              (std::min)(static_cast<std::int32_t>(static_cast<std::int32_t>(xn.my_exp) / decwide_t_elem_digits10),
-                         static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1)));
+            const auto imax =
+              static_cast<std::int32_t>
+              (
+                (std::min)(static_cast<std::int32_t>(static_cast<std::int32_t>(xn.my_exp) / decwide_t_elem_digits10),
+                           static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1)))
+              );
 
             for(auto   limb_index  = static_cast<typename representation_type::size_type>(1);
                        limb_index <= static_cast<typename representation_type::size_type>(imax);
@@ -2149,9 +2171,17 @@
 
       auto uu = u;
 
-      using local_tmp_array_type =
-        std::array<limb_type,
-                   static_cast<std::size_t>(std::numeric_limits<unsigned long long>::digits10 / static_cast<int>(decwide_t_elem_digits10)) + 3U>; // NOLINT(google-runtime-int)
+      constexpr auto local_tmp_array_size =
+        static_cast<std::size_t>
+        (
+            static_cast<std::size_t>
+            (
+              std::numeric_limits<unsigned long long>::digits10 / static_cast<int>(decwide_t_elem_digits10) // NOLINT(google-runtime-int)
+            )
+          + static_cast<std::size_t>(UINT8_C(3))
+        );
+
+      using local_tmp_array_type = std::array<limb_type, local_tmp_array_size>;
 
       local_tmp_array_type tmp;
 
@@ -2178,15 +2208,18 @@
 
       std::reverse(tmp.begin(), tmp.begin() + i);
 
-      const std::uint_fast32_t copy_limit =
-        (std::min)(static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value),
-                   static_cast<std::uint_fast32_t>(decwide_t_elem_number));
+      const auto copy_limit =
+        static_cast<std::ptrdiff_t>
+        (
+          (std::min)(static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value),
+                     static_cast<std::uint_fast32_t>(decwide_t_elem_number))
+        );
 
       std::copy(tmp.cbegin(),
-                tmp.cbegin() + static_cast<std::ptrdiff_t>((std::min)(i, copy_limit)),
+                tmp.cbegin() + static_cast<std::ptrdiff_t>((std::min)(static_cast<std::ptrdiff_t>(i), copy_limit)),
                 my_data.begin());
 
-      std::fill(my_data.begin() + static_cast<std::ptrdiff_t>((std::min)(i, copy_limit)),
+      std::fill(my_data.begin() + static_cast<std::ptrdiff_t>((std::min)(static_cast<std::ptrdiff_t>(i), copy_limit)),
                 my_data.end(),
                 static_cast<limb_type>(0U));
     }
@@ -2261,8 +2294,15 @@
       }
       else
       {
-        std::copy(result + 1,                                                                                          // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                  result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number),  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        const auto copy_end =
+          static_cast<std::ptrdiff_t>
+          (
+            (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
+                       decwide_t_elem_number)
+          );
+
+        std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                  result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                   my_data.begin());
       }
 
@@ -2305,15 +2345,28 @@
         {
           my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
+          const auto copy_end =
+            static_cast<std::ptrdiff_t>
+            (
+              (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara)
+            );
+
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_end, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
         {
-          std::copy(result + 1, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elems_for_kara), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          const auto copy_end =
+            static_cast<std::ptrdiff_t>
+            (
+              (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
+                         decwide_t_elems_for_kara)
+            );
+
+          std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
 
@@ -2356,15 +2409,28 @@
         {
           my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
+          const auto copy_end =
+            static_cast<std::ptrdiff_t>
+            (
+              (std::min)(prec_elems_for_multiply, decwide_t_elem_number)
+            );
+
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + (std::min)(prec_elems_for_multiply, decwide_t_elem_number), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_end, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
         {
-          std::copy(result + 1, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          const auto copy_end =
+            static_cast<std::ptrdiff_t>
+            (
+              (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1),
+                         decwide_t_elem_number)
+            );
+
+          std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
 
@@ -2410,15 +2476,28 @@
         {
           my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
 
+          const auto copy_end =
+            static_cast<std::ptrdiff_t>
+            (
+              (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara)
+            );
+
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_end, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
         {
-          std::copy(result + 1, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elems_for_kara), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          const auto copy_end =
+            static_cast<std::ptrdiff_t>
+            (
+              (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
+                         decwide_t_elems_for_kara)
+            );
+
+          std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
 
@@ -2462,15 +2541,28 @@
         {
           my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
 
+          const auto copy_end =
+            static_cast<std::ptrdiff_t>
+            (
+              (std::min)(prec_elems_for_multiply, decwide_t_elems_for_fft)
+            );
+
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + (std::min)(prec_elems_for_multiply, decwide_t_elems_for_fft), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_end, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
         {
-          std::copy(result + 1, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    result + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elems_for_fft), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          const auto copy_end =
+            static_cast<std::ptrdiff_t>
+            (
+              (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
+                         decwide_t_elems_for_fft)
+            );
+
+          std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
 
@@ -2525,9 +2617,16 @@
         }
         else
         {
+          const auto copy_end =
+            static_cast<std::ptrdiff_t>
+            (
+              (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
+                         decwide_t_elem_number)
+            );
+
           // Justify the data if necessary.
-          std::copy(my_data.cbegin() +  1, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    my_data.cbegin() + (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1), decwide_t_elem_number), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          std::copy(my_data.cbegin() + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    my_data.cbegin() + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
 
           my_data.back() = static_cast<limb_type>(0U);
@@ -2582,8 +2681,8 @@
           static_cast<std::int32_t>
           (
             ((digits_limb_1_to_n % decwide_t_elem_digits10) != 0)
-              ? least_digit_idx
-              : least_digit_idx + 1
+              ?                           least_digit_idx
+              : static_cast<std::int32_t>(least_digit_idx + static_cast<std::int32_t>(1))
           );
 
         // Find the base-10 order (position) of the least-significant base-10 digit.
@@ -2610,7 +2709,7 @@
           digit_helper_struct_type::digit_at_pos_in_limb
           (
              my_data[static_cast<local_size_type>(round_digit_idx)],
-             unsigned(round_digit_pos)
+             static_cast<unsigned>(round_digit_pos)
           );
 
         const local_limb_type least_digit_p10 = detail::pow10_maker_as_runtime_value(std::uint32_t(least_digit_pos));
