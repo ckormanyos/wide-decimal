@@ -921,7 +921,7 @@
           detail::eval_add_n(p_u,
                              const_limb_pointer_type(p_u),
                              const_limb_pointer_type(p_v),
-                             static_cast<std::ptrdiff_t>(prec_elems_for_add_sub));
+                             prec_elems_for_add_sub);
 
         if(b_copy)
         {
@@ -1031,7 +1031,7 @@
 
         if(first_nonzero_elem != my_data.cbegin())
         {
-          if(first_nonzero_elem == my_data.cbegin() + prec_elems_for_add_sub)
+          if(first_nonzero_elem == my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub))
           {
             // This result of the subtraction is exactly zero (within precision).
             // Reset the sign and the exponent.
