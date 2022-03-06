@@ -836,11 +836,18 @@
         return operator=(v);
       }
 
-      const auto prec_elems_for_add_sub = (std::min)(my_prec_elem, v.my_prec_elem);
+      const auto prec_elems_for_add_sub =
+        static_cast<std::int32_t>
+        (
+          (std::min)(my_prec_elem, v.my_prec_elem)
+        );
 
       // Get the offset for the add/sub operation.
       const auto max_delta_exp =
-        static_cast<exponent_type>(static_cast<exponent_type>(prec_elems_for_add_sub) * decwide_t_elem_digits10);
+        static_cast<exponent_type>
+        (
+          static_cast<exponent_type>(prec_elems_for_add_sub) * decwide_t_elem_digits10
+        );
 
       using local_unsigned_exponent_wrap_type = detail::unsigned_wrap<unsigned_exponent_type, exponent_type>;
 
@@ -914,7 +921,7 @@
           detail::eval_add_n(p_u,
                              const_limb_pointer_type(p_u),
                              const_limb_pointer_type(p_v),
-                             prec_elems_for_add_sub);
+                             static_cast<std::ptrdiff_t>(prec_elems_for_add_sub));
 
         if(b_copy)
         {
@@ -931,8 +938,8 @@
           const auto offset_to_end =
             static_cast<std::ptrdiff_t>
             (
-                static_cast<std::int32_t>(static_cast<std::int32_t>(my_data.size()) - prec_elems_for_add_sub)
-              + static_cast<std::int32_t>(INT32_C(1))
+                static_cast<std::ptrdiff_t>(static_cast<std::int32_t>(my_data.size()) - prec_elems_for_add_sub)
+              + static_cast<std::ptrdiff_t>(INT32_C(1))
             );
 
           std::copy_backward(my_data.cbegin(),
@@ -986,7 +993,7 @@
           // operand pointer p_v to point to the shifted
           // data m_data.
           std::copy(v.my_data.cbegin(),
-                    v.my_data.cbegin() + prec_elems_for_add_sub,
+                    v.my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_n_data_for_add_sub.begin());
           p_u    = my_n_data_for_add_sub.data();
           p_v    = my_data.data();
@@ -1007,7 +1014,7 @@
         if(b_copy)
         {
           std::copy(my_n_data_for_add_sub.cbegin(),
-                    my_n_data_for_add_sub.cbegin() + prec_elems_for_add_sub,
+                    my_n_data_for_add_sub.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_data.begin());
           my_exp  = v.my_exp;
           my_neg  = v.my_neg;
@@ -1016,7 +1023,7 @@
         // Is it necessary to justify the data?
         const auto first_nonzero_elem = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
           std::find_if(my_data.cbegin(),
-                       my_data.cbegin() + prec_elems_for_add_sub,
+                       my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                        [](const limb_type& d) -> bool
                        {
                          return (d != static_cast<limb_type>(UINT8_C(0)));
