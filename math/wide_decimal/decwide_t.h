@@ -519,9 +519,11 @@
         // Get the fraction and base-2 exponent.
         auto man = static_cast<native_float_type>(frexp(f, &my_exponent_part));
 
-        unsigned n2 = 0U;
+        auto n2 = static_cast<unsigned>(0U);
 
-        for(auto i = static_cast<std::uint_fast16_t>(0U); i < static_cast<std::uint_fast16_t>(std::numeric_limits<native_float_type>::digits); ++i)
+        for(auto   i = static_cast<std::uint_fast16_t>(0U);
+                   i < static_cast<std::uint_fast16_t>(std::numeric_limits<native_float_type>::digits);
+                 ++i)
         {
           // Extract the mantissa of the floating-point type in base-2
           // (one bit at a time) and store it in an unsigned long long.
@@ -957,7 +959,9 @@
         // might have to be treated with a positive, negative or zero offset.
         if(       (ofs >  static_cast<std::int32_t>(0))
            || (   (ofs == static_cast<std::int32_t>(0))
-               && (detail::compare_ranges(my_data.data(), v.my_data.data(), static_cast<std::uint_fast32_t>(prec_elems_for_add_sub)) > 0)))
+               && (detail::compare_ranges(  my_data.data(),
+                                          v.my_data.data(),
+                                          static_cast<std::uint_fast32_t>(prec_elems_for_add_sub)) > static_cast<std::int_fast8_t>(0))))
         {
           // In this case, |u| > |v| and ofs is positive.
           // Copy the data of v, shifted down to a lower value
@@ -1134,7 +1138,9 @@
       const bool u_and_v_are_identical =
         (   (my_fpclass == v.my_fpclass)
          && (my_exp     == v.my_exp)
-         && (detail::compare_ranges(my_data.data(), v.my_data.data(), static_cast<std::uint_fast32_t>(decwide_t_elem_number)) == static_cast<std::int_fast8_t>(0)));
+         && (detail::compare_ranges(  my_data.data(),
+                                    v.my_data.data(),
+                                    static_cast<std::uint_fast32_t>(decwide_t_elem_number)) == static_cast<std::int_fast8_t>(0)));
 
       if(u_and_v_are_identical)
       {
@@ -1214,7 +1220,7 @@
 
         // Shift the result of the multiplication one element to the right.
         std::copy_backward(my_data.cbegin(),
-                           my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
+                           my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - static_cast<std::int32_t>(1)),
                            my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
 
         my_data.front() = static_cast<limb_type>(carry);
@@ -1270,11 +1276,15 @@
 
           // Shift result of the division one element to the left.
           std::copy(my_data.cbegin() + static_cast<std::ptrdiff_t>(1),
-                    my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - 1),
+                    my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - static_cast<std::int32_t>(1)),
                     my_data.begin());
 
           {
-            const auto index_prev = static_cast<typename representation_type::size_type>(my_prec_elem - 1);
+            const auto index_prev =
+              static_cast<typename representation_type::size_type>
+              (
+                my_prec_elem - static_cast<std::int32_t>(1)
+              );
 
             const auto val_prev =
               static_cast<limb_type>
@@ -1402,8 +1412,10 @@
               // TBD: Compare the limbs and on the final limb (if reached)
               // assess the result of comparison on the relevant digit-level.
               // This might be needed within the compare_ranges subroutine.
-              const std::int_fast8_t val_cmp_data =
-                detail::compare_ranges(my_data.data(), v.my_data.data(), static_cast<std::uint_fast32_t>(decwide_t_elem_number));
+              const auto val_cmp_data =
+                detail::compare_ranges(  my_data.data(),
+                                       v.my_data.data(),
+                                       static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
               n_result = ((!my_neg) ? val_cmp_data : static_cast<std::int_fast8_t>(-val_cmp_data));
             }
@@ -1417,31 +1429,14 @@
     // Specific special values.
     static constexpr auto my_value_max() -> decwide_t { return from_lst( { static_cast<limb_type>(UINT8_C(9)) }, decwide_t_max_exp10 ); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     static constexpr auto my_value_min() -> decwide_t { return from_lst( { static_cast<limb_type>(UINT8_C(1)) }, decwide_t_min_exp10 ); }
+
     static constexpr auto my_value_eps() -> decwide_t
     {
       return
         from_lst
         (
-          {
-            static_cast<limb_type>
-            (
-              detail::pow10_maker
-              (
-                static_cast<std::uint32_t>
-                (
-                    static_cast<std::int32_t>
-                    (
-                      INT32_C(1) + static_cast<std::int32_t>(((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10)
-                    )
-                  - decwide_t_digits10
-                )
-              )
-            )
-          },
-          -static_cast<exponent_type>
-           (
-             ((decwide_t_digits10 / decwide_t_elem_digits10) + ((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)) * decwide_t_elem_digits10
-           )
+          { static_cast<limb_type>(detail::pow10_maker(decwide_t_power10_limb0_for_epsilon())) },
+          static_cast<exponent_type>(static_cast<std::int32_t>(-decwide_t_digits10_for_epsilon()))
         );
     }
 
@@ -1483,6 +1478,16 @@
 
         other = tmp;
       }
+    }
+
+    auto swap(decwide_t&& other) -> void
+    {
+      my_data.swap(static_cast<representation_type&&>(other.my_data));
+
+      std::swap(my_exp,       other.my_exp);
+      std::swap(my_neg,       other.my_neg);
+      std::swap(my_fpclass,   other.my_fpclass);
+      std::swap(my_prec_elem, other.my_prec_elem);
     }
 
     // Elementary primitives.
@@ -1863,14 +1868,14 @@
 
         for(;;)
         {
-          d0 = static_cast<limb_type>(d0 / static_cast<limb_type>(10U)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+          d0 = static_cast<limb_type>(d0 / static_cast<limb_type>(UINT8_C(10)));
 
           if(d0 == static_cast<limb_type>(0U))
           {
             break;
           }
 
-          p10 = static_cast<limb_type>(p10 * static_cast<limb_type>(10U)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+          p10 = static_cast<limb_type>(p10 * static_cast<limb_type>(UINT8_C(10)));
 
           ++exponent;
         }
@@ -2135,6 +2140,32 @@
     bool                my_neg;       // NOLINT(readability-identifier-naming,modernize-use-default-member-init)
     fpclass_type        my_fpclass;   // NOLINT(readability-identifier-naming)
     std::int32_t        my_prec_elem; // NOLINT(readability-identifier-naming)
+
+    static constexpr auto decwide_t_digits10_for_epsilon() -> std::int32_t
+    {
+      return
+        static_cast<std::int32_t>
+        (
+            static_cast<std::int32_t>
+            (
+                static_cast<std::int32_t> (decwide_t_digits10 / decwide_t_elem_digits10)
+              + static_cast<std::int32_t>((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)
+            )
+          * decwide_t_elem_digits10
+        );
+    }
+
+    static constexpr auto decwide_t_power10_limb0_for_epsilon() -> std::uint32_t
+    {
+      return
+        static_cast<std::uint32_t>
+        (
+          static_cast<std::int32_t>
+          (
+            static_cast<std::int32_t>(INT32_C(1) + decwide_t_digits10_for_epsilon()) - decwide_t_digits10
+          )
+        );
+    }
 
     static auto from_lst(      std::initializer_list<limb_type> limb_values,
                          const exponent_type                    e = static_cast<exponent_type>(0),
