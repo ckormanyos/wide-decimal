@@ -1056,7 +1056,15 @@
                       my_data.end(),
                       static_cast<limb_type>(0));
 
-            my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(sj * static_cast<std::ptrdiff_t>(decwide_t_elem_digits10)));
+            my_exp =
+              static_cast<exponent_type>
+              (
+                  my_exp
+                - static_cast<exponent_type>
+                  (
+                    sj * static_cast<std::ptrdiff_t>(decwide_t_elem_digits10)
+                  )
+              );
           }
         }
 
@@ -1148,7 +1156,7 @@
 
         if(my_neg != v.my_neg)
         {
-          negate();
+          my_neg = (!my_neg);
         }
       }
       else
@@ -1289,7 +1297,11 @@
             const auto val_prev =
               static_cast<limb_type>
               (
-                static_cast<std::uint64_t>(prev * static_cast<std::uint64_t>(decwide_t_elem_mask)) / nn
+                  static_cast<std::uint64_t>
+                  (
+                    prev * static_cast<std::uint64_t>(decwide_t_elem_mask)
+                  )
+                / nn
               );
 
             my_data[index_prev] = val_prev;
@@ -1335,14 +1347,13 @@
     {
       const bool b_neg = (n < static_cast<signed long long>(0)); // NOLINT(google-runtime-int)
 
-      mul_unsigned_long_long((!b_neg) ? static_cast<unsigned long long>(n) : detail::negate(static_cast<unsigned long long>(n))); // NOLINT(google-runtime-int)
+      mul_unsigned_long_long
+      (
+        (!b_neg) ?                static_cast<unsigned long long>(n)  // NOLINT(google-runtime-int)
+                 : detail::negate(static_cast<unsigned long long>(n)) // NOLINT(google-runtime-int)
+      );
 
-      if(b_neg)
-      {
-        negate();
-      }
-
-      return *this;
+      return ((!b_neg) ? *this : negate());
     }
 
     auto div_signed_long_long(signed long long n) -> decwide_t& // NOLINT(google-runtime-int)
@@ -1351,15 +1362,11 @@
 
       div_unsigned_long_long
       (
-        (!b_neg) ? static_cast<unsigned long long>(n) : detail::negate(static_cast<unsigned long long>(n)) // NOLINT(google-runtime-int)
+        (!b_neg) ?                static_cast<unsigned long long>(n)  // NOLINT(google-runtime-int)
+                 : detail::negate(static_cast<unsigned long long>(n)) // NOLINT(google-runtime-int)
       );
 
-      if(b_neg)
-      {
-        negate();
-      }
-
-      return static_cast<decwide_t&>(*this);
+      return ((!b_neg) ? *this : negate());
     }
 
     WIDE_DECIMAL_NODISCARD auto cmp(const decwide_t& v) const -> std::int_fast8_t // NOLINT(readability-function-cognitive-complexity)
@@ -1376,14 +1383,16 @@
       {
         // The value of *this is zero and v is either zero or non-zero.
         n_result = (v.iszero() ? static_cast<std::int_fast8_t>(0)
-                               : (v.my_neg ? static_cast<std::int_fast8_t>(1) : static_cast<std::int_fast8_t>(-1)));
+                               : (v.my_neg ? static_cast<std::int_fast8_t>(1)
+                                           : static_cast<std::int_fast8_t>(-1)));
       }
       else
       {
         if(v.iszero())
         {
           // The value of v is zero and *this is non-zero.
-          n_result = (my_neg ? static_cast<std::int_fast8_t>(-1) : static_cast<std::int_fast8_t>(1));
+          n_result = (my_neg ? static_cast<std::int_fast8_t>(-1)
+                             : static_cast<std::int_fast8_t>(1));
         }
         else
         {
@@ -1392,7 +1401,8 @@
           if(my_neg != v.my_neg)
           {
             // The signs are different.
-            n_result = (my_neg ? static_cast<std::int_fast8_t>(-1) : static_cast<std::int_fast8_t>(1));
+            n_result = (my_neg ? static_cast<std::int_fast8_t>(-1)
+                               : static_cast<std::int_fast8_t>(1));
           }
           else
           {
@@ -1400,7 +1410,8 @@
             {
               // The signs are the same and the exponents are different.
               const std::int_fast8_t val_cmp_exp =
-                ((my_exp < v.my_exp) ? static_cast<std::int_fast8_t>(1) : static_cast<std::int_fast8_t>(-1));
+                ((my_exp < v.my_exp) ? static_cast<std::int_fast8_t>(1)
+                                     : static_cast<std::int_fast8_t>(-1));
 
               n_result = (my_neg ? val_cmp_exp : static_cast<std::int_fast8_t>(-val_cmp_exp));
             }
@@ -1465,7 +1476,8 @@
           +  static_cast<std::int32_t>(((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0)
         );
 
-      my_prec_elem = (std::min)(decwide_t_elem_number, (std::max)(elems, static_cast<std::int32_t>(2)));
+      my_prec_elem = (std::min)(decwide_t_elem_number,
+                                (std::max)(elems, static_cast<std::int32_t>(2)));
     }
 
     auto swap(decwide_t& other) -> void
@@ -1526,7 +1538,15 @@
       const std::int32_t original_prec_elem = my_prec_elem;
 
       // Do the inverse estimate using InternalFloatType precision estimates of mantissa and exponent.
-      operator=(decwide_t(static_cast<InternalFloatType>(1) / dd, static_cast<exponent_type>(-ne)));
+      {
+        const auto one_over_d =
+          static_cast<InternalFloatType>
+          (
+            static_cast<InternalFloatType>(1) / dd
+          );
+
+        operator=(decwide_t(one_over_d, static_cast<exponent_type>(-ne)));
+      }
 
       // Compute the inverse of *this. Quadratically convergent Newton-Raphson iteration
       // is used. During the iterative steps, the precision of the calculation is limited
@@ -1601,7 +1621,19 @@
       *this = decwide_t(sqd, static_cast<exponent_type>(ne / 2));
 
       // Estimate 1.0 / (2.0 * x0) using simple manipulations.
-      decwide_t vi(static_cast<InternalFloatType>(0.5F) / sqd, static_cast<exponent_type>(static_cast<exponent_type>(-ne) / 2)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      const auto inv_half_sqd =
+        static_cast<InternalFloatType>
+        (
+          static_cast<InternalFloatType>(0.5F) / sqd
+        );
+
+      const auto minus_half_ne =
+        static_cast<exponent_type>
+        (
+          static_cast<exponent_type>(-ne) / static_cast<std::int8_t>(INT8_C(2))
+        );
+
+      decwide_t vi(inv_half_sqd, minus_half_ne);
 
       // Compute the square root of x. Coupled Newton iteration
       // as described in "Pi Unleashed" is used. During the
@@ -1615,14 +1647,15 @@
 
       for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
                digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
-               digits *= static_cast<std::int32_t>(2))
+               digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
         // Adjust precision of the terms.
         const auto new_prec_as_digits10 =
           static_cast<std::int32_t>
           (
-              static_cast<std::int32_t>(digits * 2)
-            + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10  + 1), static_cast<std::int32_t>(9))
+              static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
+            + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10  + 1),
+                         static_cast<std::int32_t>(INT8_C(9)))
           );
 
            precision(new_prec_as_digits10);
@@ -1630,7 +1663,7 @@
          x.precision(new_prec_as_digits10);
 
         // Next iteration of vi
-        vi += vi * (((*this * vi) * static_cast<std::int32_t>(-2)) + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
+        vi += vi * (((*this * vi) * static_cast<std::int32_t>(INT8_C(-2))) + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
 
         // Next iteration of *this
         *this += (vi * (-((*this) * (*this)) + x));
@@ -4066,7 +4099,7 @@
 
   // Global unary operators of decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> reference.
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto operator+(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& self) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> { return decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(self); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto operator-(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& self) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> { decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> tmp(self); tmp.negate(); return tmp; }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto operator-(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& self) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> { decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> tmp(self); return tmp.negate(); }
 
   // Global add/sub/mul/div of const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& with const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&.
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>auto operator+(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> { return decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u) += v; }
@@ -4589,7 +4622,7 @@
 
       rtn = rootn_inverse(fabs(x), 3).calculate_inv();
 
-      if(b_neg) { rtn.negate(); }
+      if(b_neg) { static_cast<void>(rtn.negate()); }
     }
     else
     {
@@ -4707,11 +4740,11 @@
     // Note at this time that (ak = bk) = AGM(...)
     // Retrieve the value of pi, divide by (2 * a) and subtract (m * ln2).
 
-    const floating_point_type result =
+    floating_point_type result =
             (pi<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() / ak)
       - (ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() * m);
 
-    return ((!b_negate) ? result : -result);
+    return ((!b_negate) ? result : result.negate());
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
