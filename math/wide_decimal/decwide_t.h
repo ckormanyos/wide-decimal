@@ -174,8 +174,10 @@
                                                                                                                                                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> a)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  template<typename char_type, typename traits_type, const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto operator<<(std::basic_ostream<char_type, traits_type>& os, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& f) -> std::basic_ostream<char_type, traits_type>&;
-  template<typename char_type, typename traits_type, const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto operator>>(std::basic_istream<char_type, traits_type>& is,       decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& f) -> std::basic_istream<char_type, traits_type>&;
+  template<typename char_type, typename traits_type,
+           const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto operator<<(std::basic_ostream<char_type, traits_type>& os, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& f) -> std::basic_ostream<char_type, traits_type>&;
+  template<typename char_type, typename traits_type,
+           const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto operator>>(std::basic_istream<char_type, traits_type>& is,       decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& f) -> std::basic_istream<char_type, traits_type>&;
   #endif // !WIDE_DECIMAL_DISABLE_IOSTREAM
 
   // Global unary operators of decwide_t reference.
@@ -600,7 +602,7 @@
       auto do_nothing() -> void { }
     };
 
-    static initializer init; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static initializer my_initializer; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     #endif
 
   public:
@@ -1454,14 +1456,14 @@
     #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
     static auto my_value_pi() -> const decwide_t&
     {
-      init.do_nothing();
+      my_initializer.do_nothing();
       static const decwide_t val(calc_pi<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
       return val;
     }
 
     static auto my_value_ln_two() -> const decwide_t&
     {
-      init.do_nothing();
+      my_initializer.do_nothing();
       static const decwide_t val(calc_ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
       return val;
     }
@@ -1702,7 +1704,7 @@
       }
       else if(p == static_cast<std::int32_t>(2))
       {
-        result = one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() / sqrt(x);
+        result = sqrt(x).calculate_inv();
       }
       else
       {
@@ -1801,14 +1803,14 @@
           value_is_one = (it_non_zero == my_data.cend());
         }
 
-        if((my_data[0U] == static_cast<limb_type>(decwide_t_elem_mask - 1)) && (my_exp == static_cast<exponent_type>(-decwide_t_elem_digits10)))
+        if((my_data[0U] == static_cast<limb_type>(decwide_t_elem_mask - INT32_C(1))) && (my_exp == static_cast<exponent_type>(-decwide_t_elem_digits10)))
         {
           const auto it_non_nine = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
             std::find_if(my_data.cbegin(),
                          my_data.cend(),
                          [](const limb_type& d) -> bool
                          {
-                           return (d != static_cast<limb_type>(decwide_t::decwide_t_elem_mask - 1));
+                           return (d != static_cast<limb_type>(decwide_t_elem_mask - INT32_C(1)));
                          });
 
           value_is_one = (it_non_nine == my_data.cend());
@@ -2162,9 +2164,9 @@
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
     static limb_type           my_school_mul_pool[static_cast<std::size_t>((decwide_t_elems_for_kara - 1) * 2)];                                                                     // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
-    static limb_type           my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    static fft_float_type      my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
-    static fft_float_type      my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+    static limb_type           my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    static fft_float_type      my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+    static fft_float_type      my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elem_number)) * 4UL))];       // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
     static representation_type my_n_data_for_add_sub; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     #endif
 
@@ -2234,7 +2236,7 @@
       return a;
     }
 
-    auto from_unsigned_long_long(const unsigned long long u) -> void // NOLINT(google-runtime-int)
+    auto from_unsigned_long_long(unsigned long long u) -> void // NOLINT(google-runtime-int)
     {
       my_exp = static_cast<exponent_type>(0);
 
@@ -2296,7 +2298,7 @@
     }
 
     template<typename FloatingPointType>
-    auto from_builtin_float_type(const FloatingPointType l) -> void
+    auto from_builtin_float_type(FloatingPointType l) -> void
     {
       const bool b_neg = (l < static_cast<FloatingPointType>(0.0L));
 
@@ -2585,7 +2587,7 @@
         // Sloanes's A029750: Numbers of the form 2^k times 1, 3, 5 or 7.
         const std::uint32_t kara_elems_for_multiply =
           (std::min)(detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply)),
-                     std::uint32_t(detail::a029750::a029750_as_runtime_value(decwide_t_elems_for_fft - 1) * 8UL));
+                     static_cast<std::uint32_t>(detail::a029750::a029750_as_runtime_value(decwide_t_elems_for_fft - 1) * 8UL));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
         auto my_kara_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * 8U)]; // NOLINT(cppcoreguidelines-owning-memory,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -2661,7 +2663,12 @@
 
         // Obtain the needed FFT size doubled (and doubled again),
         // with the added condition of needing to be a power of 2.
-        const auto n_fft = static_cast<std::uint32_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(prec_elems_for_multiply)) * UINT32_C(4));
+        const auto n_fft =
+          static_cast<std::uint32_t>
+          (
+              detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(prec_elems_for_multiply))
+            * static_cast<std::uint32_t>(UINT8_C(4))
+          );
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
         auto my_af_fft_mul_pool = new fft_float_type[static_cast<std::size_t>(n_fft)]; // NOLINT(cppcoreguidelines-owning-memory)
@@ -2783,7 +2790,7 @@
              static_cast<unsigned>(round_digit_pos)
           );
 
-        const local_limb_type least_digit_p10 = detail::pow10_maker_as_runtime_value(std::uint32_t(least_digit_pos));
+        const local_limb_type least_digit_p10 = detail::pow10_maker_as_runtime_value(static_cast<std::uint32_t>(least_digit_pos));
 
         // Clear the lower base-10 digits of the rounded element.
         my_data[static_cast<local_size_type>(least_digit_idx)] -= static_cast<local_limb_type>(my_data[static_cast<local_size_type>(least_digit_idx)] % least_digit_p10);
@@ -3007,11 +3014,19 @@
             auto n_shift   = static_cast<std::ptrdiff_t>(0);
       const auto n_exp_rem = static_cast<std::ptrdiff_t>(my_exp % static_cast<exponent_type>(decwide_t_elem_digits10));
 
-      if((my_exp % static_cast<exponent_type>(decwide_t_elem_digits10)) != static_cast<exponent_type>(0))
       {
-        n_shift = ((my_exp < static_cast<exponent_type>(0))
-                    ? static_cast<std::ptrdiff_t>(n_exp_rem + static_cast<std::ptrdiff_t>(decwide_t_elem_digits10))
-                    : static_cast<std::ptrdiff_t>(n_exp_rem));
+        const auto my_exp_mod =
+          static_cast<exponent_type>
+          (
+            my_exp % static_cast<exponent_type>(decwide_t_elem_digits10)
+          );
+
+        if(my_exp_mod != static_cast<exponent_type>(0))
+        {
+          n_shift = ((my_exp < static_cast<exponent_type>(0))
+                      ? static_cast<std::ptrdiff_t>(n_exp_rem + static_cast<std::ptrdiff_t>(decwide_t_elem_digits10))
+                      : static_cast<std::ptrdiff_t>(n_exp_rem));
+        }
       }
 
       // Make sure that there are enough digits for the decimal point shift.
@@ -3054,7 +3069,15 @@
 
         str.erase(static_cast<std::string::size_type>(pos_plus_one), static_cast<std::uint_fast32_t>(1U));
 
-        my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(static_cast<exponent_type>(n) * static_cast<exponent_type>(decwide_t_elem_digits10)));
+        my_exp =
+          static_cast<exponent_type>
+          (
+              my_exp
+            + static_cast<exponent_type>
+              (
+                static_cast<exponent_type>(n) * static_cast<exponent_type>(decwide_t_elem_digits10)
+              )
+          );
       }
 
       // Pad the decimal part such that its value is an even
@@ -3076,7 +3099,7 @@
       const auto max_dec =
         static_cast<std::ptrdiff_t>
         (
-            static_cast<std::ptrdiff_t>(decwide_t_elem_number - 1)
+            static_cast<std::ptrdiff_t>(decwide_t_elem_number - INT32_C(1))
           * static_cast<std::ptrdiff_t>(decwide_t_elem_digits10)
         );
 
@@ -3128,10 +3151,18 @@
         const auto it =   str.cbegin()
                         + static_cast<std::string::difference_type>(static_cast<std::string::difference_type>(pos_plus_one) + idigits);
 
-        const std::string str_i1(it,
-                                 it + static_cast<std::string::difference_type>(decwide_t_elem_digits10));
+        const auto str_i1 =
+          std::string
+          (
+            it,
+            it + static_cast<std::string::difference_type>(decwide_t_elem_digits10)
+          );
 
-        const auto i1 = static_cast<typename representation_type::size_type>(i + 1);
+        const auto i1 =
+          static_cast<typename representation_type::size_type>
+          (
+            i + static_cast<std::string::difference_type>(1)
+          );
 
         {
           static_assert(std::numeric_limits<unsigned long>::digits >= std::numeric_limits<limb_type>::digits, // NOLINT(google-runtime-int)
@@ -3139,7 +3170,11 @@
 
           char* ptr_end { }; // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
-          my_data[i1] = static_cast<limb_type>(std::strtoul(str_i1.c_str(), &ptr_end, 10)); // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+          my_data[i1] =
+            static_cast<limb_type>
+            (
+              std::strtoul(str_i1.c_str(), &ptr_end, static_cast<int>(INT8_C(10)))
+            );
         }
       }
 
@@ -3158,9 +3193,9 @@
                    static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
       // Extract the remaining digits from decwide_t after the decimal point.
-      std::array<char, 10U> ptr_str { }; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      std::array<char, static_cast<std::size_t>(UINT8_C(10))> ptr_str { };
 
-      ptr_str.fill(static_cast<char>(0));
+      ptr_str.fill(static_cast<char>(INT8_C(0)));
 
       char* ptr_end = util::baselexical_cast(my_data[0], ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
@@ -3169,7 +3204,7 @@
       // Extract all of the digits from decwide_t, beginning with the first data element.
       for(auto i = static_cast<std::uint_fast32_t>(1U); i < number_of_elements; i++)
       {
-        using data_element_rep_type = typename std::conditional<(std::numeric_limits<limb_type>::digits <= 32), // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        using data_element_rep_type = typename std::conditional<(std::numeric_limits<limb_type>::digits <= static_cast<int>(INT8_C(32))),
                                                                  std::uint32_t,
                                                                  limb_type>::type;
 
@@ -3196,12 +3231,13 @@
         // Truncate the string
         str = str.substr(static_cast<std::uint_fast32_t>(0U), number_of_digits);
 
-        if(round >= static_cast<std::uint32_t>(5U)) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if(round >= static_cast<std::uint32_t>(UINT8_C(5)))
         {
           auto ix = static_cast<std::string::size_type>(str.length() - 1U);
 
           // Every trailing 9 must be rounded up.
-          while((ix != 0U) && ((static_cast<int>(str.at(ix)) - '0') == 9)) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+          while(   (ix != static_cast<std::size_t>(0U))
+                && (static_cast<int>(static_cast<int>(str.at(ix)) - static_cast<int>('0')) == static_cast<int>(INT8_C(9))))
           {
             str.at(ix) = static_cast<char>('0');
 
@@ -3211,7 +3247,7 @@
           if(ix == 0U)
           {
             // There were nothing but trailing nines.
-            if((static_cast<int>(str.at(ix)) - 0x30) == 9) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+            if(static_cast<int>(static_cast<int>(str.at(ix)) - static_cast<int>(INT8_C(0x30))) == static_cast<int>(INT8_C(9)))
             {
               // Increment up to the next order and adjust exponent.
               str.at(ix) = static_cast<char>('1');
@@ -3250,7 +3286,13 @@
       static const std::stringstream str_default;
       static const std::streamsize   prec_default = str_default.precision();
 
-      const std::uint_fast32_t os_precision  = ((os.precision() <= static_cast<std::streamsize>(0)) ? static_cast<std::uint_fast32_t>(prec_default) : static_cast<std::uint_fast32_t>(os.precision()));
+      const auto os_precision =
+        static_cast<std::uint_fast32_t>
+        (
+          ((os.precision() <= static_cast<std::streamsize>(0))
+            ? static_cast<std::uint_fast32_t>(prec_default)
+            : static_cast<std::uint_fast32_t>(os.precision()))
+        );
 
       // Determine the kind of output format requested (scientific, fixed, none).
       detail::os_float_field_type my_float_field { };
@@ -3319,7 +3361,7 @@
         }
         else
         {
-          const auto exp_plus_one                   = static_cast<exponent_type>(the_exp + 1);
+          const auto exp_plus_one                   = static_cast<exponent_type>(the_exp      + static_cast<exponent_type>(1));
           const auto exp_plus_one_plus_my_precision = static_cast<exponent_type>(exp_plus_one + static_cast<exponent_type>(os_precision));
 
           the_number_of_digits_i_want_from_decwide_t = (std::min)(static_cast<std::uint_fast32_t>((std::max)(exp_plus_one_plus_my_precision, static_cast<exponent_type>(0))), max10_plus_one);
@@ -3461,7 +3503,7 @@
 
       char* ptr_end = util::baselexical_cast(u_exp, ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
-      std::string str_exp = std::string(ptr_str.data(), ptr_end);
+      auto str_exp = std::string(ptr_str.data(), ptr_end);
 
       // Format the exponent string to have a width that is an even multiple of three.
       const auto str_exp_len      = static_cast<std::size_t>(str_exp.length());
@@ -3528,7 +3570,11 @@
           static_cast<exponent_type>
           (
               static_cast<exponent_type>(os_precision)
-            - static_cast<exponent_type>(static_cast<exponent_type>(str.length() - 1U) - (the_exp + 1))
+            - static_cast<exponent_type>
+              (
+                  static_cast<exponent_type>(str.length() - static_cast<std::size_t>(1U))
+                - static_cast<exponent_type>(the_exp + static_cast<exponent_type>(1))
+              )
           );
 
         if(n_pad > static_cast<exponent_type>(0))
@@ -3621,7 +3667,11 @@
         const auto u_pad =
           static_cast<std::uint_fast32_t>
           (
-            os_precision - static_cast<std::uint_fast32_t>(str.length() - static_cast<std::uint_fast32_t>(1U))
+              os_precision
+            - static_cast<std::uint_fast32_t>
+              (
+                str.length() - static_cast<std::uint_fast32_t>(1U)
+              )
           );
 
         str.insert(str.cend(), u_pad, static_cast<char>('0'));
@@ -3771,40 +3821,56 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   constexpr auto zero() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
-    using other_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    using other_wide_decimal_type =
+      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
-    return other_wide_decimal_type::from_lst( { static_cast<typename other_wide_decimal_type::limb_type>(0U) } );
+    return
+      other_wide_decimal_type::from_lst
+      (
+        { static_cast<typename other_wide_decimal_type::limb_type>(0U) }
+      );
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   constexpr auto one() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
-    using other_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    using other_wide_decimal_type =
+      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
-    return other_wide_decimal_type::from_lst( { static_cast<typename other_wide_decimal_type::limb_type>(1U) } );
+    return
+      other_wide_decimal_type::from_lst
+      (
+        { static_cast<typename other_wide_decimal_type::limb_type>(1U) }
+      );
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   constexpr auto two() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
-    using other_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    using other_wide_decimal_type =
+      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
-    return other_wide_decimal_type::from_lst( { static_cast<typename other_wide_decimal_type::limb_type>(2U) } );
+    return
+      other_wide_decimal_type::from_lst
+      (
+        { static_cast<typename other_wide_decimal_type::limb_type>(2U) }
+      );
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   constexpr auto half() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
-    using other_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    using other_wide_decimal_type =
+      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     return
-    other_wide_decimal_type::from_lst
-    (
-      {
-        static_cast<typename other_wide_decimal_type::limb_type>(other_wide_decimal_type::decwide_t_elem_mask / 2)
-      },
-      -other_wide_decimal_type::decwide_t_elem_digits10
-    );
+      other_wide_decimal_type::from_lst
+      (
+        {
+          static_cast<typename other_wide_decimal_type::limb_type>(other_wide_decimal_type::decwide_t_elem_mask / 2)
+        },
+        -other_wide_decimal_type::decwide_t_elem_digits10
+      );
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr std::int32_t decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_digits10;       // NOLINT(readability-redundant-declaration,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
@@ -3825,15 +3891,15 @@
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::initializer decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::init; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
+  typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::initializer decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_initializer; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
   #endif
 
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_school_mul_pool[static_cast<std::size_t>((decwide_t_elems_for_kara - 1) * 2)];                                                                     // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(std::uint32_t(std::uint32_t(decwide_t_elem_number)) * 4UL))];       // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool  [static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elems_for_fft - 1)) * 8UL))]; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elem_number)) * 4UL))];       // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_bf_fft_mul_pool[static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elem_number)) * 4UL))];       // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-avoid-non-const-global-variables)
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::representation_type     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_n_data_for_add_sub;                                                                                                                       // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
   #endif
 
@@ -3855,7 +3921,8 @@
       pfn_callback_to_report_digits10(UINT32_C(0));
     }
 
-    using floating_point_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    using floating_point_type =
+      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
     floating_point_type val_pi;
 
@@ -3879,7 +3946,7 @@
       (
           static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10 / 2)
         + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10  + 1),
-                     static_cast<std::uint32_t>(9U))
+                     static_cast<std::uint32_t>(UINT8_C(9)))
       );
 
     using std::log;
@@ -3901,7 +3968,9 @@
         )
       );
 
-    for(auto k = static_cast<unsigned>(0U); k < 48U; ++k) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    for(auto   k = static_cast<unsigned>(UINT8_C(0));
+               k < static_cast<unsigned>(UINT8_C(48));
+             ++k)
     {
       using std::sqrt;
 
@@ -3924,16 +3993,17 @@
       // If it is there are enough precise digits, then the calculation
       // is finished.
       const auto ib =
-        (std::max)
+        static_cast<std::int32_t>
         (
-          static_cast<std::int32_t>(0),
-          static_cast<std::int32_t>(-ilogb(iterate_term))
+          (std::max)(static_cast<std::int32_t>(0),
+                     static_cast<std::int32_t>(-ilogb(iterate_term)))
         );
 
       const auto digits10_of_iteration =
         static_cast<std::uint32_t>
         (
-          static_cast<std::uint64_t>(static_cast<std::uint64_t>(ib) * digits10_scale) / UINT32_C(1000)
+            static_cast<std::uint64_t>(static_cast<std::uint64_t>(ib) * digits10_scale)
+          / static_cast<std::uint32_t>(UINT16_C(1000))
         );
 
       if(pfn_callback_to_report_digits10 != nullptr)
@@ -4003,7 +4073,7 @@
       (
           static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10 / 2)
         + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
-                     static_cast<std::uint32_t>(9U))
+                     static_cast<std::uint32_t>(UINT8_C(9)))
       );
 
     using std::log;
@@ -4025,7 +4095,9 @@
         )
       );
 
-    for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    for(auto   k = static_cast<std::uint32_t>(UINT8_C(0));
+               k < static_cast<std::uint32_t>(UINT8_C(128));
+             ++k)
     {
       using std::ilogb;
 
@@ -4040,7 +4112,8 @@
       const auto digits10_of_iteration =
         static_cast<std::uint32_t>
         (
-          static_cast<std::uint64_t>(static_cast<std::uint64_t>(ib) * digits10_scale) / UINT32_C(1000)
+            static_cast<std::uint64_t>(static_cast<std::uint64_t>(ib) * digits10_scale)
+          / static_cast<std::uint32_t>(UINT16_C(1000))
         );
 
       const floating_point_type ak_tmp(ak);
@@ -4688,7 +4761,7 @@
       (
           static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10 / 2)
         + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
-                     static_cast<std::uint32_t>(9U))
+                     static_cast<std::uint32_t>(UINT8_C(9)))
       );
 
     using std::lround;
@@ -4698,11 +4771,18 @@
       (
         lround
         (
-          static_cast<float>(1000.0F * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix))) / log(10.0F)
+            static_cast<float>
+            (
+                1000.0F
+              * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix))
+            )
+          / log(10.0F)
         )
       );
 
-    for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(128); ++k) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    for(auto   k = static_cast<std::uint32_t>(UINT8_C(0));
+               k < static_cast<std::uint32_t>(UINT8_C(128));
+             ++k)
     {
       // Check for the number of significant digits to be
       // at least half of the requested digits. If at least
