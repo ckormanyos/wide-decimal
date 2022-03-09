@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -224,7 +224,13 @@
 
     using local_reverse_iterator_type = std::reverse_iterator<local_limb_type*>;
 
-    local_reverse_iterator_type ir(r + (count * 2));
+    const auto r_range =
+      static_cast<std::size_t>
+      (
+        count * static_cast<std::int_fast32_t>(INT8_C(2))
+      );
+
+    local_reverse_iterator_type ir(r + r_range);
 
     auto carry = static_cast<local_double_limb_type>(0U);
 

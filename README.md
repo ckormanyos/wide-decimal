@@ -192,7 +192,7 @@ Let's consider also the macro `WIDE_DECIMAL_NAMESPACE` in greater detail.
 
 This is an advanced macro intended to be used in strict, exacting applications for which
 using the unqualified, global namespace `math` (i.e., `namespace` `::math`) is undesired or inacceptable.
-We recall that all parts of the wide-integer implementation,
+We recall that all parts of the wide-decimal implementation,
 such as the `decwide_t` class and its associated implementation
 details reside within `namespace` `::math::wide_decimal`
 
@@ -200,12 +200,12 @@ Defining the macro `WIDE_DECIMAL_NAMESPACE` to be something like,
 for instance,
 
 ```sh
--DWIDE_INTEGER_NAMESPACE=something_unique
+-DWIDE_DECIMAL_NAMESPACE=something_unique
 ```
 
-places all parts of the wide-integer implementation and its details
-within the prepended outer namespace `something_unique` ---
-as in
+places all parts of the wide-decimal's `uintwide_t` template class implementation
+and its associated details within the prepended outer namespace
+`something_unique` --- as in
 
 ```cpp
 namespace something_unique::math::wide_decimal

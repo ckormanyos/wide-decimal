@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -230,7 +230,7 @@ auto math::wide_decimal::example004_bessel_recur() -> bool
   // Calculate 1,001 decimal digits of the value of a cylindrical Bessel function.
   // N[BesselJ[9, 123456789/10000000], 1001]
 
-  using dec1001_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001)), std::uint32_t, void>;
+  using dec1001_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001)), std::uint32_t>;
 
   // Downward recursion and simultaneous summation of
   // the normalization factor.

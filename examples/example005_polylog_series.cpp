@@ -27,7 +27,9 @@ namespace local_polylog
     floating_point_type x_pow_k(x);
     floating_point_type sum    (x);
 
-    for(std::uint_fast32_t k = UINT32_C(2); k < UINT32_C(100000); ++k)
+    for(auto   k = static_cast<std::uint_fast32_t>(UINT32_C(2));
+               k < static_cast<std::uint_fast32_t>(UINT32_C(100000));
+             ++k)
     {
       x_pow_k *= x;
 
