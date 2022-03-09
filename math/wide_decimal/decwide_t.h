@@ -599,6 +599,14 @@
         decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_value_ln_two();
       }
 
+      initializer(const initializer&) = delete;
+      initializer(initializer&&) = delete;
+
+      auto operator=(const initializer&) -> initializer& = delete;
+      auto operator=(initializer&&) noexcept -> initializer& = delete;
+
+      ~initializer() = default;
+
       auto do_nothing() -> void { }
     };
 
@@ -789,7 +797,9 @@
           d                   *= static_cast<InternalFloatType>(decwide_t_elem_mask);
         }
 
-        std::fill(my_data.begin() + limb_index, my_data.end(), static_cast<limb_type>(UINT8_C(0)));
+        std::fill(my_data.begin() + static_cast<std::ptrdiff_t>(limb_index),
+                  my_data.end(),
+                  static_cast<limb_type>(UINT8_C(0)));
       }
     }
 
@@ -1474,8 +1484,8 @@
       const auto elems =
         static_cast<std::int32_t>
         (
-             static_cast<std::int32_t>  (prec_digits / decwide_t_elem_digits10)
-          +  static_cast<std::int32_t>(((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0)
+            static_cast<std::int32_t>  (prec_digits / decwide_t_elem_digits10)
+          + static_cast<std::int32_t>(((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0)
         );
 
       my_prec_elem = (std::min)(decwide_t_elem_number,
@@ -2144,13 +2154,13 @@
       return unsigned_long_long_result;
     }
 
-    explicit operator long double       () const { return                     extract_long_double(); }
-    explicit operator double            () const { return static_cast<double>(extract_long_double()); }
-    explicit operator float             () const { return static_cast<float> (extract_long_double()); }
+    explicit operator long double() const { return                     extract_long_double(); }
+    explicit operator double     () const { return static_cast<double>(extract_long_double()); }
+    explicit operator float      () const { return static_cast<float> (extract_long_double()); }
 
     template<typename IntegralType,
              typename = typename std::enable_if<std::is_integral<IntegralType>::value>::type>
-    explicit constexpr operator IntegralType() const
+    explicit operator IntegralType() const
     {
       return ((std::is_signed<IntegralType>::value)
                ? static_cast<IntegralType>(extract_signed_long_long())
@@ -2158,7 +2168,7 @@
     }
 
     // Cast operator to built-in Boolean type.
-    explicit constexpr operator bool() const { return (!iszero()); }
+    explicit operator bool() const { return (!iszero()); }
 
   private:
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
@@ -2612,7 +2622,7 @@
         // Handle a potential carry.
         if(result[0U] != static_cast<limb_type>(0U)) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         {
-          my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
+          my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
           const auto copy_end =
             static_cast<std::ptrdiff_t>

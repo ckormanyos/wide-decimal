@@ -16,7 +16,7 @@
 
 namespace example008_bernoulli
 {
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
+  constexpr std::int32_t wide_decimal_digits10 = INT32_C(1001);
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;

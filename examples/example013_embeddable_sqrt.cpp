@@ -27,7 +27,7 @@ auto math::wide_decimal::example013_embeddable_sqrt() -> bool
 {
   using local_limb_type = std::uint16_t;
 
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(101);
+  constexpr std::int32_t wide_decimal_digits10 = INT32_C(101);
 
   constexpr std::int32_t local_elem_number =
     math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
