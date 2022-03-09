@@ -952,7 +952,7 @@
           const auto offset_to_end =
             static_cast<std::ptrdiff_t>
             (
-                static_cast<std::ptrdiff_t>(static_cast<std::int32_t>(my_data.size()) - prec_elems_for_add_sub)
+                static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(my_data.size()) - static_cast<std::ptrdiff_t>(prec_elems_for_add_sub))
               + static_cast<std::ptrdiff_t>(INT32_C(1))
             );
 
@@ -1240,7 +1240,7 @@
 
         // Shift the result of the multiplication one element to the right.
         std::copy_backward(my_data.cbegin(),
-                           my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - static_cast<std::int32_t>(1)),
+                           my_data.cbegin() + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(my_prec_elem) - static_cast<std::ptrdiff_t>(1)),
                            my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
 
         my_data.front() = static_cast<limb_type>(carry);
@@ -1296,14 +1296,14 @@
 
           // Shift result of the division one element to the left.
           std::copy(my_data.cbegin() + static_cast<std::ptrdiff_t>(1),
-                    my_data.cbegin() + static_cast<std::ptrdiff_t>(my_prec_elem - static_cast<std::int32_t>(1)),
+                    my_data.cbegin() + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(my_prec_elem) - static_cast<std::ptrdiff_t>(1)),
                     my_data.begin());
 
           {
             const auto index_prev =
               static_cast<typename representation_type::size_type>
               (
-                my_prec_elem - static_cast<std::int32_t>(1)
+                static_cast<std::ptrdiff_t>(my_prec_elem) - static_cast<std::ptrdiff_t>(1)
               );
 
             const auto val_prev =
@@ -2471,10 +2471,10 @@
         auto my_kara_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * 8U)]; // NOLINT(cppcoreguidelines-owning-memory,llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         #endif
 
-        auto u_local = my_kara_mul_pool + (kara_elems_for_multiply * 0U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        auto v_local = my_kara_mul_pool + (kara_elems_for_multiply * 1U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        auto result  = my_kara_mul_pool + (kara_elems_for_multiply * 2U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        auto t       = my_kara_mul_pool + (kara_elems_for_multiply * 4U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        auto u_local = my_kara_mul_pool + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(0))); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        auto v_local = my_kara_mul_pool + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(1))); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        auto result  = my_kara_mul_pool + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(2))); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        auto t       = my_kara_mul_pool + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
         std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
@@ -3075,7 +3075,15 @@
         const auto n_rem_is_zero = static_cast<std::int32_t>((static_cast<std::int32_t>(n_pos % decwide_t_elem_digits10) == static_cast<std::int32_t>(0)) ? static_cast<std::int32_t>(1) : static_cast<std::int32_t>(0));
         const auto n             = static_cast<std::int32_t>(static_cast<std::int32_t>(n_pos / decwide_t_elem_digits10) - n_rem_is_zero);
 
-        str.insert(static_cast<std::uint_fast32_t>(static_cast<std::int32_t>(n_pos - static_cast<std::int32_t>(n * decwide_t_elem_digits10))), ".");
+        {
+          const auto pos_to_insert =
+            static_cast<std::size_t>
+            (
+              static_cast<std::int32_t>(n_pos - static_cast<std::int32_t>(n * decwide_t_elem_digits10))
+            );
+
+          str.insert(pos_to_insert, ".");
+        }
 
         str.erase(static_cast<std::string::size_type>(pos_plus_one), static_cast<std::uint_fast32_t>(1U));
 

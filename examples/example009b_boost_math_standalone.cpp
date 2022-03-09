@@ -45,10 +45,18 @@ auto sin_series(const FloatingPointType& x) -> FloatingPointType
         bool              term_is_neg = true;
   const FloatingPointType tol         = std::numeric_limits<FloatingPointType>::epsilon() * x;
 
-  for(std::uint32_t k = 3U; k < UINT32_C(0xFFFF); k += 2U)
+  for(auto k = static_cast<std::uint32_t>(UINT32_C(3));
+           k < static_cast<std::uint32_t>(UINT32_C(10000));
+           k = static_cast<std::uint32_t>(k + static_cast<std::uint32_t>(UINT8_C(2))))
   {
+    const auto k_times_k_minus_one =
+      static_cast<std::uint32_t>
+      (
+        k * static_cast<std::uint32_t>(k - static_cast<std::uint32_t>(UINT8_C(1)))
+      );
+
     term *= x2;
-    term /= std::uint32_t(k * std::uint32_t(k - 1U));
+    term /= k_times_k_minus_one;
 
     if(term < tol)
     {
