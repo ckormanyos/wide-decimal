@@ -14,7 +14,7 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example001b_roots_almost_intege
 auto math::wide_decimal::example001b_roots_almost_integer() -> bool
 #endif
 {
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(5001);
+  constexpr std::int32_t wide_decimal_digits10 = INT32_C(5001);
 
   using dec5001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
 

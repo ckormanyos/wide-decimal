@@ -18,7 +18,7 @@ auto math::wide_decimal::example001d_pow2_from_list() -> bool
 {
   using local_limb_type = std::uint32_t;
 
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(100);
+  constexpr std::int32_t wide_decimal_digits10 = INT32_C(100);
 
   using wide_decimal_type = math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, void>;
 

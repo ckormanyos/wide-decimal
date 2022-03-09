@@ -15,7 +15,7 @@
 namespace local_zeta
 {
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  using dec51_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<51U, std::uint32_t, void>;
+  using dec51_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
   #else
   using dec51_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
   #endif

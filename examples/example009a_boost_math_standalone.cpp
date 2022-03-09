@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -28,7 +28,7 @@
 
 namespace example009a_boost
 {
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
+  constexpr std::int32_t wide_decimal_digits10 = INT32_C(1001);
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;

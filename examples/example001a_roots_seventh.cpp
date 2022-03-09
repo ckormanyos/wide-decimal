@@ -16,7 +16,7 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example001a_roots_seventh() -> 
 auto math::wide_decimal::example001a_roots_seventh() -> bool
 #endif
 {
-  using dec101_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(101))>;
+  using dec101_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(101)), std::uint32_t, void>;
 
   const dec101_t r7 = rootn(dec101_t(123456U) / 100, 7);
 

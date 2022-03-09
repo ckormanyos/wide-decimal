@@ -16,7 +16,7 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example000a_multiply_pi_squared
 auto math::wide_decimal::example000a_multiply_pi_squared() -> bool
 #endif
 {
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
+  constexpr std::int32_t wide_decimal_digits10 = INT32_C(1001);
 
   using float_type = math::wide_decimal::decwide_t<wide_decimal_digits10>;
 

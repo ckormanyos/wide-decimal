@@ -12,7 +12,7 @@
 
 namespace example007_catalan
 {
-  constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(1001);
+  constexpr std::int32_t wide_decimal_digits10 = INT32_C(1001);
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
