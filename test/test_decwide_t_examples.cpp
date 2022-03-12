@@ -23,9 +23,9 @@
 #endif
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
-auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_examples_part1__() -> bool
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_examples_part1__() -> bool // NOLINT(readability-identifier-naming)
 #else
-auto test_decwide_t_examples_part1__() -> bool
+auto test_decwide_t_examples_part1__() -> bool // NOLINT(readability-identifier-naming)
 #endif
 {
   bool result_is_ok = true;
@@ -49,9 +49,9 @@ auto test_decwide_t_examples_part1__() -> bool
 }
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
-auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_examples_part2__() -> bool
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_examples_part2__() -> bool // NOLINT(readability-identifier-naming)
 #else
-auto test_decwide_t_examples_part2__() -> bool
+auto test_decwide_t_examples_part2__() -> bool // NOLINT(readability-identifier-naming)
 #endif
 {
   bool result_is_ok = true;

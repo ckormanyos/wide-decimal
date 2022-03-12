@@ -1,4 +1,4 @@
-Wide-decimal\
+﻿Wide-decimal\
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
 ==================
 
@@ -58,7 +58,7 @@ void do_something()
 ```
 
 The local data type `dec101_t` is defined with a C++11 alias.
-The first template parameter `101U` sets the decimal digit
+The first template parameter `INT32_C(101)` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
 the default limb type is 32 bits in width and unsigned.
