@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -36,7 +36,7 @@ namespace local_zeta
   template<>
   auto pi() -> dec51_t { return dec51_t( "3.14159265358979323846264338327950288419716939937510582097"); }
 
-  auto compute_primes_via_square_root(std::deque<std::uint_fast16_t>& primes,
+  auto compute_primes_via_square_root(std::deque<std::uint_fast16_t>& primes, // NOLINT(google-runtime-references)
                                       const std::uint_fast16_t maximum_value) -> void
   {
     // This is a helper function that produces a small table of primes.

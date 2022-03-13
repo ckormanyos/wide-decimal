@@ -560,7 +560,7 @@
 
       ~native_float_parts() = default;
 
-      auto operator=(const native_float_parts& other) noexcept -> native_float_parts&
+      auto operator=(const native_float_parts& other) noexcept -> native_float_parts& // NOLINT(cert-oop54-cpp)
       {
         if(this != &other)
         {
@@ -779,10 +779,14 @@
         my_exp = e;
         my_neg = b_neg;
 
-        constexpr std::int32_t digit_loops = static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
-                                                                       / static_cast<std::int32_t>(decwide_t_elem_digits10))
-                 + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
-                                                                       % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0);
+        constexpr auto digit_loops =
+          static_cast<std::int32_t>
+          (
+              static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                        / static_cast<std::int32_t>(decwide_t_elem_digits10))
+            + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+                                                                  % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0)
+          );
 
         typename representation_type::size_type limb_index;
 
@@ -807,7 +811,7 @@
     ~decwide_t() = default;
 
     // Assignment operator.
-    auto operator=(const decwide_t& other) -> decwide_t&
+    auto operator=(const decwide_t& other) -> decwide_t& // NOLINT(cert-oop54-cpp)
     {
       if(this != &other)
       {
@@ -946,9 +950,12 @@
           my_exp  = v.my_exp;
         }
 
-        // There needs to be a carry into the element -1 of the array data
         if(carry != static_cast<limb_type>(0U))
         {
+          // There needs to be a carry into the element -1 of the array data.
+          // But since this can't be done, shift the data to make place for the
+          // carry result and adjust the exponent accordingly.
+
           const auto offset_to_end =
             static_cast<std::ptrdiff_t>
             (
@@ -962,7 +969,11 @@
 
           my_data[0U] = carry;
 
-          my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
+          my_exp =
+            static_cast<exponent_type>
+            (
+              my_exp + static_cast<exponent_type>(decwide_t_elem_digits10)
+            );
         }
       }
       else
@@ -1421,11 +1432,14 @@
             if(my_exp != v.my_exp)
             {
               // The signs are the same and the exponents are different.
-              const std::int_fast8_t val_cmp_exp =
-                ((my_exp < v.my_exp) ? static_cast<std::int_fast8_t>(1)
-                                     : static_cast<std::int_fast8_t>(-1));
+              const auto val_cmp_exp =
+                static_cast<std::int_fast8_t>
+                (
+                  ((my_exp < v.my_exp) ? static_cast<std::int_fast8_t>(1)
+                                       : static_cast<std::int_fast8_t>(-1))
+                );
 
-              n_result = (my_neg ? val_cmp_exp : static_cast<std::int_fast8_t>(-val_cmp_exp));
+              n_result = static_cast<std::int_fast8_t>(my_neg ? val_cmp_exp : static_cast<std::int_fast8_t>(-val_cmp_exp));
             }
             else
             {
@@ -1440,7 +1454,7 @@
                                        v.my_data.data(),
                                        static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
-              n_result = ((!my_neg) ? val_cmp_data : static_cast<std::int_fast8_t>(-val_cmp_data));
+              n_result = static_cast<std::int_fast8_t>((!my_neg) ? val_cmp_data : static_cast<std::int_fast8_t>(-val_cmp_data));
             }
           }
         }
@@ -1467,14 +1481,18 @@
     static auto my_value_pi() -> const decwide_t&
     {
       my_initializer.do_nothing();
+
       static const decwide_t val(calc_pi<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
+
       return val;
     }
 
     static auto my_value_ln_two() -> const decwide_t&
     {
       my_initializer.do_nothing();
+
       static const decwide_t val(calc_ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
+
       return val;
     }
     #endif
@@ -1554,7 +1572,7 @@
         const auto one_over_d =
           static_cast<InternalFloatType>
           (
-            static_cast<InternalFloatType>(1) / dd
+            static_cast<InternalFloatType>(1.0F) / dd
           );
 
         operator=(decwide_t(one_over_d, static_cast<exponent_type>(-ne)));
@@ -3021,8 +3039,13 @@
       }
 
       // Shift the decimal point such that the exponent is an even multiple of decwide_t_elem_digits10.
-            auto n_shift   = static_cast<std::ptrdiff_t>(0);
-      const auto n_exp_rem = static_cast<std::ptrdiff_t>(my_exp % static_cast<exponent_type>(decwide_t_elem_digits10));
+      auto n_shift   = static_cast<std::ptrdiff_t>(0);
+
+      const auto n_exp_rem =
+        static_cast<std::ptrdiff_t>
+        (
+          my_exp % static_cast<exponent_type>(decwide_t_elem_digits10)
+        );
 
       {
         const auto my_exp_mod =
@@ -3201,7 +3224,7 @@
     #endif //!(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
 
     #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-    auto get_output_string(      std::string&       str,
+    auto get_output_string(      std::string&       str, // NOLINT(google-runtime-references)
                                  exponent_type&     the_exp,
                            const std::uint_fast32_t number_of_digits) const -> void
     {
@@ -3286,7 +3309,7 @@
       }
     }
 
-    auto wr_string(std::string& str, std::ostream& os) const -> void // NOLINT(readability-function-cognitive-complexity)
+    auto wr_string(std::string& str, std::ostream& os) const -> void // NOLINT(readability-function-cognitive-complexity,google-runtime-references)
     {
       // Assess the format flags.
       const std::ios::fmtflags my_flags = os.flags();
@@ -3436,7 +3459,7 @@
       }
     }
 
-    static auto wr_string_scientific(      std::string&       str,
+    static auto wr_string_scientific(      std::string&       str, // NOLINT(google-runtime-references)
                                      const exponent_type      the_exp,
                                      const std::uint_fast32_t os_precision,
                                      const bool               my_showpoint,
@@ -3538,7 +3561,7 @@
       str += str_exp;
     }
 
-    static auto wr_string_fixed(      std::string&       str,
+    static auto wr_string_fixed(      std::string&       str, // NOLINT(google-runtime-references)
                                 const exponent_type      the_exp,
                                 const std::uint_fast32_t os_precision,
                                 const bool               my_showpoint,
@@ -3643,7 +3666,7 @@
       }
     }
 
-    static auto special_extend_string_to_precision(std::string& str,
+    static auto special_extend_string_to_precision(std::string& str, // NOLINT(google-runtime-references)
                                                    std::uint_fast32_t os_precision) -> void
     {
       // This is the special case of showpoint in combination with
@@ -4884,7 +4907,7 @@
     // http://functions.wolfram.com/HypergeometricFunctions/Hypergeometric0F0/06/01/
     // There are no checks on input range or parameter boundaries.
 
-    const floating_point_type xh((xx - (nf * ln2)) / p2);
+    const floating_point_type xh((xx - floating_point_type(nf * ln2)) / p2);
 
     floating_point_type x_pow_n_div_n_fact(xh);
 
@@ -4896,8 +4919,8 @@
 
     // Series expansion of hypergeometric_0f0(; ; x).
     for(auto   n = static_cast<std::uint32_t>(2U);
-                n < static_cast<std::uint32_t>(UINT32_C(100000));
-              ++n)
+               n < static_cast<std::uint32_t>(UINT32_C(100000));
+             ++n)
     {
       x_pow_n_div_n_fact *= xh;
       x_pow_n_div_n_fact /= n;

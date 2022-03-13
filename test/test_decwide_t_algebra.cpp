@@ -51,9 +51,9 @@ namespace test_decwide_t
 } // namespace test_decwide_t
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
-auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_add_____() -> bool
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_add_____() -> bool // NOLINT(readability-identifier-naming)
 #else
-auto test_decwide_t_algebra_add_____() -> bool
+auto test_decwide_t_algebra_add_____() -> bool // NOLINT(readability-identifier-naming)
 #endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =
@@ -79,9 +79,9 @@ auto test_decwide_t_algebra_add_____() -> bool
 }
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
-auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_sub_____() -> bool
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_sub_____() -> bool // NOLINT(readability-identifier-naming)
 #else
-auto test_decwide_t_algebra_sub_____() -> bool
+auto test_decwide_t_algebra_sub_____() -> bool // NOLINT(readability-identifier-naming)
 #endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =
@@ -107,9 +107,9 @@ auto test_decwide_t_algebra_sub_____() -> bool
 }
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
-auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_mul_____() -> bool
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_mul_____() -> bool // NOLINT(readability-identifier-naming)
 #else
-auto test_decwide_t_algebra_mul_____() -> bool
+auto test_decwide_t_algebra_mul_____() -> bool // NOLINT(readability-identifier-naming)
 #endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =
@@ -135,9 +135,9 @@ auto test_decwide_t_algebra_mul_____() -> bool
 }
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
-auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_div_____() -> bool
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_div_____() -> bool // NOLINT(readability-identifier-naming)
 #else
-auto test_decwide_t_algebra_div_____() -> bool
+auto test_decwide_t_algebra_div_____() -> bool // NOLINT(readability-identifier-naming)
 #endif
 {
   #if defined(WIDE_DECIMAL_NAMESPACE)
@@ -168,9 +168,9 @@ auto test_decwide_t_algebra_div_____() -> bool
 }
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
-auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_sqrt____() -> bool
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_sqrt____() -> bool // NOLINT(readability-identifier-naming)
 #else
-auto test_decwide_t_algebra_sqrt____() -> bool
+auto test_decwide_t_algebra_sqrt____() -> bool // NOLINT(readability-identifier-naming)
 #endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =
@@ -196,9 +196,9 @@ auto test_decwide_t_algebra_sqrt____() -> bool
 }
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
-auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_log_____() -> bool
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-naming)
 #else
-auto test_decwide_t_algebra_log_____() -> bool
+auto test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-naming)
 #endif
 {
   using independent_algebra_test_decwide_t_boost_cpp_type =

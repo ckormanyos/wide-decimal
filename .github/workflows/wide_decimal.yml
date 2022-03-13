@@ -26,20 +26,16 @@ jobs:
           - compiler: clang++
             clang_tidy: "clang-tidy"
             container: johnmcfarlane/cnl_ci:clang-13-libcpp
-
     runs-on: ubuntu-20.04
     container: ${{matrix.container}}
     steps:
       - uses: actions/checkout@v2
-
       - name: create build directory
         run: mkdir $GITHUB_WORKSPACE/build
-
       - name: install Boost
         run: |
           apt-get update --quiet
           apt-get install --no-install-recommends --quiet --yes libboost-dev
-
       - name: build
         working-directory: build
         run: |
@@ -52,27 +48,25 @@ jobs:
               -GNinja \
               $GITHUB_WORKSPACE
           cmake --build .
-
       - name: test
         working-directory: build
         run: ctest --verbose --output-on-failure
-
   gnumake-clang-tidy-12-native:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11 ]
-        compiler: [ g++-11, clang++-12 ]
+        standard: [ c++20 ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: '0'
       - name: update-tools
-        run: sudo apt install gcc-11 g++-11 clang-12 clang-tidy-12
+        run: sudo apt install clang clang-tidy
       - name: clone-submods-bootstrap-headers-boost-develop
         run: |
           git clone -b develop --depth 1 https://github.com/boostorg/boost.git ../boost-root
@@ -97,15 +91,15 @@ jobs:
           echo "verify empty word count of ./tmp/all.tidy_txt"
           wc ./tmp/all.tidy_txt | grep '0 0 0'
   gcc-clang-native:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -128,15 +122,15 @@ jobs:
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
   gcc-clang-native-outer-namespace:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -159,15 +153,15 @@ jobs:
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
   gcc-clang-native-cpp_dec_float:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -190,15 +184,15 @@ jobs:
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
   gcc-clang-native-asan:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -221,15 +215,15 @@ jobs:
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
   gcc-clang-native-cpp_dec_float-asan:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -252,15 +246,15 @@ jobs:
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
   gcc-clang-native-ubsan:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -283,15 +277,15 @@ jobs:
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
   gcc-clang-native-cpp_dec_float-ubsan:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -314,15 +308,15 @@ jobs:
           ls -la ./wide_decimal.exe
           ./wide_decimal.exe
   gcc-clang-native-tsan:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -352,8 +346,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++-10, g++-11, clang++-10, clang++-11 ]
         standard: [ c++11, c++14, c++17, c++20 ]
+        compiler: [ g++-10, g++-11, clang++-10, clang++-11 ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -385,8 +379,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++-11, clang++-12 ]
         standard: [ c++11, c++14, c++17, c++20 ]
+        compiler: [ g++-11, clang++-12 ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -418,8 +412,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++-5 ]
         standard: [ c++11, c++14 ]
+        compiler: [ g++-5 ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -451,8 +445,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++-10, clang++-10 ]
         standard: [ c++11, c++14, c++17, c++20 ]
+        compiler: [ g++-10, clang++-10 ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -484,8 +478,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [ g++, clang++ ]
         standard: [ c++11, c++14, c++17, c++2a ]
+        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
         with:

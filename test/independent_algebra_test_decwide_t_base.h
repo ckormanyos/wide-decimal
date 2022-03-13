@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -25,7 +25,7 @@
   public:
     virtual ~independent_algebra_test_decwide_t_base() = default;
 
-    virtual void get_string(std::string&) const = 0;
+    virtual void get_string(std::string&) const = 0; // NOLINT(google-runtime-references)
 
   protected:
     independent_algebra_test_decwide_t_base() = default;

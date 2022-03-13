@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -78,7 +78,7 @@
       return compare_is_ok;
     }
 
-    static void get_random_float_string(      std::string& str,
+    static void get_random_float_string(      std::string& str, // NOLINT(google-runtime-references)
                                         const bool         do_seed_random_generators,
                                         const bool         value_is_unsigned = false)
     {
