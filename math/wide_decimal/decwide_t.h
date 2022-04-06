@@ -519,7 +519,12 @@
         using std::frexp;
 
         // Get the fraction and base-2 exponent.
-        auto man = static_cast<native_float_type>(frexp(f, &my_exponent_part));
+
+        // TBD: Need to properly handle frexp when GCC's __float128
+        // is active (in case of -std=gnu++XX).
+        // This happens when native_float_type is of type __float128.
+
+        auto man = static_cast<native_float_type>(frexp(static_cast<long double>(f), &my_exponent_part));
 
         auto n2 = static_cast<unsigned>(0U);
 
@@ -546,7 +551,18 @@
         }
 
         // Ensure that the value is normalized and adjust the exponent.
-        my_mantissa_part |= static_cast<unsigned long long>(1ULL << static_cast<unsigned>(std::numeric_limits<native_float_type>::digits - 1)); // NOLINT(google-runtime-int)
+
+        // TBD: Need to properly handle this left shif amount
+        // when GCC's __float128 is active (in case of -std=gnu++XX).
+        // This happens when native_float_type is of type __float128.
+        const auto max_left_shift_amount =
+          (std::min)
+          (
+            std::numeric_limits<native_float_type>::digits,
+            std::numeric_limits<long double>::digits
+          );
+
+        my_mantissa_part |= static_cast<unsigned long long>(1ULL << static_cast<unsigned>(max_left_shift_amount - 1)); // NOLINT(google-runtime-int)
         my_exponent_part -= 1;
       }
 
