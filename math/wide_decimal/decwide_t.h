@@ -2556,10 +2556,6 @@
         delete [] my_kara_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
         #endif
       }
-      else
-      {
-        ;
-      }
     }
 
     template<const std::int32_t OtherDigits10>
@@ -2760,10 +2756,6 @@
         delete [] my_af_fft_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
         delete [] my_bf_fft_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
         #endif
-      }
-      else
-      {
-        ;
       }
     }
 
