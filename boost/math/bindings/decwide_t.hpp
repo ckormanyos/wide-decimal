@@ -16,6 +16,10 @@
   #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
   #endif
 
+  #if (BOOST_VERSION <= 107100) && defined(__GNUC__)
+  #include <boost/type_traits/is_constructible.hpp>
+  #endif
+
   #if (BOOST_VERSION <= 107600)
   #include <boost/math/bindings/detail/big_lanczos.hpp>
   #endif
@@ -156,7 +160,7 @@
     }
 
   public:
-    #if (BOOST_VERSION <= 107200)
+    #if (BOOST_VERSION <= 107100)
     template<int N> static auto get(const mpl::int_<N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #elif (BOOST_VERSION <= 107500)
     template<int N> static auto get(const boost::integral_constant<int, N>&) -> const result_type& // NOLINT(hicpp-named-parameter,readability-named-parameter)
@@ -177,7 +181,7 @@
       return result;
     }
 
-    #if (BOOST_VERSION <= 107200)
+    #if (BOOST_VERSION <= 107100)
     static inline auto get(const mpl::int_<0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
     #elif (BOOST_VERSION <= 107500)
     static inline auto get(const boost::integral_constant<int, 0>&) -> result_type // NOLINT(hicpp-named-parameter,readability-named-parameter)
