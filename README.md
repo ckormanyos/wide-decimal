@@ -1,6 +1,11 @@
 ﻿Wide-decimal\
-[![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
 ==================
+
+[![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/context:cpp)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/alerts/)
+[![Boost Software License 1.0](https://img.shields.io/badge/license-BSL%201.0-blue.svg)](https://github.com/ckormanyos/wide-decimal/blob/master/LICENSE_1_0.txt)
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ckormanyos/wide-decimal)](https://github.com/ckormanyos/wide-decimal)
 
 Wide-decimal implements a generic C++ template for extended precision decimal float types.
 
