@@ -16,6 +16,10 @@
   #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
   #endif
 
+  #if (BOOST_VERSION <= 107100) && defined(__GNUC__)
+  #include <boost/type_traits/is_constructible.hpp>
+  #endif
+
   #if (BOOST_VERSION <= 107600)
   #include <boost/math/bindings/detail/big_lanczos.hpp>
   #endif
