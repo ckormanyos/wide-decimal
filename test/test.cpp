@@ -14,6 +14,10 @@
 // When using g++-10 and -std=c++20
 // g++-10 -finline-functions -finline-limit=32 -march=native -mtune=native -O3 -Wall -Wextra -Wconversion -Wsign-conversion -Wno-cast-function-type -std=c++20 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_78_0 -pthread -lpthread test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example000a_multiply_pi_squared.cpp examples/example000_multiply_nines.cpp examples/example001_roots_sqrt.cpp examples/example001a_roots_seventh.cpp examples/example001b_roots_almost_integer.cpp examples/example001c_roots_sqrt_limb08.cpp examples/example001d_pow2_from_list.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example002c_pi_quintic.cpp examples/example002d_pi_limb08.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp examples/example006_logarithm.cpp examples/example007_catalan_series.cpp examples/example008_bernoulli_tgamma.cpp examples/example009_boost_math_standalone.cpp examples/example009a_boost_math_standalone.cpp examples/example009b_boost_math_standalone.cpp examples/example010_hypergeometric_2f1.cpp examples/example010a_hypergeometric_1f1.cpp examples/example011_trig_trapezoid_integral.cpp examples/example012_rational_floor_ceil.cpp examples/example013_embeddable_sqrt.cpp examples/example013a_embeddable_agm.cpp -o wide_decimal.exe
 
+// cd .tidy/make
+// make prepare -f make_tidy_01_generic.gmk MY_BOOST_ROOT=/mnt/c/boost/boost_1_78_0
+// make tidy -f make_tidy_01_generic.gmk --jobs=8 MY_BOOST_ROOT=/mnt/c/boost/boost_1_78_0
+
 // cd /mnt/c/Users/User/Documents/Ks/PC_Software/NumericalPrograms/ExtendedNumberTypes/wide_decimal
 // PATH=/home/chris/local/coverity/cov-analysis-linux64-2021.12.1/bin:$PATH
 // cov-build --dir cov-int g++ -finline-functions -finline-limit=32 -march=native -mtune=native -O3 -Wall -Wextra -Wconversion -Wsign-conversion -Wno-cast-function-type -std=c++11 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_78_0 -pthread -lpthread test/test.cpp test/test_decwide_t_algebra.cpp test/test_decwide_t_examples.cpp examples/example000a_multiply_pi_squared.cpp examples/example000_multiply_nines.cpp examples/example001_roots_sqrt.cpp examples/example001a_roots_seventh.cpp examples/example001b_roots_almost_integer.cpp examples/example001c_roots_sqrt_limb08.cpp examples/example001d_pow2_from_list.cpp examples/example002_pi.cpp examples/example002a_pi_small_limb.cpp examples/example002b_pi_100k.cpp examples/example002c_pi_quintic.cpp examples/example002d_pi_limb08.cpp examples/example003_zeta.cpp examples/example004_bessel_recur.cpp examples/example005_polylog_series.cpp examples/example006_logarithm.cpp examples/example007_catalan_series.cpp examples/example008_bernoulli_tgamma.cpp examples/example009_boost_math_standalone.cpp examples/example009a_boost_math_standalone.cpp examples/example009b_boost_math_standalone.cpp examples/example010_hypergeometric_2f1.cpp examples/example010a_hypergeometric_1f1.cpp examples/example011_trig_trapezoid_integral.cpp examples/example012_rational_floor_ceil.cpp examples/example013_embeddable_sqrt.cpp examples/example013a_embeddable_agm.cpp -o wide_decimal.exe
@@ -57,12 +61,10 @@ auto local::run() -> bool
   using local_clock_type = std::chrono::high_resolution_clock;
   using time_point_type  = typename local_clock_type::time_point;
 
-  auto start_all = local_clock_type::now();
+  auto start = time_point_type();
+  auto stop  = time_point_type();
 
-  time_point_type stop;
-  time_point_type start;
-
-  bool result_is_ok;
+  bool result_is_ok { };
 
   #if (BOOST_VERSION < 107900)
   try
@@ -87,13 +89,13 @@ auto local::run() -> bool
                   && result_test_decwide_t_algebra_log____is_ok);
   #if (BOOST_VERSION < 107900)
   }
-  catch(::boost::wrapexcept<::boost::math::rounding_error>& e)
+  catch(boost_wrapexcept_round_type& e)
   {
     result_is_ok = false;
 
     std::cout << "Exception: boost_wrapexcept_round_type: " << e.what() << std::endl;
   }
-  catch(::boost::wrapexcept<std::domain_error>& e)
+  catch(boost_wrapexcept_domain_type& e)
   {
     result_is_ok = false;
 
@@ -107,26 +109,33 @@ auto local::run() -> bool
 auto main() -> int
 {
   using local_clock_type = std::chrono::high_resolution_clock;
-  using time_point_type  = typename local_clock_type::time_point;
 
   const auto start = local_clock_type::now();
 
-  const bool result_is_ok = local::run();
+  const auto result_is_ok = local::run();
 
   const auto stop = local_clock_type::now();
 
-  const float t_sec =
-    float(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / 1000.0F;
-
   {
+    constexpr auto one_thousand_milliseconds = 1000.0F;
+
+    const auto test_duration_sec =
+      static_cast<float>
+      (
+        static_cast<float>
+        (
+          std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
+        )
+        / one_thousand_milliseconds
+      );
+
     const auto flg = std::cout.flags();
 
-    // Print the total results.
     std::cout << "result_is_ok:                             : "
               << std::boolalpha
               << result_is_ok
               << ", time: "
-              << t_sec
+              << test_duration_sec
               << "s"
               << std::endl
               ;
