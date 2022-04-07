@@ -50,20 +50,20 @@
       : elem_count(count),
         elems     (nullptr)
     {
-      allocator_type my_a(a);
-
       if(elem_count > 0U)
       {
+        allocator_type my_a(a);
+
         elems = std::allocator_traits<allocator_type>::allocate(my_a, elem_count);
-      }
 
-      iterator it = begin();
+        iterator it = begin();
 
-      while(it != end())
-      {
-        std::allocator_traits<allocator_type>::construct(my_a, it, v);
+        while(it != end())
+        {
+          std::allocator_traits<allocator_type>::construct(my_a, it, v);
 
-        ++it;
+          ++it;
+        }
       }
     }
 
