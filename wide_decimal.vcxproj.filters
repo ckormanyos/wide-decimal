@@ -252,6 +252,10 @@
     <None Include=".github\toolchains\gcc.cmake">
       <Filter>.github\toolchains</Filter>
     </None>
+    <None Include=".github\workflows\wide_decimal_sonar.yml">
+      <Filter>.github\workflows</Filter>
+    </None>
+    <None Include="sonar-project.properties" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="examples\CMakeLists.txt">
