@@ -33,6 +33,11 @@
 #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
 #endif
 
+#if ((BOOST_VERSION < 107900) && defined(__GNUC__))
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+
 #if (BOOST_VERSION < 107900)
 #include <boost/math/policies/error_handling.hpp>
 #include <boost/throw_exception.hpp>
@@ -145,3 +150,7 @@ auto main() -> int
 
   return (result_is_ok ? 0 : -1);
 }
+
+#if ((BOOST_VERSION < 107900) && defined(__GNUC__))
+#pragma GCC diagnostic pop
+#endif

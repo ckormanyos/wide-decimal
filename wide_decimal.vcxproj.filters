@@ -157,6 +157,9 @@
     <ClCompile Include="util\stdcpp\stdcpp_patch.cpp">
       <Filter>Source Files\util\stdcpp</Filter>
     </ClCompile>
+    <ClCompile Include="test\coverity.c">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h">
