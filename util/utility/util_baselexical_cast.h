@@ -14,6 +14,65 @@
 
   namespace util {
 
+  template<typename OutputIterator,
+           const bool UpperCase,
+           const std::uint_fast8_t BaseRepresentation>
+  struct baselexical_cast_helper
+  {
+  private:
+    using output_value_type = typename std::iterator_traits<OutputIterator>::value_type;
+
+  public:
+    static auto extract(output_value_type) -> char = delete;
+  };
+
+  template<typename OutputIterator,
+           const bool UpperCase>
+  struct baselexical_cast_helper<OutputIterator, UpperCase, 16U>
+  {
+  private:
+    using output_value_type = typename std::iterator_traits<OutputIterator>::value_type;
+
+  public:
+    static auto extract(output_value_type c) -> output_value_type
+    {
+      if(c <= static_cast<output_value_type>(9)) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      {
+        c = static_cast<output_value_type>(c + static_cast<output_value_type>('0'));
+      }
+      else if((c >= static_cast<output_value_type>(0xA)) && (c <= static_cast<output_value_type>(0xF))) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      {
+        c =
+        static_cast<output_value_type>
+        (
+            static_cast<output_value_type>(UpperCase ? static_cast<output_value_type>('A') : static_cast<output_value_type>('a'))
+          + static_cast<output_value_type>(c - static_cast<output_value_type>(0xA)) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        );
+      }
+
+      return c;
+    }
+  };
+
+  template<typename OutputIterator,
+           const bool UpperCase>
+  struct baselexical_cast_helper<OutputIterator, UpperCase, 10U>
+  {
+  private:
+    using output_value_type = typename std::iterator_traits<OutputIterator>::value_type;
+
+  public:
+    static auto extract(output_value_type c) -> output_value_type
+    {
+      if(c <= static_cast<output_value_type>(9)) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      {
+        c = static_cast<output_value_type>(c + static_cast<output_value_type>('0'));
+      }
+
+      return c;
+    }
+  };
+
   template<typename UnsignedIntegerType,
            typename OutputIterator,
            const std::uint_fast8_t BaseRepresentation = 10U, // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -54,7 +113,7 @@
         );
       }
 
-      *out_first = c;
+      *out_first = baselexical_cast_helper<OutputIterator, UpperCase, BaseRepresentation>::extract(c);
     }
     while(x != static_cast<unsigned_integer_type>(0U));
 
