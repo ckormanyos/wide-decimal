@@ -28,7 +28,7 @@
 
   template<typename OutputIterator,
            const bool UpperCase>
-  struct baselexical_cast_helper<OutputIterator, UpperCase, 16U>
+  struct baselexical_cast_helper<OutputIterator, UpperCase, 16U> // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   {
   private:
     using output_value_type = typename std::iterator_traits<OutputIterator>::value_type;
@@ -56,7 +56,7 @@
 
   template<typename OutputIterator,
            const bool UpperCase>
-  struct baselexical_cast_helper<OutputIterator, UpperCase, 10U>
+  struct baselexical_cast_helper<OutputIterator, UpperCase, 10U> // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   {
   private:
     using output_value_type = typename std::iterator_traits<OutputIterator>::value_type;
