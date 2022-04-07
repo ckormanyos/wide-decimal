@@ -1,4 +1,4 @@
-﻿Wide-decimal\
+﻿Wide-decimal
 ==================
 
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
