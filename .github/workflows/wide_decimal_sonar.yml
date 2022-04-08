@@ -30,6 +30,7 @@ jobs:
           cd ../boost-root
           git submodule update --init tools
           git submodule update --init libs/config
+          git submodule update --init libs/math
           git submodule update --init libs/multiprecision
           ./bootstrap.sh
           ./b2 headers
