@@ -623,7 +623,10 @@
 
       ~initializer() = default;
 
-      auto do_nothing() -> void { }
+      auto do_nothing() -> void
+      {
+        // Do nothing on purpose.
+      }
     };
 
     static initializer my_initializer; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
@@ -2387,10 +2390,21 @@
 
       // Use school multiplication.
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      auto my_school_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(prec_elems_for_multiply) * 2U)]; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-owning-memory)
-      #endif
+      using school_mul_pool_type = util::dynamic_array<limb_type>;
 
-      auto result = my_school_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
+      auto my_school_mul_pool =
+        school_mul_pool_type
+        (
+          static_cast<typename school_mul_pool_type::size_type>
+          (
+            static_cast<typename school_mul_pool_type::size_type>(prec_elems_for_multiply) * 2U
+          )
+        );
+
+      typename school_mul_pool_type::pointer result = my_school_mul_pool.data();
+      #else
+      limb_type* result = &my_school_mul_pool[0U];
+      #endif
 
       using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
@@ -2422,11 +2436,6 @@
                   result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                   my_data.begin());
       }
-
-      #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-      // De-allocate the dynamic memory for school multiplication arrays.
-      delete [] my_school_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
-      #endif
     }
 
     template<const std::int32_t OtherDigits10>
@@ -2445,10 +2454,21 @@
       {
         // Use school multiplication.
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        auto my_school_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(prec_elems_for_multiply) * 2U)]; // NOLINT(cppcoreguidelines-owning-memory,llvm-qualified-auto,readability-qualified-auto)
-        #endif
+        using school_mul_pool_type = util::dynamic_array<limb_type>;
 
-        auto result = my_school_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+        auto my_school_mul_pool =
+          school_mul_pool_type
+          (
+            static_cast<typename school_mul_pool_type::size_type>
+            (
+              static_cast<typename school_mul_pool_type::size_type>(prec_elems_for_multiply) * 2U
+            )
+          );
+
+        typename school_mul_pool_type::pointer result = my_school_mul_pool.data();
+        #else
+        limb_type* result = &my_school_mul_pool[0U];
+        #endif
 
         using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
@@ -2486,11 +2506,6 @@
                     result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
-
-        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        // De-allocate the dynamic memory for the school multiplication arrays.
-        delete [] my_school_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
-        #endif
       }
       else if(   (prec_elems_for_multiply >= decwide_t_elems_for_kara)
               && (prec_elems_for_multiply <  decwide_t_elems_for_fft))
@@ -2573,10 +2588,21 @@
       {
         // Use school multiplication.
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        auto my_school_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(prec_elems_for_multiply) * 2U)]; // NOLINT(cppcoreguidelines-owning-memory)
-        #endif
+        using school_mul_pool_type = util::dynamic_array<limb_type>;
 
-        auto result = my_school_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
+        auto my_school_mul_pool =
+          school_mul_pool_type
+          (
+            static_cast<typename school_mul_pool_type::size_type>
+            (
+              static_cast<typename school_mul_pool_type::size_type>(prec_elems_for_multiply) * 2U
+            )
+          );
+
+        typename school_mul_pool_type::pointer result = my_school_mul_pool.data();
+        #else
+        limb_type* result = &my_school_mul_pool[0U];
+        #endif
 
         using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
@@ -2614,11 +2640,6 @@
                     result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
-
-        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        // De-allocate the dynamic memory for the school multiplication arrays.
-        delete [] my_school_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
-        #endif
       }
       else if(   (prec_elems_for_multiply >= decwide_t_elems_for_kara)
               && (prec_elems_for_multiply <  decwide_t_elems_for_fft))
@@ -2915,12 +2936,22 @@
       auto pos_of_e_func =
         [](const std::string& local_str) -> std::string::size_type
         {
-          auto pos_of_e = std::string::npos;
+          std::string::size_type pos_of_e = std::string::npos;
 
-          if(   ((pos_of_e = local_str.find('e')) != std::string::npos)
-             || ((pos_of_e = local_str.find('E')) != std::string::npos))
+          const auto pos_of_e_lo = local_str.find('e');
+
+          if(pos_of_e_lo != std::string::npos)
           {
-            ;
+            pos_of_e = pos_of_e_lo;
+          }
+          else
+          {
+            const auto pos_of_e_hi = local_str.find('E');
+
+            if(pos_of_e_hi != std::string::npos)
+            {
+              pos_of_e = pos_of_e_hi;
+            }
           }
 
           return pos_of_e;
