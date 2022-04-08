@@ -9,7 +9,7 @@ name: wide_decimal_sonar
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
