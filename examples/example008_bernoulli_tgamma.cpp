@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -40,7 +40,12 @@ namespace example008_bernoulli
     #endif
   }
 
-  util::dynamic_array<wide_decimal_type> bernoulli_table(static_cast<std::uint_fast32_t>(static_cast<float>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95F)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,cppcoreguidelines-avoid-non-const-global-variables,readability-magic-numbers,cert-err58-cpp)
+  auto bernoulli_table() -> util::dynamic_array<wide_decimal_type>&
+  {
+    static util::dynamic_array<wide_decimal_type> bernoulli_table(static_cast<std::uint_fast32_t>(static_cast<float>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95F)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,cppcoreguidelines-avoid-non-const-global-variables,readability-magic-numbers,cert-err58-cpp)
+
+    return bernoulli_table;
+  }
 
   template<typename FloatingPointType>
   auto bernoulli_b(FloatingPointType* bn, std::uint32_t n) -> void
@@ -124,7 +129,7 @@ namespace example008_bernoulli
 
           floating_point_type one_over_x_pow_two_n_minus_one = 1 / xx;
     const floating_point_type one_over_x2                    =  one_over_x_pow_two_n_minus_one * one_over_x_pow_two_n_minus_one;
-          floating_point_type sum                            = (one_over_x_pow_two_n_minus_one * bernoulli_table[2U]) / 2U;
+          floating_point_type sum                            = (one_over_x_pow_two_n_minus_one * bernoulli_table()[2U]) / 2U;
 
     floating_point_type tol = std::numeric_limits<floating_point_type>::epsilon();
 
@@ -149,12 +154,12 @@ namespace example008_bernoulli
     }
 
     // Perform the Bernoulli series expansion.
-    for(auto n2 = static_cast<std::uint32_t>(4U); n2 < static_cast<std::uint32_t>(bernoulli_table.size()); n2 += 2U)
+    for(auto n2 = static_cast<std::uint32_t>(4U); n2 < static_cast<std::uint32_t>(bernoulli_table().size()); n2 += 2U)
     {
       one_over_x_pow_two_n_minus_one *= one_over_x2;
 
       const floating_point_type term =
-          (one_over_x_pow_two_n_minus_one * bernoulli_table[n2])
+          (one_over_x_pow_two_n_minus_one * bernoulli_table()[n2])
         / static_cast<std::uint64_t>(static_cast<std::uint64_t>(n2) * static_cast<std::uint32_t>(n2 - 1U));
 
       using std::fabs;
@@ -196,8 +201,8 @@ auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
   // Initialize the table of Bernoulli numbers.
   example008_bernoulli::bernoulli_b
   (
-    example008_bernoulli::bernoulli_table.data(),
-    static_cast<std::uint32_t>(example008_bernoulli::bernoulli_table.size())
+    example008_bernoulli::bernoulli_table().data(),
+    static_cast<std::uint32_t>(example008_bernoulli::bernoulli_table().size())
   );
 
   // In this example, we compute values of Gamma[1/2 + n].

@@ -200,12 +200,12 @@
     auto at(const size_type i) const -> const_reference { return ((i < elem_count) ? elems[i] : elems[0U]); }
 
     // Element manipulation members.
-    void fill(const value_type& v)
+    auto fill(const value_type& v) -> void
     {
       std::fill_n(begin(), elem_count, v);
     }
 
-    void swap(dynamic_array& other)
+    auto swap(dynamic_array& other) noexcept -> void
     {
       if(this != &other)
       {
@@ -218,7 +218,7 @@
       }
     }
 
-    void swap(dynamic_array&& other)
+    auto swap(dynamic_array&& other) noexcept -> void
     {
       pointer tmp_elems = elems;
 
@@ -325,8 +325,8 @@
   }
 
   template<typename ValueType, typename AllocatorType>
-  void swap(dynamic_array<ValueType, AllocatorType>& x,
-            dynamic_array<ValueType, AllocatorType>& y)
+  auto swap(dynamic_array<ValueType, AllocatorType>& x,
+            dynamic_array<ValueType, AllocatorType>& y) noexcept -> void
   {
     x.swap(y);
   }
