@@ -1526,7 +1526,7 @@
                                 (std::max)(elems, static_cast<std::int32_t>(2)));
     }
 
-    auto swap(decwide_t& other) -> void
+    auto swap(decwide_t& other) noexcept -> void
     {
       if(this != &other)
       {
@@ -1538,7 +1538,7 @@
       }
     }
 
-    auto swap(decwide_t&& other) -> void
+    auto swap(decwide_t&& other) noexcept -> void
     {
       my_data.swap(static_cast<representation_type&&>(other.my_data));
 
