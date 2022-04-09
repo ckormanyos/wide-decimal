@@ -2513,17 +2513,31 @@
         // Karatsuba multiplication.
 
         // Sloanes's A029750: Numbers of the form 2^k times 1, 3, 5 or 7.
-        const std::uint32_t kara_elems_for_multiply =
+        const auto kara_elems_for_multiply =
           detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        auto my_kara_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * 8U)]; // NOLINT(cppcoreguidelines-owning-memory,llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        #endif
+        using kara_mul_pool_type = util::dynamic_array<limb_type>;
 
-        auto u_local = my_kara_mul_pool + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(0))); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        auto v_local = my_kara_mul_pool + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(1))); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        auto result  = my_kara_mul_pool + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(2))); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        auto t       = my_kara_mul_pool + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        auto my_kara_mul_pool =
+          kara_mul_pool_type
+          (
+            static_cast<typename kara_mul_pool_type::size_type>
+            (
+              static_cast<typename kara_mul_pool_type::size_type>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(8))
+            )
+          );
+
+        typename kara_mul_pool_type::pointer u_local = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        typename kara_mul_pool_type::pointer v_local = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(1))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        typename kara_mul_pool_type::pointer result  = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(2))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        typename kara_mul_pool_type::pointer t       = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        #else
+        limb_type* u_local = &my_kara_mul_pool[0U] + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        limb_type* v_local = &my_kara_mul_pool[0U] + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(1))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        limb_type* result  = &my_kara_mul_pool[0U] + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(2))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        limb_type* t       = &my_kara_mul_pool[0U] + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        #endif
 
         std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
@@ -2565,11 +2579,6 @@
                     result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
-
-        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        // De-allocate the dynamic memory for the Karatsuba multiplication arrays.
-        delete [] my_kara_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
-        #endif
       }
     }
 
@@ -2649,16 +2658,30 @@
         // Sloanes's A029750: Numbers of the form 2^k times 1, 3, 5 or 7.
         const std::uint32_t kara_elems_for_multiply =
           (std::min)(detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply)),
-                     static_cast<std::uint32_t>(detail::a029750::a029750_as_runtime_value(decwide_t_elems_for_fft - 1) * 8UL));
+                     static_cast<std::uint32_t>(detail::a029750::a029750_as_runtime_value(decwide_t_elems_for_fft - 1) * static_cast<std::uint32_t>(UINT8_C(8))));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        auto my_kara_mul_pool = new limb_type[static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * 8U)]; // NOLINT(cppcoreguidelines-owning-memory,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        #endif
+        using kara_mul_pool_type = util::dynamic_array<limb_type>;
 
-        auto u_local = my_kara_mul_pool + (kara_elems_for_multiply * 0U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
-        auto v_local = my_kara_mul_pool + (kara_elems_for_multiply * 1U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
-        auto result  = my_kara_mul_pool + (kara_elems_for_multiply * 2U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
-        auto t       = my_kara_mul_pool + (kara_elems_for_multiply * 4U); // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
+        auto my_kara_mul_pool =
+          kara_mul_pool_type
+          (
+            static_cast<typename kara_mul_pool_type::size_type>
+            (
+              static_cast<typename kara_mul_pool_type::size_type>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(8))
+            )
+          );
+
+        typename kara_mul_pool_type::pointer u_local = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        typename kara_mul_pool_type::pointer v_local = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(1))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        typename kara_mul_pool_type::pointer result  = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(2))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        typename kara_mul_pool_type::pointer t       = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        #else
+        limb_type* u_local = &my_kara_mul_pool[0U] + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        limb_type* v_local = &my_kara_mul_pool[0U] + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(1))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        limb_type* result  = &my_kara_mul_pool[0U] + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(2))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        limb_type* t       = &my_kara_mul_pool[0U] + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        #endif
 
         std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
@@ -2700,11 +2723,6 @@
                     result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
-
-        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        // De-allocate the dynamic memory for the Karatsuba multiplication arrays.
-        delete [] my_kara_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
-        #endif
       }
       else if(prec_elems_for_multiply >= decwide_t_elems_for_fft)
       {
@@ -2733,12 +2751,17 @@
           );
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        auto my_af_fft_mul_pool = new fft_float_type[static_cast<std::size_t>(n_fft)]; // NOLINT(cppcoreguidelines-owning-memory)
-        auto my_bf_fft_mul_pool = new fft_float_type[static_cast<std::size_t>(n_fft)]; // NOLINT(cppcoreguidelines-owning-memory)
-        #endif
+        using fft_mul_storage_type = util::dynamic_array<fft_float_type>;
 
-        auto af = my_af_fft_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
-        auto bf = my_bf_fft_mul_pool; // NOLINT(llvm-qualified-auto,readability-qualified-auto,cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
+        auto my_af_fft_mul_storage = fft_mul_storage_type(static_cast<typename fft_mul_storage_type::size_type>(n_fft));
+        auto my_bf_fft_mul_storage = fft_mul_storage_type(static_cast<typename fft_mul_storage_type::size_type>(n_fft));
+
+        typename fft_mul_storage_type::pointer af = my_af_fft_mul_storage.data();
+        typename fft_mul_storage_type::pointer bf = my_bf_fft_mul_storage.data();
+        #else
+        fft_float_type* af = &my_af_fft_mul_pool[0U];
+        fft_float_type* bf = &my_bf_fft_mul_pool[0U];
+        #endif
 
         using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
@@ -2771,12 +2794,6 @@
 
           my_data.back() = static_cast<limb_type>(0U);
         }
-
-        #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-        // De-allocate the dynamic memory for the FFT result arrays.
-        delete [] my_af_fft_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
-        delete [] my_bf_fft_mul_pool; // NOLINT(cppcoreguidelines-owning-memory)
-        #endif
       }
     }
 
