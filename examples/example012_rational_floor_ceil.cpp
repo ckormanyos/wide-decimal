@@ -57,7 +57,7 @@ namespace example012_rational
         const decimal_type a = decimal_type { lo_hi } / decimal_type { lo };
         const decimal_type b = floor(a);
 
-        result_is_ok &= (static_cast<std::int32_t>(a) == b);
+        result_is_ok = ((static_cast<std::int32_t>(a) == b) && result_is_ok);
 
         if(!result_is_ok)
         {
@@ -96,7 +96,7 @@ namespace example012_rational
         const decimal_type a = decimal_type { lo_hi } / decimal_type { lo };
         const decimal_type b = floor(a);
 
-        result_is_ok &= (static_cast<std::int32_t>(a) == b);
+        result_is_ok = ((static_cast<std::int32_t>(a) == b) && result_is_ok);
 
         if(!result_is_ok)
         {

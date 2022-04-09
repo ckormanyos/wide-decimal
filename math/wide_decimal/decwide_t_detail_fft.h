@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2013 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -69,8 +69,8 @@
     // Mathematica command: Table[N[Sin[Pi / (2^n)], 41], {n, 1, 31, 1}]
     switch(num_points)
     {
-      default:
-      case 0UL       : return static_cast<float_type>(0.0L);                                            // Pi        : as uint64_t --> UINT64_C(0x0000000000000000) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      case 0UL       :
+      default        : return static_cast<float_type>(0.0L);                                            // Pi        : as uint64_t --> UINT64_C(0x0000000000000000) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       case 2UL       : return static_cast<float_type>(1.0L);                                            // Pi / 2    : as uint64_t --> UINT64_C(0x3FF0000000000000) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       case 4UL       : return static_cast<float_type>(7.0710678118654752440084436210484903928484E-01L); // Pi / 4    : as uint64_t --> UINT64_C(0x3FE6A09E667F3BCD) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       case 8UL       : return static_cast<float_type>(3.8268343236508977172845998403039886676134E-01L); // Pi / 8    : as uint64_t --> UINT64_C(0x3FD87DE2A6AEA963) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

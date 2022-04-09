@@ -39,7 +39,7 @@
         constants::my_value_ln_two();
       }
 
-      auto do_nothing() -> void
+      auto do_nothing() const noexcept -> void
       {
         // Do nothing on purpose.
       }

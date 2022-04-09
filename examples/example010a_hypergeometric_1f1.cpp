@@ -56,10 +56,10 @@ namespace example010a_hypergeometric
 
       A[0U] = my_one;
       B[0U] = my_one;
-      B[1U] = my_one + (((1U + AP) * Z2) / CP);
+      B[1U] = my_one +  (((1U + AP) * Z2)  / CP);
       A[1U] = B[1U] - CT1X;
-      B[2U] = my_one + (((((my_two + B[1U]) * (2U + AP))) * CT2X) / 3U);
-      A[2U] = B[2U] - ((my_one + CT2X) * CT1X);
+      B[2U] = my_one + ((((my_two + B[1U]) * (2U + AP)) * CT2X) / 3U);
+      A[2U] = B[2U]  -   ((my_one + CT2X)  * CT1X);
     }
 
     std::uint_fast16_t CT1 = UINT16_C(3); // NOLINT(readability-identifier-naming)
@@ -102,7 +102,7 @@ namespace example010a_hypergeometric
       G[0U] = my_one + (CT2 * (N[2U] - AP));
       CT2   =  (CT2 *  (AP + N[1U])) / (CP + N[2U]);
       G[1U] =   CT2 * ((CP - N[1U]) + (((AP + N[0U]) / (CT1 + 2U)) * Z2));
-      G[2U] = ((CT2 *  (AP - N[2U])) * ((AP + N[2U]) * (Z2Z2))) / (std::uint32_t(std::uint32_t(CT1 - my_two) * CT1) * (CP + N[3U]));
+      G[2U] = ((CT2 *  (AP - N[2U])) * ((AP + N[2U]) *  Z2Z2)) / (std::uint32_t(std::uint32_t(CT1 - my_two) * CT1) * (CP + N[3U]));
 
       // C -----------------------------------------------------------------
       // C THE RECURRENCE RELATIONS FOR A(I) and B(I) ARE AS FOLLOWS
