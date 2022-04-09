@@ -428,7 +428,7 @@
     static constexpr std::int32_t  decwide_t_elem_mask      = detail::decwide_t_helper<ParamDigitsBaseTen, LimbType>::elem_mask;
     static constexpr std::int32_t  decwide_t_elem_mask_half = detail::decwide_t_helper<ParamDigitsBaseTen, LimbType>::elem_mask_half;
 
-    static constexpr exponent_type decwide_t_max_exp10      =  static_cast<exponent_type>(UINTMAX_C(1) << static_cast<unsigned>(std::numeric_limits<exponent_type>::digits - ((std::is_same<exponent_type, std::int64_t>::value) ? 4 : ((std::is_same<exponent_type, std::int32_t>::value) ? 3 : ((std::is_same<exponent_type, std::int16_t>::value) ? 2 : 1)))));
+    static constexpr exponent_type decwide_t_max_exp10      =  static_cast<exponent_type>(UINTMAX_C(1) << static_cast<unsigned>(std::numeric_limits<exponent_type>::digits - (std::is_same<exponent_type, std::int64_t>::value ? 4 : (std::is_same<exponent_type, std::int32_t>::value ? 3 : (std::is_same<exponent_type, std::int16_t>::value ? 2 : 1)))));
     static constexpr exponent_type decwide_t_min_exp10      = -static_cast<exponent_type>(decwide_t_max_exp10);
     static constexpr exponent_type decwide_t_max_exp        = decwide_t_max_exp10;
     static constexpr exponent_type decwide_t_min_exp        = decwide_t_min_exp10;
@@ -453,39 +453,39 @@
     // Define the array type, which is the internal
     // representation of the data field of a decwide_t.
     using representation_type =
-      typename std::conditional<(std::is_same<AllocatorType, void>::value),
+      typename std::conditional<std::is_same<AllocatorType, void>::value,
                                 detail::fixed_static_array <limb_type, static_cast<std::uint_fast32_t>(decwide_t_elem_number)>,
                                 detail::fixed_dynamic_array<limb_type, static_cast<std::uint_fast32_t>(decwide_t_elem_number), allocator_type>>::type;
 
     // Check thw width of the limb type.
-    static_assert((   (std::is_same<std::uint8_t,  limb_type>::value)
-                   || (std::is_same<std::uint16_t, limb_type>::value)
-                   || (std::is_same<std::uint32_t, limb_type>::value)),
+    static_assert((   std::is_same<std::uint8_t,  limb_type>::value
+                   || std::is_same<std::uint16_t, limb_type>::value
+                   || std::is_same<std::uint32_t, limb_type>::value),
                    "Error: limb_type (template parameter LimbType) "
                    "must be one of uint8_t, uint16_t or uint32_t.");
 
     using double_limb_type =
-      typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value),
-                                 std::uint64_t,
-                                 typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value),
-                                                            std::uint32_t,
-                                                            std::uint16_t>::type>::type;
+      typename std::conditional<std::is_same<limb_type, std::uint32_t>::value,
+                                std::uint64_t,
+                                typename std::conditional<std::is_same<limb_type, std::uint16_t>::value,
+                                                          std::uint32_t,
+                                                          std::uint16_t>::type>::type;
 
     using signed_limb_type =
-      typename std::conditional<(std::is_same<limb_type, std::uint32_t>::value),
-                                 std::int32_t,
-                                 typename std::conditional<(std::is_same<limb_type, std::uint16_t>::value),
-                                                            std::int16_t,
-                                                            std::int8_t>::type>::type;
+      typename std::conditional<std::is_same<limb_type, std::uint32_t>::value,
+                                std::int32_t,
+                                typename std::conditional<std::is_same<limb_type, std::uint16_t>::value,
+                                                          std::int16_t,
+                                                          std::int8_t>::type>::type;
 
     using unsigned_exponent_type =
-      typename std::conditional<(std::is_same<exponent_type, std::int64_t>::value),
-                                 std::uint64_t,
-                                 typename std::conditional<(std::is_same<exponent_type, std::int32_t>::value),
-                                                            std::uint32_t,
-                                                            typename std::conditional<(std::is_same<exponent_type, std::int16_t>::value),
-                                                                                       std::uint16_t,
-                                                                                       std::uint8_t>::type>::type>::type;
+      typename std::conditional<std::is_same<exponent_type, std::int64_t>::value,
+                                std::uint64_t,
+                                typename std::conditional<std::is_same<exponent_type, std::int32_t>::value,
+                                                          std::uint32_t,
+                                                          typename std::conditional<std::is_same<exponent_type, std::int16_t>::value,
+                                                                                    std::uint16_t,
+                                                                                    std::uint8_t>::type>::type>::type;
 
     using fpclass_type = enum fpclass_type
     {
@@ -497,9 +497,12 @@
     class native_float_parts final
     {
     public:
-      // Emphasize: This template class can be used with native floating-point
-      // types like float, double and long double. Note: For long double,
-      // you need to verify that the mantissa fits in unsigned long long.
+      // Emphasize: This template class can be used with native
+      // floating-point types like float, double and long double.
+
+      // Note: For long double, you need to verify that the
+      // mantissa fits in unsigned long long.
+
       explicit native_float_parts(const FloatingPointType f)
         : my_mantissa_part(0ULL),
           my_exponent_part(0)
@@ -623,7 +626,7 @@
 
       ~initializer() = default;
 
-      auto do_nothing() -> void
+      auto do_nothing() const noexcept -> void
       {
         // Do nothing on purpose.
       }
@@ -1787,7 +1790,7 @@
                  digits *= static_cast<std::int32_t>(2))
         {
           // Adjust precision of the terms.
-          const std::int32_t new_prec_as_digits10 =
+          const auto new_prec_as_digits10 =
             static_cast<std::int32_t>
             (
                 static_cast<std::int32_t>(digits * 2)
@@ -2078,8 +2081,10 @@
     WIDE_DECIMAL_NODISCARD auto extract_signed_long_long() const -> signed long long // NOLINT(google-runtime-int)
     {
       // Extracts a signed long long from *this.
-      // If (x > maximum of signed long long) or (x < minimum of signed long long),
-      // then the maximum or minimum of signed long long is returned accordingly.
+      // If either (x > maximum of signed long long)
+      // or (x < minimum of signed long long), then
+      // the maximum or minimum of signed long long
+      // is returned accordingly.
 
       auto signed_long_long_result = static_cast<signed long long>(0); // NOLINT(google-runtime-int)
 
@@ -2112,7 +2117,12 @@
 
             auto val = static_cast<unsigned long long>(xn.my_data[0]); // NOLINT(google-runtime-int)
 
-            const std::int32_t imax = (std::min)(static_cast<std::int32_t>(static_cast<std::int32_t>(xn.my_exp) / decwide_t_elem_digits10), static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1)));
+            const auto imax =
+              (std::min)
+              (
+                static_cast<std::int32_t>(static_cast<std::int32_t>(xn.my_exp) / decwide_t_elem_digits10),
+                static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1))
+              );
 
             for(auto  limb_index  = static_cast<typename representation_type::size_type>(1);
                       limb_index <= static_cast<typename representation_type::size_type>(imax);
@@ -2199,7 +2209,7 @@
              typename = typename std::enable_if<std::is_integral<IntegralType>::value>::type>
     explicit operator IntegralType() const
     {
-      return ((std::is_signed<IntegralType>::value)
+      return (std::is_signed<IntegralType>::value
                ? static_cast<IntegralType>(extract_signed_long_long())
                : static_cast<IntegralType>(extract_unsigned_long_long()));
     }
@@ -2309,8 +2319,8 @@
 
       while
       (
-        (   (uu != static_cast<unsigned long long>(0U)) // NOLINT(google-runtime-int)
-         && ( i <  static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value)))
+           (uu != static_cast<unsigned long long>(UINT8_C(0))) // NOLINT(google-runtime-int)
+        && (i  <  static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value))
       )
       {
         tmp[static_cast<std::size_t>(i)] =
