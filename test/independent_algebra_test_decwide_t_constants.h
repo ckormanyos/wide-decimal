@@ -39,7 +39,10 @@
         constants::my_value_ln_two();
       }
 
-      auto do_nothing() -> void { }
+      auto do_nothing() -> void
+      {
+        // Do nothing on purpose.
+      }
     };
 
     static initializer init; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)

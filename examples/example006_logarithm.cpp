@@ -40,11 +40,11 @@ auto math::wide_decimal::example006_logarithm() -> bool
   dec1001_t x = dec1001_t(UINT32_C(123456789)) / UINT32_C(1000000);
 
   const dec1001_t ln3 = log(dec1001_t(3U));
-  const dec1001_t tol = dec1001_t(std::numeric_limits<dec1001_t>::epsilon() * 10);
+  const auto      tol = dec1001_t(std::numeric_limits<dec1001_t>::epsilon() * 10);
 
   bool result_is_ok = true;
 
-  const std::clock_t start = std::clock();
+  const auto start = std::clock();
 
   for(auto i = static_cast<unsigned>(0U); i < static_cast<unsigned>(UINT32_C(1000)); ++i)
   {
@@ -59,7 +59,7 @@ auto math::wide_decimal::example006_logarithm() -> bool
     x *= 3U;
   }
 
-  const std::clock_t stop = std::clock();
+  const auto stop = std::clock();
 
   std::cout << "Time example006_logarithm(): "
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
