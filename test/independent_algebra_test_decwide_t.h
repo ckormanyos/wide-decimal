@@ -9,8 +9,8 @@
   #define INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H
 
   #include <atomic>
-  #include <iostream>
   #include <random>
+  #include <sstream>
 
   #include <math/wide_decimal/decwide_t.h>
 
@@ -57,7 +57,8 @@
   public:
     static constexpr auto my_tol() -> local_wide_decimal_type
     {
-      return std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      return   std::numeric_limits<local_wide_decimal_type>::epsilon()
+             * static_cast<std::uint32_t>(UINT32_C(1000));
     }
 
     static auto eval_eq(const independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
@@ -101,7 +102,13 @@
       {
         u = dst_mantissa(eng_mantissa);
 
-        ss << std::setw(8) << std::setfill('0') << u; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        constexpr auto wd =
+          static_cast<std::streamsize>
+          (
+            local_wide_decimal_type::decwide_t_elem_digits10
+          );
+
+        ss << std::setw(wd) << std::setfill('0') << u;
 
         str += ss.str();
 
@@ -162,7 +169,15 @@
   std::uniform_int_distribution<std::uint32_t> control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_exp(UINT32_C(0), static_cast<std::uint32_t>((static_cast<std::uintmax_t>(math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10) * UINTMAX_C(6)) / UINTMAX_C(10))); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::uniform_int_distribution<std::uint32_t> control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_mantissa(UINT32_C(0), UINT32_C(99999999)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  std::uniform_int_distribution<std::uint32_t>
+    control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_mantissa // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+    (
+      static_cast<std::uint32_t>(UINT32_C(0)),
+      static_cast<std::uint32_t>
+      (
+        control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_wide_decimal_type::decwide_t_elem_mask - INT32_C(1) // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+      )
+    );
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,

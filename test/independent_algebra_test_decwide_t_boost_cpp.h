@@ -220,7 +220,7 @@
           (constants<floating_point_type>::my_value_pi    () / ak)
         - (constants<floating_point_type>::my_value_ln_two() * m);
 
-      return ((b_negate) ? -result : result);
+      return (b_negate ? -result : result);
     }
   };
 
