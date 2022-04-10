@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -558,10 +558,10 @@
                i < static_cast<std::uint32_t>(prec_elems_for_multiply);
              ++i)
     {
-      af[(i * 2U)]      = static_cast<local_fft_float_type>(u[i] / local_elem_mask_half); // NOLINT(bugprone-integer-division)
+      af[ i * 2U]       = static_cast<local_fft_float_type>(u[i] / local_elem_mask_half); // NOLINT(bugprone-integer-division)
       af[(i * 2U) + 1U] = static_cast<local_fft_float_type>(u[i] % local_elem_mask_half);
 
-      bf[(i * 2U)]      = static_cast<local_fft_float_type>(v[i] / local_elem_mask_half); // NOLINT(bugprone-integer-division)
+      bf[ i * 2U]       = static_cast<local_fft_float_type>(v[i] / local_elem_mask_half); // NOLINT(bugprone-integer-division)
       bf[(i * 2U) + 1U] = static_cast<local_fft_float_type>(v[i] % local_elem_mask_half);
     }
 
@@ -609,7 +609,7 @@
                  carry = static_cast<fft_carry_type> (xhi / local_elem_mask_half);
       const auto nhi   = static_cast<local_limb_type>(xhi - static_cast<fft_carry_type>(carry * local_elem_mask_half));
 
-      r[(j / 2U)] = static_cast<local_limb_type>(static_cast<local_limb_type>(nhi * local_elem_mask_half) + nlo);
+      r[j / 2U] = static_cast<local_limb_type>(static_cast<local_limb_type>(nhi * local_elem_mask_half) + nlo);
     }
   }
 
