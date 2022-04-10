@@ -157,7 +157,7 @@
           InputLimbIteratorType   a,
           InputLimbIteratorType   b,
     const std::int_fast32_t       count,
-    const typename std::enable_if<(std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint8_t>::value)>::type* p_nullparam = nullptr
+    const typename std::enable_if<std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint8_t>::value>::type* p_nullparam = nullptr
   )
   {
     static_cast<void>(p_nullparam);
@@ -168,11 +168,11 @@
       static_cast<local_limb_type>(decwide_t_helper_base<local_limb_type>::elem_mask);
 
     using local_double_limb_type =
-      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value),
-                                  std::uint64_t,
-                                  typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value),
-                                                            std::uint32_t,
-                                                            std::uint16_t>::type>::type;
+      typename std::conditional<std::is_same<local_limb_type, std::uint32_t>::value,
+                                std::uint64_t,
+                                typename std::conditional<std::is_same<local_limb_type, std::uint16_t>::value,
+                                                          std::uint32_t,
+                                                          std::uint16_t>::type>::type;
 
     std::fill(r, r + (count * 2), static_cast<local_limb_type>(0));
 
@@ -205,8 +205,8 @@
           InputLimbIteratorType  a,
           InputLimbIteratorType  b,
     const std::int_fast32_t      count,
-    const typename std::enable_if<(   (std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint16_t>::value)
-                                   || (std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint32_t>::value))>::type* p_nullparam = nullptr)
+    const typename std::enable_if<(   std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint16_t>::value
+                                   || std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint32_t>::value)>::type* p_nullparam = nullptr)
   {
     static_cast<void>(p_nullparam);
 
@@ -216,11 +216,11 @@
       static_cast<local_limb_type>(decwide_t_helper_base<local_limb_type>::elem_mask);
 
     using local_double_limb_type =
-      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value),
-                                 std::uint64_t,
-                                 typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value),
-                                                            std::uint32_t,
-                                                            std::uint16_t>::type>::type;
+      typename std::conditional<std::is_same<local_limb_type, std::uint32_t>::value,
+                                std::uint64_t,
+                                typename std::conditional<std::is_same<local_limb_type, std::uint16_t>::value,
+                                                          std::uint32_t,
+                                                          std::uint16_t>::type>::type;
 
     using local_reverse_iterator_type = std::reverse_iterator<local_limb_type*>;
 
@@ -278,11 +278,11 @@
       static_cast<local_limb_type>(decwide_t_helper_base<local_limb_type>::elem_mask);
 
     using local_double_limb_type =
-      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value),
-                                 std::uint64_t,
-                                 typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value),
-                                                            std::uint32_t,
-                                                            std::uint16_t>::type>::type;
+      typename std::conditional<std::is_same<local_limb_type, std::uint32_t>::value,
+                                std::uint64_t,
+                                typename std::conditional<std::is_same<local_limb_type, std::uint16_t>::value,
+                                                          std::uint32_t,
+                                                          std::uint16_t>::type>::type;
 
     auto carry = static_cast<local_limb_type>(0U);
 
@@ -314,11 +314,11 @@
       static_cast<local_limb_type>(decwide_t_helper_base<local_limb_type>::elem_mask);
 
     using local_double_limb_type =
-      typename std::conditional<(std::is_same<local_limb_type, std::uint32_t>::value),
-                                 std::uint64_t,
-                                 typename std::conditional<(std::is_same<local_limb_type, std::uint16_t>::value),
-                                                            std::uint32_t,
-                                                            std::uint16_t>::type>::type;
+      typename std::conditional<std::is_same<local_limb_type, std::uint32_t>::value,
+                                std::uint64_t,
+                                typename std::conditional<std::is_same<local_limb_type, std::uint16_t>::value,
+                                                          std::uint32_t,
+                                                          std::uint16_t>::type>::type;
 
     auto prev = static_cast<local_limb_type>(0U);
 
