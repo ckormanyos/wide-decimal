@@ -67,8 +67,8 @@
   #endif
 
   template<typename UnsignedIntegralType>
-  constexpr auto negate(UnsignedIntegralType u) -> typename std::enable_if<(   (std::is_integral<UnsignedIntegralType>::value)
-                                                                            && (std::is_unsigned<UnsignedIntegralType>::value)), UnsignedIntegralType>::type
+  constexpr auto negate(UnsignedIntegralType u) -> typename std::enable_if<(   std::is_integral<UnsignedIntegralType>::value
+                                                                            && std::is_unsigned<UnsignedIntegralType>::value), UnsignedIntegralType>::type
   {
     using local_unsigned_integral_type = UnsignedIntegralType;
 
@@ -80,8 +80,8 @@
   }
 
   template<typename SignedIntegralType>
-  constexpr auto negate(SignedIntegralType n) -> typename std::enable_if<(   (std::is_integral<SignedIntegralType>::value)
-                                                                          && (std::is_signed  <SignedIntegralType>::value)), SignedIntegralType>::type
+  constexpr auto negate(SignedIntegralType n) -> typename std::enable_if<(   std::is_integral<SignedIntegralType>::value
+                                                                          && std::is_signed  <SignedIntegralType>::value), SignedIntegralType>::type
   {
     using local_signed_integral_type = SignedIntegralType;
 
@@ -221,10 +221,10 @@
   struct decwide_t_helper_base
   {
     static constexpr std::int32_t elem_digits10     =
-      ((std::is_same<LimbType, std::uint32_t>::value)
+      (std::is_same<LimbType, std::uint32_t>::value
         ? static_cast<std::int32_t>(8)
-        : ((std::is_same<LimbType, std::uint16_t>::value) ? static_cast<std::int32_t>(4)
-                                                           : static_cast<std::int32_t>(2)));
+        : (std::is_same<LimbType, std::uint16_t>::value ? static_cast<std::int32_t>(4)
+                                                        : static_cast<std::int32_t>(2)));
 
     static constexpr auto elem_mask      = static_cast<std::int32_t>(pow10_maker(static_cast<std::uint32_t>(elem_digits10)));
     static constexpr auto elem_mask_half = static_cast<std::int32_t>(pow10_maker(static_cast<std::uint32_t>(elem_digits10 / 2)));

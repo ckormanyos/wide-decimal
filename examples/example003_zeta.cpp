@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -43,7 +43,9 @@ namespace local_zeta
     // It uses rudimentary (and slow) trial division with denominator
     // ranging from 3 up to the square root of the largest expected prime.
 
-    for(std::uint_fast16_t i = UINT16_C(3); i <= maximum_value; i = std::uint_fast16_t(i + UINT16_C(2)))
+    for(auto i  = static_cast<std::uint_fast16_t>(UINT16_C(3));
+             i <= maximum_value;
+             i  = static_cast<std::uint_fast16_t>(i + UINT16_C(2)))
     {
       using std::sqrt;
 
@@ -55,9 +57,11 @@ namespace local_zeta
 
       bool is_prime = true;
 
-      for(auto j = static_cast<std::uint_fast16_t>(3U); j <= maximum_square_root_value; ++j)
+      for(auto   j = static_cast<std::uint_fast16_t>(UINT16_C(3));
+                 j <= maximum_square_root_value;
+               ++j)
       {
-        if(static_cast<std::uint_fast16_t>(i % j) == UINT32_C(0))
+        if(static_cast<std::uint_fast16_t>(i % j) == UINT16_C(0))
         {
           is_prime = false;
 
