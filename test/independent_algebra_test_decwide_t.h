@@ -170,12 +170,12 @@
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   std::uniform_int_distribution<std::uint32_t>
-    control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_mantissa // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
+    control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_mantissa // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
     (
       static_cast<std::uint32_t>(UINT32_C(0)),
       static_cast<std::uint32_t>
       (
-        control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_wide_decimal_type::decwide_t_elem_mask - INT32_C(1)
+        control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_wide_decimal_type::decwide_t_elem_mask - INT32_C(1) // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
       )
     );
 
