@@ -14,6 +14,7 @@
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
 #define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
 #define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
+#define WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>

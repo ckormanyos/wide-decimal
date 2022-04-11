@@ -38,7 +38,7 @@ auto example002a_pi_small_limb_digits10_callback(const std::uint32_t d10) -> voi
 
   p_str.fill(static_cast<char>(0));
 
-  char* p_end = util::baselexical_cast(d10, p_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+  const char* p_end = util::baselexical_cast(d10, p_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
   example002a_pi::lcd0().write(p_str.data(), static_cast<std::uint_fast8_t>(p_end - p_str.data()), 0U);
 }
