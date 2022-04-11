@@ -20,6 +20,7 @@
   //#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
   //#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
   //#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
+  //#define WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION
   //#define WIDE_DECIMAL_NAMESPACE=something_unique // (best if done on the command line)
 
   #include <algorithm>
@@ -28,7 +29,9 @@
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
   #include <cstdlib>
   #endif
+  #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
   #include <functional>
+  #endif
   #include <limits>
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   #include <iomanip>
@@ -93,7 +96,11 @@
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t,
            typename FftFloatType = double>
+  #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
   auto pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&;
+  #else
+  auto pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&;
+  #endif
   #else
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType = std::uint32_t,
@@ -101,7 +108,11 @@
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t,
            typename FftFloatType = double>
+  #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
   auto pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  #else
+  auto pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  #endif
   #endif
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
@@ -128,7 +139,11 @@
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t,
            typename FftFloatType = double>
+  #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
   auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  #else
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  #endif
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType = std::uint32_t,
@@ -4001,7 +4016,11 @@
   #endif
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
   auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  #else
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  #endif
   {
     // Description : Compute pi using the quadratically convergent Gauss AGM,
     //               in particular the Schoenhage variant.
@@ -4239,7 +4258,11 @@
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
   auto pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&
+  #else
+  auto pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&
+  #endif
   {
     static_cast<void>(pfn_callback_to_report_digits10);
 
@@ -4247,7 +4270,11 @@
   }
   #else
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
   auto pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  #else
+  auto pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  #endif
   {
     return calc_pi<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(pfn_callback_to_report_digits10);
   }
