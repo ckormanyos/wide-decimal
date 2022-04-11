@@ -250,10 +250,6 @@
       left_and_right_are_equal =
         (size_of_left_is_zero || std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin()));
     }
-    else
-    {
-      ;
-    }
 
     return left_and_right_are_equal;
   }

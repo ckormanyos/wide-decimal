@@ -3116,20 +3116,20 @@
       // Shift the decimal point such that the exponent is an even multiple of decwide_t_elem_digits10.
       auto n_shift   = static_cast<std::ptrdiff_t>(0);
 
-      const auto n_exp_rem =
-        static_cast<std::ptrdiff_t>
-        (
-          my_exp % static_cast<exponent_type>(decwide_t_elem_digits10)
-        );
-
       {
-        const auto my_exp_mod =
+        const auto n_exp_rem =
+          static_cast<std::ptrdiff_t>
+          (
+            my_exp % static_cast<exponent_type>(decwide_t_elem_digits10)
+          );
+
+        const auto n_exp_mod =
           static_cast<exponent_type>
           (
             my_exp % static_cast<exponent_type>(decwide_t_elem_digits10)
           );
 
-        if(my_exp_mod != static_cast<exponent_type>(0))
+        if(n_exp_mod != static_cast<exponent_type>(0))
         {
           n_shift = ((my_exp < static_cast<exponent_type>(0))
                       ? static_cast<std::ptrdiff_t>(n_exp_rem + static_cast<std::ptrdiff_t>(decwide_t_elem_digits10))
