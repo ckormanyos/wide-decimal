@@ -140,7 +140,12 @@
 
       u_sign = dst_sign(eng_sign);
 
-      str = (value_is_unsigned ? "" : ((u_sign == 0U) ? "" : "-")) + ss.str() + "." + str;
+      str = ss.str() + "." + str;
+
+      if((!value_is_unsigned) && (u_sign != static_cast<std::uint32_t>(UINT32_C(0))))
+      {
+        str.insert(str.begin(), '-');
+      }
     }
 
   private:

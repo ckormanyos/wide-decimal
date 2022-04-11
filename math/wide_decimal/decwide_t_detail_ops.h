@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 1999 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -34,24 +34,28 @@
 
   template<typename InputIteratorLeftType,
            typename InputIteratorRightType>
-  auto compare_ranges(      InputIteratorLeftType  a,
-                            InputIteratorRightType b,
+  auto compare_ranges(      InputIteratorLeftType  pa,
+                            InputIteratorRightType pb,
                       const std::uint_fast32_t     count) -> std::int_fast8_t
   {
     std::int_fast8_t n_return = 0;
 
-    InputIteratorRightType it_a_end(a + count);
+    InputIteratorRightType it_a_end(pa + count);
 
-    while(a != it_a_end)
+    while(pa != it_a_end)
     {
       using value_left_type =
         typename std::iterator_traits<InputIteratorLeftType>::value_type;
 
-      if(*a > static_cast<value_left_type>(*b)) { n_return =  1; break; }
-      if(*a < static_cast<value_left_type>(*b)) { n_return = -1; break; }
+      const auto value_a = *pa++;
+      const auto value_b = static_cast<value_left_type>(*pb++);
 
-      ++a;
-      ++b;
+      if(value_a != value_b)
+      {
+        n_return = static_cast<std::int_fast8_t>((value_a > value_b) ? INT8_C(1) : INT8_C(-1));
+
+        break;
+      }
     }
 
     return n_return;
