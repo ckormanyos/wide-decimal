@@ -209,23 +209,17 @@
     {
       if(this != &other)
       {
-        pointer tmp_elems = elems;
-
-        elems = other.elems;
-        other.elems = tmp_elems;
-
+        std::swap(elems,      other.elems);
         std::swap(elem_count, other.elem_count);
       }
     }
 
     auto swap(dynamic_array&& other) noexcept -> void
     {
-      pointer tmp_elems = elems;
+      auto tmp = std::move(*this);
 
-      elems = other.elems;
-      other.elems = tmp_elems;
-
-      std::swap(elem_count, other.elem_count);
+      *this = std::move(other);
+      other = std::move(tmp);
     }
 
   private:
