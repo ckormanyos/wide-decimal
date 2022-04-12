@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2022.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -39,7 +39,15 @@
         constants::my_value_ln_two();
       }
 
-      auto do_nothing() const noexcept -> void
+      initializer(const initializer&) = delete;
+      initializer(initializer&&) = delete;
+
+      auto operator=(const initializer&) -> initializer& = delete;
+      auto operator=(initializer&&) noexcept -> initializer& = delete;
+
+      ~initializer() = default;
+
+      auto do_nothing() const -> void
       {
         // Do nothing on purpose.
       }
@@ -103,7 +111,9 @@
           )
         );
 
-      for(auto k = static_cast<unsigned>(0U); k < 48U; ++k) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      for(auto   k = static_cast<unsigned>(UINT8_C(0));
+                 k < static_cast<unsigned>(UINT8_C(48));
+               ++k)
       {
         using std::sqrt;
 
@@ -203,7 +213,9 @@
           )
         );
 
-      for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      for(auto   k = static_cast<std::int32_t>(INT32_C(0));
+                 k < static_cast<std::int32_t>(INT32_C(64));
+               ++k)
       {
         using std::ilogb;
 

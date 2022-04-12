@@ -591,6 +591,8 @@
         : my_mantissa_part(other.my_mantissa_part),
           my_exponent_part(other.my_exponent_part) { }
 
+      native_float_parts() = delete;
+
       ~native_float_parts() = default;
 
       auto operator=(const native_float_parts& other) noexcept -> native_float_parts& // NOLINT(cert-oop54-cpp)
@@ -615,8 +617,6 @@
      WIDE_DECIMAL_NODISCARD constexpr auto get_mantissa() const -> unsigned long long { return my_mantissa_part; } // NOLINT(google-runtime-int)
      WIDE_DECIMAL_NODISCARD constexpr auto get_exponent() const -> int                { return my_exponent_part; }
 
-      native_float_parts() = delete;
-
     private:
       unsigned long long my_mantissa_part { }; // NOLINT(readability-identifier-naming,google-runtime-int)
       int                my_exponent_part { }; // NOLINT(readability-identifier-naming)
@@ -626,9 +626,9 @@
     // Static data initializer
     struct initializer
     {
-      initializer()
+      initializer() noexcept
       {
-        decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_value_pi    ();
+        decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_value_pi();
         decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_value_ln_two();
       }
 
@@ -638,7 +638,7 @@
       auto operator=(const initializer&) -> initializer& = delete;
       auto operator=(initializer&&) noexcept -> initializer& = delete;
 
-      ~initializer() = default;
+      ~initializer() noexcept = default;
 
       auto do_nothing() const noexcept -> void
       {
@@ -646,7 +646,7 @@
       }
     };
 
-    static initializer my_initializer; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static const initializer my_initializer;
     #endif
 
   public:
@@ -2894,7 +2894,7 @@
         }
 
         // Perform round-to-nearest with no tie-breaking whatsoever.
-        if(round_digit_value >= 5U) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if(round_digit_value >= static_cast<std::uint8_t>(UINT8_C(5)))
         {
           my_data[static_cast<local_size_type>(least_digit_idx)] += least_digit_p10;
 
@@ -2909,9 +2909,7 @@
           {
             my_data[static_cast<local_size_type>(least_digit_idx)] -= decwide_t_elem_mask;
 
-            --least_digit_idx;
-
-            for( ; least_digit_idx >= 0 && (carry_out != 0U); --least_digit_idx)
+            while(--least_digit_idx >= 0 && (carry_out != 0U))
             {
               const auto tt =
                 static_cast<local_limb_type>
@@ -4011,7 +4009,7 @@
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::initializer decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_initializer; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
+  const typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::initializer decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_initializer; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
   #endif
 
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
