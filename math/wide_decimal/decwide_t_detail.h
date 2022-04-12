@@ -391,11 +391,11 @@
     auto operator[](const size_type i) const -> typename base_class_type::const_reference { return base_class_type::operator[](static_cast<typename base_class_type::size_type>(i)); }
   };
 
-  using os_float_field_type = enum os_float_field_type
+  enum class os_float_field_type
   {
-    os_float_field_scientific,
-    os_float_field_fixed,
-    os_float_field_none
+    scientific,
+    fixed,
+    none
   };
 
   template<typename UnsignedIntegerType,

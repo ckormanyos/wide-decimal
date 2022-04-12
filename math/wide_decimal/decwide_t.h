@@ -503,7 +503,7 @@
                                                                                     std::uint16_t,
                                                                                     std::uint8_t>::type>::type>::type;
 
-    using fpclass_type = enum fpclass_type
+    enum class fpclass_type
     {
       decwide_t_finite
     };
@@ -654,7 +654,7 @@
     constexpr decwide_t() : my_data     (),
                             my_exp      (static_cast<exponent_type>(0)),
                             my_neg      (false),
-                            my_fpclass  (decwide_t_finite),
+                            my_fpclass  (fpclass_type::decwide_t_finite),
                             my_prec_elem(decwide_t_elem_number) { }
 
     // Constructors from built-in unsigned integral types.
@@ -666,7 +666,7 @@
       : my_data     (decwide_t_elem_number),
         my_exp      ((u < decwide_t_elem_mask) ? exponent_type(0) : exponent_type(decwide_t_elem_digits10)),
         my_neg      (false),
-        my_fpclass  (decwide_t_finite),
+        my_fpclass  (fpclass_type::decwide_t_finite),
         my_prec_elem(decwide_t_elem_number)
     {
       my_data[0U] = (u < decwide_t_elem_mask) ? u                          : u / static_cast<limb_type>(decwide_t_elem_mask);
@@ -681,7 +681,7 @@
     decwide_t(const UnsignedIntegralType u) : my_data     (), // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
                                               my_exp      (static_cast<exponent_type>(0)),
                                               my_neg      (false),
-                                              my_fpclass  (decwide_t_finite),
+                                              my_fpclass  (fpclass_type::decwide_t_finite),
                                               my_prec_elem(decwide_t_elem_number)
     {
       from_unsigned_long_long(u);
@@ -694,7 +694,7 @@
     decwide_t(const SignedIntegralType n) : my_data     (), // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
                                             my_exp      (static_cast<exponent_type>(0)),
                                             my_neg      (n < static_cast<signed long long>(0)), // NOLINT(google-runtime-int)
-                                            my_fpclass  (decwide_t_finite),
+                                            my_fpclass  (fpclass_type::decwide_t_finite),
                                             my_prec_elem(decwide_t_elem_number)
     {
       const auto u =
@@ -713,7 +713,7 @@
     decwide_t(const FloatingPointType f) : my_data     (), // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
                                            my_exp      (static_cast<exponent_type>(0)),
                                            my_neg      (false),
-                                           my_fpclass  (decwide_t_finite),
+                                           my_fpclass  (fpclass_type::decwide_t_finite),
                                            my_prec_elem(decwide_t_elem_number)
     {
       from_builtin_float_type(f);
@@ -724,7 +724,7 @@
     explicit decwide_t(const char* s) : my_data     (),
                                         my_exp      (static_cast<exponent_type>(0)),
                                         my_neg      (false),
-                                        my_fpclass  (decwide_t_finite),
+                                        my_fpclass  (fpclass_type::decwide_t_finite),
                                         my_prec_elem(decwide_t_elem_number)
     {
       if(!rd_string(s))
@@ -755,7 +755,7 @@
       : my_data     (),
         my_exp      (0),
         my_neg      (false),
-        my_fpclass  (decwide_t_finite),
+        my_fpclass  (fpclass_type::decwide_t_finite),
         my_prec_elem(decwide_t_elem_number) { }
 
   private:
@@ -765,7 +765,7 @@
       : my_data     (),
         my_exp      (static_cast<exponent_type>(0)),
         my_neg      (false),
-        my_fpclass  (decwide_t_finite),
+        my_fpclass  (fpclass_type::decwide_t_finite),
         my_prec_elem(decwide_t_elem_number)
     {
       // Create a decwide_t from mantissa and exponent.
@@ -1888,7 +1888,7 @@
     {
       bool value_is_int { };
 
-      if(my_fpclass != decwide_t_finite)
+      if(my_fpclass != fpclass_type::decwide_t_finite)
       {
         value_is_int = false;
       }
@@ -2301,7 +2301,7 @@
 
       a.my_exp       = e;
       a.my_neg       = is_neg;
-      a.my_fpclass   = decwide_t_finite;
+      a.my_fpclass   = fpclass_type::decwide_t_finite;
       a.my_prec_elem = decwide_t_elem_number;
 
       return a;
@@ -3409,15 +3409,15 @@
       // Determine the kind of output format requested (scientific, fixed, none).
       detail::os_float_field_type my_float_field { };
 
-      if     ((my_flags & std::ios::scientific) != static_cast<std::ios::fmtflags>(0U)) { my_float_field = detail::os_float_field_scientific; }
-      else if((my_flags & std::ios::fixed)      != static_cast<std::ios::fmtflags>(0U)) { my_float_field = detail::os_float_field_fixed; }
-      else                                                                              { my_float_field = detail::os_float_field_none; }
+      if     ((my_flags & std::ios::scientific) != static_cast<std::ios::fmtflags>(0U)) { my_float_field = detail::os_float_field_type::scientific; }
+      else if((my_flags & std::ios::fixed)      != static_cast<std::ios::fmtflags>(0U)) { my_float_field = detail::os_float_field_type::fixed; }
+      else                                                                              { my_float_field = detail::os_float_field_type::none; }
 
       bool use_scientific = false;
       bool use_fixed      = false;
 
-      if     (my_float_field == detail::os_float_field_scientific) { use_scientific = true; }
-      else if(my_float_field == detail::os_float_field_fixed)      { use_fixed      = true; }
+      if     (my_float_field == detail::os_float_field_type::scientific) { use_scientific = true; }
+      else if(my_float_field == detail::os_float_field_type::fixed)      { use_fixed      = true; }
       else // os_float_field_none
       {
         // Set up the range for dynamic detection of scientific notation.
@@ -3476,14 +3476,22 @@
           const auto exp_plus_one                   = static_cast<exponent_type>(the_exp      + static_cast<exponent_type>(1));
           const auto exp_plus_one_plus_my_precision = static_cast<exponent_type>(exp_plus_one + static_cast<exponent_type>(os_precision));
 
-          the_number_of_digits_i_want_from_decwide_t = (std::min)(static_cast<std::uint_fast32_t>((std::max)(exp_plus_one_plus_my_precision, static_cast<exponent_type>(0))), max10_plus_one);
+          the_number_of_digits_i_want_from_decwide_t =
+            (std::min)
+            (
+              static_cast<std::uint_fast32_t>
+              (
+                (std::max)(exp_plus_one_plus_my_precision, static_cast<exponent_type>(0))
+              ),
+              max10_plus_one
+            );
         }
       }
 
       // If the float field is not set, reduce the number of digits requested
       // from decwide_t such that it neither exceeds the ostream's precision
       // nor decwide_t's max_digits10.
-      if(my_float_field == detail::os_float_field_none)
+      if(my_float_field == detail::os_float_field_type::none)
       {
         const auto max_digits = (std::min)(os_precision, static_cast<std::uint_fast32_t>(decwide_t_max_digits10));
 
@@ -3497,8 +3505,8 @@
       const bool my_showpoint  = ((my_flags & std::ios::showpoint) != static_cast<std::ios::fmtflags>(0U));
 
       // Write the output string in the desired format.
-      if     (my_float_field == detail::os_float_field_scientific) { wr_string_scientific(str, the_exp, os_precision, my_showpoint, my_uppercase); }
-      else if(my_float_field == detail::os_float_field_fixed)      { wr_string_fixed     (str, the_exp, os_precision, my_showpoint); }
+      if     (my_float_field == detail::os_float_field_type::scientific) { wr_string_scientific(str, the_exp, os_precision, my_showpoint, my_uppercase); }
+      else if(my_float_field == detail::os_float_field_type::fixed)      { wr_string_fixed     (str, the_exp, os_precision, my_showpoint); }
       else // os_float_field_none
       {
         (use_scientific ? wr_string_scientific(str, the_exp, os_precision, my_showpoint, my_uppercase, true)
