@@ -53,7 +53,7 @@
       }
     };
 
-    static initializer init;
+    static initializer init; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
   public:
     static auto my_value_pi() -> const floating_point_type&
@@ -258,7 +258,7 @@
   };
 
   template<typename FloatingPointType>
-  typename constants<FloatingPointType>::initializer constants<FloatingPointType>::init; // NOLINT(cert-err58-cpp)
+  typename constants<FloatingPointType>::initializer constants<FloatingPointType>::init; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
   #if(__cplusplus >= 201703L)
   } // namespace test::independent_algebra

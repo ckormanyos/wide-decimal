@@ -1,1 +1,1 @@
-set(CMAKE_CXX_FLAGS_INIT "-Wall -Wconversion -Werror -Wextra -Wno-psabi -Wpedantic -Wshadow -Wundef")
+﻿set(CMAKE_CXX_FLAGS_INIT "-Wall -Wextra -Wconversion -Wsign-conversion -Wshadow -Wundef -Wno-psabi -Werror")
