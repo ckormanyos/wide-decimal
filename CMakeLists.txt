@@ -20,7 +20,7 @@ target_include_directories(
 
 install(TARGETS WideDecimal EXPORT WideDecimalTargets)
 install(
-  FILES math/wide_decimal/decwide_t.h math/wide_decimal/decwide_t_detail.h math/wide_decimal/decwide_t_fft.h math/wide_decimal/decwide_t_namespace.h math/wide_decimal/decwide_t_default_ops.h
+  FILES math/wide_decimal/decwide_t.h math/wide_decimal/decwide_t_detail.h math/wide_decimal/decwide_t_detail_fft.h math/wide_decimal/decwide_t_detail_namespace.h math/wide_decimal/decwide_t_detail_ops.h
   DESTINATION include/math/wide_decimal/)
 install(EXPORT WideDecimalTargets
   FILE WideDecimalConfig.cmake
