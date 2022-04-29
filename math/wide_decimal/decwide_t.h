@@ -2956,7 +2956,7 @@
       my_exp = static_cast<exponent_type>(0);
 
       auto pos_of_e_func =
-        [](const std::string& local_str)
+        [](const std::string& local_str) // NOLINT(modernize-use-trailing-return-type)
         {
           std::string::size_type pos_of_e = std::string::npos;
 
@@ -3017,7 +3017,7 @@
       const auto fwd_it_leading_zero =
         std::find_if(str.cbegin(),
                      str.cend(),
-                     [](const char& c)
+                     [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                      {
                        return (c != '0');
                      });
@@ -3051,7 +3051,7 @@
         const auto rit_non_zero =
           std::find_if(str.crbegin(),
                        str.crend(),
-                       [](const char& c)
+                       [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                        {
                          return (c != '0');
                        });
@@ -3085,7 +3085,7 @@
           const auto it_non_zero =
             std::find_if(str.cbegin() + 1U,
                          str.cend(),
-                         [](const char& c)
+                         [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                          {
                            return (c != '0');
                          });
@@ -3560,7 +3560,7 @@
         const std::string::const_reverse_iterator rit_non_zero =
           std::find_if(str.crbegin(),
                        str.crend(),
-                       [](const char& c)
+                       [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                        {
                          return (c != '0');
                        });
@@ -3707,7 +3707,7 @@
         const auto rit_non_zero =
           std::find_if(str.crbegin(),
                         str.crend(),
-                        [](const char& c)
+                        [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                         {
                           return (c != '0');
                         });
@@ -3767,7 +3767,7 @@
           const auto it_non_zero =
             std::find_if(str.cbegin() + 2U,
                          str.cend(),
-                         [](const char& c)
+                         [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                          {
                            return (c != '0');
                          });
