@@ -23,8 +23,8 @@
 #include <test/parallel_for.h>
 
 // cd /mnt/c/Users/User/Documents/Ks/PC_Software/NumericalPrograms/ExtendedNumberTypes/wide_decimal
-// When using g++-10 and -std=c++20
-// g++-10 -finline-functions -finline-limit=128 -march=native -mtune=native -O3 -Wall -Wextra -std=c++20 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_79_0 test/test_high_precision_log.cpp -pthread -lpthread -lgmp -lmpfr -o test_high_precision_log.exe
+// When using g++ and -std=c++11
+// g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -std=c++11 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_79_0 test/test_high_precision_log.cpp -pthread -lpthread -lgmp -lmpfr -o test_high_precision_log.exe
 
 namespace test_high_precision_log
 {
@@ -38,7 +38,9 @@ namespace test_high_precision_log
 
 namespace local
 {
-  using adders_array_type = std::array<std::uint64_t, 8U>;
+  constexpr auto adders_array_size = static_cast<std::size_t>(UINT8_C(8));
+
+  using adders_array_type = std::array<std::uint64_t, adders_array_size>;
 
   constexpr adders_array_type adders =
   {
@@ -51,6 +53,15 @@ namespace local
     UINT64_C(9999),
     UINT64_C(999999999999999999)
   };
+
+  static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[0U] + UINT64_C(3)) % 3U) == 0U, "Error adder must provie fractional part 1/3 in this test");
+  static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[1U] + UINT64_C(3)) % 3U) == 0U, "Error adder must provie fractional part 1/3 in this test");
+  static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[2U] + UINT64_C(3)) % 3U) == 0U, "Error adder must provie fractional part 1/3 in this test");
+  static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[3U] + UINT64_C(3)) % 3U) == 0U, "Error adder must provie fractional part 1/3 in this test");
+  static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[4U] + UINT64_C(3)) % 3U) == 0U, "Error adder must provie fractional part 1/3 in this test");
+  static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[5U] + UINT64_C(3)) % 3U) == 0U, "Error adder must provie fractional part 1/3 in this test");
+  static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[6U] + UINT64_C(3)) % 3U) == 0U, "Error adder must provie fractional part 1/3 in this test");
+  static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[7U] + UINT64_C(3)) % 3U) == 0U, "Error adder must provie fractional part 1/3 in this test");
 
   template<typename HighPrecisionFloatLeftType,
            typename HighPrecisionFloatRightType>
@@ -70,13 +81,15 @@ namespace local
 
     std::atomic_flag do_calcs_log_lock = ATOMIC_FLAG_INIT;
 
+    using local_size_type = typename adders_array_type::size_type;
+
     my_concurrency::parallel_for
     (
-      static_cast<typename adders_array_type::size_type>(0U),
-      adders.size(),
+      static_cast<local_size_type>(0U),
+      static_cast<local_size_type>(local::adders_array_size),
       [&result_is_ok, &do_calcs_log_lock, &tol](typename adders_array_type::size_type index)
       {
-        const auto one_plus_adder_at_index = static_cast<std::uint64_t>(1U + adders[index]);
+        const auto one_plus_adder_at_index = static_cast<std::uint64_t>(UINT64_C(1) + adders[index]);
 
         const auto x_left  = local_hp_float_left_type (one_plus_adder_at_index) / 3U;
         const auto x_right = local_hp_float_right_type(one_plus_adder_at_index) / 3U;
