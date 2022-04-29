@@ -631,3 +631,37 @@ jobs:
           echo 'ls -la bin/${{ matrix.example }}.elf bin/${{ matrix.example }}.map bin/${{ matrix.example }}.hex'
           ls -la bin/${{ matrix.example }}.elf bin/${{ matrix.example }}.map bin/${{ matrix.example }}.hex
         working-directory: ./
+  gcc-clang-high-precision:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        standard: [ c++11 ]
+        compiler: [ g++, clang++ ]
+        suite: [ test_high_precision_log ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: clone-submods-bootstrap-headers-boost-develop
+        run: |
+          git clone -b develop --depth 1 https://github.com/boostorg/boost.git ../boost-root
+          cd ../boost-root
+          git submodule update --init tools
+          git submodule update --init libs/config
+          git submodule update --init libs/math
+          git submodule update --init libs/multiprecision
+          ./bootstrap.sh
+          ./b2 headers
+      - name: update-tools
+        run: sudo apt install libgmp-dev libmpfr-dev
+      - name: gcc-clang-high-precision
+        run: |
+          echo "compile ./${{ matrix.suite }}.exe"
+          ${{ matrix.compiler }} -v
+          ${{ matrix.compiler }} -finline-functions -march=native -mtune=native -O3 -Werror -Wall -Wextra -std=${{ matrix.standard }} -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I../boost-root test/${{ matrix.suite }}.cpp -pthread -lmpfr -lgmp -lpthread -o ${{ matrix.suite }}.exe
+          ls -la ./${{ matrix.suite }}.exe
+          ./${{ matrix.suite }}.exe
