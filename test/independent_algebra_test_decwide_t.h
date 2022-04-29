@@ -215,8 +215,8 @@
 
       my_concurrency::parallel_for
       (
-        std::size_t(0U),
-        std::size_t(count),
+        static_cast<std::size_t>(0U),
+        static_cast<std::size_t>(count),
         [&result_is_ok, &algebra_test_lock](std::size_t j)
         {
           std::string str_a;
@@ -276,8 +276,8 @@
 
       my_concurrency::parallel_for
       (
-        std::size_t(0U),
-        std::size_t(count),
+        static_cast<std::size_t>(0U),
+        static_cast<std::size_t>(count),
         [&result_is_ok, &algebra_test_lock](std::size_t j)
         {
           std::string str_a;
@@ -337,8 +337,8 @@
 
       my_concurrency::parallel_for
       (
-        std::size_t(0U),
-        std::size_t(count),
+        static_cast<std::size_t>(0U),
+        static_cast<std::size_t>(count),
         [&result_is_ok, &algebra_test_lock](std::size_t j)
         {
           std::string str_a;
@@ -398,8 +398,8 @@
 
       my_concurrency::parallel_for
       (
-        std::size_t(0U),
-        std::size_t(count),
+        static_cast<std::size_t>(0U),
+        static_cast<std::size_t>(count),
         [&result_is_ok, &algebra_test_lock](std::size_t j)
         {
           std::string str_a;
@@ -459,8 +459,8 @@
 
       my_concurrency::parallel_for
       (
-        std::size_t(0U),
-        std::size_t(count),
+        static_cast<std::size_t>(0U),
+        static_cast<std::size_t>(count),
         [&result_is_ok, &algebra_test_lock](std::size_t j)
         {
           std::string str_a;
@@ -518,8 +518,8 @@
 
       my_concurrency::parallel_for
       (
-        std::size_t(0U),
-        std::size_t(count),
+        static_cast<std::size_t>(0U),
+        static_cast<std::size_t>(count),
         [&result_is_ok, &algebra_test_lock](std::size_t j)
         {
           std::string str_a;
