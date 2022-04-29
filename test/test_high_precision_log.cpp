@@ -129,13 +129,11 @@ auto main() -> int
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 
-  using namespace std::literals;
-
   const auto duration =
-    static_cast<double>
+    static_cast<float>
     (
-        static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())
-      / 1000.0
+        static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())
+      / 1000.0F
     );
 
   std::cout << "High-precision calculations took: " << std::fixed << std::setprecision(1) << duration << "s" << std::endl;
