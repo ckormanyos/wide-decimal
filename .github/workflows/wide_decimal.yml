@@ -657,7 +657,6 @@ jobs:
           ./bootstrap.sh
           ./b2 headers
       - name: update-tools
-      - name: Install packages
         run: sudo apt install gcc-10 clang-10 libgmp-dev libmpfr-dev
       - name: gcc-clang-high-precision
         run: |
