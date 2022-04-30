@@ -5017,13 +5017,12 @@
         x_pow_n_div_n_fact *= xh;
         x_pow_n_div_n_fact /= n;
 
-        if(n > static_cast<std::uint32_t>(4U))
+        // Use a tolerance check with iblog (via its digits10-scale).
+        // But only do this following the first few iterations.
+        if(   (n > static_cast<std::uint32_t>(UINT32_C(4)))
+           && (ilogb(x_pow_n_div_n_fact) < iteration_goal))
         {
-          // Use a tolerance check with iblog (via its digits10-scale).
-          if(ilogb(x_pow_n_div_n_fact) < iteration_goal)
-          {
-            break;
-          }
+          break;
         }
 
         h0f0 += x_pow_n_div_n_fact;
