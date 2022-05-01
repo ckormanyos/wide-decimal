@@ -56,7 +56,7 @@ auto math::wide_decimal::example001_roots_sqrt() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example001_roots_sqrt();
 

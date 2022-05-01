@@ -95,7 +95,7 @@ auto math::wide_decimal::example001b_roots_almost_integer() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example001b_roots_almost_integer();
 

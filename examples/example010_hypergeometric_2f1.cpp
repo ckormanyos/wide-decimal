@@ -199,7 +199,7 @@ auto math::wide_decimal::example010_hypergeometric_2f1() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example010_hypergeometric_2f1();
 

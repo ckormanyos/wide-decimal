@@ -121,7 +121,7 @@ auto math::wide_decimal::example007_catalan_series() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example007_catalan_series();
 

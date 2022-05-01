@@ -267,7 +267,7 @@ auto math::wide_decimal::example004_bessel_recur() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example004_bessel_recur();
 

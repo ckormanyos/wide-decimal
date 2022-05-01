@@ -142,7 +142,7 @@ auto math::wide_decimal::example012_rational_floor_ceil() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example012_rational_floor_ceil();
 

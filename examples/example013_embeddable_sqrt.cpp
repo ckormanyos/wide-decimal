@@ -70,7 +70,7 @@ auto math::wide_decimal::example013_embeddable_sqrt() -> bool
 #include <iostream>
 #endif
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example013_embeddable_sqrt();
 

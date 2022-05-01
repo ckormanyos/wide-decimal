@@ -74,7 +74,7 @@ auto math::wide_decimal::example006_logarithm() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example006_logarithm();
 

@@ -64,7 +64,7 @@ auto math::wide_decimal::example001c_roots_sqrt_limb08() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example001c_roots_sqrt_limb08();
 

@@ -147,7 +147,7 @@ auto math::wide_decimal::example003_zeta() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example003_zeta();
 

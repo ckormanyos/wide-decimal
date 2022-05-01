@@ -109,7 +109,7 @@ auto math::wide_decimal::example002d_pi_limb08() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example002d_pi_limb08();
 

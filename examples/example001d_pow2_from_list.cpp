@@ -321,7 +321,7 @@ auto math::wide_decimal::example001d_pow2_from_list() -> bool
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example001d_pow2_from_list();
 
