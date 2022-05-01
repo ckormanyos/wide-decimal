@@ -72,8 +72,23 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example009_boost_math_standalone();
+  bool result_is_ok = false;
 
+  try {
+    result_is_ok = math::wide_decimal::example009_boost_math_standalone();
+  }
+  catch(boost_wrapexcept_lexical_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_lexical_type: " << e.what() << std::endl;
+  }
+  catch(boost_wrapexcept_runtime_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_runtime_type: " << e.what() << std::endl;
+  }
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
 
