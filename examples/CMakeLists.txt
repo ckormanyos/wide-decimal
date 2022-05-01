@@ -157,12 +157,12 @@ target_include_directories(example012_rational_floor_ceil PRIVATE ${PROJECT_SOUR
 target_include_directories(example012_rational_floor_ceil SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
 
 target_compile_features(example013a_embeddable_agm PRIVATE cxx_std_11)
-target_compile_options(example013a_embeddable_agm PRIVATE -DWITH_MAIN=1)
+target_compile_options(example013a_embeddable_agm PRIVATE -DWIDE_DECIMAL_STANDALONE_EXAMPLE013A_EMBEDDABLE_AGM=1)
 target_include_directories(example013a_embeddable_agm PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(example013a_embeddable_agm SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
 
 target_compile_features(example013_embeddable_sqrt PRIVATE cxx_std_11)
-target_compile_options(example013_embeddable_sqrt PRIVATE -DWITH_MAIN=1)
+target_compile_options(example013_embeddable_sqrt PRIVATE -DWIDE_DECIMAL_STANDALONE_EXAMPLE013_EMBEDDABLE_SQRT=1)
 target_include_directories(example013_embeddable_sqrt PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(example013_embeddable_sqrt SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
 
