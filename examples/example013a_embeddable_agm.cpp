@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2022.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -107,7 +107,7 @@ auto math::wide_decimal::example013a_embeddable_agm() -> bool
 #include <iostream>
 #endif
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example013a_embeddable_agm();
 
