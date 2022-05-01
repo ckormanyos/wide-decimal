@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -78,12 +78,12 @@ auto pi_borwein_quintic(std::ostream* p_ostream) -> FloatingPointType
     using std::ilogb;
     using std::sqrt;
 
-    const floating_point_type x         = (local_five / sk) - local_one;
-    const floating_point_type x_squared = x * x;
-    const floating_point_type y         = x_squared - (x * 2U) + floating_point_type(8U);
-    const floating_point_type z         = rootn((x * (y + sqrt((y * y) - ((x_squared * x) * 4U)))) / 2U, 5);
+    const floating_point_type x          = (local_five / sk) - local_one;
+    const floating_point_type x_squared  = x * x;
+    const floating_point_type y          = x_squared - (x * 2U) + floating_point_type(8U);
+    const floating_point_type one_over_z = rootn_inv((x * (y + sqrt((y * y) - ((x_squared * x) * 4U)))) / 2U, 5);
 
-    const floating_point_type term = (z + (x / z) + local_one);
+    const floating_point_type term = ((local_one / one_over_z) + (x * one_over_z) + local_one);
 
     const floating_point_type sk_squared(sk * sk);
 
