@@ -164,30 +164,30 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isinf)   (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto  sign     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> int ;
 
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto fabs         (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto abs          (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto floor        (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto ceil         (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto sgn          (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          std::int32_t;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto ldexp        (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
-                                                                                                                                                                                          int e)                                                                                            ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto frexp        (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,                             
-                                                                                                                                                                                          int* expon)                                                                                       ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto fmod         (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v1,                            
-                                                                                                                                                                                          const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v2) ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto ilogb        (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  -> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::exponent_type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto sqrt         (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto cbrt         (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto rootn        (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x, // NOLINT(misc-no-recursion)
-                                                                                                                                                                                          std::int32_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto rootn_inverse(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
-                                                                                                                                                                                          std::int32_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto log          (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto exp          (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto pow          (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b, // NOLINT(misc-no-recursion)
-                                                                                                                                                                                          std::int64_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto pow          (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
-                                                                                                                                                                                          const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto fabs     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto abs      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto floor    (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto ceil     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto sgn      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          std::int32_t;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto ldexp    (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
+                                                                                                                                                                                      int e)                                                                                            ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto frexp    (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,                             
+                                                                                                                                                                                      int* expon)                                                                                       ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto fmod     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v1,                            
+                                                                                                                                                                                      const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v2) ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto ilogb    (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  -> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::exponent_type;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto sqrt     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto cbrt     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto rootn    (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x, // NOLINT(misc-no-recursion)
+                                                                                                                                                                                      std::int32_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto rootn_inv(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
+                                                                                                                                                                                      std::int32_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto log      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto exp      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto pow      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b, // NOLINT(misc-no-recursion)
+                                                                                                                                                                                      std::int64_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto pow      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
+                                                                                                                                                                                      const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   template<typename char_type, typename traits_type,
@@ -1087,7 +1087,7 @@
         const auto first_nonzero_elem = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
           std::find_if(my_data.cbegin(),
                        my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
-                       [](const limb_type& d) -> bool
+                       [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
                        {
                          return (d != static_cast<limb_type>(UINT8_C(0)));
                        });
@@ -1623,17 +1623,24 @@
                digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
+        constexpr auto min_elem_digits10_plus_one =
+          (std::min)
+          (
+            static_cast<std::int32_t>(decwide_t_elem_digits10 + 1),
+            static_cast<std::int32_t>(INT8_C(9))
+          );
+
         const auto new_prec_as_digits10 =
           static_cast<std::int32_t>
           (
-              static_cast<std::int32_t>(digits * 2)
-            + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10  + 1), static_cast<std::int32_t>(9))
+              static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
+            + min_elem_digits10_plus_one
           );
 
           precision(new_prec_as_digits10);
         x.precision(new_prec_as_digits10);
 
-        // Next iteration.
+        // Next iteration of *this.
         operator=(*this * (two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() - (*this * x)));
       }
 
@@ -1716,12 +1723,18 @@
                digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
         // Adjust precision of the terms.
+        constexpr auto min_elem_digits10_plus_one =
+          (std::min)
+          (
+            static_cast<std::int32_t>(decwide_t_elem_digits10 + 1),
+            static_cast<std::int32_t>(INT8_C(9))
+          );
+
         const auto new_prec_as_digits10 =
           static_cast<std::int32_t>
           (
               static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
-            + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10  + 1),
-                         static_cast<std::int32_t>(INT8_C(9)))
+            + min_elem_digits10_plus_one
           );
 
            precision(new_prec_as_digits10);
@@ -1740,39 +1753,30 @@
       return *this;
     }
 
-    auto negate() -> decwide_t&
+    auto calculate_rootn_inv(std::int32_t p) -> decwide_t&
     {
-      if(!(iszero)())
-      {
-        my_neg = (!my_neg);
-      }
-
-      return *this;
-    }
-
-    friend inline auto rootn_inverse(decwide_t x, std::int32_t p) -> decwide_t
-    {
-      decwide_t result;
-
       if(p < static_cast<std::int32_t>(0))
       {
-        result = pow(x, static_cast<std::int32_t>(-p));
+        return (*this = pow(*this, static_cast<std::int32_t>(-p)));
       }
-      else if((p == static_cast<std::int32_t>(0)) || ((x.isneg)() ))
+      else if((p == static_cast<std::int32_t>(0)) || ((isneg)() ))
       {
-        return std::numeric_limits<decwide_t>::quiet_NaN();
+        return (*this = std::numeric_limits<decwide_t>::quiet_NaN());
       }
       else if(p == static_cast<std::int32_t>(1))
       {
-        result = x;
+        return *this;
       }
       else if(p == static_cast<std::int32_t>(2))
       {
-        result = sqrt(x).calculate_inv();
+        return calculate_sqrt().calculate_inv();
       }
       else
       {
         // Compute the value of [1 / (rootn of x)] with n = p.
+
+        // Use the original value of *this for iteration below.
+        decwide_t x(*this);
 
         // Generate the initial estimate using 1 / rootn.
         // Extract the mantissa and exponent for a "manual"
@@ -1797,41 +1801,57 @@
         const InternalFloatType one_over_rtn_d = pow(dd, static_cast<InternalFloatType>(-1) / static_cast<InternalFloatType>(p));
 
         // Set the result equal to the initial guess.
-        result = decwide_t(one_over_rtn_d, static_cast<exponent_type>(-ne / p));
+        *this = decwide_t(one_over_rtn_d, static_cast<exponent_type>(-ne / p));
 
         for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
                  digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
                  digits *= static_cast<std::int32_t>(2))
         {
           // Adjust precision of the terms.
+          constexpr auto min_elem_digits10_plus_one =
+            (std::min)
+            (
+              static_cast<std::int32_t>(decwide_t_elem_digits10 + 1),
+              static_cast<std::int32_t>(INT8_C(9))
+            );
+
           const auto new_prec_as_digits10 =
             static_cast<std::int32_t>
             (
-                static_cast<std::int32_t>(digits * 2)
-              + (std::max)(static_cast<std::int32_t>(decwide_t_elem_digits10  + 1), static_cast<std::int32_t>(9))
+                static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
+              + min_elem_digits10_plus_one
             );
 
-          result.precision(new_prec_as_digits10);
-               x.precision(new_prec_as_digits10);
+            precision(new_prec_as_digits10);
+          x.precision(new_prec_as_digits10);
 
           // Perform the next iteration.
           decwide_t
             term
             (
-                (((-pow(result, p) * x) + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) / p)
+                (((-pow(*this, p) * x) + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) / p)
               + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
             );
 
           term.precision(new_prec_as_digits10);
 
-          result *= term;
+          operator*=(term);
         }
 
-             x.my_prec_elem = original_prec_elem;
-        result.my_prec_elem = original_prec_elem;
+        my_prec_elem = original_prec_elem;
+
+        return *this;
+      }
+    }
+
+    auto negate() -> decwide_t&
+    {
+      if(!(iszero)())
+      {
+        my_neg = (!my_neg);
       }
 
-      return result;
+      return *this;
     }
 
     // Comparison functions.
@@ -1859,7 +1879,7 @@
           const auto it_non_zero = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
             std::find_if(my_data.cbegin(),
                          my_data.cend(),
-                         [](const limb_type& d) -> bool
+                         [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
                          {
                            return (d != static_cast<limb_type>(0U));
                          });
@@ -1872,7 +1892,7 @@
           const auto it_non_nine = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
             std::find_if(my_data.cbegin(),
                          my_data.cend(),
-                         [](const limb_type& d) -> bool
+                         [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
                          {
                            return (d != static_cast<limb_type>(decwide_t_elem_mask - INT32_C(1)));
                          });
@@ -1925,7 +1945,7 @@
               const auto it_non_zero = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
                 std::find_if(my_data.cbegin() + static_cast<std::ptrdiff_t>(offset_decimal_part),
                              my_data.cend(),
-                             [](const limb_type& d) -> bool
+                             [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
                              {
                                return (d != static_cast<limb_type>(0U));
                              });
@@ -2586,7 +2606,7 @@
           const auto copy_end =
             static_cast<std::ptrdiff_t>
             (
-              (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + 1),
+              (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + INT32_C(1)),
                          decwide_t_elem_number)
             );
 
@@ -4826,16 +4846,31 @@
 
       using std::fabs;
 
-      rtn = rootn_inverse(fabs(x), 3).calculate_inv();
+      rtn = fabs(x).calculate_rootn_inv(3).calculate_inv();
 
       if(b_neg) { static_cast<void>(rtn.negate()); }
     }
     else
     {
-      rtn = rootn_inverse(x, p).calculate_inv();
+      rtn =
+        decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+        (
+          x
+        ).calculate_rootn_inv(p).calculate_inv();
     }
 
     return rtn;
+  }
+
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto rootn_inv(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
+                 std::int32_t p) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  {
+    return
+      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+      (
+        x
+      ).calculate_rootn_inv(p);
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
