@@ -59,7 +59,7 @@ auto math::wide_decimal::example001c_roots_sqrt_limb08() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined (WITH_MAIN)
 
 #include <iomanip>
 #include <iostream>

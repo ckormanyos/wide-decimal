@@ -51,7 +51,7 @@ auto math::wide_decimal::example001_roots_sqrt() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined (WITH_MAIN)
 
 #include <iomanip>
 #include <iostream>

@@ -75,7 +75,7 @@ auto math::wide_decimal::example005_polylog_series() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined (WITH_MAIN)
 
 #include <iomanip>
 #include <iostream>

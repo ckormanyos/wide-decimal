@@ -51,14 +51,14 @@ auto math::wide_decimal::example000_multiply_nines() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined (WITH_MAIN)
 
 #include <iomanip>
 #include <iostream>
 
 int main()
 {
-  const bool result_is_ok = math::wide_decimal::example001_roots_sqrt();
+  const bool result_is_ok = math::wide_decimal::example000_multiply_nines();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

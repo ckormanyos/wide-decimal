@@ -291,7 +291,7 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined (WITH_MAIN)
 
 #include <iomanip>
 #include <iostream>

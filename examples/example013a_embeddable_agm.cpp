@@ -23,6 +23,10 @@
 #define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 #define WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION
 
+#if defined (WITH_MAIN)
+#define WIDE_DECIMAL_STANDALONE_EXAMPLE013A_EMBEDDABLE_AGM 1
+#endif
+
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
 #include <util/memory/util_n_slot_array_allocator.h>
