@@ -1757,21 +1757,13 @@
     {
       if(p < static_cast<std::int32_t>(0))
       {
-        return (*this = pow(*this, static_cast<std::int32_t>(-p)));
+        *this = pow(*this, static_cast<std::int32_t>(-p));
       }
       else if((p == static_cast<std::int32_t>(0)) || ((isneg)() ))
       {
-        return (*this = std::numeric_limits<decwide_t>::quiet_NaN());
+        *this = std::numeric_limits<decwide_t>::quiet_NaN();
       }
-      else if(p == static_cast<std::int32_t>(1))
-      {
-        return *this;
-      }
-      else if(p == static_cast<std::int32_t>(2))
-      {
-        return calculate_sqrt().calculate_inv();
-      }
-      else
+      else if(p > static_cast<std::int32_t>(1))
       {
         // Compute the value of [1 / (rootn of x)] with n = p.
 
@@ -1839,9 +1831,9 @@
         }
 
         my_prec_elem = original_prec_elem;
-
-        return *this;
       }
+
+      return *this;
     }
 
     auto negate() -> decwide_t&
