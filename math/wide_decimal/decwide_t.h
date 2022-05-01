@@ -1623,7 +1623,7 @@
                digits *= static_cast<std::int32_t>(2))
       {
         // Adjust precision of the terms.
-        constexpr auto min_elem_digits10_plus_one =
+        const auto min_elem_digits10_plus_one =
           (std::min)
           (
             static_cast<std::int32_t>(decwide_t_elem_digits10 + 1),
@@ -1723,7 +1723,7 @@
                digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
         // Adjust precision of the terms.
-        constexpr auto min_elem_digits10_plus_one =
+        const auto min_elem_digits10_plus_one =
           (std::min)
           (
             static_cast<std::int32_t>(decwide_t_elem_digits10 + 1),
@@ -1808,7 +1808,7 @@
                  digits *= static_cast<std::int32_t>(2))
         {
           // Adjust precision of the terms.
-          constexpr auto min_elem_digits10_plus_one =
+          const auto min_elem_digits10_plus_one =
             (std::min)
             (
               static_cast<std::int32_t>(decwide_t_elem_digits10 + 1),
