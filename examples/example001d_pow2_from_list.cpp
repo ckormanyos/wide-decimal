@@ -316,12 +316,12 @@ auto math::wide_decimal::example001d_pow2_from_list() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined(WIDE_DECIMAL_STANDALONE_EXAMPLE001D_POW2_FROM_LIST)
 
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example001d_pow2_from_list();
 

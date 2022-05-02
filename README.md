@@ -245,7 +245,7 @@ the result of which is approximately
 
 #include <math/wide_decimal/decwide_t.h>
 
-int main()
+auto main() -> int
 {
   using local_limb_type = std::uint16_t;
 
@@ -292,7 +292,7 @@ of a certain number of temporary storages of mega-digit numbers
 #include <math/wide_decimal/decwide_t.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 
-int main()
+auto main() -> int
 {
   using local_limb_type = std::uint32_t;
 

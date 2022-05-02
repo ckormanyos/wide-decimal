@@ -196,12 +196,12 @@ auto math::wide_decimal::example010a_hypergeometric_1f1() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined(WIDE_DECIMAL_STANDALONE_EXAMPLE010A_HYPERGEOMETRIC_1F1)
 
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example010a_hypergeometric_1f1();
 

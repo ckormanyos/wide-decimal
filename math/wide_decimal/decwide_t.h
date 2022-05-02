@@ -503,6 +503,10 @@
                                                                                     std::uint16_t,
                                                                                     std::uint8_t>::type>::type>::type;
 
+    // TBD: Consider supporting more floating-point classes.
+    // In particular, support for NaN is already being
+    // partially used through the specialization of limits.
+    // When starting, maybe begin with FP-class NaN.
     enum class fpclass_type
     {
       decwide_t_finite
@@ -1518,7 +1522,11 @@
     {
       my_initializer.do_nothing();
 
-      static const decwide_t val(calc_pi<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
+      static const decwide_t
+        val
+        (
+          calc_pi<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+        );
 
       return val;
     }
@@ -1527,7 +1535,11 @@
     {
       my_initializer.do_nothing();
 
-      static const decwide_t val(calc_ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
+      static const decwide_t
+        val
+        (
+          calc_ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+        );
 
       return val;
     }
@@ -1838,7 +1850,7 @@
 
     auto negate() -> decwide_t&
     {
-      if(!(iszero)())
+      if(!iszero())
       {
         my_neg = (!my_neg);
       }
@@ -2058,23 +2070,24 @@
     {
       // Returns the long double conversion of a decwide_t.
 
-      long double ld { };
+      auto ld = static_cast<long double>(0.0F);
 
       // Check for non-normal decwide_t.
       const decwide_t xx(fabs(*this));
 
+      const auto is_essentially_zero =
+        (
+              iszero()
+          || (xx < long_double_min<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
+        );
+
       // Check for zero decwide_t.
-      if(iszero() || (xx < long_double_min<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()))
-      {
-        ld = 0.0L;
-      }
-      else
+      if(!is_essentially_zero)
       {
         if(xx > long_double_max<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
         {
-          // Check if decwide_t exceeds the maximum of double.
-          ld = ((!my_neg) ?  std::numeric_limits<long double>::infinity()
-                          : -std::numeric_limits<long double>::infinity());
+          // Check if decwide_t exceeds the maximum of long double.
+          ld = std::numeric_limits<long double>::infinity();
         }
         else
         {
@@ -2082,9 +2095,9 @@
 
           auto scale = static_cast<long double>(1.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-          for(auto i  = static_cast<int>(decwide_t_elem_digits10);
-                   i  < (std::numeric_limits<long double>::digits10 + 3);
-                   i += static_cast<int>(decwide_t_elem_digits10))
+          for(auto i = decwide_t_elem_digits10;
+                   i < static_cast<std::int32_t>(std::numeric_limits<long double>::digits10 + 3);
+                   i = static_cast<std::int32_t>(i + decwide_t_elem_digits10))
           {
             scale = static_cast<long double>(scale / static_cast<long double>(decwide_t_elem_mask));
 
@@ -2094,10 +2107,17 @@
                 i / decwide_t_elem_digits10
               );
 
-            ld += static_cast<long double>(static_cast<long double>(my_data[idx]) * scale);
+            ld =
+              static_cast<long double>
+              (
+                ld + static_cast<long double>(static_cast<long double>(my_data[idx]) * scale)
+              );
           }
+        }
 
-          if(my_neg) { ld = -ld; }
+        if(my_neg)
+        {
+          ld = -ld;
         }
       }
 
@@ -2114,11 +2134,7 @@
 
       auto signed_long_long_result = static_cast<signed long long>(0); // NOLINT(google-runtime-int)
 
-      if(my_exp < static_cast<exponent_type>(0))
-      {
-        ;
-      }
-      else
+      if(my_exp >= static_cast<exponent_type>(0))
       {
         const bool b_neg = isneg();
 
@@ -2183,11 +2199,7 @@
       }
       else
       {
-        if(my_exp < static_cast<exponent_type>(0))
-        {
-          unsigned_long_long_result = static_cast<unsigned long long>(0U); // NOLINT(google-runtime-int)
-        }
-        else
+        if(my_exp >= static_cast<exponent_type>(0))
         {
           decwide_t xn(*this);
 
@@ -2383,7 +2395,7 @@
     template<typename FloatingPointType>
     auto from_builtin_float_type(FloatingPointType l) -> void
     {
-      const bool b_neg = (l < static_cast<FloatingPointType>(0.0L));
+      const auto b_neg = (l < static_cast<FloatingPointType>(0.0L));
 
       const FloatingPointType my_ld = ((!b_neg) ? l : -l);
 
@@ -2682,7 +2694,7 @@
         // Use Karatsuba multiplication multiplication.
 
         // Sloanes's A029750: Numbers of the form 2^k times 1, 3, 5 or 7.
-        const std::uint32_t kara_elems_for_multiply =
+        const auto kara_elems_for_multiply =
           (std::min)(detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply)),
                      static_cast<std::uint32_t>(detail::a029750::a029750_as_runtime_value(decwide_t_elems_for_fft - 1) * static_cast<std::uint32_t>(UINT8_C(8))));
 
@@ -4734,10 +4746,10 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr auto long_double_min       () -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> { return decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>((std::numeric_limits<long double>::min)());}
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> constexpr auto long_double_max       () -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> { return decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>((std::numeric_limits<long double>::max)());}
 
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isnan)   (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return  (x.isnan)(); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isfinite)(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return  (x.isfinite)(); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isinf)   (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return  (x.isinf)(); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto  sign     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> int  { return ((x.iszero)() ? 0 : (x.isneg() ? -1 : 1)); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isnan)   (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return (x.isnan)(); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isfinite)(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return (x.isfinite)(); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isinf)   (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return (x.isinf)(); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto  sign     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> int  { return (x.iszero() ? 0 : (x.isneg() ? -1 : 1)); }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   auto pow(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,

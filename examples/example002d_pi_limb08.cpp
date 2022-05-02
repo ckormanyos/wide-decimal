@@ -104,12 +104,12 @@ auto math::wide_decimal::example002d_pi_limb08() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined(WIDE_DECIMAL_STANDALONE_EXAMPLE002D_PI_LIMB08)
 
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example002d_pi_limb08();
 

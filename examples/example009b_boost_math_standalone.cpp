@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2021.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -291,12 +291,13 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined(WIDE_DECIMAL_STANDALONE_EXAMPLE009B_BOOST_MATH_STANDALONE)
 
 #include <iomanip>
 #include <iostream>
 
-int main()
+// TBD: Handle exception catching in example009b_boost_math_standalone at a later time.
+auto main() -> int // NOLINT(bugprone-exception-escape)
 {
   const bool result_is_ok = math::wide_decimal::example009b_boost_math_standalone();
 

@@ -69,12 +69,12 @@ auto math::wide_decimal::example006_logarithm() -> bool
 }
 
 // Enable this if you would like to activate this main() as a standalone example.
-#if 0
+#if defined(WIDE_DECIMAL_STANDALONE_EXAMPLE006_LOGARITHM)
 
 #include <iomanip>
 #include <iostream>
 
-int main()
+auto main() -> int
 {
   const bool result_is_ok = math::wide_decimal::example006_logarithm();
 
