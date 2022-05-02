@@ -58,7 +58,7 @@ auto math::wide_decimal::example000_multiply_nines() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example001_roots_sqrt();
+  const bool result_is_ok = math::wide_decimal::example000_multiply_nines();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
