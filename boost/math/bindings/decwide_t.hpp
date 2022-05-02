@@ -8,6 +8,8 @@
 #ifndef DECWIDE_T_2021_02_24_HPP // NOLINT(llvm-header-guard)
   #define DECWIDE_T_2021_02_24_HPP
 
+  #include <cmath>
+
   #include <boost/version.hpp>
 
   #include <math/wide_decimal/decwide_t.h>
@@ -130,7 +132,14 @@
         B = ldexp(B, 1);
         result = A - B;
 
-        const bool neg = (boost::math::sign(result) < 0);
+        #if defined(WIDE_DECIMAL_NAMESPACE)
+        using ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::signbit;
+        #else
+        using ::math::wide_decimal::signbit;
+        #endif
+        using std::signbit;
+
+        const auto neg = (signbit)(result);
 
         if(neg)
         {
