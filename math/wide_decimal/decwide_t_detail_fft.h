@@ -63,7 +63,7 @@
   constexpr auto template_fast_div_by_two<long double>(long double a) -> long double { return static_cast<long double>(a / 2); }
 
   template<typename float_type>
-  constexpr auto template_sin_order_1(std::uint32_t num_points) -> float_type
+  constexpr auto template_sin_order_1(std::uint32_t num_points) -> float_type // NOLINT(readability-function-cognitive-complexity)
   {
     // TBD: Use constexpr functions here, depending on availability.
     // Mathematica command: Table[N[Sin[Pi / (2^n)], 41], {n, 1, 31, 1}]
@@ -113,8 +113,8 @@
   template<typename float_type,
            const bool IsForwardFft>
   constexpr auto const_unique_wp_real_init(const std::uint32_t num_points,
-                                           const bool = IsForwardFft,                                                  // NOLINT(readability-named-parameter)
-                                           const typename std::enable_if<IsForwardFft>::type* = nullptr) -> float_type // NOLINT(readability-named-parameter)
+                                           const bool = IsForwardFft,                                                  // NOLINT(readability-named-parameter,hicpp-named-parameter)
+                                           const typename std::enable_if<IsForwardFft>::type* = nullptr) -> float_type // NOLINT(readability-named-parameter,hicpp-named-parameter)
   {
     return template_sin_order_1<float_type>(num_points);
   }
@@ -122,8 +122,8 @@
   template<typename float_type,
            const bool IsForwardFft>
   constexpr auto const_unique_wp_real_init(      std::uint32_t num_points,
-                                                 bool = IsForwardFft,                                                     // NOLINT(readability-named-parameter)
-                                           const typename std::enable_if<(!IsForwardFft)>::type* = nullptr) -> float_type // NOLINT(readability-named-parameter)
+                                                 bool = IsForwardFft,                                                     // NOLINT(readability-named-parameter,hicpp-named-parameter)
+                                           const typename std::enable_if<(!IsForwardFft)>::type* = nullptr) -> float_type // NOLINT(readability-named-parameter,hicpp-named-parameter)
   {
     return -template_sin_order_1<float_type>(num_points);
   }
@@ -131,8 +131,8 @@
   template<typename float_type,
            const bool IsForwardFft>
   constexpr auto const_unique_wp_imag(      std::uint32_t num_points,
-                                            bool = IsForwardFft,                                                  // NOLINT(readability-named-parameter)
-                                      const typename std::enable_if<IsForwardFft>::type* = nullptr) -> float_type // NOLINT(readability-named-parameter)
+                                            bool = IsForwardFft,                                                  // NOLINT(readability-named-parameter,hicpp-named-parameter)
+                                      const typename std::enable_if<IsForwardFft>::type* = nullptr) -> float_type // NOLINT(readability-named-parameter,hicpp-named-parameter)
   {
     return template_sin_order_2<float_type>(num_points);
   }
@@ -140,8 +140,8 @@
   template<typename float_type,
            const bool IsForwardFft>
   constexpr auto const_unique_wp_imag(      std::uint32_t num_points,
-                                            bool = IsForwardFft,                                                     // NOLINT(readability-named-parameter)
-                                      const typename std::enable_if<(!IsForwardFft)>::type* = nullptr) -> float_type // NOLINT(readability-named-parameter)
+                                            bool = IsForwardFft,                                                     // NOLINT(readability-named-parameter,hicpp-named-parameter)
+                                      const typename std::enable_if<(!IsForwardFft)>::type* = nullptr) -> float_type // NOLINT(readability-named-parameter,hicpp-named-parameter)
   {
     return static_cast<float_type>(-template_sin_order_2<float_type>(num_points));
   }
