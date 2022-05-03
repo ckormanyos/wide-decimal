@@ -92,7 +92,7 @@ auto math::wide_decimal::example013a_embeddable_agm() -> bool
                            std::int16_t,
                            float>();
 
-  const bool result_is_ok = std::equal(app_benchmark_pi_agm_control.cbegin(),
+  const auto result_is_ok = std::equal(app_benchmark_pi_agm_control.cbegin(),
                                        app_benchmark_pi_agm_control.cend(),
                                        my_pi.crepresentation().cbegin());
 
@@ -109,7 +109,7 @@ auto math::wide_decimal::example013a_embeddable_agm() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example013a_embeddable_agm();
+  const auto result_is_ok = math::wide_decimal::example013a_embeddable_agm();
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;

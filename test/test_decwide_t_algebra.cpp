@@ -64,7 +64,7 @@ auto test_decwide_t_algebra_add_____() -> bool // NOLINT(readability-identifier-
                                                                             std::int32_t,
                                                                             double>;
 
-  const bool result_is_ok =
+  const auto result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_add_<test_decwide_t::wide_decimal_digits10,
                                                                        test_decwide_t::local_limb_type,
                                                                        std::allocator<void>,
@@ -92,7 +92,7 @@ auto test_decwide_t_algebra_sub_____() -> bool // NOLINT(readability-identifier-
                                                                             std::int32_t,
                                                                             double>;
 
-  const bool result_is_ok =
+  const auto result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_sub_<test_decwide_t::wide_decimal_digits10,
                                                                        test_decwide_t::local_limb_type,
                                                                        std::allocator<void>,
@@ -120,7 +120,7 @@ auto test_decwide_t_algebra_mul_____() -> bool // NOLINT(readability-identifier-
                                                                             std::int32_t,
                                                                             double>;
 
-  const bool result_is_ok =
+  const auto result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_mul_<test_decwide_t::wide_decimal_digits10,
                                                                        test_decwide_t::local_limb_type,
                                                                        std::allocator<void>,
@@ -153,7 +153,7 @@ auto test_decwide_t_algebra_div_____() -> bool // NOLINT(readability-identifier-
                                                                             std::int32_t,
                                                                             double>;
 
-  const bool result_is_ok =
+  const auto result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_div_<test_decwide_t::wide_decimal_digits10,
                                                                        test_decwide_t::local_limb_type,
                                                                        std::allocator<void>,
@@ -181,7 +181,7 @@ auto test_decwide_t_algebra_sqrt____() -> bool // NOLINT(readability-identifier-
                                                                             std::int32_t,
                                                                             double>;
 
-  const bool result_is_ok =
+  const auto result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_sqrt<test_decwide_t::wide_decimal_digits10,
                                                                        test_decwide_t::local_limb_type,
                                                                        std::allocator<void>,
@@ -209,7 +209,7 @@ auto test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-
                                                                             std::int32_t,
                                                                             double>;
 
-  const bool result_is_ok =
+  const auto result_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_log_<test_decwide_t::wide_decimal_digits10,
                                                                        test_decwide_t::local_limb_type,
                                                                        std::allocator<void>,

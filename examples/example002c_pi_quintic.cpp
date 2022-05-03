@@ -160,7 +160,7 @@ auto math::wide_decimal::example002c_pi_quintic() -> bool
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 
-  const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
+  const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
                                      my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_32.size(),
                                      math::constants::const_pi_control_head_32.begin());
 
@@ -177,11 +177,11 @@ auto math::wide_decimal::example002c_pi_quintic() -> bool
         )
     );
 
-  const bool tail_is_ok = std::equal(fi,
+  const auto tail_is_ok = std::equal(fi,
                                      fi + math::constants::const_pi_control_tail_32_1000001.size(),
                                           math::constants::const_pi_control_tail_32_1000001.begin());
 
-  const bool result_is_ok = (head_is_ok && tail_is_ok);
+  const auto result_is_ok = (head_is_ok && tail_is_ok);
 
   return result_is_ok;
 }
@@ -194,7 +194,7 @@ auto math::wide_decimal::example002c_pi_quintic() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example002c_pi_quintic();
+  const auto result_is_ok = math::wide_decimal::example002c_pi_quintic();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
