@@ -53,7 +53,7 @@ auto math::wide_decimal::example001c_roots_sqrt_limb08() -> bool
 
   const dec101_t closeness = fabs(1 - fabs(s / control));
 
-  const bool result_is_ok = closeness < (std::numeric_limits<dec101_t>::epsilon() * 10);
+  const auto result_is_ok = (closeness < (std::numeric_limits<dec101_t>::epsilon() * 10));
 
   return result_is_ok;
 }
@@ -66,7 +66,7 @@ auto math::wide_decimal::example001c_roots_sqrt_limb08() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example001c_roots_sqrt_limb08();
+  const auto result_is_ok = math::wide_decimal::example001c_roots_sqrt_limb08();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

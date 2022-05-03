@@ -188,7 +188,7 @@ auto math::wide_decimal::example010_hypergeometric_2f1() -> bool
 
   const dec1001_t closeness = fabs(1 - (h2f1 / control));
 
-  const bool result_is_ok = closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10);
+  const auto result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10));
 
   return result_is_ok;
 }
@@ -201,7 +201,7 @@ auto math::wide_decimal::example010_hypergeometric_2f1() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example010_hypergeometric_2f1();
+  const auto result_is_ok = math::wide_decimal::example010_hypergeometric_2f1();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

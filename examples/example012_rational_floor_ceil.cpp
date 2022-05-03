@@ -46,8 +46,8 @@ namespace example012_rational
     {
       for(std::int32_t hi_index = INT32_C(10001); hi_index < INT32_C(100010); hi_index += INT32_C(17))
       {
-        const bool lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
-        const bool hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
+        const auto lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
+        const auto hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
 
         const auto lo = static_cast<std::int32_t>((!lo_is_neg) ? lo_index : -lo_index);
         const auto hi = static_cast<std::int32_t>((!hi_is_neg) ? hi_index : -hi_index);
@@ -85,8 +85,8 @@ namespace example012_rational
     {
       for(std::int32_t hi_index = INT32_C(10001); hi_index < INT32_C(100010); hi_index += INT32_C(17))
       {
-        const bool lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
-        const bool hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
+        const auto lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
+        const auto hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
 
         const auto lo = static_cast<std::int32_t>((!lo_is_neg) ? lo_index : -lo_index);
         const auto hi = static_cast<std::int32_t>((!hi_is_neg) ? hi_index : -hi_index);
@@ -144,7 +144,7 @@ auto math::wide_decimal::example012_rational_floor_ceil() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example012_rational_floor_ceil();
+  const auto result_is_ok = math::wide_decimal::example012_rational_floor_ceil();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

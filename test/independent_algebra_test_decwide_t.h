@@ -74,7 +74,7 @@
 
       const local_wide_decimal_type delta = fabs(1 - fabs(ratio));
 
-      const bool compare_is_ok = (delta < my_tol());
+      const auto compare_is_ok = (delta < my_tol());
 
       return compare_is_ok;
     }
@@ -233,14 +233,14 @@
           eval_add(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_add(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
       );
     }
 
-    const bool result_test_is_ok = result_is_ok.load();
+    const auto result_test_is_ok = result_is_ok.load();
 
     return result_test_is_ok;
   }
@@ -294,14 +294,14 @@
           eval_sub(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_sub(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
       );
     }
 
-    const bool result_test_is_ok = result_is_ok.load();
+    const auto result_test_is_ok = result_is_ok.load();
 
     return result_test_is_ok;
   }
@@ -355,14 +355,14 @@
           eval_mul(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_mul(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
       );
     }
 
-    const bool result_test_is_ok = result_is_ok.load();
+    const auto result_test_is_ok = result_is_ok.load();
 
     return result_test_is_ok;
   }
@@ -416,14 +416,14 @@
           eval_div(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_div(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
       );
     }
 
-    const bool result_test_is_ok = result_is_ok.load();
+    const auto result_test_is_ok = result_is_ok.load();
 
     return result_test_is_ok;
   }
@@ -475,14 +475,14 @@
           eval_sqrt(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()));
           eval_sqrt(result_ef,   independent_algebra_decwide_type               (str_a.c_str()));
 
-          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
       );
     }
 
-    const bool result_test_is_ok = result_is_ok.load();
+    const auto result_test_is_ok = result_is_ok.load();
 
     return result_test_is_ok;
   }
@@ -534,14 +534,14 @@
           eval_log(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()));
           eval_log(result_ef,   independent_algebra_decwide_type               (str_a.c_str()));
 
-          const bool b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
       );
     }
 
-    const bool result_test_is_ok = result_is_ok.load();
+    const auto result_test_is_ok = result_is_ok.load();
 
     return result_test_is_ok;
   }

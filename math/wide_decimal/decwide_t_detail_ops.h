@@ -533,7 +533,7 @@
       }
       else if(static_cast<std::int_fast8_t>(cmp_result_a1a0 * cmp_result_b0b1) == static_cast<std::int_fast8_t>(-1))
       {
-        const bool has_borrow = detail::eval_subtract_n(r1, r1, t2, static_cast<std::int32_t>(n));
+        const auto has_borrow = detail::eval_subtract_n(r1, r1, t2, static_cast<std::int32_t>(n));
 
         eval_multiply_kara_propagate_borrow(r0, nh, has_borrow);
       }

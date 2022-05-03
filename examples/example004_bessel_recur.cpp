@@ -24,8 +24,8 @@ namespace example004_bessel
     const floating_point_type f_lo = pfn(x_lo);
     const floating_point_type f_hi = pfn(x_hi);
 
-    const bool f_lo_is_neg = (f_lo < static_cast<floating_point_type>(0.0L));
-    const bool f_hi_is_neg = (f_hi < static_cast<floating_point_type>(0.0L));
+    const auto f_lo_is_neg = (f_lo < static_cast<floating_point_type>(0.0L));
+    const auto f_hi_is_neg = (f_hi < static_cast<floating_point_type>(0.0L));
 
     // Make sure that there is at least one root in the interval.
     if(f_lo_is_neg == f_hi_is_neg)
@@ -256,7 +256,7 @@ auto math::wide_decimal::example004_bessel_recur() -> bool
 
   const dec1001_t closeness = fabs(1 - (j9 / control));
 
-  const bool result_is_ok = closeness < (std::numeric_limits<dec1001_t>::epsilon() * 100);
+  const auto result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * 100));
 
   return result_is_ok;
 }
@@ -269,7 +269,7 @@ auto math::wide_decimal::example004_bessel_recur() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example004_bessel_recur();
+  const auto result_is_ok = math::wide_decimal::example004_bessel_recur();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

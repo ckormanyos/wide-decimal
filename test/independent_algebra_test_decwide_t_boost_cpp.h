@@ -111,7 +111,7 @@
 
       // For values less than 1 invert the argument and
       // remember (in this case) to negate the result below.
-      const bool b_negate = (x < 1);
+      const auto b_negate = (x < 1);
 
       const floating_point_type xx((!b_negate) ? x : 1 / x);
 

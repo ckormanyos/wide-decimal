@@ -76,7 +76,7 @@ auto math::wide_decimal::example006_logarithm() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example006_logarithm();
+  const auto result_is_ok = math::wide_decimal::example006_logarithm();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

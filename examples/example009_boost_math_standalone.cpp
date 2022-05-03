@@ -59,7 +59,7 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
 
   const dec1001_t closeness = fabs(1 - (c / control));
 
-  const bool result_is_ok = closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10);
+  const auto result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10));
 
   return result_is_ok;
 }
@@ -73,7 +73,7 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
 // TBD: Handle exception catching in example009_boost_math_standalone at a later time.
 auto main() -> int // NOLINT(bugprone-exception-escape)
 {
-  const bool result_is_ok = math::wide_decimal::example009_boost_math_standalone();
+  const auto result_is_ok = math::wide_decimal::example009_boost_math_standalone();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

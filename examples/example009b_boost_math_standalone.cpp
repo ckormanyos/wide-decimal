@@ -129,8 +129,8 @@ auto sin(const FloatingPointType& x) -> FloatingPointType // NOLINT(misc-no-recu
 
     floating_point_type r = x - (boost::math::constants::half_pi<floating_point_type>() * k);
 
-    const bool is_neg =  (n > 1U);
-    const bool is_cos = ((n == 1U) || (n == 3U));
+    const auto is_neg =  (n > 1U);
+    const auto is_cos = ((n == 1U) || (n == 3U));
 
     auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
@@ -196,8 +196,8 @@ auto cos(const FloatingPointType& x) -> FloatingPointType // NOLINT(misc-no-recu
 
     floating_point_type r = x - (boost::math::constants::half_pi<floating_point_type>() * k);
 
-    const bool is_neg = ((n == 1U) || (n == 2U));
-    const bool is_sin = ((n == 1U) || (n == 3U));
+    const auto is_neg = ((n == 1U) || (n == 2U));
+    const auto is_sin = ((n == 1U) || (n == 3U));
 
     auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
@@ -260,10 +260,10 @@ namespace example009b_boost
      const T closeness_2_and_half = fabs(1 - fabs(tgamma_2_and_half / control_tgamma_2_and_half));
      const T closeness_2_fifty    = fabs(1 - fabs(tgamma_2_fifty    / control_tgamma_2_fifty));
 
-     const bool result_is_ok_2_and_half = (closeness_2_and_half < std::numeric_limits<T>::epsilon() * T(1.0E5L));
-     const bool result_is_ok_2_fifty    = (closeness_2_fifty    < std::numeric_limits<T>::epsilon() * T(1.0E5L));
+     const auto result_is_ok_2_and_half = (closeness_2_and_half < std::numeric_limits<T>::epsilon() * T(1.0E5L));
+     const auto result_is_ok_2_fifty    = (closeness_2_fifty    < std::numeric_limits<T>::epsilon() * T(1.0E5L));
 
-     const bool result_is_ok = (result_is_ok_2_and_half && result_is_ok_2_fifty);
+     const auto result_is_ok = (result_is_ok_2_and_half && result_is_ok_2_fifty);
 
      return result_is_ok;
   }
@@ -279,11 +279,11 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
   using wide_decimal_035_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 35)), std::uint32_t, void>;
   using wide_decimal_105_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(105)), std::uint32_t, void>;
 
-  const bool result_010_is_ok = example009b_boost::test_tgamma<wide_decimal_010_type>();
-  const bool result_035_is_ok = example009b_boost::test_tgamma<wide_decimal_035_type>();
-  const bool result_105_is_ok = example009b_boost::test_tgamma<wide_decimal_105_type>();
+  const auto result_010_is_ok = example009b_boost::test_tgamma<wide_decimal_010_type>();
+  const auto result_035_is_ok = example009b_boost::test_tgamma<wide_decimal_035_type>();
+  const auto result_105_is_ok = example009b_boost::test_tgamma<wide_decimal_105_type>();
 
-  const bool result_is_ok = (   result_010_is_ok
+  const auto result_is_ok = (   result_010_is_ok
                              && result_035_is_ok
                              && result_105_is_ok);
 
@@ -299,7 +299,7 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
 // TBD: Handle exception catching in example009b_boost_math_standalone at a later time.
 auto main() -> int // NOLINT(bugprone-exception-escape)
 {
-  const bool result_is_ok = math::wide_decimal::example009b_boost_math_standalone();
+  const auto result_is_ok = math::wide_decimal::example009b_boost_math_standalone();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

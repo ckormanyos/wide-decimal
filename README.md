@@ -261,7 +261,7 @@ auto main() -> int
 
   const dec101_t closeness = fabs(1 - (s / control));
 
-  const bool result_is_ok = closeness < (std::numeric_limits<dec101_t>::epsilon() * 10);
+  const auto result_is_ok = (closeness < (std::numeric_limits<dec101_t>::epsilon() * 10));
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
@@ -320,7 +320,7 @@ auto main() -> int
             << (float) (stop - start) / (float) CLOCKS_PER_SEC
             << std::endl;
 
-  const bool head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
+  const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
                                      my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_32.size(),
                                      math::constants::const_pi_control_head_32.begin());
 
@@ -337,11 +337,11 @@ auto main() -> int
         )
     );
 
-  const bool tail_is_ok = std::equal(fi,
+  const auto tail_is_ok = std::equal(fi,
                                      fi + math::constants::const_pi_control_tail_32_1000001.size(),
                                           math::constants::const_pi_control_tail_32_1000001.begin());
 
-  const bool result_is_ok = (head_is_ok && tail_is_ok);
+  const auto result_is_ok = (head_is_ok && tail_is_ok);
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
