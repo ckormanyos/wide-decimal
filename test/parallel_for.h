@@ -26,10 +26,18 @@
       static const auto number_of_threads = static_cast<unsigned>(((number_of_threads_hint == 0U) ? 4U : number_of_threads_hint)); // NOLINT(altera-id-dependent-backward-branch)
 
       // Set the size of a slice for the range functions.
-      const auto n = static_cast<index_type>(static_cast<index_type>(end - start) + static_cast<index_type>(1));
+      const auto n =
+        static_cast<index_type>
+        (
+          static_cast<index_type>(end - start) + static_cast<index_type>(1)
+        );
 
       const auto slice =
-        (std::max)(static_cast<index_type>(std::round(n / static_cast<double> (number_of_threads))), index_type(1));
+        (std::max)
+        (
+          static_cast<index_type>(std::round(static_cast<double>(n) / static_cast<double>(number_of_threads))),
+          static_cast<index_type>(1)
+        );
 
       // Inner loop.
       const auto launch_range =
