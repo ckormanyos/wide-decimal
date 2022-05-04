@@ -196,7 +196,7 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example008_bernoulli_tgamma() -
 auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #endif
 {
-  const std::clock_t start = std::clock();
+  const auto start = std::clock();
 
   // Initialize the table of Bernoulli numbers.
   example008_bernoulli::bernoulli_b
@@ -261,7 +261,7 @@ auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
     result_is_ok &= (closeness < tol);
   }
 
-  const std::clock_t stop = std::clock();
+  const auto stop = std::clock();
 
   std::cout << "Time example008_bernoulli_tgamma(): "
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)

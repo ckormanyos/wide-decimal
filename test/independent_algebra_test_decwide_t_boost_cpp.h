@@ -15,8 +15,6 @@
   #include <test/independent_algebra_test_decwide_t_base.h>
   #include <test/independent_algebra_test_decwide_t_constants.h>
 
-  #include <boost/math/bindings/decwide_t.hpp>
-
   #if defined(DECWIDE_T_TEST_OPTION_TEST_CPP_DEC_FLOAT)
   #include <boost/multiprecision/cpp_dec_float.hpp>
   #else

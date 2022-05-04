@@ -5,6 +5,17 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#include <boost/version.hpp>
+
+#if !defined(BOOST_VERSION)
+#error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
+#endif
+
+#if ((BOOST_VERSION >= 107900) && !defined(BOOST_MP_STANDALONE))
+#define BOOST_MP_STANDALONE
+#endif
+
+#if (BOOST_VERSION < 108000)
 #if defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
@@ -13,10 +24,18 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
+#endif
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
+
+#if (BOOST_VERSION < 108000)
 #if defined(__clang__) && !defined(__APPLE__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#endif
 #endif
 
 #include <math/wide_decimal/decwide_t.h>
@@ -223,12 +242,20 @@ auto test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-
   return result_is_ok;
 }
 
+#if (BOOST_VERSION < 108000)
 #if defined(__clang__) && !defined(__APPLE__)
 #pragma GCC diagnostic pop
+#endif
 #endif
 
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
+#endif
+
+#if (BOOST_VERSION < 108000)
+#if defined(__GNUC__)
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#endif
 #endif

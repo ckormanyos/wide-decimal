@@ -85,11 +85,15 @@
     {
       if(do_seed_random_generators)
       {
-        const std::clock_t s = std::clock();
+        const auto s = std::clock();
 
-        eng_sign.seed    (s);
-        eng_exp.seed     (s);
-        eng_mantissa.seed(s);
+        using local_eng_sign_type     = std::ranlux24;
+        using local_eng_exp_type      = std::minstd_rand;
+        using local_eng_mantissa_type = std::mt19937;
+
+        eng_sign.seed    (static_cast<typename local_eng_sign_type::result_type>    (s));
+        eng_exp.seed     (static_cast<typename local_eng_exp_type::result_type>     (s));
+        eng_mantissa.seed(static_cast<typename local_eng_mantissa_type::result_type>(s));
       }
 
       str = std::string();
