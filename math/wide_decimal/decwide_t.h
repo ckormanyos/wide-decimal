@@ -55,7 +55,7 @@
   #error WIDE_DECIMAL_NAMESPACE_END is not defined. Ensure that <decwide_t_detail_namespace.h> is properly included.
   #endif
 
-  #if defined(__GNUC__) && defined(__RL78__)
+  #if (defined(__GNUC__) && defined(__RL78__))
   namespace std { using ::ilogb; }
   #endif
 
@@ -162,13 +162,12 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isnan)   (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isfinite)(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isinf)   (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto  sign     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> int ;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (signbit) (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto fabs     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto abs      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto floor    (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto ceil     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto sgn      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          std::int32_t;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto ldexp    (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
                                                                                                                                                                                       int e)                                                                                            ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto frexp    (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,                             
@@ -444,13 +443,13 @@
     static constexpr std::int32_t  decwide_t_elem_mask      = detail::decwide_t_helper<ParamDigitsBaseTen, LimbType>::elem_mask;
     static constexpr std::int32_t  decwide_t_elem_mask_half = detail::decwide_t_helper<ParamDigitsBaseTen, LimbType>::elem_mask_half;
 
+    static constexpr std::int32_t  decwide_t_elems_for_kara = static_cast<std::int32_t>( 112 + 1);
+    static constexpr std::int32_t  decwide_t_elems_for_fft  = static_cast<std::int32_t>(1280 + 1);
+
     static constexpr exponent_type decwide_t_max_exp10      =  static_cast<exponent_type>(UINTMAX_C(1) << static_cast<unsigned>(std::numeric_limits<exponent_type>::digits - (std::is_same<exponent_type, std::int64_t>::value ? 4 : (std::is_same<exponent_type, std::int32_t>::value ? 3 : (std::is_same<exponent_type, std::int16_t>::value ? 2 : 1)))));
     static constexpr exponent_type decwide_t_min_exp10      = -static_cast<exponent_type>(decwide_t_max_exp10);
     static constexpr exponent_type decwide_t_max_exp        = decwide_t_max_exp10;
     static constexpr exponent_type decwide_t_min_exp        = decwide_t_min_exp10;
-
-    static constexpr std::int32_t  decwide_t_elems_for_kara = static_cast<std::int32_t>( 112 + 1);
-    static constexpr std::int32_t  decwide_t_elems_for_fft  = static_cast<std::int32_t>(1280 + 1);
 
     // Obtain the limb_type from template parameter.
     using limb_type = LimbType;
@@ -473,7 +472,7 @@
                                 detail::fixed_static_array <limb_type, static_cast<std::uint_fast32_t>(decwide_t_elem_number)>,
                                 detail::fixed_dynamic_array<limb_type, static_cast<std::uint_fast32_t>(decwide_t_elem_number), allocator_type>>::type;
 
-    // Check thw width of the limb type.
+    // Check the width of the limb type.
     static_assert((   std::is_same<std::uint8_t,  limb_type>::value
                    || std::is_same<std::uint16_t, limb_type>::value
                    || std::is_same<std::uint32_t, limb_type>::value),
@@ -776,13 +775,13 @@
       // This constructor is intended to maintain the
       // full precision of the InternalFloatType.
 
-      using std::fabs;
-
       const InternalFloatType close_to_zero =
         (  (std::numeric_limits<InternalFloatType>::min)()
          * (static_cast<InternalFloatType>(1) + std::numeric_limits<InternalFloatType>::epsilon()));
 
-      const bool mantissa_is_iszero = (fabs(mantissa) < close_to_zero);
+      using std::fabs;
+
+      const auto mantissa_is_iszero = (fabs(mantissa) < close_to_zero);
 
       if(mantissa_is_iszero)
       {
@@ -795,7 +794,7 @@
       }
       else
       {
-        const bool b_neg = (mantissa < static_cast<InternalFloatType>(0));
+        const auto b_neg = (mantissa < static_cast<InternalFloatType>(0));
 
         InternalFloatType d = ((!b_neg) ? mantissa : -mantissa);
         exponent_type     e = exponent;
@@ -922,7 +921,7 @@
         return *this;
       }
 
-      if((ofs_exp.get_is_neg() ) && (ofs_exp.get_value_unsigned() >= static_cast<unsigned_exponent_type>(max_delta_exp)))
+      if((ofs_exp.get_is_neg()) && (ofs_exp.get_value_unsigned() >= static_cast<unsigned_exponent_type>(max_delta_exp)))
       {
         // Result is *this = v since *this is negligible compared to v.
         return operator=(v);
@@ -987,7 +986,7 @@
                     my_n_data_for_add_sub.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_data.begin());
 
-          my_exp  = v.my_exp;
+          my_exp = v.my_exp;
         }
 
         if(carry != static_cast<limb_type>(0U))
@@ -1031,7 +1030,7 @@
           // into the data array m_n. Set the operand pointer p_v
           // to point to the copied, shifted data m_n.
           std::copy(v.my_data.cbegin(),
-                    v.my_data.cend()  - static_cast<std::ptrdiff_t>(ofs),
+                    v.my_data.cend() - static_cast<std::ptrdiff_t>(ofs),
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(ofs));
 
           std::fill(my_n_data_for_add_sub.begin(),
@@ -1068,15 +1067,17 @@
         }
 
         // Subtraction.
-        using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
+        {
+          using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
-        const bool has_borrow =
-          detail::eval_subtract_n(p_u,
-                                  const_limb_pointer_type(p_u),
-                                  const_limb_pointer_type(p_v),
-                                  prec_elems_for_add_sub);
+          const auto has_borrow =
+            detail::eval_subtract_n(p_u,
+                                    const_limb_pointer_type(p_u),
+                                    const_limb_pointer_type(p_v),
+                                    prec_elems_for_add_sub);
 
-        static_cast<void>(has_borrow);
+          static_cast<void>(has_borrow);
+        }
 
         if(b_copy)
         {
@@ -1098,7 +1099,7 @@
 
         if(first_nonzero_elem != my_data.cbegin())
         {
-          if(first_nonzero_elem == my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub))
+          if(first_nonzero_elem == (my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub)))
           {
             // This result of the subtraction is exactly zero (within precision).
             // Reset the sign and the exponent.
@@ -1150,7 +1151,7 @@
     auto operator*=(const decwide_t& v) -> decwide_t&
     {
       // Evaluate the sign of the result.
-      const bool b_result_is_neg = (my_neg != v.my_neg);
+      const auto b_result_is_neg = (my_neg != v.my_neg);
 
       // Artificially set the sign of the result to be positive.
       my_neg = false;
@@ -1206,7 +1207,7 @@
 
     auto operator/=(const decwide_t& v) -> decwide_t&
     {
-      const bool u_and_v_are_identical =
+      const auto u_and_v_are_identical =
         (   (my_fpclass == v.my_fpclass)
          && (my_exp     == v.my_exp)
          && (detail::compare_ranges(  my_data.data(),
@@ -1252,13 +1253,13 @@
       // Multiply *this with a constant unsigned long long.
 
       // Evaluate the sign of the result.
-      const bool b_neg = my_neg;
+      const auto b_neg = my_neg;
 
       // Artificially set the sign of the result to be positive.
       my_neg = false;
 
       // Handle special cases like zero, inf and NaN.
-      const bool b_n_is_zero = (n == static_cast<std::int32_t>(0));
+      const auto b_n_is_zero = (n == static_cast<std::int32_t>(0));
 
       if(iszero() || b_n_is_zero)
       {
@@ -1308,7 +1309,7 @@
       // Divide *this by a constant unsigned long long.
 
       // Evaluate the sign of the result.
-      const bool b_neg = my_neg;
+      const auto b_neg = my_neg;
 
       // Artificially set the sign of the result to be positive.
       my_neg = false;
@@ -1408,7 +1409,7 @@
 
     auto mul_signed_long_long(signed long long n) -> decwide_t& // NOLINT(google-runtime-int)
     {
-      const bool b_neg = (n < static_cast<signed long long>(0)); // NOLINT(google-runtime-int)
+      const auto b_neg = (n < static_cast<signed long long>(0)); // NOLINT(google-runtime-int)
 
       mul_unsigned_long_long
       (
@@ -1421,7 +1422,7 @@
 
     auto div_signed_long_long(signed long long n) -> decwide_t& // NOLINT(google-runtime-int)
     {
-      const bool b_neg = (n < static_cast<signed long long>(0)); // NOLINT(google-runtime-int)
+      const auto b_neg = (n < static_cast<signed long long>(0)); // NOLINT(google-runtime-int)
 
       div_unsigned_long_long
       (
@@ -1479,7 +1480,11 @@
                                        : static_cast<std::int_fast8_t>(-1))
                 );
 
-              n_result = static_cast<std::int_fast8_t>(my_neg ? val_cmp_exp : static_cast<std::int_fast8_t>(-val_cmp_exp));
+              n_result =
+                static_cast<std::int_fast8_t>
+                (
+                  my_neg ? val_cmp_exp : static_cast<std::int_fast8_t>(-val_cmp_exp)
+                );
             }
             else
             {
@@ -1494,7 +1499,11 @@
                                        v.my_data.data(),
                                        static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
-              n_result = static_cast<std::int_fast8_t>((!my_neg) ? val_cmp_data : static_cast<std::int_fast8_t>(-val_cmp_data));
+              n_result =
+                static_cast<std::int_fast8_t>
+                (
+                  (!my_neg) ? val_cmp_data : static_cast<std::int_fast8_t>(-val_cmp_data)
+                );
             }
           }
         }
@@ -1554,8 +1563,9 @@
           + static_cast<std::int32_t>(((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0)
         );
 
-      my_prec_elem = (std::min)(decwide_t_elem_number,
-                                (std::max)(elems, static_cast<std::int32_t>(2)));
+      const auto elems_max = (std::max)(elems, static_cast<std::int32_t>(2));
+
+      my_prec_elem = (std::min)(decwide_t_elem_number, elems_max);
     }
 
     auto swap(decwide_t& other) noexcept -> void
@@ -1584,7 +1594,7 @@
     auto calculate_inv() -> decwide_t&
     {
       // Compute the inverse of *this.
-      const bool b_neg = my_neg;
+      const auto b_neg = my_neg;
 
       my_neg = false;
 
@@ -1872,7 +1882,7 @@
     {
       // Check if the value of *this is identically 1 or very close to 1.
 
-      const bool not_negative = (!my_neg);
+      const auto not_negative = (!my_neg);
 
       bool value_is_one = false;
 
@@ -2136,7 +2146,7 @@
 
       if(my_exp >= static_cast<exponent_type>(0))
       {
-        const bool b_neg = isneg();
+        const auto b_neg = isneg();
 
         if((!b_neg) && (*this > signed_long_long_max<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()))
         {
@@ -2830,21 +2840,21 @@
 
     auto eval_round_self() -> void // NOLINT(readability-function-cognitive-complexity)
     {
-      const bool needs_rounding = (((isfinite)()) && (!iszero()));
+      const auto needs_rounding = ((isfinite)() && (!iszero()));
 
       if(needs_rounding)
       {
         using local_size_type = typename representation_type::size_type;
         using local_limb_type = typename representation_type::value_type;
 
-        std::int32_t digits_limb_0 = 0;
+        auto digits_limb_0 = static_cast<std::int32_t>(0);
 
-        local_limb_type tmp_limb_0 = my_data[0U];
+        auto tmp_limb_0 = my_data[0U];
 
         // Manually count the number of base-10 digits on the zero'th limb.
         while(tmp_limb_0 > 0U)
         {
-          tmp_limb_0 /= 10U; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+          tmp_limb_0 = static_cast<local_limb_type>(tmp_limb_0 / 10U); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
           ++digits_limb_0;
         }
@@ -2890,14 +2900,14 @@
         using digit_helper_struct_type = detail::decwide_t_helper<decwide_t_elem_digits10, limb_type>;
 
         // Get the value of the rounding base-10 digit.
-        const std::uint8_t round_digit_value =
+        const auto round_digit_value =
           digit_helper_struct_type::digit_at_pos_in_limb
           (
              my_data[static_cast<local_size_type>(round_digit_idx)],
              static_cast<unsigned>(round_digit_pos)
           );
 
-        const local_limb_type least_digit_p10 = detail::pow10_maker_as_runtime_value(static_cast<std::uint32_t>(least_digit_pos));
+        const auto least_digit_p10 = detail::pow10_maker_as_runtime_value(static_cast<std::uint32_t>(least_digit_pos));
 
         // Clear the lower base-10 digits of the rounded element.
         my_data[static_cast<local_size_type>(least_digit_idx)] -= static_cast<local_limb_type>(my_data[static_cast<local_size_type>(least_digit_idx)] % least_digit_p10);
@@ -2906,7 +2916,7 @@
         {
           const auto least_digit_idx_plus_one = static_cast<std::int32_t>(least_digit_idx + 1);
 
-          const bool do_clear_lower_limbs =
+          const auto do_clear_lower_limbs =
             (least_digit_idx_plus_one < static_cast<std::int32_t>(my_data.size() - 1U));
 
           if(do_clear_lower_limbs)
@@ -2929,11 +2939,12 @@
               : static_cast<std::uint_fast8_t>(0U));
 
           // Propogate the carry into the limbs of higher significance as needed.
-          if(carry_out != 0U)
+          if(carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0)))
           {
             my_data[static_cast<local_size_type>(least_digit_idx)] -= decwide_t_elem_mask;
 
-            while(--least_digit_idx >= 0 && (carry_out != 0U))
+            while(   (--least_digit_idx >= static_cast<std::int32_t>(0))
+                  && (carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0))))
             {
               const auto tt =
                 static_cast<local_limb_type>
@@ -2953,7 +2964,8 @@
                 );
             }
 
-            if((least_digit_idx < 0) && (carry_out != static_cast<std::uint_fast8_t>(0U)))
+            if(   (least_digit_idx < static_cast<std::int32_t>(0))
+               && (carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0))))
             {
               // In rare cases, propagation of the carry reaches the zero'th limb
               // of highest significance, and we must shift the data, create a new limb
@@ -3408,8 +3420,8 @@
       const std::ios::fmtflags my_flags = os.flags();
 
       // Obtain the showpos flag.
-      const bool my_showpos   = ((my_flags & std::ios::showpos)   != static_cast<std::ios::fmtflags>(0U));
-      const bool my_uppercase = ((my_flags & std::ios::uppercase) != static_cast<std::ios::fmtflags>(0U));
+      const auto my_showpos   = ((my_flags & std::ios::showpos)   != static_cast<std::ios::fmtflags>(0U));
+      const auto my_uppercase = ((my_flags & std::ios::uppercase) != static_cast<std::ios::fmtflags>(0U));
 
       // Get the base-10 exponent.
       auto the_exp = static_cast<exponent_type>(ilogb(*this));
@@ -3524,7 +3536,7 @@
       get_output_string(str, the_exp, the_number_of_digits_i_want_from_decwide_t);
 
       // Obtain additional format information.
-      const bool my_showpoint  = ((my_flags & std::ios::showpoint) != static_cast<std::ios::fmtflags>(0U));
+      const auto my_showpoint = ((my_flags & std::ios::showpoint) != static_cast<std::ios::fmtflags>(0U));
 
       // Write the output string in the desired format.
       if     (my_float_field == detail::os_float_field_type::scientific) { wr_string_scientific(str, the_exp, os_precision, my_showpoint, my_uppercase); }
@@ -3553,7 +3565,10 @@
         const auto n_fill = static_cast<std::uint_fast32_t>(my_width - str.length());
 
         // Left-justify is the exception, std::right and std::internal justify right.
-        const bool my_left = ((my_flags & std::ios::left)  != static_cast<std::ios::fmtflags>(0U));
+        const auto my_left =
+        (
+          static_cast<std::ios::fmtflags>(my_flags & std::ios::left) != static_cast<std::ios::fmtflags>(0U)
+        );
 
         // Justify left or right and insert the fill characters.
         str.insert((my_left ? str.cend() : str.cbegin()), n_fill, os.fill());
@@ -3613,7 +3628,7 @@
       }
 
       // Append the exponent in uppercase or lower case, including its sign.
-      const bool b_exp_is_neg = (the_exp < static_cast<exponent_type>(0));
+      const auto b_exp_is_neg = (the_exp < static_cast<exponent_type>(0));
 
       const auto u_exp =
         static_cast<std::uint64_t>
@@ -3851,14 +3866,6 @@
     friend inline auto abs(const decwide_t& x) -> decwide_t
     {
       return fabs(x);
-    }
-
-    friend inline auto sgn(const decwide_t& x) -> std::int32_t
-    {
-      // TBD: The name sgn is not quite right.
-      return (x.iszero() ? static_cast<std::int32_t>(0)
-                         : (x.isneg() ? static_cast<std::int32_t>(-1)
-                                      : static_cast<std::int32_t>(1)));
     }
 
     friend inline auto floor(const decwide_t& x) -> decwide_t
@@ -4749,7 +4756,7 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isnan)   (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return (x.isnan)(); }
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isfinite)(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return (x.isfinite)(); }
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (isinf)   (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return (x.isinf)(); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto  sign     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> int  { return (x.iszero() ? 0 : (x.isneg() ? -1 : 1)); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto (signbit) (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> bool { return  x.isneg(); }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   auto pow(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
@@ -4846,7 +4853,7 @@
     }
     else if(p == static_cast<std::int32_t>(3))
     {
-      const bool b_neg = (x < 0);
+      const auto b_neg = (x < 0);
 
       using std::fabs;
 
@@ -4884,7 +4891,7 @@
 
     // For values less than 1 invert the argument and
     // remember (in this case) to negate the result below.
-    const bool b_negate =
+    const auto b_negate =
       (x < one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
 
     const floating_point_type xx((!b_negate) ? x : floating_point_type(x).calculate_inv());

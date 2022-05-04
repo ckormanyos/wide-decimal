@@ -28,7 +28,7 @@ auto math::wide_decimal::example001a_roots_seventh() -> bool
 
   const dec101_t closeness = fabs(1 - fabs(r7 / control));
 
-  const bool result_is_ok = closeness < (std::numeric_limits<dec101_t>::epsilon() * 10);
+  const auto result_is_ok = (closeness < (std::numeric_limits<dec101_t>::epsilon() * 10));
 
   return result_is_ok;
 }
@@ -41,7 +41,7 @@ auto math::wide_decimal::example001a_roots_seventh() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example001a_roots_seventh();
+  const auto result_is_ok = math::wide_decimal::example001a_roots_seventh();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

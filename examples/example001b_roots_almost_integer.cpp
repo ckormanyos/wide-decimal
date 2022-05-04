@@ -84,7 +84,7 @@ auto math::wide_decimal::example001b_roots_almost_integer() -> bool
 
   const dec5001_t closeness = fabs(1 - fabs(p / control));
 
-  const bool result_is_ok = closeness < (std::numeric_limits<dec5001_t>::epsilon() * 10);
+  const auto result_is_ok = (closeness < (std::numeric_limits<dec5001_t>::epsilon() * 10));
 
   return result_is_ok;
 }
@@ -97,7 +97,7 @@ auto math::wide_decimal::example001b_roots_almost_integer() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example001b_roots_almost_integer();
+  const auto result_is_ok = math::wide_decimal::example001b_roots_almost_integer();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

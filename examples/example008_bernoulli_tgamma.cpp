@@ -87,7 +87,7 @@ namespace example008_bernoulli
 
       const floating_point_type b = (tangent_numbers[i] * two_i) / (two_pow_two_m * (two_pow_two_m - 1));
 
-      const bool  b_neg = ((two_i % 4U) == 0U);
+      const auto b_neg = ((two_i % 4U) == 0U);
 
       bn[two_i] = ((!b_neg) ? b : -b); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
@@ -278,7 +278,7 @@ auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example008_bernoulli_tgamma();
+  const auto result_is_ok = math::wide_decimal::example008_bernoulli_tgamma();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

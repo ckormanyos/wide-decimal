@@ -323,7 +323,7 @@ auto math::wide_decimal::example001d_pow2_from_list() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example001d_pow2_from_list();
+  const auto result_is_ok = math::wide_decimal::example001d_pow2_from_list();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

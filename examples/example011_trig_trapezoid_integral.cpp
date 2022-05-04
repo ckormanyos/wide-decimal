@@ -219,8 +219,8 @@ namespace example011_trig
 
       dec51_t r = x - (pi_half<dec51_t>() * k);
 
-      const bool is_neg =  (n > 1U);
-      const bool is_cos = ((n == 1U) || (n == 3U));
+      const auto is_neg =  (n > 1U);
+      const auto is_cos = ((n == 1U) || (n == 3U));
 
       auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
@@ -283,8 +283,8 @@ namespace example011_trig
 
       dec51_t r = x - (pi_half<dec51_t>() * k);
 
-      const bool is_neg = ((n == 1U) || (n == 2U));
-      const bool is_sin = ((n == 1U) || (n == 3U));
+      const auto is_neg = ((n == 1U) || (n == 2U));
+      const auto is_sin = ((n == 1U) || (n == 3U));
 
       auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
@@ -432,7 +432,7 @@ auto math::wide_decimal::example011_trig_trapezoid_integral() -> bool
 
   const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * 10U;
 
-  const bool result_is_ok = (   (closeness2 < tol)
+  const auto result_is_ok = (   (closeness2 < tol)
                              && (closeness3 < tol)
                              && (closeness4 < tol));
 
@@ -447,7 +447,7 @@ auto math::wide_decimal::example011_trig_trapezoid_integral() -> bool
 
 auto main() -> int
 {
-  const bool result_is_ok = math::wide_decimal::example011_trig_trapezoid_integral();
+  const auto result_is_ok = math::wide_decimal::example011_trig_trapezoid_integral();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

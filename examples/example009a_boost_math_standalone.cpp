@@ -131,8 +131,8 @@ auto sin(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
 
     dec1001_t r = x - (boost::math::constants::half_pi<dec1001_t>() * k);
 
-    const bool is_neg =  (n > 1U);
-    const bool is_cos = ((n == 1U) || (n == 3U));
+    const auto is_neg =  (n > 1U);
+    const auto is_cos = ((n == 1U) || (n == 3U));
 
     auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
@@ -195,8 +195,8 @@ auto cos(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
 
     dec1001_t r = x - (boost::math::constants::half_pi<dec1001_t>() * k);
 
-    const bool is_neg = ((n == 1U) || (n == 2U));
-    const bool is_sin = ((n == 1U) || (n == 3U));
+    const auto is_neg = ((n == 1U) || (n == 2U));
+    const auto is_sin = ((n == 1U) || (n == 3U));
 
     auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
 
@@ -414,10 +414,10 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   const dec1001_t closeness_lpvu = fabs(1 - (lpvu / control_lpvu));
   const dec1001_t closeness_lqvu = fabs(1 - (lqvu / control_lqvu));
 
-  const bool result_lpvu_is_ok = closeness_lpvu < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000));
-  const bool result_lqvu_is_ok = closeness_lqvu < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000));
+  const auto result_lpvu_is_ok = (closeness_lpvu < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000)));
+  const auto result_lqvu_is_ok = (closeness_lqvu < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000)));
 
-  const bool result_is_ok = (result_lpvu_is_ok && result_lqvu_is_ok);
+  const auto result_is_ok = (result_lpvu_is_ok && result_lqvu_is_ok);
 
   return result_is_ok;
 }
@@ -431,7 +431,7 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
 // TBD: Handle exception catching in example009a_boost_math_standalone at a later time.
 auto main() -> int // NOLINT(bugprone-exception-escape)
 {
-  const bool result_is_ok = math::wide_decimal::example009a_boost_math_standalone();
+  const auto result_is_ok = math::wide_decimal::example009a_boost_math_standalone();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
