@@ -62,6 +62,12 @@
     <Filter Include=".github\toolchains">
       <UniqueIdentifier>{14a4c145-a484-4c81-a33d-8b4246647a39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\boost\multiprecision">
+      <UniqueIdentifier>{290e9f57-ab93-4522-bc3b-b90f53e1af52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost\multiprecision\detail">
+      <UniqueIdentifier>{1106a10d-1216-4b65-91dc-f389adbd354c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -233,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="examples\example_decwide_t.h">
       <Filter>Source Files\examples</Filter>
+    </ClInclude>
+    <ClInclude Include="boost\multiprecision\detail\number_base.hpp">
+      <Filter>Source Files\boost\multiprecision\detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

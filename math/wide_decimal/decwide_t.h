@@ -3106,7 +3106,7 @@
               - std::distance<std::string::const_reverse_iterator>(str.crbegin(), rit_non_zero)
             );
 
-          str.erase(str.cbegin() + ofs, str.cend());
+          str.erase(ofs, str.size() - ofs);
         }
 
         // Check if the input is identically zero.
