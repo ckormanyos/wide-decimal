@@ -156,7 +156,7 @@
           result = -result;
         }
 
-        result = ldexp(result, k - 1);
+        result = ldexp(result, static_cast<int>(k - 1U));
         D -= result;
         ++k;
         lim = ldexp(lim, 1);

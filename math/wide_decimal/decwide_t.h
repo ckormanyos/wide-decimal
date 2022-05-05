@@ -529,7 +529,7 @@
         static_assert(std::numeric_limits<native_float_type>::digits <= std::numeric_limits<unsigned long long>::digits, // NOLINT(google-runtime-int)
                       "Error: The width of the mantissa does not fit in unsigned long long");
 
-        const native_float_type ff = ((f < static_cast<native_float_type>(0)) ? -f : f);
+        const native_float_type ff = ((f < static_cast<native_float_type>(0)) ? static_cast<native_float_type>(-f) : f);
 
         if(ff < (std::numeric_limits<native_float_type>::min)())
         {
@@ -667,7 +667,7 @@
                                       && (std::numeric_limits<UnsignedIntegralType>::digits <= std::numeric_limits<limb_type>::digits))>::type const* = nullptr>
     decwide_t(const UnsignedIntegralType u) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
       : my_data     (decwide_t_elem_number),
-        my_exp      ((u < decwide_t_elem_mask) ? exponent_type(0) : exponent_type(decwide_t_elem_digits10)),
+        my_exp      ((u < decwide_t_elem_mask) ? static_cast<exponent_type>(0) : static_cast<exponent_type>(decwide_t_elem_digits10)),
         my_neg      (false),
         my_fpclass  (fpclass_type::decwide_t_finite),
         my_prec_elem(decwide_t_elem_number)
@@ -775,13 +775,18 @@
       // This constructor is intended to maintain the
       // full precision of the InternalFloatType.
 
-      const InternalFloatType close_to_zero =
-        (  (std::numeric_limits<InternalFloatType>::min)()
-         * (static_cast<InternalFloatType>(1) + std::numeric_limits<InternalFloatType>::epsilon()));
+      const auto detla_zero =
+        static_cast<InternalFloatType>
+        (
+          (
+              (std::numeric_limits<InternalFloatType>::min)()
+            * (static_cast<InternalFloatType>(1) + std::numeric_limits<InternalFloatType>::epsilon())
+          )
+        );
 
       using std::fabs;
 
-      const auto mantissa_is_iszero = (fabs(mantissa) < close_to_zero);
+      const auto mantissa_is_iszero = (fabs(mantissa) < detla_zero);
 
       if(mantissa_is_iszero)
       {

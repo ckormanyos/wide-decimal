@@ -149,12 +149,12 @@ auto math::wide_decimal::example002c_pi_quintic() -> bool
   using local_wide_decimal_type =
     math::wide_decimal::decwide_t<wide_decimal_digits10>;
 
-  const std::clock_t start = std::clock();
+  const auto start = std::clock();
 
   const auto my_pi =
     example002c_pi::pi_borwein_quintic<math::wide_decimal::decwide_t<wide_decimal_digits10>>(&std::cout);
 
-  const std::clock_t stop = std::clock();
+  const auto stop = std::clock();
 
   std::cout << "Time example002c_pi_quintic(): "
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)

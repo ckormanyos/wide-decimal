@@ -43,12 +43,12 @@ auto math::wide_decimal::example002b_pi_100k() -> bool
   using local_wide_decimal_type =
     math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type>;
 
-  const std::clock_t start = std::clock();
+  const auto start = std::clock();
 
   const local_wide_decimal_type my_pi =
     math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type>();
 
-  const std::clock_t stop = std::clock();
+  const auto stop = std::clock();
 
   std::cout << "Time example002b_pi_100k(): "
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)

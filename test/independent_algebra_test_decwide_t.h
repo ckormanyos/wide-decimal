@@ -54,6 +54,12 @@
     using local_wide_decimal_type =
       math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
+    using local_eng_sgn_type = std::ranlux24;
+    using local_eng_exp_type = std::minstd_rand;
+    using local_eng_man_type = std::mt19937;
+
+    using local_dst_type = std::uniform_int_distribution<std::uint32_t>;
+
   public:
     static constexpr auto my_tol() -> local_wide_decimal_type
     {
@@ -85,11 +91,11 @@
     {
       if(do_seed_random_generators)
       {
-        const std::clock_t s = std::clock();
+        const auto s = std::clock();
 
-        eng_sign.seed    (s);
-        eng_exp.seed     (s);
-        eng_mantissa.seed(s);
+        eng_sgn.seed(static_cast<typename local_eng_sgn_type::result_type>(s));
+        eng_exp.seed(static_cast<typename local_eng_exp_type::result_type>(s));
+        eng_man.seed(static_cast<typename local_eng_man_type::result_type>(s));
       }
 
       str = std::string();
@@ -100,7 +106,7 @@
 
       while(str.length() < std::string::size_type(std::numeric_limits<local_wide_decimal_type>::digits10))
       {
-        u = dst_mantissa(eng_mantissa);
+        u = dst_man(eng_man);
 
         constexpr auto wd =
           static_cast<std::streamsize>
@@ -115,7 +121,7 @@
         ss.rdbuf()->str(std::string(""));
       }
 
-      std::uint32_t u_sign = dst_sign(eng_sign);
+      std::uint32_t u_sign = dst_sgn(eng_sgn);
 
       if(u_sign == 0U)
       {
@@ -134,11 +140,11 @@
 
       ss.rdbuf()->str(std::string(""));
 
-      u = dst_mantissa(eng_mantissa);
+      u = dst_man(eng_man);
 
       ss << u;
 
-      u_sign = dst_sign(eng_sign);
+      u_sign = dst_sgn(eng_sgn);
 
       str = ss.str() + "." + str;
 
@@ -149,33 +155,33 @@
     }
 
   private:
-    static std::ranlux24    eng_sign;     // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-    static std::minstd_rand eng_exp;      // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-    static std::mt19937     eng_mantissa; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static local_eng_sgn_type eng_sgn; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static local_eng_exp_type eng_exp; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static local_eng_man_type eng_man; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
-    static std::uniform_int_distribution<std::uint32_t> dst_sign;     // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-    static std::uniform_int_distribution<std::uint32_t> dst_exp;      // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-    static std::uniform_int_distribution<std::uint32_t> dst_mantissa; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static local_dst_type     dst_sgn; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static local_dst_type     dst_exp; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static local_dst_type     dst_man; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
   };
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::ranlux24 control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_sign; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_eng_sgn_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_sgn; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::minstd_rand control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_exp; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_eng_exp_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_exp; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::mt19937 control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_mantissa; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_eng_man_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_man; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::uniform_int_distribution<std::uint32_t> control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_sign(UINT32_C(0), UINT32_C(1)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_sgn(UINT32_C(0), UINT32_C(1)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::uniform_int_distribution<std::uint32_t> control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_exp(UINT32_C(0), static_cast<std::uint32_t>((static_cast<std::uintmax_t>(math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10) * UINTMAX_C(6)) / UINTMAX_C(10))); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_exp(UINT32_C(0), static_cast<std::uint32_t>((static_cast<std::uintmax_t>(math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10) * UINTMAX_C(6)) / UINTMAX_C(10))); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  std::uniform_int_distribution<std::uint32_t>
-    control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_mantissa // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+    control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_man               // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
     (
       static_cast<std::uint32_t>(UINT32_C(0)),
       static_cast<std::uint32_t>
