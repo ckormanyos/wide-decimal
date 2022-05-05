@@ -180,8 +180,8 @@
   typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_exp(UINT32_C(0), static_cast<std::uint32_t>((static_cast<std::uintmax_t>(math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10) * UINTMAX_C(6)) / UINTMAX_C(10))); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type
-    control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_man // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+    control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_man               // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
     (
       static_cast<std::uint32_t>(UINT32_C(0)),
       static_cast<std::uint32_t>
