@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         standard: [ c++11 ]
-        compiler: [ g++-4.8 ]
+        compiler: [ g++-4 ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -39,7 +39,7 @@ jobs:
           ./bootstrap.sh
           ./b2 headers
       - name: update-tools
-        run: sudo apt install gcc-4.8
+        run: sudo apt install g++-4
       - name: gcc-4_bionic
         run: |
           echo "compile ./wide_decimal.exe"
