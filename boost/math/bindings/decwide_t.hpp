@@ -10,16 +10,18 @@
 
   #include <cmath>
 
-  #if !defined(BOOST_MATH_STANDALONE)
-  #define BOOST_MATH_STANDALONE
-  #endif
-
   #include <boost/version.hpp>
 
   #include <math/wide_decimal/decwide_t.h>
 
   #if !defined(BOOST_VERSION)
   #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
+  #endif
+
+  #if (BOOST_VERSION >= 107700) && (defined(__GNUC__) && (__GNUC__ < 5))
+  #if !defined(BOOST_MATH_STANDALONE)
+  #define BOOST_MATH_STANDALONE
+  #endif
   #endif
 
   #if (BOOST_VERSION <= 107100) && defined(__GNUC__)
