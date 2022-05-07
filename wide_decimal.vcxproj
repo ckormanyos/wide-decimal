@@ -211,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boost\math\bindings\decwide_t.hpp" />
+    <ClInclude Include="boost\multiprecision\cpp_int.hpp" />
     <ClInclude Include="boost\multiprecision\detail\number_base.hpp" />
     <ClInclude Include="examples\example_decwide_t.h" />
     <ClInclude Include="math\constants\constants_pi_control_for_decwide_t.h" />

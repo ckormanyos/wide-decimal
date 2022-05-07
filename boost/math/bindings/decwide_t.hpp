@@ -10,6 +10,10 @@
 
   #include <cmath>
 
+  #if !defined(BOOST_MATH_STANDALONE)
+  #define BOOST_MATH_STANDALONE
+  #endif
+
   #include <boost/version.hpp>
 
   #include <math/wide_decimal/decwide_t.h>

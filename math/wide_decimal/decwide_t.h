@@ -3344,9 +3344,7 @@
                    static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
       // Extract the remaining digits from decwide_t after the decimal point.
-      std::array<char, static_cast<std::size_t>(UINT8_C(10))> ptr_str { };
-
-      ptr_str.fill('\0');
+      std::array<char, static_cast<std::size_t>(UINT8_C(10))> ptr_str = {{ '\0' }};
 
       char* ptr_end = util::baselexical_cast(my_data[0], ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
@@ -3659,9 +3657,7 @@
         str += "+";
       }
 
-      std::array<char, 20U> ptr_str { }; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-      ptr_str.fill('\0');
+      std::array<char, 20U> ptr_str = {{ '\0' }}; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       char* ptr_end = util::baselexical_cast(u_exp, ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 

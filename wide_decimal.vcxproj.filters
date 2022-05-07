@@ -243,6 +243,9 @@
     <ClInclude Include="boost\multiprecision\detail\number_base.hpp">
       <Filter>Source Files\boost\multiprecision\detail</Filter>
     </ClInclude>
+    <ClInclude Include="boost\multiprecision\cpp_int.hpp">
+      <Filter>Source Files\boost\multiprecision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\wide_decimal.yml">
