@@ -68,6 +68,12 @@
     <Filter Include="Source Files\boost\multiprecision\detail">
       <UniqueIdentifier>{1106a10d-1216-4b65-91dc-f389adbd354c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\boost\math\special_functions">
+      <UniqueIdentifier>{a13ebc99-24a7-49ca-9d65-0cf3578ede88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost\math\special_functions\detail">
+      <UniqueIdentifier>{7e68112c-7262-4898-888e-bf81fe208d18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -245,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="boost\multiprecision\cpp_int.hpp">
       <Filter>Source Files\boost\multiprecision</Filter>
+    </ClInclude>
+    <ClInclude Include="boost\math\special_functions\detail\unchecked_factorial.hpp">
+      <Filter>Source Files\boost\math\special_functions\detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
