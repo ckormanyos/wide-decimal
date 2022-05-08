@@ -24,6 +24,10 @@
   #endif
   #endif
 
+  #if ((BOOST_VERSION >= 107900) && !defined(BOOST_MP_STANDALONE))
+  #define BOOST_MP_STANDALONE
+  #endif
+
   #if (BOOST_VERSION <= 107100) && defined(__GNUC__)
   #include <boost/type_traits/is_constructible.hpp>
   #endif
