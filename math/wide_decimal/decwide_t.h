@@ -3147,7 +3147,7 @@
           // Bring one single digit into the mantissa and adjust exponent accordingly.
           str.erase(str.begin(), it_non_zero);
 
-          str.insert(static_cast<std::uint_fast32_t>(1U), ".");
+          str.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
 
           my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(delta_exp + 1U));
         }
@@ -3201,7 +3201,7 @@
       // Do the decimal point shift.
       if(n_shift != static_cast<std::ptrdiff_t>(0))
       {
-        str.insert(static_cast<std::string::size_type>(pos_plus_one + n_shift), ".");
+        str.insert(static_cast<std::size_t>(pos_plus_one + n_shift), static_cast<std::size_t>(1U), '.');
 
         str.erase(pos, static_cast<std::ptrdiff_t>(1));
 
@@ -3224,7 +3224,7 @@
             static_cast<std::int32_t>(n_pos - static_cast<std::int32_t>(n * decwide_t_elem_digits10))
           );
 
-        str.insert(pos_to_insert, ".");
+        str.insert(pos_to_insert, static_cast<std::size_t>(1U), '.');
 
         str.erase(static_cast<std::string::size_type>(pos_plus_one), static_cast<std::uint_fast32_t>(1U));
 
@@ -3557,8 +3557,8 @@
       }
 
       // Append the sign.
-      if     (isneg())    { str.insert(static_cast<std::uint_fast32_t>(0U), "-"); }
-      else if(my_showpos) { str.insert(static_cast<std::uint_fast32_t>(0U), "+"); }
+      if     (isneg())    { str.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), '-'); }
+      else if(my_showpos) { str.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), '+'); }
 
       // Handle std::setw(...), std::setfill(...), std::left, std::right, std::internal.
       const auto my_width =
@@ -3580,7 +3580,7 @@
         );
 
         // Justify left or right and insert the fill characters.
-        str.insert((my_left ? str.end() : str.begin()), n_fill, os.fill());
+        str.insert((my_left ? str.end() : str.begin()), static_cast<std::size_t>(n_fill), os.fill());
       }
     }
 
@@ -3596,11 +3596,11 @@
         // Zero-extend the string to the given precision if necessary.
         const auto n_pad = static_cast<std::uint_fast32_t>(os_precision - (str.length() - 1U));
 
-        str.insert(str.end(), n_pad, '0');
+        str.insert(str.end(), static_cast<std::size_t>(n_pad), '0');
       }
 
       // Insert the decimal point.
-      str.insert(static_cast<std::uint_fast32_t>(1U), ".");
+      str.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
 
       // Trim the trailing zeros, where the trim-characteristics depend on the showpoint flag.
       if(trim_trailing_zeros)
@@ -3707,12 +3707,12 @@
             - static_cast<exponent_type>(str.length() + str_zero_insert.length())
           );
 
-        str.insert(0U, "0." + str_zero_insert);
+        str.insert(static_cast<std::size_t>(0U), "0." + str_zero_insert);
 
         // Zero-extend the string to the given precision if necessary.
         if(n_pad > static_cast<exponent_type>(0))
         {
-          str.insert(str.end(), static_cast<std::uint_fast32_t>(n_pad), '0');
+          str.insert(str.end(), static_cast<std::size_t>(n_pad), '0');
         }
       }
       else
@@ -3724,10 +3724,10 @@
         // Zero extend the integer part of the string.
         if(input_str_len < my_exp_plus_one)
         {
-          str.insert(str.end(), static_cast<std::uint_fast32_t>(my_exp_plus_one- str.length()), '0');
+          str.insert(str.end(), static_cast<std::size_t>(my_exp_plus_one - static_cast<std::uint_fast32_t>(str.length())), '0');
         }
 
-        str.insert(my_exp_plus_one, ".");
+        str.insert(static_cast<std::size_t>(my_exp_plus_one), static_cast<std::size_t>(1U), '.');
 
         // Zero-extend the string to the given precision if necessary.
         const auto n_pad =
@@ -3743,7 +3743,7 @@
 
         if(n_pad > static_cast<exponent_type>(0))
         {
-          str.insert(str.end(), static_cast<std::uint_fast32_t>(n_pad), '0');
+          str.insert(str.end(), static_cast<std::size_t>(n_pad), '0');
         }
       }
 
@@ -3805,7 +3805,7 @@
         if(str.length() == static_cast<std::uint_fast32_t>(2U))
         {
           // This string represents zero and needs zero extension.
-          str.insert(str.end(), os_precision, '0');
+          str.insert(str.end(), static_cast<std::size_t>(os_precision), '0');
         }
         else
         {
@@ -3822,7 +3822,7 @@
 
           const auto u_pad = static_cast<std::uint_fast32_t>(os_precision - len_non_zero_part);
 
-          str.insert(str.end(), u_pad, '0');
+          str.insert(str.end(), static_cast<std::size_t>(u_pad), '0');
         }
       }
       else
@@ -3838,7 +3838,7 @@
               )
           );
 
-        str.insert(str.end(), u_pad, '0');
+        str.insert(str.end(), static_cast<std::size_t>(u_pad), '0');
       }
     }
 
