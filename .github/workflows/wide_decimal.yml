@@ -458,6 +458,9 @@ jobs:
           git submodule update --init tools
           git submodule update --init libs/config
           git submodule update --init libs/math
+          cd libs/math
+          git checkout redeclaration_of_max_factorial
+          cd ../..
           git submodule update --init libs/multiprecision
           cd libs/multiprecision
           git checkout try_gcc4_in_ci
