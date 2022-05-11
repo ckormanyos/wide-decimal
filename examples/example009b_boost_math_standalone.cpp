@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2021.                        //
+//  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -11,10 +11,6 @@
 
 #if !defined(BOOST_VERSION)
 #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
-#endif
-
-#if !defined(BOOST_MATH_STANDALONE)
-#define BOOST_NO_EXCEPTIONS
 #endif
 
 #if (BOOST_VERSION >= 107700)
@@ -47,6 +43,11 @@
 
 #include <boost/math/bindings/decwide_t.hpp>
 #include <boost/math/special_functions/gamma.hpp>
+
+#if (BOOST_VERSION < 107900)
+#include <boost/math/policies/error_handling.hpp>
+#include <boost/throw_exception.hpp>
+#endif
 
 #include <examples/example_decwide_t.h>
 
@@ -303,13 +304,36 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
   using wide_decimal_035_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 35)), std::uint32_t, void>;
   using wide_decimal_105_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(105)), std::uint32_t, void>;
 
+  auto result_is_ok = false;
+
+  #if (BOOST_VERSION < 107900)
+  try
+  {
+  #endif
+
   const auto result_010_is_ok = example009b_boost::test_tgamma<wide_decimal_010_type>();
   const auto result_035_is_ok = example009b_boost::test_tgamma<wide_decimal_035_type>();
   const auto result_105_is_ok = example009b_boost::test_tgamma<wide_decimal_105_type>();
 
-  const auto result_is_ok = (   result_010_is_ok
-                             && result_035_is_ok
-                             && result_105_is_ok);
+  result_is_ok = (   result_010_is_ok
+                  && result_035_is_ok
+                  && result_105_is_ok);
+
+  #if (BOOST_VERSION < 107900)
+  }
+  catch(boost_wrapexcept_round_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_round_type: " << e.what() << std::endl;
+  }
+  catch(boost_wrapexcept_domain_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
+  }
+  #endif
 
   return result_is_ok;
 }

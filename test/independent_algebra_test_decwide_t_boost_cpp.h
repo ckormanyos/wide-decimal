@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -15,10 +15,6 @@
 
   #if !defined(BOOST_VERSION)
   #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
-  #endif
-
-  #if !defined(BOOST_MATH_STANDALONE)
-  #define BOOST_NO_EXCEPTIONS
   #endif
 
   #if (BOOST_VERSION >= 107700)

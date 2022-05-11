@@ -13,10 +13,6 @@
 #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
 #endif
 
-#if !defined(BOOST_MATH_STANDALONE)
-#define BOOST_NO_EXCEPTIONS
-#endif
-
 #if (BOOST_VERSION >= 107700)
 #if !defined(BOOST_MATH_STANDALONE)
 #define BOOST_MATH_STANDALONE
@@ -47,6 +43,11 @@
 
 #include <boost/math/bindings/decwide_t.hpp>
 #include <boost/math/special_functions/gamma.hpp>
+
+#if (BOOST_VERSION < 107900)
+#include <boost/math/policies/error_handling.hpp>
+#include <boost/throw_exception.hpp>
+#endif
 
 #include <examples/example_decwide_t.h>
 
@@ -80,10 +81,18 @@ auto sin_series(const FloatingPointType& x) -> FloatingPointType
         bool              term_is_neg = true;
   const FloatingPointType tol         = std::numeric_limits<FloatingPointType>::epsilon() * x;
 
-  for(std::uint32_t k = 3U; k < UINT32_C(0xFFFF); k += 2U)
+  for(auto k = static_cast<std::uint32_t>(UINT32_C(3));
+           k < static_cast<std::uint32_t>(UINT32_C(10000));
+           k = static_cast<std::uint32_t>(k + static_cast<std::uint32_t>(UINT8_C(2))))
   {
+    const auto k_times_k_minus_one =
+      static_cast<std::uint32_t>
+      (
+        k * static_cast<std::uint32_t>(k - static_cast<std::uint32_t>(UINT8_C(1)))
+      );
+
     term *= x2;
-    term /= std::uint32_t(k * std::uint32_t(k - 1U));
+    term /= k_times_k_minus_one;
 
     if(term < tol)
     {
@@ -389,9 +398,16 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009a_boost_math_standalo
 auto math::wide_decimal::example009a_boost_math_standalone() -> bool
 #endif
 {
+  auto result_is_ok = false;
+
   using std::fabs;
 
   using example009a_boost::dec1001_t;
+
+  #if (BOOST_VERSION < 107900)
+  try
+  {
+  #endif
 
   const dec1001_t x = dec1001_t(UINT32_C(789)) / 1000U;
 
@@ -441,7 +457,23 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   const auto result_lpvu_is_ok = (closeness_lpvu < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000)));
   const auto result_lqvu_is_ok = (closeness_lqvu < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000)));
 
-  const auto result_is_ok = (result_lpvu_is_ok && result_lqvu_is_ok);
+  result_is_ok = (result_lpvu_is_ok && result_lqvu_is_ok);
+
+  #if (BOOST_VERSION < 107900)
+  }
+  catch(boost_wrapexcept_round_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_round_type: " << e.what() << std::endl;
+  }
+  catch(boost_wrapexcept_domain_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
+  }
+  #endif
 
   return result_is_ok;
 }
