@@ -35,9 +35,7 @@ auto lcd0() -> mcal::lcd::lcd_base&
 
 auto example002d_pi_limb8_digits10_callback(const std::uint32_t d10) -> void
 {
-  std::array<char, static_cast<std::size_t>(UINT32_C(10))> p_str { };
-
-  p_str.fill(static_cast<char>(0));
+  std::array<char, static_cast<std::size_t>(UINT32_C(10))> p_str = {{ '\0' }};
 
   const char* p_end = util::baselexical_cast(d10, p_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 

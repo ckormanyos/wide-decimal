@@ -3056,16 +3056,16 @@
 
       // Remove leading zeros for all input types.
       const auto fwd_it_leading_zero =
-        std::find_if(str.cbegin(),
-                     str.cend(),
+        std::find_if(str.begin(),
+                     str.end(),
                      [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                      {
                        return (c != '0');
                      });
 
-      if(fwd_it_leading_zero != str.cbegin())
+      if(fwd_it_leading_zero != str.begin())
       {
-        if(fwd_it_leading_zero == str.cend())
+        if(fwd_it_leading_zero == str.end())
         {
           // The string contains nothing but leading zeros.
           // This string represents zero.
@@ -3074,7 +3074,7 @@
           return true;
         }
 
-        str.erase(str.cbegin(), fwd_it_leading_zero);
+        str.erase(str.begin(), fwd_it_leading_zero);
       }
 
       // Put the input string into the standard decwide_t input form
@@ -3106,7 +3106,13 @@
               - std::distance<std::string::const_reverse_iterator>(str.crbegin(), rit_non_zero)
             );
 
-          str.erase(str.cbegin() + ofs, str.cend());
+          const auto cnt =
+            static_cast<std::size_t>
+            (
+              static_cast<std::ptrdiff_t>(str.size()) - ofs
+            );
+
+          str.erase(static_cast<std::size_t>(ofs), cnt);
         }
 
         // Check if the input is identically zero.
@@ -3124,8 +3130,8 @@
         if(str.at(static_cast<std::uint_fast32_t>(0U)) == '.')
         {
           const auto it_non_zero =
-            std::find_if(str.cbegin() + 1U,
-                         str.cend(),
+            std::find_if(str.begin() + 1U,
+                         str.end(),
                          [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                          {
                            return (c != '0');
@@ -3135,13 +3141,13 @@
 
           if(str.at(static_cast<std::uint_fast32_t>(1U)) == '0')
           {
-            delta_exp = static_cast<std::uint_fast32_t>(it_non_zero - (str.cbegin() + 1U));
+            delta_exp = static_cast<std::uint_fast32_t>(it_non_zero - (str.begin() + 1U));
           }
 
           // Bring one single digit into the mantissa and adjust exponent accordingly.
-          str.erase(str.cbegin(), it_non_zero);
+          str.erase(str.begin(), it_non_zero);
 
-          str.insert(static_cast<std::uint_fast32_t>(1U), ".");
+          str.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
 
           my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(delta_exp + 1U));
         }
@@ -3195,7 +3201,7 @@
       // Do the decimal point shift.
       if(n_shift != static_cast<std::ptrdiff_t>(0))
       {
-        str.insert(static_cast<std::string::size_type>(pos_plus_one + n_shift), ".");
+        str.insert(static_cast<std::size_t>(pos_plus_one + n_shift), static_cast<std::size_t>(1U), '.');
 
         str.erase(pos, static_cast<std::ptrdiff_t>(1));
 
@@ -3218,7 +3224,7 @@
             static_cast<std::int32_t>(n_pos - static_cast<std::int32_t>(n * decwide_t_elem_digits10))
           );
 
-        str.insert(pos_to_insert, ".");
+        str.insert(pos_to_insert, static_cast<std::size_t>(1U), '.');
 
         str.erase(static_cast<std::string::size_type>(pos_plus_one), static_cast<std::uint_fast32_t>(1U));
 
@@ -3301,7 +3307,7 @@
             i * static_cast<std::string::difference_type>(decwide_t_elem_digits10)
           );
 
-        const auto it =   str.cbegin()
+        const auto it =   str.begin()
                         + static_cast<std::string::difference_type>(static_cast<std::string::difference_type>(pos_plus_one) + idigits);
 
         const auto str_i1 =
@@ -3344,9 +3350,7 @@
                    static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
       // Extract the remaining digits from decwide_t after the decimal point.
-      std::array<char, static_cast<std::size_t>(UINT8_C(10))> ptr_str { };
-
-      ptr_str.fill('\0');
+      std::array<char, static_cast<std::size_t>(UINT8_C(10))> ptr_str = {{ '\0' }};
 
       char* ptr_end = util::baselexical_cast(my_data[0], ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
@@ -3553,8 +3557,8 @@
       }
 
       // Append the sign.
-      if     (isneg())    { str.insert(static_cast<std::uint_fast32_t>(0U), "-"); }
-      else if(my_showpos) { str.insert(static_cast<std::uint_fast32_t>(0U), "+"); }
+      if     (isneg())    { str.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), '-'); }
+      else if(my_showpos) { str.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), '+'); }
 
       // Handle std::setw(...), std::setfill(...), std::left, std::right, std::internal.
       const auto my_width =
@@ -3576,7 +3580,7 @@
         );
 
         // Justify left or right and insert the fill characters.
-        str.insert((my_left ? str.cend() : str.cbegin()), n_fill, os.fill());
+        str.insert((my_left ? str.end() : str.begin()), static_cast<std::size_t>(n_fill), os.fill());
       }
     }
 
@@ -3592,11 +3596,11 @@
         // Zero-extend the string to the given precision if necessary.
         const auto n_pad = static_cast<std::uint_fast32_t>(os_precision - (str.length() - 1U));
 
-        str.insert(str.cend(), n_pad, '0');
+        str.insert(str.end(), static_cast<std::size_t>(n_pad), '0');
       }
 
       // Insert the decimal point.
-      str.insert(static_cast<std::uint_fast32_t>(1U), ".");
+      str.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
 
       // Trim the trailing zeros, where the trim-characteristics depend on the showpoint flag.
       if(trim_trailing_zeros)
@@ -3614,7 +3618,7 @@
           const std::ptrdiff_t ofs =   static_cast<std::ptrdiff_t>(str.length())
                                      - static_cast<std::ptrdiff_t>(rit_non_zero - str.crbegin());
 
-          str.erase(str.cbegin() + ofs, str.cend());
+          str.erase(str.begin() + ofs, str.end());
         }
       }
 
@@ -3626,9 +3630,9 @@
       else
       {
         // Remove the trailing decimal point if necessary.
-        if(*(str.cend() - 1U) == '.')
+        if(*(str.end() - 1U) == '.')
         {
-          str.erase(str.cend() - 1U, str.cend());
+          str.erase(str.end() - 1U, str.end());
         }
       }
 
@@ -3659,9 +3663,7 @@
         str += "+";
       }
 
-      std::array<char, 20U> ptr_str { }; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-      ptr_str.fill('\0');
+      std::array<char, 20U> ptr_str = {{ '\0' }}; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       char* ptr_end = util::baselexical_cast(u_exp, ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
@@ -3705,12 +3707,12 @@
             - static_cast<exponent_type>(str.length() + str_zero_insert.length())
           );
 
-        str.insert(0U, "0." + str_zero_insert);
+        str.insert(static_cast<std::size_t>(0U), "0." + str_zero_insert);
 
         // Zero-extend the string to the given precision if necessary.
         if(n_pad > static_cast<exponent_type>(0))
         {
-          str.insert(str.cend(), static_cast<std::uint_fast32_t>(n_pad), '0');
+          str.insert(str.end(), static_cast<std::size_t>(n_pad), '0');
         }
       }
       else
@@ -3722,10 +3724,10 @@
         // Zero extend the integer part of the string.
         if(input_str_len < my_exp_plus_one)
         {
-          str.insert(str.cend(), static_cast<std::uint_fast32_t>(my_exp_plus_one- str.length()), '0');
+          str.insert(str.end(), static_cast<std::size_t>(my_exp_plus_one - static_cast<std::uint_fast32_t>(str.length())), '0');
         }
 
-        str.insert(my_exp_plus_one, ".");
+        str.insert(static_cast<std::size_t>(my_exp_plus_one), static_cast<std::size_t>(1U), '.');
 
         // Zero-extend the string to the given precision if necessary.
         const auto n_pad =
@@ -3741,7 +3743,7 @@
 
         if(n_pad > static_cast<exponent_type>(0))
         {
-          str.insert(str.cend(), static_cast<std::uint_fast32_t>(n_pad), '0');
+          str.insert(str.end(), static_cast<std::size_t>(n_pad), '0');
         }
       }
 
@@ -3765,7 +3767,7 @@
               - std::distance<std::string::const_reverse_iterator>(str.crbegin(), rit_non_zero)
             );
 
-          str.erase(str.cbegin() + ofs, str.cend());
+          str.erase(str.begin() + ofs, str.end());
         }
       }
 
@@ -3780,9 +3782,9 @@
       else
       {
         // Remove the trailing decimal point if necessary.
-        if(*(str.cend() - 1U) == '.')
+        if(*(str.end() - 1U) == '.')
         {
-          str.erase(str.cend() - 1U, str.cend());
+          str.erase(str.end() - 1U, str.end());
         }
       }
     }
@@ -3803,24 +3805,24 @@
         if(str.length() == static_cast<std::uint_fast32_t>(2U))
         {
           // This string represents zero and needs zero extension.
-          str.insert(str.cend(), os_precision, '0');
+          str.insert(str.end(), static_cast<std::size_t>(os_precision), '0');
         }
         else
         {
           // This is a non-zero decimal less than 1 that needs zero extension.
           const auto it_non_zero =
-            std::find_if(str.cbegin() + 2U,
-                         str.cend(),
+            std::find_if(str.begin() + 2U,
+                         str.end(),
                          [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                          {
                            return (c != '0');
                          });
 
-          const auto len_non_zero_part = static_cast<std::uint_fast32_t>(str.cend() - it_non_zero);
+          const auto len_non_zero_part = static_cast<std::uint_fast32_t>(str.end() - it_non_zero);
 
           const auto u_pad = static_cast<std::uint_fast32_t>(os_precision - len_non_zero_part);
 
-          str.insert(str.cend(), u_pad, '0');
+          str.insert(str.end(), static_cast<std::size_t>(u_pad), '0');
         }
       }
       else
@@ -3836,7 +3838,7 @@
               )
           );
 
-        str.insert(str.cend(), u_pad, '0');
+        str.insert(str.end(), static_cast<std::size_t>(u_pad), '0');
       }
     }
 

@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -10,6 +10,22 @@
 
   #include <iomanip>
   #include <sstream>
+
+  #include <boost/version.hpp>
+
+  #if !defined(BOOST_VERSION)
+  #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
+  #endif
+
+  #if (BOOST_VERSION >= 107700) && (defined(__GNUC__) && (__GNUC__ < 5))
+  #if !defined(BOOST_MATH_STANDALONE)
+  #define BOOST_MATH_STANDALONE
+  #endif
+  #endif
+
+  #if ((BOOST_VERSION >= 107900) && !defined(BOOST_MP_STANDALONE))
+  #define BOOST_MP_STANDALONE
+  #endif
 
   #include <math/wide_decimal/decwide_t.h>
   #include <test/independent_algebra_test_decwide_t_base.h>
@@ -61,7 +77,7 @@
 
     local_float_type my_cpp_boost_float; // NOLINT(misc-non-private-member-variables-in-classes)
 
-    independent_algebra_test_decwide_t_boost_cpp() : my_cpp_boost_float() { }
+    independent_algebra_test_decwide_t_boost_cpp() = default;
 
     explicit independent_algebra_test_decwide_t_boost_cpp(const char* str)
       : my_cpp_boost_float(str) { }
