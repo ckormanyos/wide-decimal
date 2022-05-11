@@ -113,9 +113,3 @@ auto main() -> int
 
   return (result_is_ok ? 0 : -1);
 }
-
-#if (BOOST_VERSION < 107900)
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
-#endif
