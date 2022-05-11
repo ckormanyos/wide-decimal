@@ -490,8 +490,7 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
 #include <iomanip>
 #include <iostream>
 
-// TBD: Handle exception catching in example009a_boost_math_standalone at a later time.
-auto main() -> int // NOLINT(bugprone-exception-escape)
+auto main() -> int
 {
   const auto result_is_ok = math::wide_decimal::example009a_boost_math_standalone();
 
