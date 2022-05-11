@@ -405,6 +405,9 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   using example009a_boost::dec1001_t;
 
   #if (BOOST_VERSION < 107900)
+  using boost_wrapexcept_round_type  = ::boost::wrapexcept<::boost::math::rounding_error>;
+  using boost_wrapexcept_domain_type = ::boost::wrapexcept<std::domain_error>;
+
   try
   {
   #endif
