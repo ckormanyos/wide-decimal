@@ -460,20 +460,20 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   result_is_ok = (result_lpvu_is_ok && result_lqvu_is_ok);
   }
   #if (BOOST_VERSION < 107900)
-  catch(boost_wrapexcept_round_type& e)
+  catch(const boost_wrapexcept_round_type& e)
   {
     result_is_ok = false;
 
     std::cout << "Exception: boost_wrapexcept_round_type: " << e.what() << std::endl;
   }
-  catch(boost_wrapexcept_domain_type& e)
+  catch(const boost_wrapexcept_domain_type& e)
   {
     result_is_ok = false;
 
     std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
   }
   #else
-  catch(::boost::math::rounding_error& e)
+  catch(const ::boost::math::rounding_error& e)
   {
     result_is_ok = false;
 

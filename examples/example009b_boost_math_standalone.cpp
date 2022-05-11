@@ -39,6 +39,11 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #endif
 
+#if (BOOST_VERSION < 107900)
+#include <boost/math/policies/error_handling.hpp>
+#include <boost/throw_exception.hpp>
+#endif
+
 #include <boost/math/bindings/decwide_t.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 
@@ -297,13 +302,44 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
   using wide_decimal_035_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 35)), std::uint32_t, void>;
   using wide_decimal_105_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(105)), std::uint32_t, void>;
 
+  #if (BOOST_VERSION < 107900)
+  using boost_wrapexcept_round_type  = ::boost::wrapexcept<::boost::math::rounding_error>;
+  using boost_wrapexcept_domain_type = ::boost::wrapexcept<std::domain_error>;
+  #endif
+
+  auto result_is_ok = false;
+
+  try
+  {
   const auto result_010_is_ok = example009b_boost::test_tgamma<wide_decimal_010_type>();
   const auto result_035_is_ok = example009b_boost::test_tgamma<wide_decimal_035_type>();
   const auto result_105_is_ok = example009b_boost::test_tgamma<wide_decimal_105_type>();
 
-  const auto result_is_ok = (   result_010_is_ok
-                             && result_035_is_ok
-                             && result_105_is_ok);
+  result_is_ok = (   result_010_is_ok
+                  && result_035_is_ok
+                  && result_105_is_ok);
+  }
+  #if (BOOST_VERSION < 107900)
+  catch(const boost_wrapexcept_round_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_round_type: " << e.what() << std::endl;
+  }
+  catch(const boost_wrapexcept_domain_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
+  }
+  #else
+  catch(const ::boost::math::rounding_error& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
+  }
+  #endif
 
   return result_is_ok;
 }
