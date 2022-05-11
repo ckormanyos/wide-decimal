@@ -459,9 +459,6 @@ jobs:
           git submodule update --init libs/config
           git submodule update --init libs/math
           git submodule update --init libs/multiprecision
-          cd libs/multiprecision
-          git checkout try_gcc4_in_ci
-          cd ../..
           ./bootstrap.sh
           ./b2 headers
       - name: update-tools
