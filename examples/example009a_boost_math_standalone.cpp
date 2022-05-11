@@ -31,8 +31,6 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wundef"
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 
@@ -41,13 +39,13 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #endif
 
-#include <boost/math/bindings/decwide_t.hpp>
-#include <boost/math/special_functions/gamma.hpp>
-
 #if (BOOST_VERSION < 107900)
 #include <boost/math/policies/error_handling.hpp>
 #include <boost/throw_exception.hpp>
 #endif
+
+#include <boost/math/bindings/decwide_t.hpp>
+#include <boost/math/special_functions/gamma.hpp>
 
 #include <examples/example_decwide_t.h>
 
@@ -398,8 +396,6 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009a_boost_math_standalo
 auto math::wide_decimal::example009a_boost_math_standalone() -> bool
 #endif
 {
-  auto result_is_ok = false;
-
   using std::fabs;
 
   using example009a_boost::dec1001_t;
@@ -407,11 +403,12 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   #if (BOOST_VERSION < 107900)
   using boost_wrapexcept_round_type  = ::boost::wrapexcept<::boost::math::rounding_error>;
   using boost_wrapexcept_domain_type = ::boost::wrapexcept<std::domain_error>;
+  #endif
+
+  auto result_is_ok = false;
 
   try
   {
-  #endif
-
   const dec1001_t x = dec1001_t(UINT32_C(789)) / 1000U;
 
   // Compute some values of the Legendre function of the second kind
@@ -461,9 +458,8 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   const auto result_lqvu_is_ok = (closeness_lqvu < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000)));
 
   result_is_ok = (result_lpvu_is_ok && result_lqvu_is_ok);
-
-  #if (BOOST_VERSION < 107900)
   }
+  #if (BOOST_VERSION < 107900)
   catch(boost_wrapexcept_round_type& e)
   {
     result_is_ok = false;
@@ -471,6 +467,13 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
     std::cout << "Exception: boost_wrapexcept_round_type: " << e.what() << std::endl;
   }
   catch(boost_wrapexcept_domain_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
+  }
+  #else
+  catch(::boost::math::rounding_error& e)
   {
     result_is_ok = false;
 
@@ -502,7 +505,6 @@ auto main() -> int // NOLINT(bugprone-exception-escape)
 #endif
 
 #if defined(__GNUC__)
-#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop

@@ -31,8 +31,6 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wundef"
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 
@@ -43,11 +41,6 @@
 
 #include <boost/math/bindings/decwide_t.hpp>
 #include <boost/math/special_functions/gamma.hpp>
-
-#if (BOOST_VERSION < 107900)
-#include <boost/math/policies/error_handling.hpp>
-#include <boost/throw_exception.hpp>
-#endif
 
 #include <examples/example_decwide_t.h>
 
@@ -304,39 +297,13 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
   using wide_decimal_035_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 35)), std::uint32_t, void>;
   using wide_decimal_105_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(105)), std::uint32_t, void>;
 
-  auto result_is_ok = false;
-
-  #if (BOOST_VERSION < 107900)
-  using boost_wrapexcept_round_type  = ::boost::wrapexcept<::boost::math::rounding_error>;
-  using boost_wrapexcept_domain_type = ::boost::wrapexcept<std::domain_error>;
-
-  try
-  {
-  #endif
-
   const auto result_010_is_ok = example009b_boost::test_tgamma<wide_decimal_010_type>();
   const auto result_035_is_ok = example009b_boost::test_tgamma<wide_decimal_035_type>();
   const auto result_105_is_ok = example009b_boost::test_tgamma<wide_decimal_105_type>();
 
-  result_is_ok = (   result_010_is_ok
-                  && result_035_is_ok
-                  && result_105_is_ok);
-
-  #if (BOOST_VERSION < 107900)
-  }
-  catch(boost_wrapexcept_round_type& e)
-  {
-    result_is_ok = false;
-
-    std::cout << "Exception: boost_wrapexcept_round_type: " << e.what() << std::endl;
-  }
-  catch(boost_wrapexcept_domain_type& e)
-  {
-    result_is_ok = false;
-
-    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
-  }
-  #endif
+  const auto result_is_ok = (   result_010_is_ok
+                             && result_035_is_ok
+                             && result_105_is_ok);
 
   return result_is_ok;
 }
@@ -362,7 +329,6 @@ auto main() -> int // NOLINT(bugprone-exception-escape)
 #endif
 
 #if defined(__GNUC__)
-#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
