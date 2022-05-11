@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -9,6 +9,12 @@
 
 #if !defined(BOOST_VERSION)
 #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
+#endif
+
+#if (BOOST_VERSION >= 107700)
+#if !defined(BOOST_MATH_STANDALONE)
+#define BOOST_MATH_STANDALONE
+#endif
 #endif
 
 #if ((BOOST_VERSION >= 107900) && !defined(BOOST_MP_STANDALONE))
@@ -22,8 +28,6 @@
 #pragma GCC diagnostic ignored "-Wsign-conversion"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wundef"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
@@ -246,7 +250,6 @@ auto test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-
 #endif
 
 #if defined(__GNUC__)
-#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
