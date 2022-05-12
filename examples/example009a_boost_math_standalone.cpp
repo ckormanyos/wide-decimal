@@ -454,8 +454,8 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   const dec1001_t closeness_lpvu = fabs(1 - (lpvu / control_lpvu));
   const dec1001_t closeness_lqvu = fabs(1 - (lqvu / control_lqvu));
 
-  const auto result_lpvu_is_ok = (closeness_lpvu < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000)));
-  const auto result_lqvu_is_ok = (closeness_lqvu < (std::numeric_limits<dec1001_t>::epsilon() * UINT32_C(1000000)));
+  const auto result_lpvu_is_ok = (closeness_lpvu < (std::numeric_limits<dec1001_t>::epsilon() * static_cast<std::uint32_t>(UINT32_C(1000000))));
+  const auto result_lqvu_is_ok = (closeness_lqvu < (std::numeric_limits<dec1001_t>::epsilon() * static_cast<std::uint32_t>(UINT32_C(1000000))));
 
   result_is_ok = (result_lpvu_is_ok && result_lqvu_is_ok);
   }
@@ -477,7 +477,13 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   {
     result_is_ok = false;
 
-    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
+    std::cout << "Exception: ::boost::math::rounding_error: " << e.what() << std::endl;
+  }
+  catch(const std::domain_error& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: std::domain_error: " << e.what() << std::endl;
   }
   #endif
 

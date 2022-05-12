@@ -430,7 +430,7 @@ auto math::wide_decimal::example011_trig_trapezoid_integral() -> bool
   const dec51_t closeness3 = fabs(1 - (j3 / control3));
   const dec51_t closeness4 = fabs(1 - (j4 / control4));
 
-  const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * 10U;
+  const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10));
 
   const auto result_is_ok = (   (closeness2 < tol)
                              && (closeness3 < tol)
