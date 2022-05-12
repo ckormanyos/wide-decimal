@@ -337,20 +337,21 @@ namespace example009a_boost
                     const FloatingPointType& u,
                     const FloatingPointType& x) -> FloatingPointType
   {
+    using floating_point_type = FloatingPointType;
+
     using std::pow;
 
     // See also the third series representation provided in:
     // https://functions.wolfram.com/HypergeometricFunctions/LegendreP2General/06/01/04/
 
-    const FloatingPointType u_half       = u / 2U;
-    const FloatingPointType one_minus_x  = 1U - x;
-    const FloatingPointType one_minus_mu = 1U - u;
+    const floating_point_type u_half       = u / 2U;
+    const floating_point_type one_minus_x  = 1U - x;
+    const floating_point_type one_minus_mu = 1U - u;
 
-    const FloatingPointType tgamma_term   = boost::math::tgamma(one_minus_mu);
-    const FloatingPointType h2f1_reg_term = hypergeometric_2f1_regularized(-v,
-                                                                           1U + v,
-                                                                           one_minus_mu,
-                                                                           one_minus_x / 2U);
+    const floating_point_type h2f1_reg_term = hypergeometric_2f1_regularized(-v,
+                                                                             1U + v,
+                                                                             one_minus_mu,
+                                                                             one_minus_x / 2U);
 
     return (pow(1U + x, u_half) * h2f1_reg_term) / pow(one_minus_x, u_half);
   }
@@ -360,6 +361,8 @@ namespace example009a_boost
                     const FloatingPointType& u, // NOLINT(bugprone-easily-swappable-parameters)
                     const FloatingPointType& x) -> FloatingPointType
   {
+    using floating_point_type = FloatingPointType;
+
     using std::cos;
     using std::pow;
     using std::sin;
@@ -367,26 +370,26 @@ namespace example009a_boost
     // See also the third series representation provided in:
     // https://functions.wolfram.com/HypergeometricFunctions/LegendreQ2General/06/01/02/
 
-    const FloatingPointType u_pi     = u * boost::math::constants::pi<FloatingPointType>();
-    const FloatingPointType sin_u_pi = sin(u_pi);
-    const FloatingPointType cos_u_pi = cos(u_pi);
+    const floating_point_type u_pi     = u * boost::math::constants::pi<floating_point_type>();
+    const floating_point_type sin_u_pi = sin(u_pi);
+    const floating_point_type cos_u_pi = cos(u_pi);
 
-    const FloatingPointType one_minus_x          = 1U - x;
-    const FloatingPointType one_plus_x           = 1U + x;
-    const FloatingPointType u_half               = u / 2U;
-    const FloatingPointType one_minus_x_over_two = one_minus_x / 2U;
+    const floating_point_type one_minus_x          = 1U - x;
+    const floating_point_type one_plus_x           = 1U + x;
+    const floating_point_type u_half               = u / 2U;
+    const floating_point_type one_minus_x_over_two = one_minus_x / 2U;
 
-    const FloatingPointType one_plus_x_over_one_minus_x_pow_u_half = pow(one_plus_x / one_minus_x, u_half);
+    const floating_point_type one_plus_x_over_one_minus_x_pow_u_half = pow(one_plus_x / one_minus_x, u_half);
 
-    const FloatingPointType v_plus_one =  v + 1U;
+    const floating_point_type v_plus_one =  v + 1U;
 
-    const FloatingPointType h2f1_1 = hypergeometric_2f1_regularized(-v, v_plus_one, 1U - u, one_minus_x_over_two);
-    const FloatingPointType h2f1_2 = hypergeometric_2f1_regularized(-v, v_plus_one, 1U + u, one_minus_x_over_two);
+    const floating_point_type h2f1_1 = hypergeometric_2f1_regularized(-v, v_plus_one, 1U - u, one_minus_x_over_two);
+    const floating_point_type h2f1_2 = hypergeometric_2f1_regularized(-v, v_plus_one, 1U + u, one_minus_x_over_two);
 
-    const FloatingPointType term1 = (h2f1_1 * one_plus_x_over_one_minus_x_pow_u_half) * cos_u_pi;
-    const FloatingPointType term2 = (h2f1_2 / one_plus_x_over_one_minus_x_pow_u_half) * pochhammer(v_plus_one - u, u * 2U);
+    const floating_point_type term1 = (h2f1_1 * one_plus_x_over_one_minus_x_pow_u_half) * cos_u_pi;
+    const floating_point_type term2 = (h2f1_2 / one_plus_x_over_one_minus_x_pow_u_half) * pochhammer(v_plus_one - u, u * 2U);
 
-    return (boost::math::constants::half_pi<FloatingPointType>() * (term1 - term2)) / sin_u_pi;
+    return (boost::math::constants::half_pi<floating_point_type>() * (term1 - term2)) / sin_u_pi;
   }
 } // namespace example009a_boost
 
