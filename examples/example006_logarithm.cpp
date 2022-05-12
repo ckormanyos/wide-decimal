@@ -40,7 +40,7 @@ auto math::wide_decimal::example006_logarithm() -> bool
   dec1001_t x = dec1001_t(UINT32_C(123456789)) / UINT32_C(1000000);
 
   const dec1001_t ln3 = log(dec1001_t(3U));
-  const auto      tol = dec1001_t(std::numeric_limits<dec1001_t>::epsilon() * 10);
+  const auto      tol = dec1001_t(std::numeric_limits<dec1001_t>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10)));
 
   bool result_is_ok = true;
 

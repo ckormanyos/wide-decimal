@@ -57,7 +57,7 @@ auto math::wide_decimal::example013_embeddable_sqrt() -> bool
 
   const dec101_t closeness = fabs(1 - (s / control));
 
-  const auto result_is_ok = (closeness < (std::numeric_limits<dec101_t>::epsilon() * 10));
+  const auto result_is_ok = (closeness < (std::numeric_limits<dec101_t>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10))));
 
   return result_is_ok;
 }

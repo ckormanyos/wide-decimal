@@ -239,7 +239,7 @@ auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
 
   using example008_bernoulli::wide_decimal_type;
 
-  const wide_decimal_type tol (std::numeric_limits<wide_decimal_type>::epsilon() * UINT32_C(100000));
+  const wide_decimal_type tol (std::numeric_limits<wide_decimal_type>::epsilon() * static_cast<std::uint32_t>(UINT32_C(100000)));
   const wide_decimal_type half(0.5F);
 
   for(auto i = static_cast<std::size_t>(0U); i < ratios.size(); ++i)

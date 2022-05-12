@@ -91,7 +91,7 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
 
   const dec1001_t closeness = fabs(1 - (c / control));
 
-  result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10));
+  result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10))));
   }
   #if (BOOST_VERSION < 107900)
   catch(const boost_wrapexcept_round_type& e)

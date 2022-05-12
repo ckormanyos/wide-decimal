@@ -110,7 +110,7 @@ auto math::wide_decimal::example007_catalan_series() -> bool
 
   const dec1001_t closeness = fabs(1 - (c / control));
 
-  const auto result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10));
+  const auto result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10))));
 
   return result_is_ok;
 }

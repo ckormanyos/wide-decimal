@@ -45,7 +45,7 @@ auto math::wide_decimal::example000_multiply_nines() -> bool
 
   const wide_decimal_type closeness = fabs(1 - fabs(result / control));
 
-  const auto result_is_ok = (closeness < (std::numeric_limits<wide_decimal_type>::epsilon() * 10));
+  const auto result_is_ok = (closeness < (std::numeric_limits<wide_decimal_type>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10))));
 
   return result_is_ok;
 }
