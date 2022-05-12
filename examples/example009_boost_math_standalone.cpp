@@ -39,6 +39,11 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #endif
 
+#if (BOOST_VERSION < 107900)
+#include <boost/math/policies/error_handling.hpp>
+#include <boost/throw_exception.hpp>
+#endif
+
 #include <boost/math/bindings/decwide_t.hpp>
 #include <boost/math/special_functions/cbrt.hpp>
 
@@ -63,6 +68,15 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
 {
   using example009_boost::dec1001_t;
 
+  #if (BOOST_VERSION < 107900)
+  using boost_wrapexcept_round_type  = ::boost::wrapexcept<::boost::math::rounding_error>;
+  using boost_wrapexcept_domain_type = ::boost::wrapexcept<std::domain_error>;
+  #endif
+
+  auto result_is_ok = false;
+
+  try
+  {
   const dec1001_t x = dec1001_t(UINT32_C(123456789)) / 100U;
 
   using std::cbrt;
@@ -77,7 +91,35 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
 
   const dec1001_t closeness = fabs(1 - (c / control));
 
-  const auto result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10));
+  result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * 10));
+  }
+  #if (BOOST_VERSION < 107900)
+  catch(const boost_wrapexcept_round_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_round_type: " << e.what() << std::endl;
+  }
+  catch(const boost_wrapexcept_domain_type& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
+  }
+  #else
+  catch(const ::boost::math::rounding_error& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: ::boost::math::rounding_error: " << e.what() << std::endl;
+  }
+  catch(const std::domain_error& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: std::domain_error: " << e.what() << std::endl;
+  }
+  #endif
 
   return result_is_ok;
 }

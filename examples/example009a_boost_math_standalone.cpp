@@ -477,7 +477,13 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   {
     result_is_ok = false;
 
-    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
+    std::cout << "Exception: ::boost::math::rounding_error: " << e.what() << std::endl;
+  }
+  catch(const std::domain_error& e)
+  {
+    result_is_ok = false;
+
+    std::cout << "Exception: std::domain_error: " << e.what() << std::endl;
   }
   #endif
 
