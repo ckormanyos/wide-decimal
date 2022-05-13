@@ -62,11 +62,13 @@ namespace detail {
 template<typename FloatingPointType>
 auto sin_series(const FloatingPointType& x) -> FloatingPointType
 {
-        FloatingPointType term        = x;
-  const FloatingPointType x2          = x * x;
-        FloatingPointType sum         = x;
+  using floating_point_type = FloatingPointType;
+
+        floating_point_type term        = x;
+  const floating_point_type x2          = x * x;
+        floating_point_type sum         = x;
         bool              term_is_neg = true;
-  const FloatingPointType tol         = std::numeric_limits<FloatingPointType>::epsilon() * x;
+  const floating_point_type tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
 
   for(auto k = static_cast<std::uint32_t>(UINT32_C(3));
            k < static_cast<std::uint32_t>(UINT32_C(10000));
@@ -97,11 +99,13 @@ auto sin_series(const FloatingPointType& x) -> FloatingPointType
 template<typename FloatingPointType>
 auto cos_series(const FloatingPointType& x) -> FloatingPointType
 {
-  const FloatingPointType x2          = x * x;
-        FloatingPointType term        = x2 / 2U;
-        FloatingPointType sum         = term;
+  using floating_point_type = FloatingPointType;
+
+  const floating_point_type x2          = x * x;
+        floating_point_type term        = x2 / 2U;
+        floating_point_type sum         = term;
         bool              term_is_neg = true;
-  const FloatingPointType tol         = std::numeric_limits<FloatingPointType>::epsilon() * x;
+  const floating_point_type tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
 
   for(std::uint32_t k = 4U; k < UINT32_C(0xFFFF); k += 2U)
   {
