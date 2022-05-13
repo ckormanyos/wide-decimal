@@ -445,7 +445,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11 ]
+        standard: [ c++11, c++1y ]
         compiler: [ g++-4.8 ]
     steps:
       - uses: actions/checkout@v2
