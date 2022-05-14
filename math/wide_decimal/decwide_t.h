@@ -3724,7 +3724,7 @@
             - static_cast<exponent_type>(str.length() + zero_insert_length)
           );
 
-        str.insert(static_cast<std::size_t>(0U), str_zero_insert, '0');
+        str.insert(static_cast<std::size_t>(0U), zero_insert_length, '0');
         str.insert(static_cast<std::size_t>(0U), "0.");
 
         // Zero-extend the string to the given precision if necessary.
