@@ -13,6 +13,15 @@
 #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
 #endif
 
+#if (BOOST_VERSION >= 108000)
+#if !defined(BOOST_NO_EXCEPTIONS)
+#define BOOST_NO_EXCEPTIONS
+#endif
+#if !defined(BOOST_NO_RTTI)
+#define BOOST_NO_RTTI
+#endif
+#endif
+
 #if (BOOST_VERSION >= 107700)
 #if !defined(BOOST_MATH_STANDALONE)
 #define BOOST_MATH_STANDALONE
@@ -313,8 +322,11 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
 
   auto result_is_ok = false;
 
+  #if (BOOST_VERSION >= 108000)
+  #else
   try
   {
+  #endif
   const auto result_010_is_ok = example009b_boost::test_tgamma<wide_decimal_010_type>();
   const auto result_035_is_ok = example009b_boost::test_tgamma<wide_decimal_035_type>();
   const auto result_105_is_ok = example009b_boost::test_tgamma<wide_decimal_105_type>();
@@ -322,6 +334,8 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
   result_is_ok = (   result_010_is_ok
                   && result_035_is_ok
                   && result_105_is_ok);
+  #if (BOOST_VERSION >= 108000)
+  #else
   }
   #if (BOOST_VERSION < 107900)
   catch(const boost_wrapexcept_round_type& e)
@@ -349,6 +363,7 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
 
     std::cout << "Exception: std::domain_error: " << e.what() << std::endl;
   }
+  #endif
   #endif
 
   return result_is_ok;

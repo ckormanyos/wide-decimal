@@ -11,6 +11,15 @@
 #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
 #endif
 
+#if (BOOST_VERSION >= 108000)
+#if !defined(BOOST_NO_EXCEPTIONS)
+#define BOOST_NO_EXCEPTIONS
+#endif
+#if !defined(BOOST_NO_RTTI)
+#define BOOST_NO_RTTI
+#endif
+#endif
+
 #if (BOOST_VERSION >= 107700)
 #if !defined(BOOST_MATH_STANDALONE)
 #define BOOST_MATH_STANDALONE

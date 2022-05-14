@@ -775,7 +775,7 @@
       // This constructor is intended to maintain the
       // full precision of the InternalFloatType.
 
-      const auto detla_zero =
+      const auto delta_zero =
         static_cast<InternalFloatType>
         (
           (
@@ -786,7 +786,7 @@
 
       using std::fabs;
 
-      const auto mantissa_is_iszero = (fabs(mantissa) < detla_zero);
+      const auto mantissa_is_iszero = (fabs(mantissa) < delta_zero);
 
       if(mantissa_is_iszero)
       {
@@ -832,10 +832,12 @@
                                                                   % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0)
           );
 
-        typename representation_type::size_type limb_index;
+        using local_size_type = typename representation_type::size_type;
 
-        for(  limb_index = static_cast<typename representation_type::size_type>(0);
-              limb_index < static_cast<typename representation_type::size_type>(digit_loops);
+        local_size_type limb_index;
+
+        for(  limb_index = static_cast<local_size_type>(0);
+              limb_index < static_cast<local_size_type>(digit_loops);
             ++limb_index)
         {
           const auto n = static_cast<limb_type>(d);
@@ -1357,8 +1359,10 @@
                     my_data.begin());
 
           {
+            using local_size_type = typename representation_type::size_type;
+
             const auto index_prev =
-              static_cast<typename representation_type::size_type>
+              static_cast<local_size_type>
               (
                 static_cast<std::ptrdiff_t>(my_prec_elem) - static_cast<std::ptrdiff_t>(1)
               );
@@ -1874,9 +1878,9 @@
     }
 
     // Comparison functions.
-    WIDE_DECIMAL_NODISCARD auto (isnan)   () const -> bool { return false; }
-    WIDE_DECIMAL_NODISCARD auto (isinf)   () const -> bool { return false; }
-    WIDE_DECIMAL_NODISCARD auto (isfinite)() const -> bool { return true; }
+    WIDE_DECIMAL_NODISCARD constexpr auto (isnan)   () const -> bool { return false; }
+    WIDE_DECIMAL_NODISCARD constexpr auto (isinf)   () const -> bool { return false; }
+    WIDE_DECIMAL_NODISCARD constexpr auto (isfinite)() const -> bool { return true; }
 
     WIDE_DECIMAL_NODISCARD auto iszero() const -> bool
     {
@@ -1946,14 +1950,16 @@
           }
           else
           {
+            using local_size_type = typename representation_type::size_type;
+
             const auto offset_decimal_part =
-              static_cast<typename representation_type::size_type>
+              static_cast<local_size_type>
               (
-                  static_cast<typename representation_type::size_type>(my_exp / decwide_t_elem_digits10)
-                + static_cast<typename representation_type::size_type>(UINT8_C(1))
+                  static_cast<local_size_type>(my_exp / decwide_t_elem_digits10)
+                + static_cast<local_size_type>(UINT8_C(1))
               );
 
-            if(offset_decimal_part >= static_cast<typename representation_type::size_type>(decwide_t_elem_number))
+            if(offset_decimal_part >= static_cast<local_size_type>(decwide_t_elem_number))
             {
               // The number is too large to resolve the integer part.
               // It considered to be a pure integer.
@@ -2034,8 +2040,10 @@
                                                                 % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0)
         );
 
-      for(auto   limb_index = static_cast<typename representation_type::size_type>(0U);
-               ((limb_index < my_data.size()) && (limb_index < static_cast<typename representation_type::size_type>(digit_loops)));
+      using local_size_type = typename representation_type::size_type;
+
+      for(auto   limb_index = static_cast<local_size_type>(0U);
+               ((limb_index < my_data.size()) && (limb_index < static_cast<local_size_type>(digit_loops)));
                ++limb_index)
       {
         mantissa += (static_cast<InternalFloatType>(my_data[limb_index]) * scale);
@@ -2116,11 +2124,9 @@
           {
             scale = static_cast<long double>(scale / static_cast<long double>(decwide_t_elem_mask));
 
-            const auto idx =
-              static_cast<typename representation_type::size_type>
-              (
-                i / decwide_t_elem_digits10
-              );
+            using local_size_type = typename representation_type::size_type;
+
+            const auto idx = static_cast<local_size_type>(i / decwide_t_elem_digits10);
 
             ld =
               static_cast<long double>
@@ -2181,8 +2187,10 @@
                 static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1))
               );
 
-            for(auto  limb_index  = static_cast<typename representation_type::size_type>(1);
-                      limb_index <= static_cast<typename representation_type::size_type>(imax);
+            using local_size_type = typename representation_type::size_type;
+
+            for(auto  limb_index  = static_cast<local_size_type>(1);
+                      limb_index <= static_cast<local_size_type>(imax);
                     ++limb_index)
             {
               val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)
@@ -2238,8 +2246,10 @@
                            static_cast<std::int32_t>(decwide_t_elem_number - static_cast<std::int32_t>(1)))
               );
 
-            for(auto   limb_index  = static_cast<typename representation_type::size_type>(1);
-                       limb_index <= static_cast<typename representation_type::size_type>(imax);
+            using local_size_type = typename representation_type::size_type;
+
+            for(auto   limb_index  = static_cast<local_size_type>(1);
+                       limb_index <= static_cast<local_size_type>(imax);
                      ++limb_index)
             {
               val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)
@@ -3284,7 +3294,9 @@
 
         // First get the digits to the left of the decimal point...
 
-        my_data[static_cast<typename representation_type::size_type>(0U)] =
+        using local_size_type = typename representation_type::size_type;
+
+        my_data[static_cast<local_size_type>(0U)] =
           static_cast<limb_type>
           (
             std::strtoul(str.substr(static_cast<std::ptrdiff_t>(0), pos).c_str(), &ptr_end, 10) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -3317,8 +3329,10 @@
             it + static_cast<std::string::difference_type>(decwide_t_elem_digits10)
           );
 
+        using local_size_type = typename representation_type::size_type;
+
         const auto i1 =
-          static_cast<typename representation_type::size_type>
+          static_cast<local_size_type>
           (
             i + static_cast<std::string::difference_type>(1)
           );
@@ -3425,12 +3439,14 @@
 
     auto wr_string(std::string& str, std::ostream& os) const -> void // NOLINT(readability-function-cognitive-complexity,google-runtime-references)
     {
+      using local_flags_type = std::ios::fmtflags;
+
       // Assess the format flags.
-      const std::ios::fmtflags my_flags = os.flags();
+      const local_flags_type my_flags = os.flags();
 
       // Obtain the showpos flag.
-      const auto my_showpos   = ((my_flags & std::ios::showpos)   != static_cast<std::ios::fmtflags>(0U));
-      const auto my_uppercase = ((my_flags & std::ios::uppercase) != static_cast<std::ios::fmtflags>(0U));
+      const auto my_showpos   = (static_cast<local_flags_type>(my_flags & std::ios::showpos)   != static_cast<local_flags_type>(0U));
+      const auto my_uppercase = (static_cast<local_flags_type>(my_flags & std::ios::uppercase) != static_cast<local_flags_type>(0U));
 
       // Get the base-10 exponent.
       auto the_exp = static_cast<exponent_type>(ilogb(*this));
@@ -3452,8 +3468,8 @@
       // Determine the kind of output format requested (scientific, fixed, none).
       detail::os_float_field_type my_float_field { };
 
-      if     ((my_flags & std::ios::scientific) != static_cast<std::ios::fmtflags>(0U)) { my_float_field = detail::os_float_field_type::scientific; }
-      else if((my_flags & std::ios::fixed)      != static_cast<std::ios::fmtflags>(0U)) { my_float_field = detail::os_float_field_type::fixed; }
+      if     ((my_flags & std::ios::scientific) != static_cast<local_flags_type>(0U)) { my_float_field = detail::os_float_field_type::scientific; }
+      else if((my_flags & std::ios::fixed)      != static_cast<local_flags_type>(0U)) { my_float_field = detail::os_float_field_type::fixed; }
       else                                                                              { my_float_field = detail::os_float_field_type::none; }
 
       bool use_scientific = false;
@@ -3545,7 +3561,7 @@
       get_output_string(str, the_exp, the_number_of_digits_i_want_from_decwide_t);
 
       // Obtain additional format information.
-      const auto my_showpoint = ((my_flags & std::ios::showpoint) != static_cast<std::ios::fmtflags>(0U));
+      const auto my_showpoint = ((my_flags & std::ios::showpoint) != static_cast<local_flags_type>(0U));
 
       // Write the output string in the desired format.
       if     (my_float_field == detail::os_float_field_type::scientific) { wr_string_scientific(str, the_exp, os_precision, my_showpoint, my_uppercase); }
@@ -3576,7 +3592,7 @@
         // Left-justify is the exception, std::right and std::internal justify right.
         const auto my_left =
         (
-          static_cast<std::ios::fmtflags>(my_flags & std::ios::left) != static_cast<std::ios::fmtflags>(0U)
+          static_cast<local_flags_type>(my_flags & std::ios::left) != static_cast<local_flags_type>(0U)
         );
 
         // Justify left or right and insert the fill characters.
@@ -3645,23 +3661,9 @@
           (!b_exp_is_neg) ? the_exp : static_cast<exponent_type>(-the_exp)
         );
 
-      if(my_uppercase)
-      {
-        str += "E";
-      }
-      else
-      {
-        str += "e";
-      }
+      str.push_back(my_uppercase ? 'E' : 'e');
 
-      if(b_exp_is_neg)
-      {
-        str += "-";
-      }
-      else
-      {
-        str += "+";
-      }
+      str.push_back((!b_exp_is_neg) ? '+' : '-');
 
       std::array<char, 20U> ptr_str = {{ '\0' }}; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
@@ -3680,7 +3682,8 @@
                                                               : static_cast<std::uint_fast32_t>(0U))
         );
 
-      str += std::string(str_exp_len_pad, '0');
+      str.insert(str.end(), static_cast<std::size_t>(str_exp_len_pad), '0');
+
       str += str_exp;
     }
 
