@@ -370,9 +370,9 @@ namespace example009a_boost
   }
 
   template<typename FloatingPointType>
-  auto legendre_qvu(const FloatingPointType& v,
-                    const FloatingPointType& u, // NOLINT(bugprone-easily-swappable-parameters)
-                    const FloatingPointType& x) -> FloatingPointType
+  auto legendre_qvu(const FloatingPointType& v,                      // NOLINT(bugprone-easily-swappable-parameters)
+                    const FloatingPointType& u,                      // NOLINT(bugprone-easily-swappable-parameters)
+                    const FloatingPointType& x) -> FloatingPointType // NOLINT(bugprone-easily-swappable-parameters)
   {
     using std::cos;
     using std::pow;
