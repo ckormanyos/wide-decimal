@@ -3707,15 +3707,17 @@
       {
         // The number is less than one in magnitude. Insert the decimal
         // point using "0." as well as the needed number of leading zeros.
-        const auto minus_exp_minus_one = static_cast<std::uint_fast32_t>(-the_exp - 1);
+        const auto minus_exp_minus_one =
+          static_cast<std::uint_fast32_t>
+          (
+            static_cast<exponent_type>(-the_exp) - 1
+          );
 
         const auto zero_insert_length =
           static_cast<std::size_t>
           (
             (std::min)(minus_exp_minus_one, os_precision)
           );
-
-        const std::string str_zero_insert((std::min)(minus_exp_minus_one, os_precision), '0');
 
         const auto n_pad =
           static_cast<exponent_type>
