@@ -29,7 +29,9 @@
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
   #include <cstdlib>
   #endif
+  #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
   #include <cstring>
+  #endif
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
   #include <functional>
   #endif
@@ -990,6 +992,7 @@
 
         if(b_copy)
         {
+          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
           const auto memmove_size =
             static_cast<std::size_t>
             (
@@ -997,6 +1000,11 @@
             );
 
           std::memmove(my_data.data(), my_n_data_for_add_sub.data(), memmove_size);
+          #else
+          std::copy(my_n_data_for_add_sub.cbegin(),
+                    my_n_data_for_add_sub.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
+                    my_data.begin());
+          #endif
 
           my_exp = v.my_exp;
         }
