@@ -989,9 +989,13 @@
 
         if(b_copy)
         {
-          std::copy(my_n_data_for_add_sub.cbegin(),
-                    my_n_data_for_add_sub.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
-                    my_data.begin());
+          const auto memmove_size =
+            static_cast<std::size_t>
+            (
+              prec_elems_for_add_sub * static_cast<std::ptrdiff_t>(std::numeric_limits<limb_type>::digits / 8)
+            );
+
+          std::memmove(my_data.data(), my_n_data_for_add_sub.data(), memmove_size);
 
           my_exp = v.my_exp;
         }
