@@ -29,6 +29,7 @@
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
   #include <cstdlib>
   #endif
+  #include <cstring>
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
   #include <functional>
   #endif
