@@ -993,16 +993,17 @@
         if(b_copy)
         {
           #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-          const auto memmove_size =
-            static_cast<std::size_t>
+          const auto memmove_dif =
+            static_cast<std::ptrdiff_t>
             (
-              prec_elems_for_add_sub * static_cast<std::ptrdiff_t>(std::numeric_limits<limb_type>::digits / 8)
+                static_cast<std::ptrdiff_t>(prec_elems_for_add_sub)
+              * static_cast<std::ptrdiff_t>(sizeof(limb_type))
             );
 
-          std::memmove(my_data.data(), my_n_data_for_add_sub.data(), memmove_size);
+          std::memmove(my_data.data(), my_n_data_for_add_sub.data(), static_cast<std::size_t>(memmove_dif));
           #else
-          std::copy(my_n_data_for_add_sub.cbegin(),
-                    my_n_data_for_add_sub.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
+          std::copy(my_n_data_for_add_sub.data(),
+                    my_n_data_for_add_sub.data() + static_cast<std::size_t>(prec_elems_for_add_sub),
                     my_data.begin());
           #endif
 
