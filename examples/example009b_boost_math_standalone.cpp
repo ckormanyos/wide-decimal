@@ -278,19 +278,23 @@ namespace example009b_boost
      // N[Gamma[5/2], 120]
      const T control_tgamma_2_and_half("1.32934038817913702047362561250585888709816209209179034616035584238968346344327413603121299255390849906217011771821192800");
 
-     // N[Gamma[5000/2], 120]
-     const T control_tgamma_2_fifty   ("1.29314250436364309292832582080974738839793748706951226669917697084512949902204448379552716614841127978037140294127577317E490");
+     // N[Gamma[501/2], 120]
+     const T control_tgamma_250_and_half("2.04361576378676793274281040858168765479902044174168184223161039072956296132709215283453484593278166826360563422419505374E491");
 
-     const T tgamma_2_and_half = boost::math::tgamma(T(T(5)   / 2));
-     const T tgamma_2_fifty    = boost::math::tgamma(T(T(500) / 2));
+     const T tgamma_2_and_half   = ::boost::math::tgamma(T(T(5)   / 2));
+     const T tgamma_250_and_half = ::boost::math::tgamma(T(T(501) / 2));
 
-     const T closeness_2_and_half = fabs(1 - fabs(tgamma_2_and_half / control_tgamma_2_and_half));
-     const T closeness_2_fifty    = fabs(1 - fabs(tgamma_2_fifty    / control_tgamma_2_fifty));
+     using std::fabs;
 
-     const auto result_is_ok_2_and_half = (closeness_2_and_half < std::numeric_limits<T>::epsilon() * T(1.0E5L));
-     const auto result_is_ok_2_fifty    = (closeness_2_fifty    < std::numeric_limits<T>::epsilon() * T(1.0E5L));
+     const T closeness_2_and_half   = fabs(1 - fabs(tgamma_2_and_half   / control_tgamma_2_and_half));
+     const T closeness_250_and_half = fabs(1 - fabs(tgamma_250_and_half / control_tgamma_250_and_half));
 
-     const auto result_is_ok = (result_is_ok_2_and_half && result_is_ok_2_fifty);
+     const T tol = std::numeric_limits<T>::epsilon() * static_cast<std::uint32_t>(UINT32_C(100000));
+
+     const auto result_is_ok_2_and_half   = (closeness_2_and_half   < tol);
+     const auto result_is_ok_250_and_half = (closeness_250_and_half < tol);
+
+     const auto result_is_ok = (result_is_ok_2_and_half && result_is_ok_250_and_half);
 
      return result_is_ok;
   }

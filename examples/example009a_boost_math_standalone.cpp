@@ -73,11 +73,13 @@ namespace detail {
 template<typename FloatingPointType>
 auto sin_series(const FloatingPointType& x) -> FloatingPointType
 {
-        FloatingPointType term        = x;
-  const FloatingPointType x2          = x * x;
-        FloatingPointType sum         = x;
-        bool              term_is_neg = true;
-  const FloatingPointType tol         = std::numeric_limits<FloatingPointType>::epsilon() * x;
+  using floating_point_type = FloatingPointType;
+
+        auto term        = x;
+  const auto x2          = x * x;
+        auto sum         = x;
+        auto term_is_neg = true;
+  const auto tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
 
   for(auto k = static_cast<std::uint32_t>(UINT32_C(3));
            k < static_cast<std::uint32_t>(UINT32_C(10000));
@@ -108,11 +110,13 @@ auto sin_series(const FloatingPointType& x) -> FloatingPointType
 template<typename FloatingPointType>
 auto cos_series(const FloatingPointType& x) -> FloatingPointType
 {
-  const FloatingPointType x2          = x * x;
-        FloatingPointType term        = x2 / 2U;
-        FloatingPointType sum         = term;
-        bool              term_is_neg = true;
-  const FloatingPointType tol         = std::numeric_limits<FloatingPointType>::epsilon() * x;
+  using floating_point_type = FloatingPointType;
+
+  const auto x2          = x * x;
+        auto term        = x2 / 2U;
+        auto sum         = term;
+        auto term_is_neg = true;
+  const auto tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
 
   for(std::uint32_t k = 4U; k < UINT32_C(0xFFFF); k += 2U)
   {
@@ -160,7 +164,7 @@ auto sin(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
     const auto k = static_cast<std::uint32_t>     (x / boost::math::constants::half_pi<dec1001_t>());
     const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
-    dec1001_t r = x - (boost::math::constants::half_pi<dec1001_t>() * k);
+    dec1001_t r = x - (::boost::math::constants::half_pi<dec1001_t>() * k);
 
     const auto is_neg =  (n > 1U);
     const auto is_cos = ((n == 1U) || (n == 3U));
@@ -221,10 +225,10 @@ auto cos(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
     // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
     // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-    const auto k = static_cast<std::uint32_t>     (x / boost::math::constants::half_pi<dec1001_t>());
+    const auto k = static_cast<std::uint32_t>     (x / ::boost::math::constants::half_pi<dec1001_t>());
     const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
-    dec1001_t r = x - (boost::math::constants::half_pi<dec1001_t>() * k);
+    dec1001_t r = x - (::boost::math::constants::half_pi<dec1001_t>() * k);
 
     const auto is_neg = ((n == 1U) || (n == 2U));
     const auto is_sin = ((n == 1U) || (n == 3U));
@@ -313,12 +317,12 @@ auto hypergeometric_2f1_regularized(const dec1001_t& a,
                                     const dec1001_t& c,
                                     const dec1001_t& x) -> dec1001_t
 {
-  return hypergeometric_2f1(a, b, c, x) / boost::math::tgamma(c);
+  return hypergeometric_2f1(a, b, c, x) / ::boost::math::tgamma(c);
 }
 
 auto pochhammer(const dec1001_t& x, const dec1001_t& a) -> dec1001_t
 {
-  return boost::math::tgamma(x + a) / boost::math::tgamma(x);
+  return ::boost::math::tgamma(x + a) / ::boost::math::tgamma(x);
 }
 
 #if(__cplusplus >= 201703L)
@@ -357,12 +361,10 @@ namespace example009a_boost
   }
 
   template<typename FloatingPointType>
-  auto legendre_qvu(const FloatingPointType& v,
-                    const FloatingPointType& u, // NOLINT(bugprone-easily-swappable-parameters)
-                    const FloatingPointType& x) -> FloatingPointType
+  auto legendre_qvu(const FloatingPointType& v,                      // NOLINT(bugprone-easily-swappable-parameters)
+                    const FloatingPointType& u,                      // NOLINT(bugprone-easily-swappable-parameters)
+                    const FloatingPointType& x) -> FloatingPointType // NOLINT(bugprone-easily-swappable-parameters)
   {
-    using floating_point_type = FloatingPointType;
-
     using std::cos;
     using std::pow;
     using std::sin;
@@ -370,26 +372,30 @@ namespace example009a_boost
     // See also the third series representation provided in:
     // https://functions.wolfram.com/HypergeometricFunctions/LegendreQ2General/06/01/02/
 
-    const floating_point_type u_pi     = u * boost::math::constants::pi<floating_point_type>();
-    const floating_point_type sin_u_pi = sin(u_pi);
-    const floating_point_type cos_u_pi = cos(u_pi);
+    using floating_point_type = FloatingPointType;
 
-    const floating_point_type one_minus_x          = 1U - x;
-    const floating_point_type one_plus_x           = 1U + x;
-    const floating_point_type u_half               = u / 2U;
-    const floating_point_type one_minus_x_over_two = one_minus_x / 2U;
+    const auto u_pi     = u * ::boost::math::constants::pi<floating_point_type>();
+    const auto sin_u_pi = sin(u_pi);
+    const auto cos_u_pi = cos(u_pi);
 
-    const floating_point_type one_plus_x_over_one_minus_x_pow_u_half = pow(one_plus_x / one_minus_x, u_half);
+    const auto one_local              (1U);
+    const auto one_minus_x          = one_local - x;
+    const auto one_plus_x           = one_local + x;
+    const auto u_half               = u / 2U;
+    const auto one_minus_x_over_two = one_minus_x / 2U;
 
-    const floating_point_type v_plus_one =  v + 1U;
+    const auto one_plus_x_over_one_minus_x_pow_u_half = pow(one_plus_x / one_minus_x, u_half);
 
-    const floating_point_type h2f1_1 = hypergeometric_2f1_regularized(-v, v_plus_one, 1U - u, one_minus_x_over_two);
-    const floating_point_type h2f1_2 = hypergeometric_2f1_regularized(-v, v_plus_one, 1U + u, one_minus_x_over_two);
+    const auto v_plus_one =  v + one_local;
+    const auto minus_v    = -v;
 
-    const floating_point_type term1 = (h2f1_1 * one_plus_x_over_one_minus_x_pow_u_half) * cos_u_pi;
-    const floating_point_type term2 = (h2f1_2 / one_plus_x_over_one_minus_x_pow_u_half) * pochhammer(v_plus_one - u, u * 2U);
+    const auto h2f1_1 = hypergeometric_2f1_regularized(minus_v, v_plus_one, one_local - u, one_minus_x_over_two);
+    const auto h2f1_2 = hypergeometric_2f1_regularized(minus_v, v_plus_one, one_local + u, one_minus_x_over_two);
 
-    return (boost::math::constants::half_pi<floating_point_type>() * (term1 - term2)) / sin_u_pi;
+    const auto term1 = (h2f1_1 * one_plus_x_over_one_minus_x_pow_u_half) * cos_u_pi;
+    const auto term2 = (h2f1_2 / one_plus_x_over_one_minus_x_pow_u_half) * pochhammer(v_plus_one - u, u * 2U);
+
+    return (::boost::math::constants::half_pi<floating_point_type>() * (term1 - term2)) / sin_u_pi;
   }
 } // namespace example009a_boost
 
