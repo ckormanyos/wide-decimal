@@ -447,7 +447,7 @@
     static constexpr std::int32_t  decwide_t_elem_mask_half = detail::decwide_t_helper<ParamDigitsBaseTen, LimbType>::elem_mask_half;
 
     static constexpr std::int32_t  decwide_t_elems_for_kara = static_cast<std::int32_t>( 112 + 1);
-    static constexpr std::int32_t  decwide_t_elems_for_fft  = static_cast<std::int32_t>(1280 + 1);
+    static constexpr std::int32_t  decwide_t_elems_for_fft  = static_cast<std::int32_t>(1792 + 1);
 
     static constexpr exponent_type decwide_t_max_exp10      =  static_cast<exponent_type>(UINTMAX_C(1) << static_cast<unsigned>(std::numeric_limits<exponent_type>::digits - (std::is_same<exponent_type, std::int64_t>::value ? 4 : (std::is_same<exponent_type, std::int32_t>::value ? 3 : (std::is_same<exponent_type, std::int16_t>::value ? 2 : 1)))));
     static constexpr exponent_type decwide_t_min_exp10      = -static_cast<exponent_type>(decwide_t_max_exp10);
@@ -993,16 +993,17 @@
         if(b_copy)
         {
           #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-          const auto memmove_size =
-            static_cast<std::size_t>
+          const auto memmove_dif =
+            static_cast<std::ptrdiff_t>
             (
-              prec_elems_for_add_sub * static_cast<std::ptrdiff_t>(std::numeric_limits<limb_type>::digits / 8)
+                static_cast<std::ptrdiff_t>(prec_elems_for_add_sub)
+              * static_cast<std::ptrdiff_t>(sizeof(limb_type))
             );
 
-          std::memmove(my_data.data(), my_n_data_for_add_sub.data(), memmove_size);
+          std::memmove(my_data.data(), my_n_data_for_add_sub.data(), static_cast<std::size_t>(memmove_dif));
           #else
-          std::copy(my_n_data_for_add_sub.cbegin(),
-                    my_n_data_for_add_sub.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
+          std::copy(my_n_data_for_add_sub.data(),
+                    my_n_data_for_add_sub.data() + static_cast<std::size_t>(prec_elems_for_add_sub),
                     my_data.begin());
           #endif
 
