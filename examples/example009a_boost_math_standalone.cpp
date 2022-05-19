@@ -13,8 +13,18 @@
 #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
 #endif
 
-#if (BOOST_VERSION >= 107700)
-#if !defined(BOOST_MATH_STANDALONE)
+#if (BOOST_VERSION >= 108000)
+#if !defined(BOOST_NO_EXCEPTIONS)
+#define BOOST_NO_EXCEPTIONS
+#endif
+#if !defined(BOOST_NO_RTTI)
+#define BOOST_NO_RTTI
+#endif
+#endif
+
+#if ((BOOST_VERSION >= 107700) && !defined(BOOST_MATH_STANDALONE))
+#if (defined(_MSC_VER) && (_MSC_VER < 1920))
+#else
 #define BOOST_MATH_STANDALONE
 #endif
 #endif
@@ -416,8 +426,11 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
 
   auto result_is_ok = false;
 
+  #if (BOOST_VERSION >= 108000)
+  #else
   try
   {
+  #endif
   const dec1001_t x = dec1001_t(UINT32_C(789)) / 1000U;
 
   // Compute some values of the Legendre function of the second kind
@@ -467,6 +480,8 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
   const auto result_lqvu_is_ok = (closeness_lqvu < (std::numeric_limits<dec1001_t>::epsilon() * static_cast<std::uint32_t>(UINT32_C(1000000))));
 
   result_is_ok = (result_lpvu_is_ok && result_lqvu_is_ok);
+  #if (BOOST_VERSION >= 108000)
+  #else
   }
   #if (BOOST_VERSION < 107900)
   catch(const boost_wrapexcept_round_type& e)
@@ -494,6 +509,7 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
 
     std::cout << "Exception: std::domain_error: " << e.what() << std::endl;
   }
+  #endif
   #endif
 
   return result_is_ok;

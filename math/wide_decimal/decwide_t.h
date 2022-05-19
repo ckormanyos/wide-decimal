@@ -1579,16 +1579,23 @@
 
     auto precision(std::int32_t prec_digits) -> void
     {
-      const auto elems =
+      const auto elems_needed_for_digits =
         static_cast<std::int32_t>
         (
             static_cast<std::int32_t>  (prec_digits / decwide_t_elem_digits10)
           + static_cast<std::int32_t>(((prec_digits % decwide_t_elem_digits10) != 0) ? 1 : 0)
         );
 
-      const auto elems_max = (std::max)(elems, static_cast<std::int32_t>(2));
+      {
+        const auto elems_least = (std::max)(elems_needed_for_digits, static_cast<std::int32_t>(2));
 
-      my_prec_elem = (std::min)(decwide_t_elem_number, elems_max);
+        my_prec_elem = (std::min)(decwide_t_elem_number, elems_least);
+      }
+    }
+
+    WIDE_DECIMAL_NODISCARD static constexpr auto get_precision(const decwide_t& x) noexcept -> std::int32_t
+    {
+      return static_cast<std::int32_t>(x.my_prec_elem * decwide_t_elem_digits10);
     }
 
     auto swap(decwide_t& other) noexcept -> void
@@ -4986,8 +4993,8 @@
       // then break after the upcoming iteration.
 
       const auto ilogb_of_ak_minus_bk =
-        (std::max) (static_cast<std::int32_t>(0),
-                    static_cast<std::int32_t>(-ilogb(ak - bk)));
+        (std::max)(static_cast<std::int32_t>(0),
+                   static_cast<std::int32_t>(-ilogb(ak - bk)));
 
       const auto digits10_of_iteration =
         static_cast<std::uint32_t>
@@ -5061,16 +5068,38 @@
       // http://functions.wolfram.com/HypergeometricFunctions/Hypergeometric0F0/06/01/
       // There are no checks on input range or parameter boundaries.
 
-      const floating_point_type xh((xx - floating_point_type(nf * ln2)) / p2);
+      const auto precision_of_x = floating_point_type::get_precision(x);
+
+      floating_point_type xh((xx - floating_point_type(nf * ln2)) / p2);
+
+      xh.precision(precision_of_x);
 
       floating_point_type x_pow_n_div_n_fact(xh);
 
-      floating_point_type h0f0 =
-          one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
-        + x_pow_n_div_n_fact;
+      floating_point_type
+        h0f0
+        (
+            one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+          + x_pow_n_div_n_fact
+        );
+
+      h0f0.precision(precision_of_x);
+
+      using local_exponent_type = typename floating_point_type::exponent_type;
 
       using std::ilogb;
-      const auto iteration_goal = ilogb(std::numeric_limits<floating_point_type>::epsilon());
+
+      const auto iteration_goal_ilobg =
+        (std::max)(static_cast<local_exponent_type>(0),
+                   static_cast<local_exponent_type>(-ilogb(std::numeric_limits<floating_point_type>::epsilon())));
+
+      const auto iteration_goal_prec = static_cast<local_exponent_type>(precision_of_x);
+
+      const auto digits10_iteration_goal =
+        static_cast<local_exponent_type>
+        (
+          (std::min)(iteration_goal_ilobg, iteration_goal_prec)
+        );
 
       // Series expansion of hypergeometric_0f0(; ; x).
       for(auto   n = static_cast<std::uint32_t>(UINT32_C(2));
@@ -5080,12 +5109,19 @@
         x_pow_n_div_n_fact *= xh;
         x_pow_n_div_n_fact /= n;
 
-        // Use a tolerance check with iblog (via its digits10-scale).
-        // But only do this following the first few iterations.
-        if(   (n > static_cast<std::uint32_t>(UINT32_C(4)))
-           && (ilogb(x_pow_n_div_n_fact) < iteration_goal))
+        if(n > static_cast<std::uint32_t>(UINT32_C(4)))
         {
-          break;
+          // Use a tolerance check with iblog (via its digits10-scale).
+          // But only do this following the first few iterations.
+
+          const auto iteration_result_so_far =
+            (std::max)(static_cast<local_exponent_type>(0),
+                       static_cast<local_exponent_type>(-ilogb(x_pow_n_div_n_fact)));
+
+          if(iteration_result_so_far > digits10_iteration_goal)
+          {
+            break;
+          }
         }
 
         h0f0 += x_pow_n_div_n_fact;
