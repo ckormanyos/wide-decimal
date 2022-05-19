@@ -13,8 +13,18 @@
 #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
 #endif
 
-#if (BOOST_VERSION >= 107700)
-#if !defined(BOOST_MATH_STANDALONE)
+#if (BOOST_VERSION >= 108000)
+#if !defined(BOOST_NO_EXCEPTIONS)
+#define BOOST_NO_EXCEPTIONS
+#endif
+#if !defined(BOOST_NO_RTTI)
+#define BOOST_NO_RTTI
+#endif
+#endif
+
+#if ((BOOST_VERSION >= 107700) && !defined(BOOST_MATH_STANDALONE))
+#if (defined(_MSC_VER) && (_MSC_VER < 1920))
+#else
 #define BOOST_MATH_STANDALONE
 #endif
 #endif
@@ -75,8 +85,11 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
 
   auto result_is_ok = false;
 
+  #if (BOOST_VERSION >= 108000)
+  #else
   try
   {
+  #endif
   const dec1001_t x = dec1001_t(UINT32_C(123456789)) / 100U;
 
   using std::cbrt;
@@ -92,6 +105,8 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
   const dec1001_t closeness = fabs(1 - (c / control));
 
   result_is_ok = (closeness < (std::numeric_limits<dec1001_t>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10))));
+  #if (BOOST_VERSION >= 108000)
+  #else
   }
   #if (BOOST_VERSION < 107900)
   catch(const boost_wrapexcept_round_type& e)
@@ -119,6 +134,7 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
 
     std::cout << "Exception: std::domain_error: " << e.what() << std::endl;
   }
+  #endif
   #endif
 
   return result_is_ok;
