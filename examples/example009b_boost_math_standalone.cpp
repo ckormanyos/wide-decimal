@@ -74,11 +74,11 @@ auto sin_series(const FloatingPointType& x) -> FloatingPointType
 {
   using floating_point_type = FloatingPointType;
 
-        floating_point_type term        = x;
-  const floating_point_type x2          = x * x;
-        floating_point_type sum         = x;
-        bool              term_is_neg = true;
-  const floating_point_type tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
+        auto term        = x;
+  const auto x2          = x * x;
+        auto sum         = x;
+        auto term_is_neg = true;
+  const auto tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
 
   for(auto k = static_cast<std::uint32_t>(UINT32_C(3));
            k < static_cast<std::uint32_t>(UINT32_C(10000));
@@ -111,13 +111,15 @@ auto cos_series(const FloatingPointType& x) -> FloatingPointType
 {
   using floating_point_type = FloatingPointType;
 
-  const floating_point_type x2          = x * x;
-        floating_point_type term        = x2 / 2U;
-        floating_point_type sum         = term;
-        bool              term_is_neg = true;
-  const floating_point_type tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
+  const auto x2          = x * x;
+        auto term        = x2 / 2U;
+        auto sum         = term;
+        auto term_is_neg = true;
+  const auto tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
 
-  for(std::uint32_t k = 4U; k < UINT32_C(0xFFFF); k += 2U)
+  for(auto k = static_cast<std::uint32_t>(UINT32_C(4));
+           k < static_cast<std::uint32_t>(UINT32_C(10000));
+           k = static_cast<std::uint32_t>(k + static_cast<std::uint32_t>(UINT8_C(2))))
   {
     term *= x2;
     term /= std::uint32_t(k * std::uint32_t(k - 1U));
@@ -285,26 +287,26 @@ namespace example009b_boost
   template<class T>
   auto test_tgamma() -> bool
   {
-     // N[Gamma[5/2], 120]
-     const T control_tgamma_2_and_half("1.32934038817913702047362561250585888709816209209179034616035584238968346344327413603121299255390849906217011771821192800");
+     // N[Gamma[5/2], 320]
+     const T control_tgamma_002_and_half("1.3293403881791370204736256125058588870981620920917903461603558423896834634432741360312129925539084990621701177182119279996771146492933169518938202822020903013465282739898288421374438797717131196716990715344509721001309792615136097903875251426389255139390852308711844802354413316444296623040644993756797988057103001081064");
 
-     // N[Gamma[501/2], 120]
-     const T control_tgamma_250_and_half("2.04361576378676793274281040858168765479902044174168184223161039072956296132709215283453484593278166826360563422419505374E491");
+     // N[Gamma[501/2], 320]
+     const T control_tgamma_250_and_half("2.0436157637867679327428104085816876547990204417416818422316103907295629613270921528345348459327816682636056342241950537446541535116288177757620180708816682736540856939947792019709829601955492735707432530618999787498280191875334522078610897426020922257309921502998837542955056170017022660969773746509339458003165654615581E491");
 
-     const T tgamma_2_and_half   = ::boost::math::tgamma(T(T(5)   / 2));
+     const T tgamma_002_and_half = ::boost::math::tgamma(T(T(  5) / 2));
      const T tgamma_250_and_half = ::boost::math::tgamma(T(T(501) / 2));
 
      using std::fabs;
 
-     const T closeness_2_and_half   = fabs(1 - fabs(tgamma_2_and_half   / control_tgamma_2_and_half));
+     const T closeness_002_and_half = fabs(1 - fabs(tgamma_002_and_half / control_tgamma_002_and_half));
      const T closeness_250_and_half = fabs(1 - fabs(tgamma_250_and_half / control_tgamma_250_and_half));
 
      const T tol = std::numeric_limits<T>::epsilon() * static_cast<std::uint32_t>(UINT32_C(100000));
 
-     const auto result_is_ok_2_and_half   = (closeness_2_and_half   < tol);
+     const auto result_is_ok_002_and_half = (closeness_002_and_half < tol);
      const auto result_is_ok_250_and_half = (closeness_250_and_half < tol);
 
-     const auto result_is_ok = (result_is_ok_2_and_half && result_is_ok_250_and_half);
+     const auto result_is_ok = (result_is_ok_002_and_half && result_is_ok_250_and_half);
 
      return result_is_ok;
   }
@@ -319,6 +321,7 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
   using wide_decimal_010_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 10)), std::uint32_t, void>;
   using wide_decimal_035_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 35)), std::uint32_t, void>;
   using wide_decimal_105_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(105)), std::uint32_t, void>;
+  using wide_decimal_305_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(305)), std::uint32_t, void>;
 
   #if (BOOST_VERSION < 107900)
   using boost_wrapexcept_round_type  = ::boost::wrapexcept<::boost::math::rounding_error>;
@@ -335,10 +338,12 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
   const auto result_010_is_ok = example009b_boost::test_tgamma<wide_decimal_010_type>();
   const auto result_035_is_ok = example009b_boost::test_tgamma<wide_decimal_035_type>();
   const auto result_105_is_ok = example009b_boost::test_tgamma<wide_decimal_105_type>();
+  const auto result_305_is_ok = example009b_boost::test_tgamma<wide_decimal_305_type>();
 
   result_is_ok = (   result_010_is_ok
                   && result_035_is_ok
-                  && result_105_is_ok);
+                  && result_105_is_ok
+                  && result_305_is_ok);
   #if (BOOST_VERSION >= 108000)
   #else
   }
