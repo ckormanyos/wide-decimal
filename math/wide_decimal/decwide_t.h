@@ -190,7 +190,55 @@
            typename InternalFloatType = double,
            typename ExponentType = std::int64_t,
            typename FftFloatType = double>
-  auto calc_ln_two() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  auto calc_ln_two() -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+
+  template<const std::int32_t ParamDigitsBaseTen,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double,
+           typename ExponentType = std::int64_t,
+           typename FftFloatType = double>
+  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+
+  template<const std::int32_t ParamDigitsBaseTen,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double,
+           typename ExponentType = std::int64_t,
+           typename FftFloatType = double>
+  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+
+  template<const std::int32_t ParamDigitsBaseTen,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double,
+           typename ExponentType = std::int64_t,
+           typename FftFloatType = double>
+  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+
+  template<const std::int32_t ParamDigitsBaseTen,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double,
+           typename ExponentType = std::int64_t,
+           typename FftFloatType = double>
+  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+
+  template<const std::int32_t ParamDigitsBaseTen,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double,
+           typename ExponentType = std::int64_t,
+           typename FftFloatType = double>
+  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+
+  template<const std::int32_t ParamDigitsBaseTen,
+           typename LimbType = std::uint32_t,
+           typename AllocatorType = std::allocator<void>,
+           typename InternalFloatType = double,
+           typename ExponentType = std::int64_t,
+           typename FftFloatType = double>
+  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto constexpr unsigned_long_long_max() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto constexpr signed_long_long_min  () -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
@@ -220,8 +268,10 @@
                                                                                                                                                                                       std::int32_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto rootn_inv(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
                                                                                                                                                                                       std::int32_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto log      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto exp      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto log      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto log      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          typename std::enable_if<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto exp      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto exp      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          typename std::enable_if<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto pow      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b, // NOLINT(misc-no-recursion)
                                                                                                                                                                                       std::int64_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto pow      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
@@ -670,8 +720,8 @@
     {
       initializer() noexcept
       {
-        decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_value_pi();
-        decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_value_ln_two();
+        static_cast<void>(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_value_pi());
+        static_cast<void>(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_value_ln_two());
       }
 
       initializer(const initializer&) = delete;
@@ -2065,7 +2115,7 @@
       auto p10 = static_cast<limb_type>(1U);
 
       {
-        auto d0  = my_data[0U];
+        auto d0 = my_data[0U];
 
         for(;;)
         {
@@ -2327,7 +2377,7 @@
 
     template<typename IntegralType,
              typename = typename std::enable_if<std::is_integral<IntegralType>::value>::type>
-    explicit operator IntegralType() const
+    explicit constexpr operator IntegralType() const
     {
       return (std::is_signed<IntegralType>::value
                ? static_cast<IntegralType>(extract_signed_long_long())
@@ -2335,7 +2385,7 @@
     }
 
     // Cast operator to built-in Boolean type.
-    explicit operator bool() const { return (!iszero()); }
+    explicit constexpr operator bool() const { return (!iszero()); }
 
     static auto from_lst(      std::initializer_list<limb_type> limb_values,
                          const exponent_type                    e = static_cast<exponent_type>(0),
@@ -2553,7 +2603,7 @@
       }
       else
       {
-        const auto copy_end =
+        const auto copy_limit =
           static_cast<std::ptrdiff_t>
           (
             (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
@@ -2561,7 +2611,7 @@
           );
 
         std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                  result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                  result + copy_limit,                     // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                   my_data.begin());
       }
     }
@@ -2608,7 +2658,7 @@
         {
           my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
-          const auto copy_end =
+          const auto copy_limit =
             static_cast<std::ptrdiff_t>
             (
               (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara)
@@ -2616,12 +2666,12 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + copy_end, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_limit, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
         {
-          const auto copy_end =
+          const auto copy_limit =
             static_cast<std::ptrdiff_t>
             (
               (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
@@ -2629,7 +2679,7 @@
             );
 
           std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_limit,                     // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
       }
@@ -2676,7 +2726,7 @@
         {
           my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
-          const auto copy_end =
+          const auto copy_limit =
             static_cast<std::ptrdiff_t>
             (
               (std::min)(prec_elems_for_multiply, decwide_t_elem_number)
@@ -2684,12 +2734,12 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + copy_end, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_limit, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
         {
-          const auto copy_end =
+          const auto copy_limit =
             static_cast<std::ptrdiff_t>
             (
               (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + INT32_C(1)),
@@ -2697,7 +2747,7 @@
             );
 
           std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_limit,                     // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
       }
@@ -2745,7 +2795,7 @@
         {
           my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
 
-          const auto copy_end =
+          const auto copy_limit =
             static_cast<std::ptrdiff_t>
             (
               (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara)
@@ -2753,12 +2803,12 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + copy_end, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_limit, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
         {
-          const auto copy_end =
+          const auto copy_limit =
             static_cast<std::ptrdiff_t>
             (
               (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
@@ -2766,7 +2816,7 @@
             );
 
           std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_limit,                      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
       }
@@ -2815,7 +2865,7 @@
         {
           my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
-          const auto copy_end =
+          const auto copy_limit =
             static_cast<std::ptrdiff_t>
             (
               (std::min)(prec_elems_for_multiply, decwide_t_elems_for_fft)
@@ -2823,12 +2873,12 @@
 
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + copy_end, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_limit, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
         {
-          const auto copy_end =
+          const auto copy_limit =
             static_cast<std::ptrdiff_t>
             (
               (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
@@ -2836,7 +2886,7 @@
             );
 
           std::copy(result + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    result + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + copy_limit,                     // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
       }
@@ -2893,7 +2943,7 @@
         }
         else
         {
-          const auto copy_end =
+          const auto copy_limit =
             static_cast<std::ptrdiff_t>
             (
               (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(1)),
@@ -2902,7 +2952,7 @@
 
           // Justify the data if necessary.
           std::copy(my_data.cbegin() + static_cast<std::ptrdiff_t>(1), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                    my_data.cbegin() + copy_end,                       // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    my_data.cbegin() + copy_limit,                     // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
 
           my_data.back() = static_cast<limb_type>(0U);
@@ -2924,7 +2974,7 @@
         auto tmp_limb_0 = my_data[0U];
 
         // Manually count the number of base-10 digits on the zero'th limb.
-        while(tmp_limb_0 > 0U)
+        while(tmp_limb_0 > static_cast<local_limb_type>(0U))
         {
           tmp_limb_0 = static_cast<local_limb_type>(tmp_limb_0 / 10U); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
@@ -3264,16 +3314,16 @@
 
       if((static_cast<std::ptrdiff_t>(str.length()) - pos_plus_one) < n_shift)
       {
-        const auto sz =
+        const auto cnt =
           static_cast<std::ptrdiff_t>
           (
             n_shift - (static_cast<std::ptrdiff_t>(str.length()) - pos_plus_one)
           );
 
-        str.append(std::string(static_cast<std::string::size_type>(sz), '0'));
+        str.append(static_cast<std::size_t>(cnt), '0');
       }
 
-      // Do the decimal point shift.
+      // Perform the shift of the decimal point.
       if(n_shift != static_cast<std::ptrdiff_t>(0))
       {
         str.insert(static_cast<std::size_t>(pos_plus_one + n_shift), static_cast<std::size_t>(1U), '.');
@@ -3283,7 +3333,7 @@
         my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(n_shift));
       }
 
-      // Cut the size of the mantissa to <= decwide_t_elem_digits10.
+      // Reduce the size of the mantissa to <= decwide_t_elem_digits10.
       pos          = str.find('.');
       pos_plus_one = static_cast<std::ptrdiff_t>(pos + 1U);
 
@@ -3326,7 +3376,7 @@
 
       if(n_cnt != static_cast<std::int32_t>(0))
       {
-        str.append(static_cast<std::string::size_type>(n_cnt), '0');
+        str.append(static_cast<std::size_t>(n_cnt), '0');
       }
 
       // Truncate decimal part if it is too long.
@@ -3351,6 +3401,8 @@
 
       // Extract the data.
 
+      using local_size_type = typename representation_type::size_type;
+
       {
         static_assert(std::numeric_limits<unsigned long>::digits >= std::numeric_limits<limb_type>::digits, // NOLINT(google-runtime-int)
                       "Error: Type unsigned long is not wide enough to hold result of type limb_type");
@@ -3359,12 +3411,12 @@
 
         // First get the digits to the left of the decimal point...
 
-        using local_size_type = typename representation_type::size_type;
+        const auto str_zeroth_limb = str.substr(static_cast<std::ptrdiff_t>(0), pos);
 
         my_data[static_cast<local_size_type>(0U)] =
           static_cast<limb_type>
           (
-            std::strtoul(str.substr(static_cast<std::ptrdiff_t>(0), pos).c_str(), &ptr_end, 10) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+            std::strtoul(str_zeroth_limb.c_str(), &ptr_end, 10) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
           );
       }
 
@@ -3387,14 +3439,12 @@
         const auto it =   str.begin()
                         + static_cast<std::string::difference_type>(static_cast<std::string::difference_type>(pos_plus_one) + idigits);
 
-        const auto str_i1 =
+        const auto str_next_limb =
           std::string
           (
             it,
             it + static_cast<std::string::difference_type>(decwide_t_elem_digits10)
           );
-
-        using local_size_type = typename representation_type::size_type;
 
         const auto i1 =
           static_cast<local_size_type>
@@ -3410,7 +3460,7 @@
         my_data[i1] =
           static_cast<limb_type>
           (
-            std::strtoul(str_i1.c_str(), &ptr_end, static_cast<int>(INT8_C(10)))
+            std::strtoul(str_next_limb.c_str(), &ptr_end, static_cast<int>(INT8_C(10)))
           );
       }
 
@@ -4266,6 +4316,9 @@
   auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
   #endif
   {
+    // N[Pi, 121]
+    // 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647
+
     static_cast<void>(pfn_callback_to_report_digits10);
 
     using floating_point_type =
@@ -4298,6 +4351,9 @@
   auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
   #endif
   {
+    // N[Pi, 121]
+    // 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647
+
     static_cast<void>(pfn_callback_to_report_digits10);
 
     using floating_point_type =
@@ -4330,6 +4386,9 @@
   auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
   #endif
   {
+    // N[Pi, 121]
+    // 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647
+
     static_cast<void>(pfn_callback_to_report_digits10);
 
     using floating_point_type =
@@ -4351,7 +4410,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto calc_ln_two() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  auto calc_ln_two() -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
   {
     using floating_point_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -4454,6 +4513,153 @@
         * ak.calculate_inv()
       )
       / m;
+  }
+
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  {
+    // N[Log[2], 121]
+    // 0.6931471805599453094172321214581765680755001343602552541206800094933936219696947156058633269964186875420014810205706857337
+
+    using floating_point_type =
+      decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return
+      floating_point_type::from_lst
+      (
+        {
+          UINT8_C(69), UINT8_C(31), UINT8_C(47), UINT8_C(18),
+          UINT8_C( 5), UINT8_C(59), UINT8_C(94), UINT8_C(53), UINT8_C( 9), UINT8_C(41), UINT8_C(72), UINT8_C(32),
+          UINT8_C(12), UINT8_C(14), UINT8_C(58), UINT8_C(17), UINT8_C(65), UINT8_C(68), UINT8_C( 7), UINT8_C(55),
+          UINT8_C( 0), UINT8_C(13), UINT8_C(43), UINT8_C(60), UINT8_C(25), UINT8_C(52), UINT8_C(54), UINT8_C(12),
+          UINT8_C( 6), UINT8_C(80), UINT8_C( 0), UINT8_C(94), UINT8_C(93), UINT8_C(39), UINT8_C(36), UINT8_C(21),
+          UINT8_C(96), UINT8_C(96), UINT8_C(94), UINT8_C(71), UINT8_C(56), UINT8_C( 5), UINT8_C(86), UINT8_C(33),
+          UINT8_C(26), UINT8_C(99), UINT8_C(64), UINT8_C(18), UINT8_C(68), UINT8_C(75), UINT8_C(42), UINT8_C( 0),
+        },
+        static_cast<typename floating_point_type::exponent_type>(INT8_C(-8))
+      );
+  }
+
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  {
+    // N[Log[2], 121]
+    // 0.6931471805599453094172321214581765680755001343602552541206800094933936219696947156058633269964186875420014810205706857337
+
+    using floating_point_type =
+      decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return
+      floating_point_type::from_lst
+      (
+        {
+          UINT16_C(6931), UINT16_C(4718),
+          UINT16_C( 559), UINT16_C(9453), UINT16_C( 941), UINT16_C(7232),
+          UINT16_C(1214), UINT16_C(5817), UINT16_C(6568), UINT16_C( 755),
+          UINT16_C(  13), UINT16_C(4360), UINT16_C(2552), UINT16_C(5412),
+          UINT16_C( 680), UINT16_C(  94), UINT16_C(9339), UINT16_C(3621),
+          UINT16_C(9696), UINT16_C(9471), UINT16_C(5605), UINT16_C(8633),
+          UINT16_C(2699), UINT16_C(6418), UINT16_C(6875), UINT16_C(4200),
+        },
+        static_cast<typename floating_point_type::exponent_type>(INT8_C(-8))
+      );
+  }
+
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  {
+    // N[Log[2], 121]
+    // 0.6931471805599453094172321214581765680755001343602552541206800094933936219696947156058633269964186875420014810205706857337
+
+    using floating_point_type =
+      decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return
+      floating_point_type::from_lst
+      (
+        {
+          UINT32_C(69314718),
+          UINT32_C( 5599453), UINT32_C( 9417232),
+          UINT32_C(12145817), UINT32_C(65680755),
+          UINT32_C(  134360), UINT32_C(25525412),
+          UINT32_C( 6800094), UINT32_C(93393621),
+          UINT32_C(96969471), UINT32_C(56058633),
+          UINT32_C(26996418), UINT32_C(68754200),
+        },
+        static_cast<typename floating_point_type::exponent_type>(INT8_C(-8))
+      );
+  }
+
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  {
+    // N[Log[10], 121]
+    // 2.302585092994045684017991454684364207601101488628772976033327900967572609677352480235997205089598298341967784042286248633
+
+    using floating_point_type =
+      decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return
+      floating_point_type::from_lst
+      (
+        {
+          UINT8_C( 2),
+          UINT8_C(30), UINT8_C(25), UINT8_C(85), UINT8_C( 9), UINT8_C(29), UINT8_C(94), UINT8_C( 4), UINT8_C(56),
+          UINT8_C(84), UINT8_C( 1), UINT8_C(79), UINT8_C(91), UINT8_C(45), UINT8_C(46), UINT8_C(84), UINT8_C(36),
+          UINT8_C(42), UINT8_C( 7), UINT8_C(60), UINT8_C(11), UINT8_C( 1), UINT8_C(48), UINT8_C(86), UINT8_C(28),
+          UINT8_C(77), UINT8_C(29), UINT8_C(76), UINT8_C( 3), UINT8_C(33), UINT8_C(27), UINT8_C(90), UINT8_C( 9),
+          UINT8_C(67), UINT8_C(57), UINT8_C(26), UINT8_C( 9), UINT8_C(67), UINT8_C(73), UINT8_C(52), UINT8_C(48),
+          UINT8_C( 2), UINT8_C(35), UINT8_C(99), UINT8_C(72), UINT8_C( 5), UINT8_C( 8), UINT8_C(95), UINT8_C(98),
+        }
+      );
+  }
+
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  {
+    // N[Log[10], 121]
+    // 2.302585092994045684017991454684364207601101488628772976033327900967572609677352480235997205089598298341967784042286248633
+
+    using floating_point_type =
+      decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return
+      floating_point_type::from_lst
+      (
+        {
+          UINT16_C(   2),
+          UINT16_C(3025), UINT16_C(8509), UINT16_C(2994), UINT16_C( 456),
+          UINT16_C(8401), UINT16_C(7991), UINT16_C(4546), UINT16_C(8436),
+          UINT16_C(4207), UINT16_C(6011), UINT16_C( 148), UINT16_C(8628),
+          UINT16_C(7729), UINT16_C(7603), UINT16_C(3327), UINT16_C(9009),
+          UINT16_C(6757), UINT16_C(2609), UINT16_C(6773), UINT16_C(5248),
+          UINT16_C( 235), UINT16_C(9972), UINT16_C( 508), UINT16_C(9598)
+        }
+      );
+  }
+
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  {
+    // N[Log[10], 121]
+    // 2.302585092994045684017991454684364207601101488628772976033327900967572609677352480235997205089598298341967784042286248633
+
+    using floating_point_type =
+      decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    return
+      floating_point_type::from_lst
+      (
+        {
+          UINT32_C(       2),
+          UINT32_C(30258509), UINT32_C(29940456),
+          UINT32_C(84017991), UINT32_C(45468436),
+          UINT32_C(42076011), UINT32_C( 1488628),
+          UINT32_C(77297603), UINT32_C(33279009),
+          UINT32_C(67572609), UINT32_C(67735248),
+          UINT32_C( 2359972), UINT32_C( 5089598)
+        }
+      );
   }
 
   #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
@@ -5048,170 +5254,354 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto log(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  auto log(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
   {
     using floating_point_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
-    // For values less than 1 invert the argument and
-    // remember (in this case) to negate the result below.
-    const auto b_negate =
-      (x < one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
+    floating_point_type result { };
 
-    floating_point_type xx(x);
-
-    const auto precision_of_x = floating_point_type::get_precision(x);
-
-    // Use an AGM method to compute the logarithm of x.
-    // Set a0 = 1
-    // Set b0 = 4 / (x * 2^m)
-    //        = 1 / (x * 2^(m - 2))
-
-    floating_point_type ak(1U);
-
-    const auto n_times_factor =
-      static_cast<float>
-      (
-        static_cast<float>(static_cast<float>(std::numeric_limits<floating_point_type>::digits10)) * 1.67F
-      );
-
-    // Extract lg_xx = Log[mantissa * radix^ib]
-    //               = Log[mantissa] + ib * Log[radix],
-    // where the logarithm of the mantissa is simply neglected
-    // in the approximation.
-
-    using std::ilogb;
-
-    using local_exponent_type = typename floating_point_type::exponent_type;
-
-    auto ilogb_of_xx = static_cast<local_exponent_type>(ilogb(xx));
-
-    if(b_negate)
+    if(x < one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
     {
-      ilogb_of_xx = static_cast<local_exponent_type>(-ilogb_of_xx);
+      result = -log(floating_point_type(x).calculate_inv());
     }
-
-    using std::log;
-
-    const auto lg_xx_approx =
-      static_cast<float>
-      (
-          static_cast<float>(ilogb_of_xx)
-        * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix))
-      );
-
-    const auto lg_xx_over_lg2 = static_cast<float>(lg_xx_approx / log(2.0F));
-
-    // Ensure that the resulting power is non-negative.
-    // Also enforce that m >= 3.
-    const auto m = (std::max)(static_cast<std::int32_t>(n_times_factor - lg_xx_over_lg2),
-                              static_cast<std::int32_t>(3));
-
-    floating_point_type bk =
-      one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
-
-    bk.precision(precision_of_x);
-
-    bk = ldexp(bk, static_cast<std::int32_t>(2 - m));
-
-    (b_negate ? bk *= xx : bk *= xx.calculate_inv());
-
-    // TBD: Tolerance should have the log of the argument added to it (usually negligible).
-    const auto digits10_iteration_goal_a =
-      static_cast<std::uint32_t>
-      (
-          static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10 / 2)
-        + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
-                     static_cast<std::uint32_t>(UINT8_C(9)))
-      );
-
-    const auto digits10_iteration_goal_b =
-      static_cast<std::uint32_t>
-      (
-          static_cast<std::uint32_t>(precision_of_x / 2)
-        + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
-                     static_cast<std::uint32_t>(UINT8_C(9)))
-      );
-
-    const auto digits10_iteration_goal =
-      static_cast<local_exponent_type>
-      (
-        (std::min)(digits10_iteration_goal_a, digits10_iteration_goal_b)
-      );
-
-    using std::lround;
-
-    const auto digits10_scale =
-      static_cast<std::uint32_t>
-      (
-        lround
-        (
-            static_cast<float>
-            (
-                1000.0F
-              * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix))
-            )
-          / log(10.0F)
-        )
-      );
-
-    for(auto   k = static_cast<std::uint32_t>(UINT8_C(0));
-               k < static_cast<std::uint32_t>(UINT8_C(128));
-             ++k)
+    else if(x > one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
     {
-      // Check for the number of significant digits to be
-      // at least half of the requested digits. If at least
-      // half of the requested digits have been achieved,
-      // then break after the upcoming iteration.
+      const auto precision_of_x = floating_point_type::get_precision(x);
 
-      const auto ilogb_of_ak_minus_bk =
-        (std::max)(static_cast<std::int32_t>(0),
-                   static_cast<std::int32_t>(-ilogb(ak - bk)));
+      // Use an AGM method to compute the logarithm of x.
+      // Set a0 = 1
+      // Set b0 = 4 / (x * 2^m)
+      //        = 1 / (x * 2^(m - 2))
 
-      const auto digits10_of_iteration =
-        static_cast<local_exponent_type>
+      result = one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+
+      const auto n_times_factor =
+        static_cast<float>
         (
-          static_cast<std::uint64_t>(static_cast<std::uint64_t>(ilogb_of_ak_minus_bk) * digits10_scale) / UINT32_C(1000)
+          static_cast<float>(static_cast<float>(std::numeric_limits<floating_point_type>::digits10)) * 1.67F
         );
 
-      const floating_point_type ak_tmp(ak);
+      // Extract lg_xx = Log[mantissa * radix^ib]
+      //               = Log[mantissa] + ib * Log[radix],
+      // where the logarithm of the mantissa is simply neglected
+      // in the approximation.
 
-      ak += bk;
+      using std::ilogb;
 
-      if(digits10_of_iteration > digits10_iteration_goal)
+      using local_exponent_type = typename floating_point_type::exponent_type;
+
+      auto ilogb_of_x = static_cast<local_exponent_type>(ilogb(x));
+
+      using std::log;
+
+      const auto lg_x_approx =
+        static_cast<float>
+        (
+            static_cast<float>(ilogb_of_x)
+          * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix))
+        );
+
+      const auto lg_x_over_lg2 = static_cast<float>(lg_x_approx / log(2.0F));
+
+      // Ensure that the resulting power is non-negative.
+      // Also enforce that m >= 3.
+      const auto m = (std::max)(static_cast<std::int32_t>(n_times_factor - lg_x_over_lg2),
+                                static_cast<std::int32_t>(3));
+
+      floating_point_type bk =
+        one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+
+      bk.precision(precision_of_x);
+
+      bk = ldexp(bk, static_cast<std::int32_t>(2 - m));
+
+      bk /= x;
+
+      // TBD: Tolerance should have the log of the argument added to it (usually negligible).
+      const auto digits10_iteration_goal_a =
+        static_cast<std::uint32_t>
+        (
+            static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10 / 2)
+          + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
+                       static_cast<std::uint32_t>(UINT8_C(9)))
+        );
+
+      const auto digits10_iteration_goal_b =
+        static_cast<std::uint32_t>
+        (
+            static_cast<std::uint32_t>(precision_of_x / 2)
+          + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
+                       static_cast<std::uint32_t>(UINT8_C(9)))
+        );
+
+      const auto digits10_iteration_goal =
+        static_cast<local_exponent_type>
+        (
+          (std::min)(digits10_iteration_goal_a, digits10_iteration_goal_b)
+        );
+
+      using std::lround;
+
+      const auto digits10_scale =
+        static_cast<std::uint32_t>
+        (
+          lround
+          (
+              static_cast<float>
+              (
+                  1000.0F
+                * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix))
+              )
+            / log(10.0F)
+          )
+        );
+
+      for(auto   k = static_cast<std::uint32_t>(UINT8_C(0));
+                 k < static_cast<std::uint32_t>(UINT8_C(128));
+               ++k)
       {
-        break;
+        // Check for the number of significant digits to be
+        // at least half of the requested digits. If at least
+        // half of the requested digits have been achieved,
+        // then break after the upcoming iteration.
+
+        const auto ilogb_of_ak_minus_bk =
+          (std::max)(static_cast<std::int32_t>(0),
+                     static_cast<std::int32_t>(-ilogb(result - bk)));
+
+        const auto digits10_of_iteration =
+          static_cast<local_exponent_type>
+          (
+            static_cast<std::uint64_t>(static_cast<std::uint64_t>(ilogb_of_ak_minus_bk) * digits10_scale) / UINT32_C(1000)
+          );
+
+        const floating_point_type ak_tmp(result);
+
+        result += bk;
+
+        if(digits10_of_iteration > digits10_iteration_goal)
+        {
+          break;
+        }
+
+        using std::sqrt;
+
+        result /= 2;
+        bk *= ak_tmp;
+        static_cast<void>(bk.calculate_sqrt());
       }
 
-      using std::sqrt;
+      // We are now finished with the AGM iteration for log(x).
+      // Compute log(x) = {pi / [2 * AGM(1, 4 / 2^m)]} - (m * ln2)
+      // Note at this time that (ak = bk) = AGM(...)
+      // Retrieve the value of pi, divide by (2 * a) and subtract (m * ln2).
 
-      ak /= 2;
-      bk *= ak_tmp;
-      static_cast<void>(bk.calculate_sqrt());
+      result.calculate_inv();
+      result *= pi<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+      result -= (ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() * m);
     }
-
-    // We are now finished with the AGM iteration for log(x).
-    // Compute log(x) = {pi / [2 * AGM(1, 4 / 2^m)]} - (m * ln2)
-    // Note at this time that (ak = bk) = AGM(...)
-    // Retrieve the value of pi, divide by (2 * a) and subtract (m * ln2).
-
-    floating_point_type result =
-            (pi<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() * ak.calculate_inv())
-      - (ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() * m);
-
-    if(b_negate)
+    else
     {
-      result.negate();
+      result = zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
     }
 
     return result;
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto exp(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
+  auto log(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> typename std::enable_if<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
   {
     using floating_point_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
-    const auto b_neg = (x < 0);
+    floating_point_type result { };
+
+    if(x < one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
+    {
+      result = -log(floating_point_type(x).calculate_inv());
+    }
+    else if(x > one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
+    {
+      // Reduce the argument to x_scaled = 10^n * x.
+      // This results in:
+      //   log10(x) = n * log(10) + log10(x).
+
+      // Subsequently define y = x_scaled - 1 and use
+      // the Taylor series for log(y) evalueated at 1.
+
+      using local_exponent_type = typename floating_point_type::exponent_type;
+      using local_limb_type     = typename floating_point_type::limb_type;
+
+      using std::ilogb;
+
+      auto n = ilogb(x);
+
+      // Create a wide decimal scale_factor which is intended to scale
+      // the input argument to a value in the approximate range 1 ... 10.
+
+      floating_point_type scale_factor =
+        floating_point_type::from_lst
+        (
+          {
+            static_cast<local_limb_type>
+            (
+              detail::pow10_maker_as_runtime_value(static_cast<std::uint32_t>(n % static_cast<local_exponent_type>(floating_point_type::decwide_t_elem_digits10)))
+            )
+          },
+          static_cast<local_exponent_type>
+          (
+            (n / static_cast<local_exponent_type>(floating_point_type::decwide_t_elem_digits10)) * static_cast<local_exponent_type>(floating_point_type::decwide_t_elem_digits10)
+          )
+        );
+
+      auto x_scaled = x / scale_factor;
+
+      if(x_scaled > static_cast<floating_point_type>(1.8F)) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      {
+        // Scale the argument by an additional factor of ten if
+        // it exceeds an empirical limit designed to optimize
+        // (i.e., minimize) the number of iterations required
+        // in the Taylor series of the logarithm below.
+
+        x_scaled /= static_cast<local_limb_type>(UINT8_C(10));
+
+        ++n;
+      }
+
+      const auto digits10_series_goal =
+        static_cast<local_exponent_type>
+        (
+            static_cast<local_exponent_type>(std::numeric_limits<floating_point_type>::digits10)
+          + static_cast<local_exponent_type>(5)
+        );
+
+      const auto y =
+        (
+            x_scaled
+          - one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+        );
+
+      auto y_pow_n       = y;
+      auto sum           = y_pow_n;
+      auto negative_term = true;
+
+      for(auto   i = static_cast<std::uint32_t>(UINT32_C(2));
+                 i < static_cast<std::uint32_t>(UINT32_C(10000));
+               ++i)
+      {
+        y_pow_n *= y;
+
+        const auto term = y_pow_n / i;
+
+        if(i > static_cast<std::uint32_t>(UINT8_C(4)))
+        {
+          const auto digits10_of_series =
+            (std::max)(static_cast<std::int32_t>(0),
+                       static_cast<std::int32_t>(-ilogb(y_pow_n)));
+
+          if(y_pow_n.iszero() || (digits10_of_series > digits10_series_goal))
+          {
+            break;
+          }
+        }
+
+        (negative_term ? sum -= term : sum += term);
+
+        negative_term = (!negative_term);
+      }
+
+      result =
+        (
+            calc_ln_ten_low_precision<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+          * n
+        )
+        + sum;
+    }
+    else
+    {
+      result = zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+    }
+
+    return result;
+  }
+
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto exp(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  {
+    using floating_point_type =
+      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    floating_point_type exp_result;
+
+    if(x.isneg())
+    {
+      exp_result = exp(-x).calculate_inv();
+    }
+    else if(!x.iszero())
+    {
+      const auto precision_of_x = floating_point_type::get_precision(x);
+
+      // Setup the iteration.
+
+      // Use the original value of x for iteration below.
+      floating_point_type original_x(x);
+
+      floating_point_type iterate_term;
+
+      using std::exp;
+
+      // Estimate the exponent using built-in <cmath>-functions.
+      const auto x_as_built_in_float = static_cast<InternalFloatType>(original_x);
+      const auto exp_estimate        = exp(x_as_built_in_float);
+
+      exp_result = exp_estimate;
+
+      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
+               digits  < precision_of_x;
+               digits *= static_cast<std::int32_t>(INT8_C(2)))
+      {
+        // Adjust precision of the terms.
+        const auto min_elem_digits10_plus_one =
+          (std::min)
+          (
+            static_cast<std::int32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
+            static_cast<std::int32_t>(INT8_C(9))
+          );
+
+        const auto new_prec_as_digits10 =
+          static_cast<std::int32_t>
+          (
+              static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
+            + min_elem_digits10_plus_one
+          );
+
+          exp_result.precision(new_prec_as_digits10);
+        iterate_term.precision(new_prec_as_digits10);
+          original_x.precision(new_prec_as_digits10);
+
+        iterate_term  = log(exp_result);
+        iterate_term.negate();
+        iterate_term += original_x;
+
+        iterate_term += one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+        exp_result       *= iterate_term;
+      }
+
+      exp_result.precision(precision_of_x);
+    }
+    else
+    {
+      exp_result = one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+    }
+
+    return exp_result;
+  }
+
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto exp(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> typename std::enable_if<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  {
+    using floating_point_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+
+    const auto b_neg = x.isneg();
 
     floating_point_type exp_result;
 

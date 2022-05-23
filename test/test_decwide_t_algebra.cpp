@@ -72,10 +72,12 @@ namespace test_decwide_t
   #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
   constexpr std::uint32_t independent_algebra_test_decwide_t_count         = UINT32_C(128);
   constexpr std::uint32_t independent_algebra_test_decwide_t_count_for_log = UINT32_C(32);
+  constexpr std::uint32_t independent_algebra_test_decwide_t_count_for_exp = UINT32_C(16);
   constexpr std::uint32_t independent_algebra_test_decwide_t_round         = UINT32_C(4);
   #else
   constexpr std::uint32_t independent_algebra_test_decwide_t_count         = UINT32_C(32);
   constexpr std::uint32_t independent_algebra_test_decwide_t_count_for_log = UINT32_C(8);
+  constexpr std::uint32_t independent_algebra_test_decwide_t_count_for_exp = UINT32_C(4);
   constexpr std::uint32_t independent_algebra_test_decwide_t_round         = UINT32_C(1);
   #endif
 } // namespace test_decwide_t
@@ -247,6 +249,34 @@ auto test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-
                                                                        std::int32_t,
                                                                        double,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_count_for_log,
+                                                                       test_decwide_t::independent_algebra_test_decwide_t_round,
+                                                                       independent_algebra_test_decwide_t_boost_cpp_type>();
+
+  return result_is_ok;
+}
+
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_exp_____() -> bool // NOLINT(readability-identifier-naming)
+#else
+auto test_decwide_t_algebra_exp_____() -> bool // NOLINT(readability-identifier-naming)
+#endif
+{
+  using independent_algebra_test_decwide_t_boost_cpp_type =
+    test::independent_algebra::independent_algebra_test_decwide_t_boost_cpp<test_decwide_t::wide_decimal_digits10,
+                                                                            test_decwide_t::local_limb_type,
+                                                                            std::allocator<void>,
+                                                                            double,
+                                                                            std::int32_t,
+                                                                            double>;
+
+  const auto result_is_ok =
+    test::independent_algebra::independent_algebra_test_decwide_t_exp_<test_decwide_t::wide_decimal_digits10,
+                                                                       test_decwide_t::local_limb_type,
+                                                                       std::allocator<void>,
+                                                                       double,
+                                                                       std::int32_t,
+                                                                       double,
+                                                                       test_decwide_t::independent_algebra_test_decwide_t_count_for_exp,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_round,
                                                                        independent_algebra_test_decwide_t_boost_cpp_type>();
 

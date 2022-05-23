@@ -300,6 +300,14 @@
     result.my_cpp_boost_float = lg_a;
   }
 
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto eval_exp(      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a) -> void
+  {
+    result.my_cpp_boost_float = exp(a.my_cpp_boost_float);
+  }
+
+
   #if(__cplusplus >= 201703L)
   } // namespace test::independent_algebra
   #else

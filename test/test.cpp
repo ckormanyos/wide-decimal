@@ -61,6 +61,7 @@ auto local::run() -> bool
   start = local_clock_type::now(); const auto result_test_decwide_t_algebra_div____is_ok = (test_decwide_t_algebra_div_____()); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_algebra_div____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_div____is_ok << ", time: " << (static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())) / 1000.0F << "s" << std::endl; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   start = local_clock_type::now(); const auto result_test_decwide_t_algebra_sqrt___is_ok = (test_decwide_t_algebra_sqrt____()); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_algebra_sqrt___is_ok: " << std::boolalpha << result_test_decwide_t_algebra_sqrt___is_ok << ", time: " << (static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())) / 1000.0F << "s" << std::endl; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   start = local_clock_type::now(); const auto result_test_decwide_t_algebra_log____is_ok = (test_decwide_t_algebra_log_____()); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_algebra_log____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_log____is_ok << ", time: " << (static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())) / 1000.0F << "s" << std::endl; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  start = local_clock_type::now(); const auto result_test_decwide_t_algebra_exp____is_ok = (test_decwide_t_algebra_exp_____()); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_algebra_exp____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_log____is_ok << ", time: " << (static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())) / 1000.0F << "s" << std::endl; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
   result_is_ok = (   result_test_decwide_t_examples_part1_is_ok
                   && result_test_decwide_t_examples_part2_is_ok
@@ -69,7 +70,8 @@ auto local::run() -> bool
                   && result_test_decwide_t_algebra_mul____is_ok
                   && result_test_decwide_t_algebra_div____is_ok
                   && result_test_decwide_t_algebra_sqrt___is_ok
-                  && result_test_decwide_t_algebra_log____is_ok);
+                  && result_test_decwide_t_algebra_log____is_ok
+                  && result_test_decwide_t_algebra_exp____is_ok);
 
   return result_is_ok;
 }

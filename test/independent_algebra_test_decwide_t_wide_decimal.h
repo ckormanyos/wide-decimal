@@ -96,6 +96,13 @@
     result.my_decwide_t = log(a.my_decwide_t);
   }
 
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
+  auto eval_exp(      independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
+                const independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a) -> void
+  {
+    result.my_decwide_t = exp(a.my_decwide_t);
+  }
+
   #if(__cplusplus >= 201703L)
   } // namespace test::independent_algebra
   #else
