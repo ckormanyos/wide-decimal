@@ -552,65 +552,6 @@
     return result_test_is_ok;
   }
 
-  template<const std::int32_t ParamDigitsBaseTen,
-           typename LimbType,
-           typename AllocatorType,
-           typename InternalFloatType,
-           typename ExponentType,
-           typename FftFloatType,
-           const std::uint32_t CountN,
-           const std::uint32_t RoundN,
-           typename IndependentAlgebraTestControlType>
-  auto independent_algebra_test_decwide_t_exp_() -> bool // NOLINT(readability-identifier-naming)
-  {
-    using independent_algebra_test_decwide_t_control_type = IndependentAlgebraTestControlType;
-
-    using independent_algebra_decwide_type =
-      test::independent_algebra::independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-
-    using independent_algebra_test_decwide_t_control_struct =
-      test::independent_algebra::control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-
-    constexpr std::uint32_t count = CountN;
-    constexpr std::uint32_t round = RoundN;
-
-    std::atomic_bool result_is_ok;
-    result_is_ok.store(true);
-
-    for(std::uint32_t i = 0U; i < round && result_is_ok; ++i)
-    {
-      std::atomic_flag algebra_test_lock = ATOMIC_FLAG_INIT;
-
-      my_concurrency::parallel_for
-      (
-        static_cast<std::size_t>(0U),
-        static_cast<std::size_t>(count),
-        [&result_is_ok, &algebra_test_lock](std::size_t j)
-        {
-          std::string str_a;
-
-          while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == UINT32_C(0)));
-          algebra_test_lock.clear();
-
-          independent_algebra_test_decwide_t_control_type result_ctrl;
-          independent_algebra_decwide_type                result_ef;
-
-          eval_exp(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()));
-          eval_exp(result_ef,   independent_algebra_decwide_type               (str_a.c_str()));
-
-          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
-
-          result_is_ok.store(b_ok);
-        }
-      );
-    }
-
-    const auto result_test_is_ok = result_is_ok.load();
-
-    return result_test_is_ok;
-  }
-
   #if(__cplusplus >= 201703L)
   } // namespace test::independent_algebra
   #else

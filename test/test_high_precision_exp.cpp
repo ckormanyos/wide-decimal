@@ -1,27 +1,22 @@
-﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022.                        //
-//  Distributed under the Boost Software License,                //
-//  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
-//  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
-///////////////////////////////////////////////////////////////////
-
-#include <array>
-#include <atomic>
 #include <chrono>
 #include <cmath>
+#include <cstdint>
+#include <ctime>
 #include <iomanip>
 #include <iostream>
+#include <random>
 #include <sstream>
-#include <string>
 
 #if !defined(WIDE_DECIMAL_NAMESPACE)
 #define WIDE_DECIMAL_NAMESPACE ckormanyos
 #endif
 
+#include <boost/math/constants/constants.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
-#include <math/wide_decimal/decwide_t.h>
 #include <test/parallel_for.h>
+
+#include <math/wide_decimal/decwide_t.h>
 
 // cd /mnt/c/Users/User/Documents/Ks/PC_Software/NumericalPrograms/ExtendedNumberTypes/wide_decimal
 // When using g++ and -std=c++11
@@ -30,105 +25,84 @@
 
 namespace test_high_precision_exp
 {
-  constexpr auto my_digits10 = static_cast<std::int32_t>(INT32_C(100011));
+  constexpr auto local_digits10 = static_cast<std::int32_t>(INT32_C(100001));
 
-  using local_boost_high_precision_backend_type = boost::multiprecision::mpfr_float_backend<my_digits10, boost::multiprecision::allocate_dynamic>;
-  using local_boost_high_precision_number_type  = boost::multiprecision::number<local_boost_high_precision_backend_type, boost::multiprecision::et_off>;
+  using wide_decimal_type        = ckormanyos::math::wide_decimal::decwide_t<local_digits10>;
+  using boost_float_backend_type = boost::multiprecision::mpfr_float_backend<local_digits10, boost::multiprecision::allocate_dynamic>;
+  using boost_float_type         = boost::multiprecision::number<boost_float_backend_type, boost::multiprecision::et_off>;
 
-  using local_wide_decimal_high_precision_number_type = ckormanyos::math::wide_decimal::decwide_t<my_digits10, std::uint32_t, std::allocator<void>>;
-} // namespace test_high_precision_exp
+  std::uniform_int_distribution<std::uint32_t> dst_numer(UINT32_C(900000000), UINT32_C(999999999));
+  std::uniform_int_distribution<std::uint32_t> dst_denom(UINT32_C(100000000), UINT32_C(899999999));
 
-namespace local
-{
-  constexpr auto str_arg_array_size = static_cast<std::size_t>(UINT8_C(6));
+  using eng_numer_type = std::mt19937;
+  using eng_denom_type = std::minstd_rand0;
 
-  using str_arg_array_type = std::array<std::string, str_arg_array_size>;
+  eng_numer_type eng_numer;
+  eng_denom_type eng_denom;
 
-  const str_arg_array_type str_args =
+  auto do_test() -> bool
   {
-    std::string("-123.4"),
-    std::string("-12.34"),
-    std::string("-1.234"),
-    std::string("1.234"),
-    std::string("12.34"),
-    std::string("123.4")
-  };
+    const auto my_pi_w = ckormanyos::math::wide_decimal::pi<local_digits10>();
+    const auto my_pi_b = boost::math::constants::pi<boost_float_type>();
 
-  template<typename HighPrecisionFloatLeftType,
-           typename HighPrecisionFloatRightType>
-  static auto do_calcs_exp() -> bool
-  {
-    using local_hp_float_left_type  = HighPrecisionFloatLeftType;
-    using local_hp_float_right_type = HighPrecisionFloatRightType;
+    const auto sd = std::clock();
 
-    const auto tol =
-      local_hp_float_left_type
-      (
-          std::numeric_limits<local_hp_float_left_type>::epsilon()
-        * static_cast<std::uint32_t>(UINT32_C(100000000))
-      );
+    eng_numer.seed(static_cast<typename eng_numer_type::result_type>(sd));
+    eng_denom.seed(static_cast<typename eng_denom_type::result_type>(sd));
 
     auto result_is_ok = true;
 
-    std::atomic_flag do_calcs_exp_lock = ATOMIC_FLAG_INIT;
+    using std::ilogb;
 
-    using local_size_type = typename str_arg_array_type::size_type;
+    const auto ilogb_tol = ilogb(std::numeric_limits<wide_decimal_type>::epsilon());
+
+    std::atomic_flag do_calcs_exp_lock = ATOMIC_FLAG_INIT;
 
     my_concurrency::parallel_for
     (
-      static_cast<local_size_type>(0U),
-      static_cast<local_size_type>(local::str_arg_array_size),
-      [&result_is_ok, &do_calcs_exp_lock, &tol](typename str_arg_array_type::size_type index)
+      0U,
+      48U,
+      [&my_pi_w, &my_pi_b, &result_is_ok, &do_calcs_exp_lock, &ilogb_tol](unsigned count)
       {
-        const auto x_left  = local_hp_float_left_type (str_args[index].c_str());
-        const auto x_right = local_hp_float_right_type(str_args[index].c_str());
+        while(do_calcs_exp_lock.test_and_set()) { ; }
+        const auto numer = dst_numer(eng_numer);
+        const auto denom = dst_denom(eng_denom);
+        do_calcs_exp_lock.clear();
 
-        using std::exp;
+        const auto yw = wide_decimal_type((wide_decimal_type(numer) * my_pi_w) / denom);
+        const auto ew = exp(yw);
 
-        const auto y_left  = exp(x_left);
-        const auto y_right = exp(x_right);
+        const auto yb = boost_float_type((boost_float_type(numer) * my_pi_b) / denom);
+        const auto eb = exp(yb);
 
-        using std::fabs;
+        std::stringstream strm_b;
 
-        std::stringstream strm;
+        strm_b << std::setprecision(std::numeric_limits<wide_decimal_type>::digits10 + 3)
+               << eb;
 
-        strm << std::setprecision(test_high_precision_exp::my_digits10) << y_right;
+        const wide_decimal_type ctrl(strm_b.str().c_str());
 
-//std::cout << std::setprecision(test_high_precision_exp::my_digits10) << y_left  << std::endl << std::endl << std::endl;
-//std::cout << std::setprecision(test_high_precision_exp::my_digits10) << y_right << std::endl << std::endl << std::endl;
+        const auto delta = fabs(1 - fabs(ew / ctrl));
 
-        const local_hp_float_left_type y_ctrl(strm.str().c_str());
-
-        const auto delta = fabs(1 - (y_left / y_ctrl));
+        const bool result_exp_is_ok = ((delta == 0) || (ilogb(delta) <= ilogb_tol));
 
         while(do_calcs_exp_lock.test_and_set()) { ; }
-        const auto is_close_fraction = (delta < tol);
+        result_is_ok = (result_is_ok && result_exp_is_ok);
 
-        result_is_ok = (is_close_fraction && result_is_ok);
-
-        std::cout << "index: "
-                  << index
-                  << ", is_close_fraction: "
-                  << std::boolalpha
-                  << is_close_fraction
-                  << std::endl;
+        std::cout << "count: " << count << ", delta: " << delta << ", result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
         do_calcs_exp_lock.clear();
       }
     );
 
     return result_is_ok;
   }
-} // namespace local
+} // namespace test_high_precision_exp
 
-auto main() -> int
+int main()
 {
-  using local_hp_float_left_type  = test_high_precision_exp::local_wide_decimal_high_precision_number_type;
-  using local_hp_float_right_type = test_high_precision_exp::local_boost_high_precision_number_type;
-
   const auto start = std::chrono::high_resolution_clock::now();
 
-  const auto result_is_ok =
-    local::do_calcs_exp<local_hp_float_left_type, local_hp_float_right_type>();
+  const bool result_is_ok = test_high_precision_exp::do_test();
 
   const auto stop = std::chrono::high_resolution_clock::now();
 

@@ -5262,7 +5262,11 @@
 
     if(x < one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
     {
-      result = -log(floating_point_type(x).calculate_inv());
+      floating_point_type xx(x);
+
+      static_cast<void>(xx.calculate_inv());
+
+      result = -log(xx);
     }
     else if(x > one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
     {
@@ -5534,9 +5538,15 @@
 
     if(x.isneg())
     {
-      exp_result = exp(-x).calculate_inv();
+      floating_point_type xx(x);
+
+      xx.negate();
+
+      exp_result = exp(xx);
+
+      static_cast<void>(exp_result.calculate_inv());
     }
-    else if(!x.iszero())
+    else if((!x.iszero()))
     {
       const auto precision_of_x = floating_point_type::get_precision(x);
 

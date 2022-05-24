@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -129,7 +129,7 @@
       str = ss.str();
     }
 
-    static auto my_log(const local_float_type& x) -> local_float_type
+    static auto my_local_log(const local_float_type& x) -> local_float_type
     {
       using floating_point_type = local_float_type;
 
@@ -295,18 +295,10 @@
       typename independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_float_type;
 
     const boost_multiprecision_type lg_a =
-      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_log(a.my_cpp_boost_float);
+      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_local_log(a.my_cpp_boost_float);
 
     result.my_cpp_boost_float = lg_a;
   }
-
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto eval_exp(      independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& result,
-                const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a) -> void
-  {
-    result.my_cpp_boost_float = exp(a.my_cpp_boost_float);
-  }
-
 
   #if(__cplusplus >= 201703L)
   } // namespace test::independent_algebra
