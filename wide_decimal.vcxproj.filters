@@ -169,6 +169,9 @@
     <ClCompile Include="test\test_high_precision_log.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
+    <ClCompile Include="test\test_high_precision_exp.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h">
