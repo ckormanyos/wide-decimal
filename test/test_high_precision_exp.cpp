@@ -147,22 +147,26 @@ namespace test_high_precision_exp
     return wide_decimal_type(strm_b.str().c_str());
   };
 
-  std::uniform_int_distribution<std::uint32_t> dst_numer(UINT32_C(900000000), UINT32_C(999999999));
-  std::uniform_int_distribution<std::uint32_t> dst_denom(UINT32_C(100000000), UINT32_C(899999999));
+  std::uniform_int_distribution<std::uint32_t> dst_sgn(UINT32_C(        0), UINT32_C(        1));
+  std::uniform_int_distribution<std::uint32_t> dst_top(UINT32_C( 30000000), UINT32_C(999999999));
+  std::uniform_int_distribution<std::uint32_t> dst_bot(UINT32_C(100000000), UINT32_C(999999999));
 
-  using eng_numer_type = std::mt19937;
-  using eng_denom_type = std::minstd_rand0;
+  using eng_sgn_type = std::ranlux24;
+  using eng_top_type = std::mt19937;
+  using eng_bot_type = std::minstd_rand0;
 
-  eng_numer_type eng_numer;
-  eng_denom_type eng_denom;
+  eng_top_type eng_sgn;
+  eng_top_type eng_top;
+  eng_bot_type eng_bot;
 
   auto do_test() -> bool
   {
     const auto my_pi_w = ckormanyos::math::wide_decimal::pi<wide_decimal_type::decwide_t_digits10>();
     const auto my_pi_b = detail::calc_pi<boost_float_type>();
 
-    eng_numer.seed(static_cast<typename eng_numer_type::result_type>(std::random_device{}()));
-    eng_denom.seed(static_cast<typename eng_denom_type::result_type>(std::random_device{}()));
+    eng_sgn.seed(static_cast<typename eng_top_type::result_type>(std::random_device{ }()));
+    eng_top.seed(static_cast<typename eng_top_type::result_type>(std::random_device{ }()));
+    eng_bot.seed(static_cast<typename eng_bot_type::result_type>(std::random_device{ }()));
 
     auto result_is_ok = true;
 
@@ -182,8 +186,24 @@ namespace test_high_precision_exp
       [&my_pi_w, &my_pi_b, &result_is_ok, &do_calcs_exp_lock, &ilogb_tol, &my_zero, &my_one](unsigned count)
       {
         while(do_calcs_exp_lock.test_and_set()) { ; }
-        const auto numer = dst_numer(eng_numer);
-        const auto denom = dst_denom(eng_denom);
+        const auto sgn_top = (dst_sgn(eng_sgn) == static_cast<std::uint32_t>(UINT32_C(1)));
+        const auto sgn_bot = (dst_sgn(eng_sgn) == static_cast<std::uint32_t>(UINT32_C(1)));
+
+        const auto top = dst_top(eng_top);
+        const auto bot = dst_bot(eng_bot);
+
+        const auto numer =
+          static_cast<std::int32_t>
+          (
+            (!sgn_top) ? static_cast<std::int32_t>(top) : static_cast<std::int32_t>(-static_cast<std::int32_t>(top))
+          );
+
+        const auto denom =
+          static_cast<std::int32_t>
+          (
+            (!sgn_bot) ? static_cast<std::int32_t>(bot) : static_cast<std::int32_t>(-static_cast<std::int32_t>(bot))
+          );
+
         do_calcs_exp_lock.clear();
 
         const auto yw = wide_decimal_type((wide_decimal_type(numer) * my_pi_w) / denom);
@@ -204,7 +224,13 @@ namespace test_high_precision_exp
         strm << "count: "
              << std::setw(2)
              << count
+             << ", yw: "
+             << std::showpos
+             << std::scientific
+             << std::setprecision(5)
+             << yw
              << ", delta: "
+             << std::noshowpos
              << std::scientific
              << std::setprecision(2)
              << delta

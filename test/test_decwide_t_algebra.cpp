@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -20,14 +20,9 @@
 #endif
 #endif
 
-<<<<<<< HEAD
-#if (BOOST_VERSION >= 107700)
-#if !defined(BOOST_MATH_STANDALONE)
-=======
 #if ((BOOST_VERSION >= 107700) && !defined(BOOST_MATH_STANDALONE))
 #if (defined(_MSC_VER) && (_MSC_VER < 1920))
 #else
->>>>>>> high_precision_exp
 #define BOOST_MATH_STANDALONE
 #endif
 #endif
