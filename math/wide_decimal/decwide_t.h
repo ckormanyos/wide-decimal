@@ -5540,7 +5540,7 @@
     {
       exp_result = exp(floating_point_type(x).negate()).calculate_inv();
     }
-    else if((!x.iszero()))
+    else if(!x.iszero())
     {
       if(x < one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
       {
