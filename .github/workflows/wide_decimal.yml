@@ -761,7 +761,7 @@ jobs:
       matrix:
         standard: [ c++11 ]
         compiler: [ g++, clang++ ]
-        suite: [ test_high_precision_log ]
+        suite: [ test_high_precision_exp, test_high_precision_log ]
     steps:
       - uses: actions/checkout@v2
         with:

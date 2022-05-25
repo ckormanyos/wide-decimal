@@ -234,7 +234,7 @@
           algebra_test_lock.clear();
 
           independent_algebra_test_decwide_t_control_type result_ctrl;
-          independent_algebra_decwide_type      result_ef;
+          independent_algebra_decwide_type                result_ef;
 
           eval_add(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_add(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
@@ -295,7 +295,7 @@
           algebra_test_lock.clear();
 
           independent_algebra_test_decwide_t_control_type result_ctrl;
-          independent_algebra_decwide_type      result_ef;
+          independent_algebra_decwide_type                result_ef;
 
           eval_sub(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_sub(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
@@ -356,7 +356,7 @@
           algebra_test_lock.clear();
 
           independent_algebra_test_decwide_t_control_type result_ctrl;
-          independent_algebra_decwide_type      result_ef;
+          independent_algebra_decwide_type                result_ef;
 
           eval_mul(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_mul(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
@@ -417,7 +417,7 @@
           algebra_test_lock.clear();
 
           independent_algebra_test_decwide_t_control_type result_ctrl;
-          independent_algebra_decwide_type      result_ef;
+          independent_algebra_decwide_type                result_ef;
 
           eval_div(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_div(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
@@ -476,7 +476,7 @@
           algebra_test_lock.clear();
 
           independent_algebra_test_decwide_t_control_type result_ctrl;
-          independent_algebra_decwide_type      result_ef;
+          independent_algebra_decwide_type                result_ef;
 
           eval_sqrt(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()));
           eval_sqrt(result_ef,   independent_algebra_decwide_type               (str_a.c_str()));
@@ -535,7 +535,7 @@
           algebra_test_lock.clear();
 
           independent_algebra_test_decwide_t_control_type result_ctrl;
-          independent_algebra_decwide_type      result_ef;
+          independent_algebra_decwide_type                result_ef;
 
           eval_log(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()));
           eval_log(result_ef,   independent_algebra_decwide_type               (str_a.c_str()));
