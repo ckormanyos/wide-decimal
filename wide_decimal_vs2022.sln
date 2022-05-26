@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wide_decimal_vs2022", "wide_decimal_vs2022.vcxproj", "{E8006465-B814-49F0-B17C-5CC35591686D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		wide-decimal-debug|x64 = wide-decimal-debug|x64
+		wide-decimal-debug|x86 = wide-decimal-debug|x86
+		wide-decimal-release|x64 = wide-decimal-release|x64
+		wide-decimal-release|x86 = wide-decimal-release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-debug|x64.ActiveCfg = wide-decimal-debug|x64
+		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-debug|x64.Build.0 = wide-decimal-debug|x64
+		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-debug|x86.ActiveCfg = wide-decimal-debug|Win32
+		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-debug|x86.Build.0 = wide-decimal-debug|Win32
+		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-release|x64.ActiveCfg = wide-decimal-release|x64
+		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-release|x64.Build.0 = wide-decimal-release|x64
+		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-release|x86.ActiveCfg = wide-decimal-release|Win32
+		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-release|x86.Build.0 = wide-decimal-release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {86125F66-3207-4137-970A-AEF86CF9E05E}
+	EndGlobalSection
+EndGlobal
