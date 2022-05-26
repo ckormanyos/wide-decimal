@@ -33,12 +33,12 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.bat
           ./b2 headers
-      - name: msvc-release-x64-vs2022
+      - name: Setup MSBuild (x64)
         id: setup_msbuild_path
+        uses: ./
         with:
-          vs-prerelease: true
           msbuild-architecture: 'x64'
-        working-directory: ./
+      - name: msvc-release-x64-vs2022
         run: |
           set INCLUDE=%cd%;%cd%\..\boost-root;%INCLUDE%
           MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
