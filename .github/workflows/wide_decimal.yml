@@ -33,13 +33,10 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.bat
           ./b2 headers
-      - name: Setup MSBuild (x64)
-        id: setup_msbuild_path
-        uses: ./
+      - name: msvc-release-x64-vs2022
+      - uses: microsoft/setup-msbuild@v1.1
         with:
           msbuild-architecture: 'x64'
-      - name: msvc-release-x64-vs2022
-        shell: cmd
         working-directory: ./
         run: |
           set INCLUDE=%cd%;%cd%\..\boost-root;%INCLUDE%
