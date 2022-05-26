@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\examples">
+      <UniqueIdentifier>{0e3853da-096b-4c5d-8a42-f802000b23a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{ff45ea6f-5f76-40bc-bd79-40ae09db9752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test">
+      <UniqueIdentifier>{7010a26a-1323-42ef-8599-5b057f699893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{58e3345c-e388-4997-bc58-93998393339a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mcal_lcd">
+      <UniqueIdentifier>{9cc54b47-41cd-4027-ad68-2efb025f502e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util\memory">
+      <UniqueIdentifier>{2403818f-d651-4b3e-baa2-864a31fb6d90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util\utility">
+      <UniqueIdentifier>{8790c231-dade-48a4-9d1e-bb57e4c59ec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math\constants">
+      <UniqueIdentifier>{50165077-4bdd-4733-950e-8328a1bd403e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math\wide_decimal">
+      <UniqueIdentifier>{5879d775-12fc-4e21-96f2-2c6327873bfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include=".github">
+      <UniqueIdentifier>{07021126-4ba3-4b98-9801-2a86fbac1fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include=".github\workflows">
+      <UniqueIdentifier>{7364754c-af08-40c2-a3ec-25fbaba8abc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_doc">
+      <UniqueIdentifier>{c84326e0-541e-4462-bd66-7f5086e5ce3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost">
+      <UniqueIdentifier>{b3288824-b78f-4a7d-a7cc-d7f5d1892b26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost\math">
+      <UniqueIdentifier>{f9e28eae-c346-44a8-9a14-a555b7b978f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost\math\bindings">
+      <UniqueIdentifier>{73323c60-6a6c-4ad9-8508-42ec0b55fc21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include=".tidy">
+      <UniqueIdentifier>{ac826590-0eea-4ad6-95c5-4de06412c1fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include=".tidy\make">
+      <UniqueIdentifier>{0d5eb981-f809-48f3-880d-5cb3557fd7cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util\stdcpp">
+      <UniqueIdentifier>{3e4c74ff-74d1-4bee-b6d4-b06c5c455a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include=".github\toolchains">
+      <UniqueIdentifier>{14a4c145-a484-4c81-a33d-8b4246647a39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost\multiprecision">
+      <UniqueIdentifier>{2a35e613-6cdb-49e2-b4fb-3a4522dcb770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\boost\multiprecision\detail">
+      <UniqueIdentifier>{b9dd9544-f8a4-4034-8cb3-10c06fc8e156}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002_pi.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002a_pi_small_limb.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002b_pi_100k.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002c_pi_quintic.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example003_zeta.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example004_bessel_recur.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example005_polylog_series.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example006_logarithm.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example007_catalan_series.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example008_bernoulli_tgamma.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example009_boost_math_standalone.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example010_hypergeometric_2f1.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example010a_hypergeometric_1f1.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example011_trig_trapezoid_integral.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example001_roots_sqrt.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example001a_roots_seventh.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_decwide_t_algebra.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_decwide_t_examples.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example009a_boost_math_standalone.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example001c_roots_sqrt_limb08.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example002d_pi_limb08.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example000_multiply_nines.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example001d_pow2_from_list.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example000a_multiply_pi_squared.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example009b_boost_math_standalone.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example012_rational_floor_ceil.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example013_embeddable_sqrt.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\example013a_embeddable_agm.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="util\stdcpp\stdcpp_patch.cpp">
+      <Filter>Source Files\util\stdcpp</Filter>
+    </ClCompile>
+    <ClCompile Include="test\coverity.c">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_high_precision_log.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_high_precision_exp.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\independent_algebra_test_decwide_t_wide_decimal.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\parallel_for.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\test_decwide_t_algebra.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\test_decwide_t_examples.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\independent_algebra_test_decwide_t.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\independent_algebra_test_decwide_t_base.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="util\memory\util_n_slot_array_allocator.h">
+      <Filter>Source Files\util\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="util\utility\util_noncopyable.h">
+      <Filter>Source Files\util\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="util\utility\util_baselexical_cast.h">
+      <Filter>Source Files\util\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="util\utility\util_dynamic_array.h">
+      <Filter>Source Files\util\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="mcal_lcd\mcal_lcd_console.h">
+      <Filter>Source Files\mcal_lcd</Filter>
+    </ClInclude>
+    <ClInclude Include="mcal_lcd\mcal_lcd_generic_st7066.h">
+      <Filter>Source Files\mcal_lcd</Filter>
+    </ClInclude>
+    <ClInclude Include="mcal_lcd\mcal_lcd_base.h">
+      <Filter>Source Files\mcal_lcd</Filter>
+    </ClInclude>
+    <ClInclude Include="math\constants\constants_pi_control_for_decwide_t.h">
+      <Filter>Source Files\math\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t.h">
+      <Filter>Source Files\math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t_detail_fft.h">
+      <Filter>Source Files\math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="boost\math\bindings\decwide_t.hpp">
+      <Filter>Source Files\boost\math\bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t_detail.h">
+      <Filter>Source Files\math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t_detail_ops.h">
+      <Filter>Source Files\math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="test\independent_algebra_test_decwide_t_constants.h">
+      <Filter>Source Files\test</Filter>
+    </ClInclude>
+    <ClInclude Include="math\wide_decimal\decwide_t_detail_namespace.h">
+      <Filter>Source Files\math\wide_decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\example_decwide_t.h">
+      <Filter>Source Files\examples</Filter>
+    </ClInclude>
+    <ClInclude Include="boost\multiprecision\detail\check_cpp11_config.hpp">
+      <Filter>Source Files\boost\multiprecision\detail</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".github\workflows\wide_decimal.yml">
+      <Filter>.github\workflows</Filter>
+    </None>
+    <None Include="README.md">
+      <Filter>_doc</Filter>
+    </None>
+    <None Include=".tidy\make\make_tidy_02_files.gmk">
+      <Filter>.tidy\make</Filter>
+    </None>
+    <None Include=".tidy\make\make_tidy_03_flags.gmk">
+      <Filter>.tidy\make</Filter>
+    </None>
+    <None Include=".tidy\make\make_tidy_01_generic.gmk">
+      <Filter>.tidy\make</Filter>
+    </None>
+    <None Include=".clang-tidy" />
+    <None Include=".github\toolchains\gcc.cmake">
+      <Filter>.github\toolchains</Filter>
+    </None>
+    <None Include=".github\workflows\wide_decimal_sonar.yml">
+      <Filter>.github\workflows</Filter>
+    </None>
+    <None Include="sonar-project.properties" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="examples\CMakeLists.txt">
+      <Filter>Source Files\examples</Filter>
+    </Text>
+    <Text Include="test\CMakeLists.txt">
+      <Filter>Source Files\test</Filter>
+    </Text>
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
+</Project>

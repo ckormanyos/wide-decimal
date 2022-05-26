@@ -33,6 +33,8 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.bat
           ./b2 headers
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
       - name: msvc-release-x64-vs2022
         shell: cmd
         working-directory: ./
