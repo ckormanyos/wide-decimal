@@ -41,6 +41,7 @@ jobs:
         shell: cmd
         working-directory: ./
         run: |
+          set PATH="C:\Program Files (x86)\Windows Kits\10\Extension SDKs\WindowsDesktop";%PATH%
           set INCLUDE=%cd%;%cd%\..\boost-root;%INCLUDE%
           MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
           dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
