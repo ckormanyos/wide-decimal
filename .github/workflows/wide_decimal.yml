@@ -39,7 +39,6 @@ jobs:
           msbuild-architecture: x64
       - name: msvc-release-x64-vs2022
         run: |
-          set INCLUDE=.;..\boost-root;%INCLUDE%
           MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
           dir .\wide-decimal-release-x64\wide-decimal-release-x64.exe
           .\wide-decimal-release-x64\wide-decimal-release-x64.exe
