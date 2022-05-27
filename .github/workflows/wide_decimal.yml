@@ -15,7 +15,7 @@ on:
     - cron: '30 0 * * *' # run at 00:30 AM UTC
 jobs:
   msvc-release-x64-vs2022:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
         with:
@@ -35,10 +35,11 @@ jobs:
           ./b2 headers
       - uses: actions/checkout@v1
       - uses: ilammy/msvc-dev-cmd@v1
-        with:
-          msbuild-architecture: x64
       - name: msvc-release-x64-vs2022
+        shell: cmd
+        working-directory: ./
         run: |
-          MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
-          dir .\wide-decimal-release-x64\wide-decimal-release-x64.exe
-          .\wide-decimal-release-x64\wide-decimal-release-x64.exe
+          set INCLUDE=%cd%;%cd%\..\boost-root;%INCLUDE%
+          MSBuild -m wide_decimal.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
+          dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
+          %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
