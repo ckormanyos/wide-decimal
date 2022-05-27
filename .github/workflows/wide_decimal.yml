@@ -108,7 +108,7 @@ jobs:
         with:
           fetch-depth: '0'
       - name: update-tools
-        run: sudo apt install lcov gcov htmlgen
+        run: sudo apt install lcov
       - name: clone-submods-bootstrap-headers-boost-develop
         run: |
           git clone -b develop --depth 1 https://github.com/boostorg/boost.git ../boost-root
