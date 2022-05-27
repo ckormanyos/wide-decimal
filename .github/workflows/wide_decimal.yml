@@ -644,6 +644,35 @@ jobs:
           MSBuild -m wide_decimal.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
           dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
           %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
+  msvc-release-x64-vs2022:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: clone-submods-bootstrap-headers-boost-develop
+        run: |
+          git clone -b develop --depth 1 https://github.com/boostorg/boost.git ../boost-root
+          cd ../boost-root
+          git submodule update --init tools
+          git submodule update --init libs/config
+          git submodule update --init libs/math
+          cd libs/math
+          git checkout no_exceptions_or_rtti_error_handling
+          cd ../..
+          git submodule update --init libs/multiprecision
+          ./bootstrap.bat
+          ./b2 headers
+      - uses: actions/checkout@v1
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: msvc-release-x64-vs2022
+        shell: cmd
+        working-directory: ./
+        run: |
+          set INCLUDE=%cd%;%cd%\..\boost-root;%INCLUDE%
+          MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
+          dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
+          %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
   mingw-winhost-x64:
     runs-on: windows-2019
     strategy:
