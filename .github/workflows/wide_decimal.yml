@@ -40,6 +40,6 @@ jobs:
         working-directory: ./
         run: |
           set INCLUDE=%cd%;%cd%\..\boost-root;%INCLUDE%
-          MSBuild -m wide_decimal.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
+          MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
           dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
           %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
