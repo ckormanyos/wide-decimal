@@ -37,7 +37,7 @@ jobs:
       - uses: microsoft/setup-msbuild@v1.1
         with:
           msbuild-architecture: 'x64'
-          vs-version: '[17.2)'
+          vs-version: '[17.1,17.2)'
       - name: msvc-release-x64-vs2022
         shell: cmd
         working-directory: ./
