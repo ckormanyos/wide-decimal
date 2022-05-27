@@ -1,0 +1,97 @@
+﻿# ------------------------------------------------------------------------------
+#  Copyright Christopher Kormanyos 2022.
+#  Distributed under the Boost Software License,
+#  Version 1.0. (See accompanying file LICENSE_1_0.txt
+#  or copy at http://www.boost.org/LICENSE_1_0.txt)
+# ------------------------------------------------------------------------------
+
+PATH_MAKE        = $(CURDIR)
+PATH_PRJ         = $(PATH_MAKE)/../..
+PATH_SRC         = $(PATH_PRJ)
+PATH_BIN         = $(PATH_MAKE)/bin
+PATH_ERR         = $(PATH_MAKE)/err
+PATH_OBJ         = $(PATH_MAKE)/obj
+
+CAT              = cat
+GNUECHO          = echo
+LS               = ls
+MKDIR            = mkdir
+GCOV             = gcov
+LCOV             = lcov
+GENHTML          = genhtml
+RM               = rm
+SED              = sed
+
+include make_gcov_02_files.gmk
+include make_gcov_03_flags.gmk
+
+FILES_ALL        = $(FILES_PRJ)
+FILES_O          = $(addprefix $(PATH_OBJ)/, $(notdir $(addsuffix .o, $(FILES_ALL))))
+FILES_GCOV       = $(addprefix $(PATH_OBJ)/, $(notdir $(addsuffix .gcov, $(FILES_ALL))))
+
+# ------------------------------------------------------------------------------
+# VPATH definition: VPATH is required for make to find the source files.
+# ------------------------------------------------------------------------------
+VPATH    := $(sort $(dir $(FILES_ALL)))
+
+
+# ------------------------------------------------------------------------------
+# Executable file:
+# ------------------------------------------------------------------------------
+
+.PHONY: $(PATH_BIN)/wide_decimal.exe
+$(PATH_BIN)/wide_decimal.exe: $(FILES_O)
+  # Summarize tidy results
+	@$(GNUECHO) +++ link object files to $(PATH_BIN)/wide_decimal.exe
+	@$(CC) -x none $(CXXFLAGS) $(FILES_O) -o $(PATH_BIN)/wide_decimal.exe
+	@$(GNUECHO)
+
+
+# ------------------------------------------------------------------------------
+# Main dependency:
+#   Compile all files and link them.
+#   Run gcov and get results.
+# ------------------------------------------------------------------------------
+
+.PHONY: gcov
+gcov: $(PATH_BIN)/wide_decimal.exe
+  # Obtain results
+	@$(GNUECHO) +++ execute $(PATH_BIN)/wide_decimal.exe
+	@$(PATH_BIN)/wide_decimal.exe
+	@$(GNUECHO)
+	@$(GNUECHO) +++ running gcov
+	@$(GCOV) $(GCOV_FLAGS) $(addsuffix .cpp,$(FILES_PRJ)) --object-directory obj
+	@$(GNUECHO)
+	@$(LCOV) -c --directory obj --output-file wide_decimal.info
+	@$(GENHTML) wide_decimal.info --demangle-cpp --branch-coverage --output-directory out
+
+# ------------------------------------------------------------------------------
+# Clean temporary files.
+# ------------------------------------------------------------------------------
+
+.PHONY: prepare
+prepare:
+  # creating output directories
+	@$(GNUECHO) +++ creating output directories
+	@-$(MKDIR) -p $(PATH_BIN)
+	@-$(MKDIR) -p $(PATH_ERR)
+	@-$(MKDIR) -p $(PATH_OBJ)
+	@$(GNUECHO)
+	@$(GNUECHO) +++ cleaning output directories
+	@-$(RM) -rf $(PATH_BIN)/*.*
+	@-$(RM) -rf $(PATH_ERR)/*.*
+	@-$(RM) -rf $(PATH_OBJ)/*.*
+	@$(GNUECHO)
+	@$(GNUECHO) +++ print gcov version
+	@$(GCOV) --version
+	@$(GNUECHO)
+	@$(GNUECHO) +++ print include paths
+	@$(GNUECHO) $(C_INCLUDES)
+	@$(GNUECHO)
+
+# ------------------------------------------------------------------------------
+# pattern rule for compilation of cpp-files
+# ------------------------------------------------------------------------------
+$(PATH_OBJ)/%.o : %.cpp
+	@-$(GNUECHO) +++ compiling: $(notdir $<) to $(notdir $(PATH_OBJ)/$(basename $(@F)).o)
+	@-$(CC) $(CXXFLAGS) -x c++ -c $(C_INCLUDES) $(C_DEFINES) $< -o $(PATH_OBJ)/$(basename $(@F)).o 2> $(PATH_ERR)/$(basename $(@F)).err

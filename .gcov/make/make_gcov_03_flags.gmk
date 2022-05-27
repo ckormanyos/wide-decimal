@@ -1,0 +1,48 @@
+﻿# ------------------------------------------------------------------------------
+#  Copyright Christopher Kormanyos 2022.
+#  Distributed under the Boost Software License,
+#  Version 1.0. (See accompanying file LICENSE_1_0.txt
+#  or copy at http://www.boost.org/LICENSE_1_0.txt)
+# ------------------------------------------------------------------------------
+
+BOOST_ROOT_FOR_GCOV = /mnt/c/boost/boost_1_78_0
+CC                  = g++-10
+STD                 = c++11
+
+ifneq ($(MY_BOOST_ROOT),)
+BOOST_ROOT_FOR_TIDY := $(MY_BOOST_ROOT)
+endif
+
+ifneq ($(MY_CC),)
+CC                  := $(MY_CC)
+endif
+
+ifneq ($(MY_STD),)
+STD                 := $(MY_STD)
+endif
+
+CXXFLAGS     = -march=native                                                   \
+               -mtune=native                                                   \
+               -O2                                                             \
+               -Wall                                                           \
+               -Wextra                                                         \
+               -Wconversion                                                    \
+               -Wsign-conversion                                               \
+               -std=$(STD)                                                     \
+               -pthread                                                        \
+               -lpthread                                                       \
+               -fprofile-arcs                                                  \
+               -ftest-coverage                                                 \
+               -fbranch-probabilities                                          \
+               -fprofile-exclude-files=/usr/*
+
+C_DEFINES    = WIDE_DECIMAL_HAS_COVERAGE
+
+C_INCLUDES   = $(PATH_SRC)                                                     \
+               $(BOOST_ROOT_FOR_GCOV)
+
+C_DEFINES   :=$(addprefix -D,$(C_DEFINES))
+C_INCLUDES  :=$(addprefix -I,$(C_INCLUDES))
+
+
+GCOV_FLAGS   = -b -c -m
