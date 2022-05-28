@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -66,7 +66,13 @@ auto test_decwide_t_examples_part2__() -> bool // NOLINT(readability-identifier-
   result_is_ok &= math::wide_decimal::example003_zeta                     (); std::cout << "example003_zeta                     : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example004_bessel_recur             (); std::cout << "example004_bessel_recur             : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example005_polylog_series           (); std::cout << "example005_polylog_series           : " << std::boolalpha << result_is_ok << std::endl;
-  #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
+  #if defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
+  #if defined(WIDE_DECIMAL_HAS_COVERAGE)
+  result_is_ok &= math::wide_decimal::example006_logarithm                (); std::cout << "example006_logarithm                : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example007_catalan_series           (); std::cout << "example007_catalan_series           : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma         (); std::cout << "example008_bernoulli_tgamma         : " << std::boolalpha << result_is_ok << std::endl;
+  #endif
+  #else
   result_is_ok &= math::wide_decimal::example006_logarithm                (); std::cout << "example006_logarithm                : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example007_catalan_series           (); std::cout << "example007_catalan_series           : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma         (); std::cout << "example008_bernoulli_tgamma         : " << std::boolalpha << result_is_ok << std::endl;

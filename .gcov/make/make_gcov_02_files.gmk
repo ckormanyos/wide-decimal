@@ -19,7 +19,6 @@ FILES_PRJ  =   $(PATH_SRC)/test/test                                       \
                $(PATH_SRC)/examples/example002a_pi_small_limb              \
                $(PATH_SRC)/examples/example002b_pi_100k                    \
                $(PATH_SRC)/examples/example002c_pi_quintic                 \
-               $(PATH_SRC)/examples/example002d_pi_limb08                  \
                $(PATH_SRC)/examples/example003_zeta                        \
                $(PATH_SRC)/examples/example004_bessel_recur                \
                $(PATH_SRC)/examples/example005_polylog_series              \

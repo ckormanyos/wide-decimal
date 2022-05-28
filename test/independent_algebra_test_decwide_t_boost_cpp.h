@@ -117,11 +117,11 @@
       return *this;
     }
 
-    auto get_string(std::string& str) const -> void override
+    auto get_string(std::string& str, const bool use_fixed = false) const -> void override
     {
       std::stringstream ss;
 
-      ss << std::scientific
+      ss << ((!use_fixed) ? std::scientific : std::fixed)
          << std::uppercase
          << std::setprecision(std::streamsize(std::numeric_limits<local_float_type>::digits10 + 1))
          << my_cpp_boost_float;
