@@ -37,7 +37,7 @@
 
     ~independent_algebra_test_decwide_t_decwide_t() override = default;
 
-    auto get_string(std::string& str, const bool use_fixed = false) const -> void override
+    auto get_string(std::string& str, bool use_fixed) const -> void override
     {
       std::stringstream ss;
 

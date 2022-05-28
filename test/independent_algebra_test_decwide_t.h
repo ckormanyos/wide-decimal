@@ -128,11 +128,11 @@
       auto compare_is_ok = true;
 
       const auto compare_b_is_ok =
-        [&a, &b]() // NOLINT(modernize-use-trailing-return-type)
+        [&a, &b, &use_fixed]() // NOLINT(modernize-use-trailing-return-type)
         {
           std::string str_b;
 
-          b.get_string(str_b);
+          b.get_string(str_b, use_fixed);
 
           const local_wide_decimal_type decwide_t_b(str_b.c_str());
 
