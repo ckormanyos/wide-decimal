@@ -98,3 +98,4 @@ prepare:
 $(PATH_OBJ)/%.o : %.cpp
 	@-$(GNUECHO) +++ compiling: $(notdir $<) to $(notdir $(PATH_OBJ)/$(basename $(@F)).o)
 	@-$(CC) $(CXXFLAGS) -x c++ -c $(C_INCLUDES) $(C_DEFINES) $< -o $(PATH_OBJ)/$(basename $(@F)).o 2> $(PATH_ERR)/$(basename $(@F)).err
+	@-$(SED) -e 's|.h:\([0-9]*\),|.h(\1) :|' -e 's|:\([0-9]*\):|(\1) :|' $(PATH_ERR)/$(basename $(@F)).err
