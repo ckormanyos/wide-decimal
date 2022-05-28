@@ -41,7 +41,7 @@ VPATH    := $(sort $(dir $(FILES_ALL)))
 
 .PHONY: $(PATH_BIN)/wide_decimal.exe
 $(PATH_BIN)/wide_decimal.exe: $(FILES_O)
-  # Summarize tidy results
+  # Link coverage-instrumented executable
 	@$(GNUECHO) +++ link object files to $(PATH_BIN)/wide_decimal.exe
 	@$(CC) -x none $(CXXFLAGS) $(FILES_O) -o $(PATH_BIN)/wide_decimal.exe
 	@$(GNUECHO)
