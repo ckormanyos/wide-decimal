@@ -31,10 +31,9 @@ CXXFLAGS     = -march=native                                                   \
                -std=$(STD)                                                     \
                -pthread                                                        \
                -lpthread                                                       \
+               -fno-inline-functions                                           \
                -fprofile-arcs                                                  \
-               -ftest-coverage                                                 \
-               -fbranch-probabilities                                          \
-               -fprofile-exclude-files=/usr/*
+               -ftest-coverage
 
 C_DEFINES    = WIDE_DECIMAL_HAS_COVERAGE
 
