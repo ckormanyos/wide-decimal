@@ -11,6 +11,7 @@
   #include <atomic>
   #include <random>
   #include <sstream>
+  #include <string>
 
   #include <math/wide_decimal/decwide_t.h>
 
@@ -60,6 +61,59 @@
 
     using local_dst_type = std::uniform_int_distribution<std::uint32_t>;
 
+    template<typename MyControlFloatType>
+    static auto my_tol_ctrl() -> const MyControlFloatType&
+    {
+      using local_float_control_type = MyControlFloatType;
+
+      static const auto my_local_control_tol =
+        []() // NOLINT(modernize-use-trailing-return-type)
+        {
+          using std::log;
+          using std::lround;
+
+          const auto digits10_scale =
+            static_cast<std::uint32_t>
+            (
+              lround
+              (
+                static_cast<float>
+                (
+                    static_cast<float>
+                    (
+                      1000.0F * log(static_cast<float>(std::numeric_limits<local_float_control_type>::radix))
+                    )
+                  / log(10.0F)
+                )
+              )
+            );
+
+          using std::ilogb;
+
+          const auto approx_ilogb_of_tol =
+            static_cast<std::intmax_t>
+            (
+              ilogb(my_tol()) + INTMAX_C(1)
+            );
+
+          const auto approx_digits10_of_tol =
+            static_cast<std::uint32_t>
+            (
+                static_cast<std::uint64_t>(static_cast<std::uint64_t>(approx_ilogb_of_tol) * digits10_scale)
+              / static_cast<std::uint32_t>(UINT16_C(1000))
+            );
+
+          auto str_approx_digits10_of_tol = std::to_string(approx_digits10_of_tol);
+
+          str_approx_digits10_of_tol.insert(str_approx_digits10_of_tol.begin(), 'E');
+          str_approx_digits10_of_tol.insert(str_approx_digits10_of_tol.begin(), '1');
+
+          return local_float_control_type(str_approx_digits10_of_tol);
+        }();
+
+      return my_local_control_tol;
+    }
+
   public:
     static constexpr auto my_tol() -> local_wide_decimal_type
     {
@@ -67,20 +121,48 @@
              * static_cast<std::uint32_t>(UINT32_C(1000));
     }
 
-    static auto eval_eq(const independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
-                        const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b) -> bool
+    static auto eval_equal(const independent_algebra_test_decwide_t_decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a,
+                           const independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b,
+                           const bool use_fixed = false) -> bool
     {
-      std::string str_b;
+      auto compare_is_ok = true;
 
-      b.get_string(str_b);
+      const auto compare_b_is_ok =
+        [&a, &b, &use_fixed]() // NOLINT(modernize-use-trailing-return-type)
+        {
+          std::string str_b;
 
-      const local_wide_decimal_type decwide_t_b(str_b.c_str());
+          b.get_string(str_b, use_fixed);
 
-      const local_wide_decimal_type ratio = a.my_decwide_t / decwide_t_b;
+          const local_wide_decimal_type decwide_t_b(str_b.c_str());
 
-      const local_wide_decimal_type delta = fabs(1 - fabs(ratio));
+          const local_wide_decimal_type ratio = a.my_decwide_t / decwide_t_b;
 
-      const auto compare_is_ok = (delta < my_tol());
+          const local_wide_decimal_type delta = fabs(1 - fabs(ratio));
+
+          return (delta < my_tol());
+        }();
+
+      using local_float_control_type =
+        typename independent_algebra_test_decwide_t_boost_cpp<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_float_type;
+
+      const auto compare_a_is_ok =
+        [&a, &b, &use_fixed]() // NOLINT(modernize-use-trailing-return-type)
+        {
+          std::string str_a;
+
+          a.get_string(str_a, use_fixed);
+
+          const local_float_control_type control_type_a(str_a.c_str());
+
+          const local_float_control_type ratio = b.my_cpp_boost_float / control_type_a;
+
+          const local_float_control_type delta = fabs(1 - fabs(ratio));
+
+          return (delta < my_tol_ctrl<local_float_control_type>());
+        }();
+
+      compare_is_ok = (compare_is_ok && (compare_a_is_ok && compare_b_is_ok));
 
       return compare_is_ok;
     }
@@ -239,7 +321,7 @@
           eval_add(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_add(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_equal(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -300,7 +382,7 @@
           eval_sub(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_sub(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_equal(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -361,7 +443,7 @@
           eval_mul(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_mul(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_equal(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -422,7 +504,7 @@
           eval_div(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()), independent_algebra_test_decwide_t_control_type(str_b.c_str()));
           eval_div(result_ef,   independent_algebra_decwide_type               (str_a.c_str()), independent_algebra_decwide_type     (str_b.c_str()));
 
-          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_equal(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -481,7 +563,7 @@
           eval_sqrt(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()));
           eval_sqrt(result_ef,   independent_algebra_decwide_type               (str_a.c_str()));
 
-          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_equal(result_ef, result_ctrl);
 
           result_is_ok.store(b_ok);
         }
@@ -540,7 +622,7 @@
           eval_log(result_ctrl, independent_algebra_test_decwide_t_control_type(str_a.c_str()));
           eval_log(result_ef,   independent_algebra_decwide_type               (str_a.c_str()));
 
-          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_eq(result_ef, result_ctrl);
+          const auto b_ok = independent_algebra_test_decwide_t_control_struct::eval_equal(result_ef, result_ctrl, true);
 
           result_is_ok.store(b_ok);
         }

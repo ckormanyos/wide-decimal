@@ -25,7 +25,7 @@
   public:
     virtual ~independent_algebra_test_decwide_t_base() = default;
 
-    virtual void get_string(std::string&) const = 0; // NOLINT(google-runtime-references)
+    virtual void get_string(std::string&, bool) const = 0; // NOLINT(google-runtime-references)
 
   protected:
     independent_algebra_test_decwide_t_base() = default;

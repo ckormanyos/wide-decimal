@@ -17,7 +17,7 @@
   #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
   #endif
 #elif defined(__GNUC__)
-  #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__)
+  #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__) || defined(WIDE_DECIMAL_HAS_COVERAGE)
   #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
   #endif
 #endif
@@ -37,7 +37,14 @@ auto test_decwide_t_examples_part1__() -> bool // NOLINT(readability-identifier-
   result_is_ok &= math::wide_decimal::example001b_roots_almost_integer    (); std::cout << "example001b_roots_almost_integer    : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example001c_roots_sqrt_limb08       (); std::cout << "example001c_roots_sqrt_limb08       : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example001d_pow2_from_list          (); std::cout << "example001d_pow2_from_list          : " << std::boolalpha << result_is_ok << std::endl;
-  #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
+  #if defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
+  #if defined(WIDE_DECIMAL_HAS_COVERAGE)
+  result_is_ok &= math::wide_decimal::example002_pi                       (); std::cout << "example002_pi                       : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example002a_pi_small_limb           (); std::cout << "example002a_pi_small_limb           : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example002b_pi_100k                 (); std::cout << "example002b_pi_100k                 : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example002c_pi_quintic              (); std::cout << "example002c_pi_quintic              : " << std::boolalpha << result_is_ok << std::endl;
+  #endif
+  #else
   result_is_ok &= math::wide_decimal::example002_pi                       (); std::cout << "example002_pi                       : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example002a_pi_small_limb           (); std::cout << "example002a_pi_small_limb           : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example002b_pi_100k                 (); std::cout << "example002b_pi_100k                 : " << std::boolalpha << result_is_ok << std::endl;
@@ -59,7 +66,13 @@ auto test_decwide_t_examples_part2__() -> bool // NOLINT(readability-identifier-
   result_is_ok &= math::wide_decimal::example003_zeta                     (); std::cout << "example003_zeta                     : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example004_bessel_recur             (); std::cout << "example004_bessel_recur             : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example005_polylog_series           (); std::cout << "example005_polylog_series           : " << std::boolalpha << result_is_ok << std::endl;
-  #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
+  #if defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
+  #if defined(WIDE_DECIMAL_HAS_COVERAGE)
+  result_is_ok &= math::wide_decimal::example006_logarithm                (); std::cout << "example006_logarithm                : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example007_catalan_series           (); std::cout << "example007_catalan_series           : " << std::boolalpha << result_is_ok << std::endl;
+  result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma         (); std::cout << "example008_bernoulli_tgamma         : " << std::boolalpha << result_is_ok << std::endl;
+  #endif
+  #else
   result_is_ok &= math::wide_decimal::example006_logarithm                (); std::cout << "example006_logarithm                : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example007_catalan_series           (); std::cout << "example007_catalan_series           : " << std::boolalpha << result_is_ok << std::endl;
   result_is_ok &= math::wide_decimal::example008_bernoulli_tgamma         (); std::cout << "example008_bernoulli_tgamma         : " << std::boolalpha << result_is_ok << std::endl;
