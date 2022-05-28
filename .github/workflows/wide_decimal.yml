@@ -93,6 +93,46 @@ jobs:
           echo
           echo "verify empty word count of ./tmp/all.tidy_txt"
           wc ./tmp/all.tidy_txt | grep '0 0 0'
+  gnumake-gcc-gcov-native:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        standard: [ c++11 ]
+        compiler: [ g++ ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: update-tools
+        run: sudo apt install lcov
+      - name: clone-submods-bootstrap-headers-boost-develop
+        run: |
+          git clone -b develop --depth 1 https://github.com/boostorg/boost.git ../boost-root
+          cd ../boost-root
+          git submodule update --init tools
+          git submodule update --init libs/config
+          git submodule update --init libs/math
+          cd libs/math
+          git checkout no_exceptions_or_rtti_error_handling
+          cd ../..
+          git submodule update --init libs/multiprecision
+          ./bootstrap.sh
+          ./b2 headers
+      - name: gnumake-gcc-gcov-native
+        run: |
+          grep BOOST_VERSION ../boost-root/boost/version.hpp
+          cd .gcov/make
+          echo "running gcov"
+          echo "make prepare -f make_gcov_01_generic.gmk MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}"
+          echo
+          make prepare -f make_gcov_01_generic.gmk MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}
+          echo "make gcov -f make_gcov_01_generic.gmk --jobs=8 MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}"
+          make gcov -f make_gcov_01_generic.gmk --jobs=8 MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}
+          echo
   gcc-clang-native:
     runs-on: ubuntu-20.04
     defaults:
@@ -670,6 +710,36 @@ jobs:
         working-directory: ./
         run: |
           set INCLUDE=%cd%;%cd%\..\boost-root;%INCLUDE%
+          MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
+          dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
+          %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
+  msvc-release-x64-vs2022-asan:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: clone-submods-bootstrap-headers-boost-develop
+        run: |
+          git clone -b develop --depth 1 https://github.com/boostorg/boost.git ../boost-root
+          cd ../boost-root
+          git submodule update --init tools
+          git submodule update --init libs/config
+          git submodule update --init libs/math
+          cd libs/math
+          git checkout no_exceptions_or_rtti_error_handling
+          cd ../..
+          git submodule update --init libs/multiprecision
+          ./bootstrap.bat
+          ./b2 headers
+      - uses: actions/checkout@v1
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: msvc-release-x64-vs2022
+        shell: cmd
+        working-directory: ./
+        run: |
+          set INCLUDE=%cd%;%cd%\..\boost-root;%INCLUDE%
+          copy /Y .props\Directory.Build.props .
           MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
           dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
           %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe

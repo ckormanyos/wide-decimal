@@ -58,7 +58,7 @@
   #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
   #endif
 #elif defined(__GNUC__)
-  #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__)
+  #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__) || defined(WIDE_DECIMAL_HAS_COVERAGE)
   #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
   #endif
 #endif

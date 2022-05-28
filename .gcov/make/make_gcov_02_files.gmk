@@ -1,0 +1,36 @@
+﻿# ------------------------------------------------------------------------------
+#  Copyright Christopher Kormanyos 2022.
+#  Distributed under the Boost Software License,
+#  Version 1.0. (See accompanying file LICENSE_1_0.txt
+#  or copy at http://www.boost.org/LICENSE_1_0.txt)
+# ------------------------------------------------------------------------------
+
+FILES_PRJ  =   $(PATH_SRC)/test/test                                       \
+               $(PATH_SRC)/test/test_decwide_t_algebra                     \
+               $(PATH_SRC)/test/test_decwide_t_examples                    \
+               $(PATH_SRC)/examples/example000a_multiply_pi_squared        \
+               $(PATH_SRC)/examples/example000_multiply_nines              \
+               $(PATH_SRC)/examples/example001_roots_sqrt                  \
+               $(PATH_SRC)/examples/example001a_roots_seventh              \
+               $(PATH_SRC)/examples/example001b_roots_almost_integer       \
+               $(PATH_SRC)/examples/example001c_roots_sqrt_limb08          \
+               $(PATH_SRC)/examples/example001d_pow2_from_list             \
+               $(PATH_SRC)/examples/example002_pi                          \
+               $(PATH_SRC)/examples/example002a_pi_small_limb              \
+               $(PATH_SRC)/examples/example002b_pi_100k                    \
+               $(PATH_SRC)/examples/example002c_pi_quintic                 \
+               $(PATH_SRC)/examples/example003_zeta                        \
+               $(PATH_SRC)/examples/example004_bessel_recur                \
+               $(PATH_SRC)/examples/example005_polylog_series              \
+               $(PATH_SRC)/examples/example006_logarithm                   \
+               $(PATH_SRC)/examples/example007_catalan_series              \
+               $(PATH_SRC)/examples/example008_bernoulli_tgamma            \
+               $(PATH_SRC)/examples/example009_boost_math_standalone       \
+               $(PATH_SRC)/examples/example009a_boost_math_standalone      \
+               $(PATH_SRC)/examples/example009b_boost_math_standalone      \
+               $(PATH_SRC)/examples/example010_hypergeometric_2f1          \
+               $(PATH_SRC)/examples/example010a_hypergeometric_1f1         \
+               $(PATH_SRC)/examples/example011_trig_trapezoid_integral     \
+               $(PATH_SRC)/examples/example012_rational_floor_ceil         \
+               $(PATH_SRC)/examples/example013_embeddable_sqrt             \
+               $(PATH_SRC)/examples/example013a_embeddable_agm
