@@ -68,6 +68,15 @@
     <Filter Include="Source Files\boost\multiprecision\detail">
       <UniqueIdentifier>{b9dd9544-f8a4-4034-8cb3-10c06fc8e156}</UniqueIdentifier>
     </Filter>
+    <Filter Include=".gcov">
+      <UniqueIdentifier>{c5334470-1c92-41ca-8c4d-e3a16c6e35cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include=".gcov\make">
+      <UniqueIdentifier>{073ae4a3-c703-437f-8dd2-c8e872f29e62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include=".props">
+      <UniqueIdentifier>{5e8867a6-4552-4667-a2c3-87203a8ac998}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -271,6 +280,18 @@
       <Filter>.github\workflows</Filter>
     </None>
     <None Include="sonar-project.properties" />
+    <None Include=".gcov\make\make_gcov_03_flags.gmk">
+      <Filter>.gcov\make</Filter>
+    </None>
+    <None Include=".gcov\make\make_gcov_01_generic.gmk">
+      <Filter>.gcov\make</Filter>
+    </None>
+    <None Include=".gcov\make\make_gcov_02_files.gmk">
+      <Filter>.gcov\make</Filter>
+    </None>
+    <None Include=".props\Directory.Build.props">
+      <Filter>.props</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="examples\CMakeLists.txt">
