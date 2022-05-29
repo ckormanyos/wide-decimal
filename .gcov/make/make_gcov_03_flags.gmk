@@ -43,5 +43,4 @@ C_INCLUDES   = $(PATH_SRC)                                                     \
 C_DEFINES   :=$(addprefix -D,$(C_DEFINES))
 C_INCLUDES  :=$(addprefix -I,$(C_INCLUDES))
 
-
-GCOV_FLAGS   = -b -c -m
+GCOV_FLAGS   = -abcfu --object-directory obj

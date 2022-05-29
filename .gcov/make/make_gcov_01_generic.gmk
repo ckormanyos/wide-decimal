@@ -61,12 +61,11 @@ gcov: $(PATH_BIN)/wide_decimal.exe
 	@$(PATH_BIN)/wide_decimal.exe
 	@$(GNUECHO)
 	@$(GNUECHO) +++ running gcov
-	@$(GCOV) $(GCOV_FLAGS) $(addsuffix .cpp,$(FILES_PRJ)) --object-directory obj
+	@$(GCOV) $(GCOV_FLAGS) $(addsuffix .cpp,$(FILES_PRJ))
 	@$(GNUECHO)
-	@$(LCOV) -c --directory obj --output-file coverage.info
-	@$(LCOV) --remove coverage.info '/usr/*' --output-file coverage.info
-	@$(LCOV) --remove coverage.info '*boost/*' --output-file coverage.info
-	@$(GENHTML) coverage.info --demangle-cpp --output-directory out
+	@$(LCOV) -c --rc lcov_branch_coverage=1 --directory obj --output-file coverage.info
+	@$(LCOV) --rc lcov_branch_coverage=1 --remove coverage.info '/usr/*' '*boost/*' --output-file coverage.info
+	@$(GENHTML) coverage.info --demangle-cpp --rc lcov_branch_coverage=1 --output-directory out
 
 # ------------------------------------------------------------------------------
 # Clean temporary files.
