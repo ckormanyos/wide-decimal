@@ -47,9 +47,14 @@ jobs:
           grep BOOST_VERSION ../boost-root/boost/version.hpp
           cd .gcov/make
           echo "build and run gcov/lcov/genhtml"
-          echo "make all -f make_gcov_01_generic.gmk --jobs=8 MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}"
+          echo "make prepare -f make_gcov_01_generic.gmk MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}"
           echo
-          make all -f make_gcov_01_generic.gmk --jobs=8 MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}
+          make prepare -f make_gcov_01_generic.gmk MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}
+          echo
+          echo "make gcov -f make_gcov_01_generic.gmk --jobs=8 MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}"
+          echo
+          make gcov -f make_gcov_01_generic.gmk --jobs=8 MY_BOOST_ROOT=../../../boost-root MY_CC=${{ matrix.compiler }} MY_STD=${{ matrix.standard }}
+          echo
           echo "return to wide-decimal root directory"
           cd ../..
       - name: upload-codecov

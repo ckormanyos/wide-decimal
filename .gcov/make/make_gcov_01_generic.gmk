@@ -5,8 +5,6 @@
 #  or copy at http://www.boost.org/LICENSE_1_0.txt)
 # ------------------------------------------------------------------------------
 
-all: prepare gcov
-
 PATH_MAKE        = $(CURDIR)
 PATH_PRJ         = $(PATH_MAKE)/../..
 PATH_SRC         = $(PATH_PRJ)
