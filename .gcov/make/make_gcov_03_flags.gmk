@@ -53,14 +53,20 @@ C_DEFINES   :=$(addprefix -D,$(C_DEFINES))
 C_INCLUDES  :=$(addprefix -I,$(C_INCLUDES))
 
 GCOV_FLAGS   = --object-directory obj                                          \
-               --all-blocks                                                    \
-               --function-summaries                                            \
                --demangled-names
+
+
+# ------------------------------------------------------------------------------
+# All gcov flags: The GCOV_FLAGS below are equivalent to -abcfu
+# ------------------------------------------------------------------------------
 
 ifneq ($(ALL_COV),0)
 GCOV_FLAGS  := $(GCOV_FLAGS)                                                   \
+               --all-blocks                                                    \
                --branch-counts                                                 \
-               --branch-probabilities
+               --branch-probabilities                                          \
+               --function-summaries                                            \
+               --unconditional-branches
 endif
 
 LCOV_BRANCH  =
