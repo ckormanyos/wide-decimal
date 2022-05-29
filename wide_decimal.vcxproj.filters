@@ -292,6 +292,9 @@
     <None Include=".props\Directory.Build.props">
       <Filter>.props</Filter>
     </None>
+    <None Include=".github\workflows\wide_decimal_codecov.yml">
+      <Filter>.github\workflows</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="examples\CMakeLists.txt">

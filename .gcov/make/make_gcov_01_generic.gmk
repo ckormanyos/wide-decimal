@@ -5,6 +5,8 @@
 #  or copy at http://www.boost.org/LICENSE_1_0.txt)
 # ------------------------------------------------------------------------------
 
+all: prepare gcov
+
 PATH_MAKE        = $(CURDIR)
 PATH_PRJ         = $(PATH_MAKE)/../..
 PATH_SRC         = $(PATH_PRJ)
@@ -63,26 +65,40 @@ gcov: $(PATH_BIN)/wide_decimal.exe
 	@$(GNUECHO) +++ running gcov
 	@$(GCOV) $(GCOV_FLAGS) $(addsuffix .cpp,$(FILES_PRJ))
 	@$(GNUECHO)
-	@$(LCOV) -c --rc lcov_branch_coverage=1 --directory obj --output-file coverage.info
-	@$(LCOV) --rc lcov_branch_coverage=1 --remove coverage.info '/usr/*' '*boost/*' --output-file coverage.info
-	@$(GENHTML) coverage.info --demangle-cpp --rc lcov_branch_coverage=1 --output-directory out
+	@$(GNUECHO) +++ running lcov
+	@$(LCOV) $(LCOV_BRANCH) -c --directory obj --output-file coverage_unfiltered.info
+	@$(LCOV) $(LCOV_BRANCH) --remove coverage_unfiltered.info $(LCOV_REMOVES) --output-file coverage.info
+	@$(GNUECHO)
+	@$(GNUECHO) +++ running genhtml
+	@$(GENHTML) coverage.info $(LCOV_BRANCH) --demangle-cpp --output-directory $(PATH_BIN)/report
+	@$(GNUECHO)
 
 # ------------------------------------------------------------------------------
 # Clean temporary files.
 # ------------------------------------------------------------------------------
 
-.PHONY: prepare
-prepare:
+.PHONY: clean
+clean:
   # creating output directories
+	@$(GNUECHO) +++ cleaning output directories
+	@-$(RM) -rf $(PATH_BIN)* || uname -r
+	@-$(RM) -rf $(PATH_ERR)* || uname -r
+	@-$(RM) -rf $(PATH_OBJ)* || uname -r
+	@-$(RM) -f *.gcov || uname -r
+	@-$(RM) -f coverage* || uname -r
+	@$(GNUECHO)
+
+
+# ------------------------------------------------------------------------------
+# Prepare the gcov build.
+# ------------------------------------------------------------------------------
+
+.PHONY: prepare
+prepare: clean
 	@$(GNUECHO) +++ creating output directories
 	@-$(MKDIR) -p $(PATH_BIN)
 	@-$(MKDIR) -p $(PATH_ERR)
 	@-$(MKDIR) -p $(PATH_OBJ)
-	@$(GNUECHO)
-	@$(GNUECHO) +++ cleaning output directories
-	@-$(RM) -rf $(PATH_BIN)/*.*
-	@-$(RM) -rf $(PATH_ERR)/*.*
-	@-$(RM) -rf $(PATH_OBJ)/*.*
 	@$(GNUECHO)
 	@$(GNUECHO) +++ print gcov version
 	@$(GCOV) --version
