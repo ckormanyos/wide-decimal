@@ -6,8 +6,9 @@
 # ------------------------------------------------------------------------------
 
 BOOST_ROOT_FOR_GCOV = /mnt/c/boost/boost_1_78_0
-CC                  = g++-10
+CC                  = g++
 STD                 = c++11
+ALL_COV             = 0
 
 ifneq ($(MY_BOOST_ROOT),)
 BOOST_ROOT_FOR_GCOV := $(MY_BOOST_ROOT)
@@ -19,6 +20,14 @@ endif
 
 ifneq ($(MY_STD),)
 STD                 := $(MY_STD)
+endif
+
+ifneq ($(MY_STD),)
+STD                 := $(MY_STD)
+endif
+
+ifneq ($(MY_ALL_COV),)
+ALL_COV             := $(MY_ALL_COV)
 endif
 
 CXXFLAGS     = -march=native                                                   \
@@ -43,5 +52,22 @@ C_INCLUDES   = $(PATH_SRC)                                                     \
 C_DEFINES   :=$(addprefix -D,$(C_DEFINES))
 C_INCLUDES  :=$(addprefix -I,$(C_INCLUDES))
 
+GCOV_FLAGS   = --object-directory obj                                          \
+               --all-blocks                                                    \
+               --function-summaries                                            \
+               --demangled-names
 
-GCOV_FLAGS   = -b -c -m
+ifneq ($(ALL_COV),0)
+GCOV_FLAGS  := $(GCOV_FLAGS)                                                   \
+               --branch-counts                                                 \
+               --branch-probabilities
+endif
+
+LCOV_BRANCH  =
+
+ifneq ($(ALL_COV),0)
+LCOV_BRANCH := --rc lcov_branch_coverage=1
+endif
+
+LCOV_REMOVES = '/usr/*'                                                       \
+               '*boost/*'

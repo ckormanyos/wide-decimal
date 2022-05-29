@@ -61,29 +61,42 @@ gcov: $(PATH_BIN)/wide_decimal.exe
 	@$(PATH_BIN)/wide_decimal.exe
 	@$(GNUECHO)
 	@$(GNUECHO) +++ running gcov
-	@$(GCOV) $(GCOV_FLAGS) $(addsuffix .cpp,$(FILES_PRJ)) --object-directory obj
+	@$(GCOV) $(GCOV_FLAGS) $(addsuffix .cpp,$(FILES_PRJ))
 	@$(GNUECHO)
-	@$(LCOV) -c --directory obj --output-file coverage.info
-	@$(LCOV) --remove coverage.info '/usr/*' --output-file coverage.info
-	@$(LCOV) --remove coverage.info '*boost/*' --output-file coverage.info
-	@$(GENHTML) coverage.info --demangle-cpp --output-directory out
+	@$(GNUECHO) +++ running lcov
+	@$(LCOV) $(LCOV_BRANCH) -c --directory obj --output-file coverage_unfiltered.info
+	@$(LCOV) $(LCOV_BRANCH) --remove coverage_unfiltered.info $(LCOV_REMOVES) --output-file coverage.info
+	@$(GNUECHO)
+	@$(GNUECHO) +++ running genhtml
+	@$(GENHTML) coverage.info $(LCOV_BRANCH) --demangle-cpp --output-directory $(PATH_BIN)/report
+	@$(GNUECHO)
 
 # ------------------------------------------------------------------------------
 # Clean temporary files.
 # ------------------------------------------------------------------------------
 
-.PHONY: prepare
-prepare:
+.PHONY: clean
+clean:
   # creating output directories
+	@$(GNUECHO) +++ cleaning output directories
+	@-$(RM) -rf $(PATH_BIN)* || uname -r
+	@-$(RM) -rf $(PATH_ERR)* || uname -r
+	@-$(RM) -rf $(PATH_OBJ)* || uname -r
+	@-$(RM) -f *.gcov || uname -r
+	@-$(RM) -f coverage* || uname -r
+	@$(GNUECHO)
+
+
+# ------------------------------------------------------------------------------
+# Prepare the gcov build.
+# ------------------------------------------------------------------------------
+
+.PHONY: prepare
+prepare: clean
 	@$(GNUECHO) +++ creating output directories
 	@-$(MKDIR) -p $(PATH_BIN)
 	@-$(MKDIR) -p $(PATH_ERR)
 	@-$(MKDIR) -p $(PATH_OBJ)
-	@$(GNUECHO)
-	@$(GNUECHO) +++ cleaning output directories
-	@-$(RM) -rf $(PATH_BIN)/*.*
-	@-$(RM) -rf $(PATH_ERR)/*.*
-	@-$(RM) -rf $(PATH_OBJ)/*.*
 	@$(GNUECHO)
 	@$(GNUECHO) +++ print gcov version
 	@$(GCOV) --version

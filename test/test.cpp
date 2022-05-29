@@ -22,8 +22,9 @@
 // make tidy -f make_tidy_01_generic.gmk --jobs=8 MY_BOOST_ROOT=/mnt/c/boost/boost_1_79_0
 
 // cd .gcov/make
-// make prepare -f make_gcov_01_generic.gmk MY_BOOST_ROOT=/mnt/c/boost/boost_1_79_0
-// make gcov -f make_gcov_01_generic.gmk --jobs=8 MY_BOOST_ROOT=/mnt/c/boost/boost_1_79_0
+// make clean -f make_gcov_01_generic.gmk MY_CC=g++ MY_ALL_COV=0 MY_BOOST_ROOT=/mnt/c/boost/boost_1_79_0
+// make prepare -f make_gcov_01_generic.gmk MY_CC=g++ MY_ALL_COV=0 MY_BOOST_ROOT=/mnt/c/boost/boost_1_79_0
+// make gcov -f make_gcov_01_generic.gmk --jobs=8 MY_CC=g++ MY_ALL_COV=0 MY_BOOST_ROOT=/mnt/c/boost/boost_1_79_0
 
 // cd /mnt/c/Users/User/Documents/Ks/PC_Software/NumericalPrograms/ExtendedNumberTypes/wide_decimal
 // PATH=/home/chris/local/coverity/cov-analysis-linux64-2021.12.1/bin:$PATH
