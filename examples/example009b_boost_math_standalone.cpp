@@ -276,7 +276,7 @@ namespace example009b_boost
       const T x = T(static_cast<std::uint8_t>(i + static_cast<std::size_t>(UINT8_C(1U)))) / 10U;
       const T s = sin(x);
 
-      const T closeness = fabs(1 - fabs(s / control[i]));
+      const T closeness = fabs(1 - fabs(s / control[i])); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
       const bool result_sin_is_ok = (closeness < tol);
 
