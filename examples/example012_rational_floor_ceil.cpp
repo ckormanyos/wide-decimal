@@ -94,7 +94,7 @@ namespace example012_rational
         const auto lo_hi = static_cast<std::int32_t>(lo * hi);
 
         const decimal_type a = decimal_type { lo_hi } / decimal_type { lo };
-        const decimal_type b = floor(a);
+        const decimal_type b = ceil(a);
 
         result_is_ok = ((static_cast<std::int32_t>(a) == b) && result_is_ok);
 

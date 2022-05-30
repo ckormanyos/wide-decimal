@@ -822,10 +822,7 @@
                                         my_fpclass  (fpclass_type::decwide_t_finite),
                                         my_prec_elem(decwide_t_elem_number)
     {
-      if(!rd_string(s))
-      {
-        std::fill(my_data.begin(), my_data.end(), static_cast<limb_type>(0U));
-      }
+      static_cast<void>(rd_string(s));
     }
 
     #endif // !WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
