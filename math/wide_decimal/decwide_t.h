@@ -759,13 +759,27 @@
                                       && (std::numeric_limits<UnsignedIntegralType>::digits <= std::numeric_limits<limb_type>::digits))>::type const* = nullptr>
     decwide_t(const UnsignedIntegralType u) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
       : my_data     (decwide_t_elem_number),
-        my_exp      ((u < decwide_t_elem_mask) ? static_cast<exponent_type>(0) : static_cast<exponent_type>(decwide_t_elem_digits10)),
+        my_exp      (static_cast<exponent_type>(0)),
         my_neg      (false),
         my_fpclass  (fpclass_type::decwide_t_finite),
         my_prec_elem(decwide_t_elem_number)
     {
-      my_data[0U] = (u < decwide_t_elem_mask) ? u                          : u / static_cast<limb_type>(decwide_t_elem_mask);
-      my_data[1U] = (u < decwide_t_elem_mask) ? static_cast<limb_type>(0U) : u % static_cast<limb_type>(decwide_t_elem_mask);
+      const auto u_is_less_than_mask =
+        (
+          static_cast<limb_type>(u) < static_cast<limb_type>(decwide_t_elem_mask)
+        );
+
+      if(u_is_less_than_mask)
+      {
+        my_data[0U] = static_cast<limb_type>(u);
+      }
+      else
+      {
+        my_data[0U] = static_cast<limb_type>(u / static_cast<limb_type>(decwide_t_elem_mask));
+        my_data[1U] = static_cast<limb_type>(u % static_cast<limb_type>(decwide_t_elem_mask));
+
+        my_exp = static_cast<exponent_type>(decwide_t_elem_digits10);
+      }
     }
 
     // Constructors from built-in unsigned integral types.
