@@ -764,8 +764,15 @@
         my_fpclass  (fpclass_type::decwide_t_finite),
         my_prec_elem(decwide_t_elem_number)
     {
-      my_data[0U] = (u < decwide_t_elem_mask) ? u                          : u / static_cast<limb_type>(decwide_t_elem_mask);
-      my_data[1U] = (u < decwide_t_elem_mask) ? static_cast<limb_type>(0U) : u % static_cast<limb_type>(decwide_t_elem_mask);
+      if(u < decwide_t_elem_mask)
+      {
+        my_data[0U] = static_cast<limb_type>(u);
+      }
+      else
+      {
+        my_data[0U] = static_cast<limb_type>(u / static_cast<limb_type>(decwide_t_elem_mask));
+        my_data[1U] = static_cast<limb_type>(u % static_cast<limb_type>(decwide_t_elem_mask));
+      }
     }
 
     // Constructors from built-in unsigned integral types.
