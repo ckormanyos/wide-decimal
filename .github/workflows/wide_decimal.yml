@@ -98,7 +98,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
@@ -129,7 +129,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
@@ -160,7 +160,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
@@ -191,7 +191,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
@@ -222,7 +222,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
@@ -253,7 +253,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
@@ -284,7 +284,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
@@ -315,7 +315,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
@@ -346,7 +346,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++20 ]
+        standard: [ c++14, c++17, c++20 ]
         compiler: [ g++-10, g++-11, clang++-10, clang++-11 ]
     steps:
       - uses: actions/checkout@v2
@@ -379,7 +379,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++20 ]
+        standard: [ c++14, c++17, c++20 ]
         compiler: [ g++-11, clang++-12 ]
     steps:
       - uses: actions/checkout@v2
@@ -412,7 +412,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++20, c++2b ]
+        standard: [ c++14, c++17, c++20, c++2b ]
         compiler: [ g++-12, clang++-14 ]
     steps:
       - uses: actions/checkout@v2
@@ -445,7 +445,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14 ]
+        standard: [ c++14 ]
         compiler: [ g++-5 ]
     steps:
       - uses: actions/checkout@v2
@@ -478,7 +478,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++1y ]
+        standard: [ c++1y ]
         compiler: [ g++-4.8 ]
     steps:
       - uses: actions/checkout@v2
@@ -511,7 +511,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++20 ]
+        standard: [ c++14, c++17, c++20 ]
         compiler: [ g++-10, clang++-10 ]
     steps:
       - uses: actions/checkout@v2
@@ -544,7 +544,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v2
@@ -652,7 +652,7 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [ g++ ]
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -758,7 +758,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++11 ]
+        standard: [ c++14 ]
         compiler: [ g++, clang++ ]
         suite: [ test_high_precision_exp, test_high_precision_log ]
     steps:
