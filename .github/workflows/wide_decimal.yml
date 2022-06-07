@@ -784,3 +784,30 @@ jobs:
           ${{ matrix.compiler }} -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -Wconversion -Wsign-conversion -Wshadow -Wunused-parameter -Wuninitialized -Wunreachable-code -Winit-self -Wzero-as-null-pointer-constant -std=${{ matrix.standard }} -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I../boost-root test/${{ matrix.suite }}.cpp -pthread -lmpfr -lgmp -lpthread -o ${{ matrix.suite }}.exe
           ls -la ./${{ matrix.suite }}.exe
           ./${{ matrix.suite }}.exe
+  gcc-12-clang-14-mixed:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        standard: [ c++20 ]
+        compiler: [ g++-12, clang++-14 ]
+        suite: [ test_mixed_wide_decimal_wide_integer_b2n ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: clone-wide_integer
+        run: |
+          git clone -b master --depth 1 https://github.com/ckormanyos/wide-integer.git ../wide-integer-root
+      - name: update-tools
+        run: sudo apt install g++-12 clang-14
+      - name: gcc-12-clang-14-mixed
+        run: |
+          echo "compile ./${{ matrix.suite }}.exe"
+          ${{ matrix.compiler }} -v
+          ${{ matrix.compiler }} -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -Wconversion -Wsign-conversion -Wshadow -Wunused-parameter -Wuninitialized -Wunreachable-code -Winit-self -Wzero-as-null-pointer-constant -std=${{ matrix.standard }} -I. -I../wide-integer-root test/${{ matrix.suite }}.cpp -o ${{ matrix.suite }}.exe
+          ls -la ./${{ matrix.suite }}.exe
+          ./${{ matrix.suite }}.exe
