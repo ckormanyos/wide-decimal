@@ -66,7 +66,7 @@ auto generate_wide_decimal_value(bool is_positive = false) -> local_wide_decimal
 
   str_x.insert(str_x.length(), static_cast<std::size_t>(1U), 'E');
 
-  char pstr_exp[32U] = { '\0' };
+  char pstr_exp[static_cast<std::size_t>(UINT8_C(32))] = { '\0' }; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
 
   pstr_exp[0U] = static_cast<char>(sgn_exp ? '-' : '+');
 
@@ -77,7 +77,7 @@ auto generate_wide_decimal_value(bool is_positive = false) -> local_wide_decimal
 
     str_x.insert(offs, static_cast<std::size_t>(1U), 'E');
 
-    for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p)
+    for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto)
     {
       offs = str_x.length();
 
@@ -111,31 +111,6 @@ auto test_div_by_other_sign_same() -> bool
              i < static_cast<unsigned>(UINT32_C(1024));
            ++i)
   {
-    std::string
-      str_x
-      (
-        static_cast<std::size_t>(std::numeric_limits<local_wide_decimal_type>::digits10 - 2), '0'
-      );
-
-    std::generate(str_x.begin(),
-                  str_x.end(),
-                  []() // NOLINT(modernize-use-trailing-return-type,-warnings-as-errors)
-                  {
-                    const auto dig = dst_dig(eng_dig);
-
-                    const auto next_char =
-                      static_cast<char>
-                      (
-                        dig + static_cast<std::uint32_t>(UINT32_C(0x30))
-                      );
-
-                    return next_char;
-                  });
-
-    const auto exp_value = dst_exp(eng_exp);
-
-    str_x += ("E" + std::to_string(exp_value));
-
     local_wide_decimal_type left = generate_wide_decimal_value();
 
     const local_wide_decimal_type right = -left;
