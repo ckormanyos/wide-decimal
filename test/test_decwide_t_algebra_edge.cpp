@@ -11,6 +11,7 @@
 #include <string>
 
 #include <math/wide_decimal/decwide_t.h>
+#include <util/utility/util_baselexical_cast.h>
 
 namespace test_decwide_t_algebra_edge {
 
@@ -24,17 +25,17 @@ using local_wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decw
 using local_wide_decimal_type = ::math::wide_decimal::decwide_t<local_wide_decimal_digits10, local_limb_type, void>;
 #endif
 
-std::uniform_int_distribution<std::uint32_t> dst_sgn(UINT32_C(0), UINT32_C(1));        // NOLINT(cert-err58-cpp)
-std::uniform_int_distribution<std::uint32_t> dst_dig(UINT32_C(1), UINT32_C(9));        // NOLINT(cert-err58-cpp)
-std::uniform_int_distribution<std::int32_t>  dst_exp(INT32_C(-10000), INT32_C(10000)); // NOLINT(cert-err58-cpp)
+std::uniform_int_distribution<std::uint32_t> dst_sgn(UINT32_C(0), UINT32_C(1));     // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+std::uniform_int_distribution<std::uint32_t> dst_dig(UINT32_C(1), UINT32_C(9));     // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+std::uniform_int_distribution<std::uint32_t> dst_exp(UINT32_C(0), UINT32_C(10000)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 
 using eng_sgn_type = std::ranlux24;
 using eng_dig_type = std::minstd_rand0;
 using eng_exp_type = std::mt19937;
 
-eng_sgn_type eng_sgn; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp)
-eng_dig_type eng_dig; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp)
-eng_dig_type eng_exp; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp)
+eng_sgn_type eng_sgn; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+eng_dig_type eng_dig; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+eng_dig_type eng_exp; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 
 auto generate_wide_decimal_value(bool is_positive = false) -> local_wide_decimal_type
 {
@@ -46,7 +47,7 @@ auto generate_wide_decimal_value(bool is_positive = false) -> local_wide_decimal
 
   std::generate(str_x.begin(),
                 str_x.end(),
-                []()
+                []() // NOLINT(modernize-use-trailing-return-type,-warnings-as-errors)
                 {
                   const auto dig = dst_dig(eng_dig);
 
@@ -59,9 +60,30 @@ auto generate_wide_decimal_value(bool is_positive = false) -> local_wide_decimal
                   return next_char;
                 });
 
-  const auto exp_value = dst_exp(eng_exp);
+  const auto val_exp = dst_exp(eng_exp);
 
-  str_x += ("E" + std::to_string(exp_value));
+  const auto sgn_exp = (dst_sgn(eng_sgn) == static_cast<std::uint32_t>(UINT32_C(1)));
+
+  str_x.insert(str_x.length(), static_cast<std::size_t>(1U), 'E');
+
+  char pstr_exp[32U] = { '\0' };
+
+  pstr_exp[0U] = static_cast<char>(sgn_exp ? '-' : '+');
+
+  const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[1U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+
+  {
+    auto offs = str_x.length();
+
+    str_x.insert(offs, static_cast<std::size_t>(1U), 'E');
+
+    for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p)
+    {
+      offs = str_x.length();
+
+      str_x.insert(offs, static_cast<std::size_t>(1U), *p);
+    }
+  }
 
   auto generated_result = local_wide_decimal_type(local_wide_decimal_type(str_x.c_str()));
 
@@ -97,7 +119,7 @@ auto test_div_by_other_sign_same() -> bool
 
     std::generate(str_x.begin(),
                   str_x.end(),
-                  []()
+                  []() // NOLINT(modernize-use-trailing-return-type,-warnings-as-errors)
                   {
                     const auto dig = dst_dig(eng_dig);
 
@@ -186,9 +208,9 @@ auto test_various_one_operations() -> bool
 } // namespace test_decwide_t_algebra_edge
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
-auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-naming)
+auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 #else
-auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-naming)
+auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 #endif
 {
   auto result_is_ok = true;
