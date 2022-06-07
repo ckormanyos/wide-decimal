@@ -142,7 +142,7 @@ ranging from C++11, 14, 17, 20 are included in CI.
 ### Build Status
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
 
-## Details
+## Additional Details
 
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
@@ -232,7 +232,9 @@ In this default state, `namespace` `::math::wide_decimal` is used
 and the `decwide_t` class and its associated implementation
 details reside therein.
 
-## Detailed examples
+## Examples
+
+### Basic Square Root
 
 The example below calculates the square root of the decimal representation of
 <img src="https://render.githubusercontent.com/render/math?math=\sqrt{1234.56}">,
@@ -267,6 +269,8 @@ auto main() -> int
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
 ```
+
+### 1,000,001 digits of pi
 
 In the following code, we compute <img src="https://render.githubusercontent.com/render/math?math=1,000,001">
 (one million and one) decimal digits of the fundamental constant
@@ -353,7 +357,7 @@ The million digit run is comparatively slow and requires approximately
 of header-only and capable of running on bare-metal, this is
 a very nice calculational result.
 
-## 1,000,001 digits of pi on a bare metal microcontroller
+### 1,000,001 digits of pi on a bare metal microcontroller
 
 The wide-decimal float back end is used to compute
 <img src="https://render.githubusercontent.com/render/math?math=1,000,001">
@@ -361,3 +365,52 @@ decimal digits of the mathematical constant
 <img src="https://render.githubusercontent.com/render/math?math=\pi">
 on selected bare-metal OS-less microcontroller systems in
 [pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
+
+## Further Details
+
+### Mixing Wide-Decimal with Wide-Integer
+
+Wide-decimal can be used simultaneously with
+[wide-integer](https://github.com/ckormanyos/wide-integer).
+Although this was not primarily foreseen in the designs
+of these libraries, harmonized mixing can be done in the same project,
+and even in the same file.
+This can, however, lead to a conflicting multiple definition
+of this container class, as has been shown in
+[issue 166](https://github.com/ckormanyos/wide-decimal/issues/166).
+
+In order to use the
+[`uintwide_t.h`](https://github.com/ckormanyos/wide-integer/tree/master/math/wide_integer)
+header together with the
+[`decwide_t.h`](https://github.com/ckormanyos/wide-integer/tree/master/math/wide_integer)
+header in the same translation unit, use the
+definition shown below.
+
+```cpp
+#define WIDE_INTEGER_DISABLE_IMPLEMENT_UTIL_DYNAMIC_ARRAY
+```
+
+Ensure that this definition appears _above_ the line that `#include`s
+the `uintwide_t.h` header.
+Do this for all files including both big-number headers.
+Alternatively, this preprocessor
+switch can be defined on the command line of the compiler call(s)
+for the project.
+
+The helper-container template class `util::dynamic_array<>`
+is used in both the
+[`decwide_t_detail.h`](https://github.com/ckormanyos/wide-decimal/tree/main/math/wide_decimal)
+header (secondarily included in `decwide_t.h`) as well as the
+[`uintwide_t.h`](https://github.com/ckormanyos/wide-integer/tree/master/math/wide_integer)
+header.
+Defining `WIDE_INTEGER_DISABLE_IMPLEMENT_UTIL_DYNAMIC_ARRAY`
+upstream of the inclusion of the `uintwide_t.h` header
+disables that file's definition
+of `util::dynamic_array<>`, and ensures that
+only one definition is visivble in the file
+containing both big-number headers.
+
+A use-case (test file) called `test_mixed_wide_decimal_wide_integer_b2n.cpp` is included in
+the [test folder](https://github.com/ckormanyos/wide-decimal/tree/main/test)
+and also included in continuous integration.
+This test file involves the computation of Bernoulli numbers.
