@@ -1337,11 +1337,13 @@
 
       if(u_and_v_are_identical)
       {
+        const auto negate_one = (my_neg != v.my_neg);
+
         *this = one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
 
-        if(my_neg != v.my_neg)
+        if(negate_one)
         {
-          my_neg = (!my_neg);
+          negate();
         }
       }
       else
@@ -5145,7 +5147,18 @@
   auto pow(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
            const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
-    return exp(a * log(x));
+    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> pow_result;
+
+    if(a.iszero())
+    {
+      pow_result = one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+    }
+    else
+    {
+      pow_result = exp(a * log(x));
+    }
+
+    return pow_result;
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
