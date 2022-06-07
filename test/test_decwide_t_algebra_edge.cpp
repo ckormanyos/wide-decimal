@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2022.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -11,6 +11,7 @@
 #include <string>
 
 #include <math/wide_decimal/decwide_t.h>
+#include <test/test_decwide_t_algebra.h>
 #include <util/utility/util_baselexical_cast.h>
 
 namespace test_decwide_t_algebra_edge {
