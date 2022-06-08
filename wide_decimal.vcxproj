@@ -195,6 +195,7 @@
     <ClCompile Include="test\coverity.c" />
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
+    <ClCompile Include="test\test_decwide_t_algebra_edge.cpp" />
     <ClCompile Include="test\test_decwide_t_examples.cpp" />
     <ClCompile Include="test\test_high_precision_exp.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>

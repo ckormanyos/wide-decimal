@@ -184,6 +184,9 @@
     <ClCompile Include="test\test_mixed_wide_decimal_wide_integer_b2n.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
+    <ClCompile Include="test\test_decwide_t_algebra_edge.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h">
