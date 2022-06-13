@@ -3601,7 +3601,7 @@
 
       if     ((my_flags & std::ios::scientific) != static_cast<local_flags_type>(0U)) { my_float_field = detail::os_float_field_type::scientific; }
       else if((my_flags & std::ios::fixed)      != static_cast<local_flags_type>(0U)) { my_float_field = detail::os_float_field_type::fixed; }
-      else                                                                              { my_float_field = detail::os_float_field_type::none; }
+      else                                                                            { my_float_field = detail::os_float_field_type::none; }
 
       bool use_scientific = false;
       bool use_fixed      = false;
