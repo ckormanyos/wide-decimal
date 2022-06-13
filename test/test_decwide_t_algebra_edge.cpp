@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2022.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -109,7 +109,7 @@ auto test_div_by_other_sign_same() -> bool
              i < static_cast<unsigned>(UINT32_C(1024));
            ++i)
   {
-    local_wide_decimal_type left = generate_wide_decimal_value<local_wide_decimal_type>();
+    auto left = generate_wide_decimal_value<local_wide_decimal_type>();
 
     const local_wide_decimal_type right = -left;
 
@@ -125,12 +125,12 @@ auto test_div_by_other_sign_same() -> bool
 
 auto test_various_zero_operations() -> bool
 {
-  const local_wide_decimal_type local_zero(0U);
-  const local_wide_decimal_type local_zero_as_pow_to_raise(0U);
+  const auto local_zero                 = local_wide_decimal_type(0U);
+  const auto local_zero_as_pow_to_raise = local_wide_decimal_type(0U);
 
   auto result_is_ok = true;
 
-  const local_wide_decimal_type zero_raised_to_the_zero = pow(local_zero, local_zero_as_pow_to_raise);
+  const auto zero_raised_to_the_zero = pow(local_zero, local_zero_as_pow_to_raise);
 
   const auto result_zero_raised_to_the_zero = (zero_raised_to_the_zero == 1);
 
@@ -140,8 +140,8 @@ auto test_various_zero_operations() -> bool
              i < static_cast<unsigned>(UINT32_C(128));
            ++i)
   {
-    const local_wide_decimal_type x          = generate_wide_decimal_value<local_wide_decimal_type>(true);
-    const local_wide_decimal_type x_pow_zero = pow(x, local_zero);
+    const auto x          = generate_wide_decimal_value<local_wide_decimal_type>(true);
+    const auto x_pow_zero = pow(x, local_zero);
 
     result_is_ok = ((x_pow_zero == 1) && result_is_ok);
   }
@@ -150,8 +150,8 @@ auto test_various_zero_operations() -> bool
              i < static_cast<unsigned>(UINT32_C(128));
            ++i)
   {
-    const local_wide_decimal_type x          = generate_wide_decimal_value<local_wide_decimal_type>();
-    const local_wide_decimal_type x_div_zero = x / local_zero;
+    const auto x          = generate_wide_decimal_value<local_wide_decimal_type>();
+    const auto x_div_zero = x / local_zero;
 
     result_is_ok = ((x_div_zero == 0) && result_is_ok);
   }
@@ -161,7 +161,7 @@ auto test_various_zero_operations() -> bool
 
 auto test_various_one_operations() -> bool
 {
-  const local_wide_decimal_type local_one(1U);
+  const auto local_one = local_wide_decimal_type(1U);
 
   auto result_is_ok = true;
 
@@ -169,8 +169,8 @@ auto test_various_one_operations() -> bool
              i < static_cast<unsigned>(UINT32_C(128));
            ++i)
   {
-    const local_wide_decimal_type x         = generate_wide_decimal_value<local_wide_decimal_type>();
-    const local_wide_decimal_type x_div_one = x / local_one;
+    const auto x         = generate_wide_decimal_value<local_wide_decimal_type>();
+    const auto x_div_one = x / local_one;
 
     result_is_ok = ((x_div_one == x) && result_is_ok);
   }
@@ -180,19 +180,36 @@ auto test_various_one_operations() -> bool
 
 auto test_string_round_tripping() -> bool
 {
-  const local_wide_decimal_type local_one(1U);
-
   auto result_is_ok = true;
+
+  const auto tol = local_wide_decimal_type(local_wide_decimal_type(1U) / 100U);
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(8192));
            ++i)
   {
-    const local_wide_decimal_type x = generate_wide_decimal_value<local_wide_decimal_type>(false, true);
+    const auto x = generate_wide_decimal_value<local_wide_decimal_type>(false, true);
 
     {
       std::stringstream strm;
 
+      // Use I/O streaming with no flags whatsoever.
+      strm << x;
+
+      const auto x_from_strm = local_wide_decimal_type(strm.str().c_str());
+
+      using std::fabs;
+      const auto delta = fabs(1 - fabs(x / x_from_strm));
+
+      const auto result_x_from_strm_is_ok = (delta < tol);
+
+      result_is_ok = (result_x_from_strm_is_ok && result_is_ok);
+    }
+
+    {
+      std::stringstream strm;
+
+      // Use I/O streaming with precision flags only.
       strm << std::setprecision(std::numeric_limits<local_wide_decimal_type>::max_digits10)
            << x;
 
@@ -206,6 +223,7 @@ auto test_string_round_tripping() -> bool
     {
       std::stringstream strm;
 
+      // Use I/O streaming with precision and fixed flags combined.
       strm << std::setprecision(std::numeric_limits<local_wide_decimal_type>::max_digits10)
            << std::fixed
            << x;
@@ -220,6 +238,7 @@ auto test_string_round_tripping() -> bool
     {
       std::stringstream strm;
 
+      // Use I/O streaming with precision and scientific flags combined.
       strm << std::setprecision(std::numeric_limits<local_wide_decimal_type>::max_digits10)
            << std::scientific
            << x;
@@ -243,12 +262,13 @@ auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_edge____() -> bool // NOLINT
 auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 #endif
 {
-  auto result_is_ok = true;
-
-  result_is_ok = (test_decwide_t_algebra_edge::test_div_by_other_sign_same () && result_is_ok);
-  result_is_ok = (test_decwide_t_algebra_edge::test_various_zero_operations() && result_is_ok);
-  result_is_ok = (test_decwide_t_algebra_edge::test_various_one_operations () && result_is_ok);
-  result_is_ok = (test_decwide_t_algebra_edge::test_string_round_tripping  () && result_is_ok);
+  const auto result_is_ok =
+  (
+        test_decwide_t_algebra_edge::test_div_by_other_sign_same ()
+     && test_decwide_t_algebra_edge::test_various_zero_operations()
+     && test_decwide_t_algebra_edge::test_various_one_operations ()
+     && test_decwide_t_algebra_edge::test_string_round_tripping  ()
+  );
 
   return result_is_ok;
 }
