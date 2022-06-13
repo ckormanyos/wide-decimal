@@ -41,11 +41,12 @@ eng_dig_type eng_exp; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppco
 
 template<typename FloatingPointTypeWithStringConstruction>
 auto generate_wide_decimal_value(bool is_positive     = false,
+                                 bool exp_is_limited  = false,
                                  int  digits10_to_get = std::numeric_limits<FloatingPointTypeWithStringConstruction>::digits10 - 2) -> FloatingPointTypeWithStringConstruction
 {
   using local_floating_point_type = FloatingPointTypeWithStringConstruction;
 
-  static_assert(std::numeric_limits<local_floating_point_type>::digits10 > 9,
+  static_assert(std::numeric_limits<local_floating_point_type>::digits10 > static_cast<int>(INT8_C(9)),
                 "Error: Floating-point type destination does not have enough digits10");
 
   std::string str_x(static_cast<std::size_t>(digits10_to_get), '0');
@@ -57,65 +58,7 @@ auto generate_wide_decimal_value(bool is_positive     = false,
                   return static_cast<char>(dist_dig(eng_dig));
                 });
 
-  const auto val_exp = dist_exp(eng_exp);
-
-  const auto sgn_exp = (dist_sgn(eng_sgn) == static_cast<std::uint32_t>(UINT32_C(1)));
-
-  str_x.insert(str_x.length(), static_cast<std::size_t>(1U), 'E');
-
-  char pstr_exp[static_cast<std::size_t>(UINT8_C(32))] = { '\0' }; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
-
-  pstr_exp[static_cast<std::size_t>(UINT8_C(0))] = static_cast<char>(sgn_exp ? '-' : '+');
-
-  const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[1U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
-
-  {
-    auto len = str_x.length();
-
-    str_x.insert(len, static_cast<std::size_t>(1U), 'E');
-
-    for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-    {
-      len = str_x.length();
-
-      str_x.insert(len, static_cast<std::size_t>(1U), *p);
-    }
-  }
-
-  auto x = local_floating_point_type(str_x.c_str());
-
-  if(!is_positive)
-  {
-    const auto sgn_left = (dist_sgn(eng_sgn) == static_cast<std::uint32_t>(UINT32_C(1)));
-
-    if(sgn_left)
-    {
-      x = -x;
-    }
-  }
-
-  return x;
-}
-
-template<typename FloatingPointTypeWithStringConstruction>
-auto generate_wide_decimal_value_limited_exp(bool is_positive     = false,
-                                             int  digits10_to_get = std::numeric_limits<FloatingPointTypeWithStringConstruction>::digits10 - 2) -> FloatingPointTypeWithStringConstruction
-{
-  using local_floating_point_type = FloatingPointTypeWithStringConstruction;
-
-  static_assert(std::numeric_limits<local_floating_point_type>::digits10 > 9,
-                "Error: Floating-point type destination does not have enough digits10");
-
-  std::string str_x(static_cast<std::size_t>(digits10_to_get), '0');
-
-  std::generate(str_x.begin(),
-                str_x.end(),
-                []() // NOLINT(modernize-use-trailing-return-type,-warnings-as-errors)
-                {
-                  return static_cast<char>(dist_dig(eng_dig));
-                });
-
-  const auto val_exp = dist_exp_lim(eng_exp);
+  const auto val_exp = (exp_is_limited ? dist_exp_lim(eng_exp) : dist_exp(eng_exp));
 
   const auto sgn_exp = (dist_sgn(eng_sgn) == static_cast<std::uint32_t>(UINT32_C(1)));
 
@@ -245,7 +188,7 @@ auto test_string_round_tripping() -> bool
              i < static_cast<unsigned>(UINT32_C(8192));
            ++i)
   {
-    const local_wide_decimal_type x = generate_wide_decimal_value_limited_exp<local_wide_decimal_type>();
+    const local_wide_decimal_type x = generate_wide_decimal_value<local_wide_decimal_type>(false, true);
 
     {
       std::stringstream strm;
