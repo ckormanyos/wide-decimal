@@ -3651,30 +3651,23 @@
         // The float-field is scientific. The number of all-digits depends
         // on the form of the number.
 
+        const auto exp_plus_one                   = static_cast<exponent_type>(the_exp      + static_cast<exponent_type>(1));
+        const auto exp_plus_one_plus_my_precision = static_cast<exponent_type>(exp_plus_one + static_cast<exponent_type>(os_precision));
+
         if(the_exp >= static_cast<exponent_type>(0))
         {
           // If the number is larger than 1 in absolute value, then the number of
           // digits is given by the width of the integer part plus the ostream's
           // precision, not to exceed (max_digits10 + 1).
-          const auto exp_plus_one                   = static_cast<std::uint_fast32_t>(static_cast<exponent_type>(the_exp + 1));
-          const auto exp_plus_one_plus_my_precision = static_cast<std::uint_fast32_t>(exp_plus_one + os_precision);
-
-          the_number_of_digits_i_want_from_decwide_t = (std::min)(exp_plus_one_plus_my_precision, max10_plus_one);
+          the_number_of_digits_i_want_from_decwide_t =
+            static_cast<std::uint_fast32_t>
+            (
+              (std::min)(exp_plus_one_plus_my_precision, static_cast<exponent_type>(max10_plus_one))
+            );
         }
         else
         {
-          const auto exp_plus_one                   = static_cast<exponent_type>(the_exp      + static_cast<exponent_type>(1));
-          const auto exp_plus_one_plus_my_precision = static_cast<exponent_type>(exp_plus_one + static_cast<exponent_type>(os_precision));
-
-          the_number_of_digits_i_want_from_decwide_t =
-            (std::min)
-            (
-              static_cast<std::uint_fast32_t>
-              (
-                (std::max)(exp_plus_one_plus_my_precision, static_cast<exponent_type>(0))
-              ),
-              max10_plus_one
-            );
+          the_number_of_digits_i_want_from_decwide_t = (std::min)(os_precision, max10_plus_one);
         }
       }
 
@@ -3830,16 +3823,10 @@
       {
         // The number is less than one in magnitude. Insert the decimal
         // point using "0." as well as the needed number of leading zeros.
-        const auto minus_exp_minus_one =
-          static_cast<std::uint_fast32_t>
-          (
-            static_cast<exponent_type>(-the_exp) - 1
-          );
-
         const auto zero_insert_length =
           static_cast<std::size_t>
           (
-            (std::min)(minus_exp_minus_one, os_precision)
+            static_cast<exponent_type>(-the_exp) - 1
           );
 
         const auto n_pad =
@@ -3850,7 +3837,8 @@
           );
 
         str.insert(static_cast<std::size_t>(0U), zero_insert_length, '0');
-        str.insert(static_cast<std::size_t>(0U), "0.");
+        str.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), '.');
+        str.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), '0');
 
         // Zero-extend the string to the given precision if necessary.
         if(n_pad > static_cast<exponent_type>(0))
