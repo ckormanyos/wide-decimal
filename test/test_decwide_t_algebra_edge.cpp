@@ -29,7 +29,7 @@ using local_wide_decimal_type = ::math::wide_decimal::decwide_t<local_wide_decim
 std::uniform_int_distribution<std::uint32_t> dist_sgn    (UINT32_C(   0), UINT32_C(    1)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 std::uniform_int_distribution<std::uint32_t> dist_dig    (UINT32_C(0x31), UINT32_C( 0x39)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 std::uniform_int_distribution<std::uint32_t> dist_exp    (UINT32_C(   0), UINT32_C(10000)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
-std::uniform_int_distribution<std::uint32_t> dist_exp_lim(UINT32_C(   0), UINT32_C(   10)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+std::uniform_int_distribution<std::uint32_t> dist_exp_lim(UINT32_C(   0), UINT32_C(   33)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 
 using eng_sgn_type = std::ranlux24;
 using eng_dig_type = std::minstd_rand0;
@@ -60,42 +60,35 @@ auto generate_wide_decimal_value(bool is_positive     = false,
 
   const auto val_exp = (exp_is_limited ? dist_exp_lim(eng_exp) : dist_exp(eng_exp));
 
-  const auto sgn_exp = (dist_sgn(eng_sgn) == static_cast<std::uint32_t>(UINT32_C(1)));
-
-  str_x.insert(str_x.length(), static_cast<std::size_t>(1U), 'E');
+  const auto sgn_exp = (dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT32_C(0)));
 
   char pstr_exp[static_cast<std::size_t>(UINT8_C(32))] = { '\0' }; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
 
-  pstr_exp[static_cast<std::size_t>(UINT8_C(0))] = static_cast<char>(sgn_exp ? '-' : '+');
+  pstr_exp[static_cast<std::size_t>(UINT8_C(0))] = 'E';
+  pstr_exp[static_cast<std::size_t>(UINT8_C(1))] = static_cast<char>(sgn_exp ? '-' : '+');
 
-  const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[1U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+  const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[2U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
   {
-    auto len = str_x.length();
-
-    str_x.insert(len, static_cast<std::size_t>(1U), 'E');
-
     for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto)
     {
-      len = str_x.length();
+      const auto len = str_x.length();
 
       str_x.insert(len, static_cast<std::size_t>(1U), *p);
     }
   }
 
-  auto x = local_floating_point_type(str_x.c_str());
+  const auto sign_char_to_insert =
+    static_cast<char>
+    (
+      is_positive
+        ? '+'
+        : static_cast<char>((dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT32_C(0))) ? '+' : '-')
+    );
 
-  if(!is_positive)
-  {
-    const auto sgn_left = (dist_sgn(eng_sgn) == static_cast<std::uint32_t>(UINT32_C(1)));
+  str_x.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), sign_char_to_insert);
 
-    if(sgn_left)
-    {
-      x = -x;
-    }
-  }
-
-  return x;
+  return local_floating_point_type(str_x.c_str());
 }
 
 auto test_div_by_other_sign_same() -> bool
@@ -196,14 +189,11 @@ auto test_string_round_tripping() -> bool
       // Use I/O streaming with no flags whatsoever.
       strm << x;
 
-      const auto x_from_strm = local_wide_decimal_type(strm.str().c_str());
-
       using std::fabs;
-      const auto delta = fabs(1 - fabs(x / x_from_strm));
 
-      const auto result_x_from_strm_is_ok = (delta < tol);
+      const auto delta = fabs(1 - fabs(x / local_wide_decimal_type(strm.str().c_str())));
 
-      result_is_ok = (result_x_from_strm_is_ok && result_is_ok);
+      result_is_ok = ((delta < tol) && result_is_ok);
     }
 
     {
@@ -213,11 +203,7 @@ auto test_string_round_tripping() -> bool
       strm << std::setprecision(std::numeric_limits<local_wide_decimal_type>::max_digits10)
            << x;
 
-      const auto x_from_strm = local_wide_decimal_type(strm.str().c_str());
-
-      const auto result_x_from_strm_is_ok = (x == x_from_strm);
-
-      result_is_ok = (result_x_from_strm_is_ok && result_is_ok);
+      result_is_ok = ((x == local_wide_decimal_type(strm.str().c_str())) && result_is_ok);
     }
 
     {
@@ -228,11 +214,7 @@ auto test_string_round_tripping() -> bool
            << std::fixed
            << x;
 
-      const auto x_from_strm = local_wide_decimal_type(strm.str().c_str());
-
-      const auto result_x_from_strm_is_ok = (x == x_from_strm);
-
-      result_is_ok = (result_x_from_strm_is_ok && result_is_ok);
+      result_is_ok = ((x == local_wide_decimal_type(strm.str().c_str())) && result_is_ok);
     }
 
     {
@@ -243,11 +225,7 @@ auto test_string_round_tripping() -> bool
            << std::scientific
            << x;
 
-      const auto x_from_strm = local_wide_decimal_type(strm.str().c_str());
-
-      const auto result_x_from_strm_is_ok = (x == x_from_strm);
-
-      result_is_ok = (result_x_from_strm_is_ok && result_is_ok);
+      result_is_ok = ((x == local_wide_decimal_type(strm.str().c_str())) && result_is_ok);
     }
   }
 
