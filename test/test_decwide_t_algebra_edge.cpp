@@ -29,7 +29,7 @@ using local_wide_decimal_type = ::math::wide_decimal::decwide_t<local_wide_decim
 std::uniform_int_distribution<std::uint32_t> dist_sgn    (UINT32_C(   0), UINT32_C(    1)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 std::uniform_int_distribution<std::uint32_t> dist_dig    (UINT32_C(0x31), UINT32_C( 0x39)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 std::uniform_int_distribution<std::uint32_t> dist_exp    (UINT32_C(   0), UINT32_C(10000)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
-std::uniform_int_distribution<std::uint32_t> dist_exp_lim(UINT32_C(   0), UINT32_C(   33)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+std::uniform_int_distribution<std::uint32_t> dist_exp_lim(UINT32_C(   0), UINT32_C(   65)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 
 using eng_sgn_type = std::ranlux24;
 using eng_dig_type = std::minstd_rand0;
@@ -78,6 +78,8 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     }
   }
 
+  // Insert either a positive sign or a negative sign
+  // (always one or the other) depending on the sign of x.
   const auto sign_char_to_insert =
     static_cast<char>
     (
@@ -87,6 +89,9 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     );
 
   str_x.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), sign_char_to_insert);
+
+  // Insert a decimal point.
+  str_x.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
 
   return local_floating_point_type(str_x.c_str());
 }
@@ -162,10 +167,11 @@ auto test_various_one_operations() -> bool
              i < static_cast<unsigned>(UINT32_C(128));
            ++i)
   {
-    const auto x         = generate_wide_decimal_value<local_wide_decimal_type>();
-    const auto x_div_one = x / local_one;
+    const auto x               = generate_wide_decimal_value<local_wide_decimal_type>();
+    const auto x_div_one       = x /  local_one;
+    const auto x_div_one_minus = x / -local_one;
 
-    result_is_ok = ((x_div_one == x) && result_is_ok);
+    result_is_ok = ((x_div_one == x) && (x_div_one_minus == -x) && result_is_ok);
   }
 
   return result_is_ok;
@@ -175,7 +181,7 @@ auto test_string_round_tripping() -> bool
 {
   auto result_is_ok = true;
 
-  const auto tol = local_wide_decimal_type(local_wide_decimal_type(1U) / 100U);
+  const auto tol = local_wide_decimal_type(local_wide_decimal_type(1U) / 1000U);
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(8192));
@@ -188,6 +194,34 @@ auto test_string_round_tripping() -> bool
 
       // Use I/O streaming with no flags whatsoever.
       strm << x;
+
+      using std::fabs;
+
+      const auto delta = fabs(1 - fabs(x / local_wide_decimal_type(strm.str().c_str())));
+
+      result_is_ok = ((delta < tol) && result_is_ok);
+    }
+
+    {
+      std::stringstream strm;
+
+      // Use I/O streaming with fixed flag only.
+      strm << std::fixed << x;
+
+      using std::fabs;
+
+      const auto x_strm = local_wide_decimal_type(strm.str().c_str());
+
+      const auto delta = fabs(1 - fabs(x / x_strm));
+
+      result_is_ok = ((delta < tol) && result_is_ok);
+    }
+
+    {
+      std::stringstream strm;
+
+      // Use I/O streaming with scientific flag only.
+      strm << std::scientific << x;
 
       using std::fabs;
 
@@ -227,6 +261,17 @@ auto test_string_round_tripping() -> bool
 
       result_is_ok = ((x == local_wide_decimal_type(strm.str().c_str())) && result_is_ok);
     }
+
+    {
+      std::stringstream strm;
+
+      // Use I/O streaming with precision and showpoint flags combined.
+      strm << std::setprecision(std::numeric_limits<local_wide_decimal_type>::max_digits10)
+           << std::showpoint
+           << x;
+
+      result_is_ok = ((x == local_wide_decimal_type(strm.str().c_str())) && result_is_ok);
+    }
   }
 
   return result_is_ok;
@@ -240,13 +285,12 @@ auto WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_edge____() -> bool // NOLINT
 auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 #endif
 {
-  const auto result_is_ok =
-  (
-        test_decwide_t_algebra_edge::test_div_by_other_sign_same ()
-     && test_decwide_t_algebra_edge::test_various_zero_operations()
-     && test_decwide_t_algebra_edge::test_various_one_operations ()
-     && test_decwide_t_algebra_edge::test_string_round_tripping  ()
-  );
+  auto result_is_ok = true;
+
+  result_is_ok = (test_decwide_t_algebra_edge::test_div_by_other_sign_same () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_various_zero_operations() && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_various_one_operations () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_string_round_tripping  () && result_is_ok);
 
   return result_is_ok;
 }
