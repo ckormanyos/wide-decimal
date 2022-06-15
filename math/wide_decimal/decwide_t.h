@@ -2023,7 +2023,7 @@
         if((my_data[0U] == static_cast<limb_type>(1U)) && (my_exp == static_cast<exponent_type>(0)))
         {
           const auto it_non_zero = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-            std::find_if(my_data.cbegin(),
+            std::find_if(my_data.cbegin() + 1U,
                          my_data.cend(),
                          [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
                          {
@@ -2032,8 +2032,7 @@
 
           value_is_one = (it_non_zero == my_data.cend());
         }
-
-        if((my_data[0U] == static_cast<limb_type>(decwide_t_elem_mask - INT32_C(1))) && (my_exp == static_cast<exponent_type>(-decwide_t_elem_digits10)))
+        else if((my_data[0U] == static_cast<limb_type>(decwide_t_elem_mask - INT32_C(1))) && (my_exp == static_cast<exponent_type>(-decwide_t_elem_digits10)))
         {
           const auto it_non_nine = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
             std::find_if(my_data.cbegin(),
