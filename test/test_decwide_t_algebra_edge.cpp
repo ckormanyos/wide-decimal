@@ -154,7 +154,7 @@ auto test_various_zero_operations() -> bool
   {
     const auto x              = generate_wide_decimal_value<local_wide_decimal_type>();
     const auto x_div_zero     = x / local_zero();
-    const auto x_div_zero_ull = x / static_cast<unsigned long long>(local_zero());
+    const auto x_div_zero_ull = x / static_cast<unsigned long long>(local_zero()); // NOLINT(google-runtime-int)
 
     result_is_ok = ((x_div_zero == 0) && (x_div_zero_ull == 0) && result_is_ok);
   }
