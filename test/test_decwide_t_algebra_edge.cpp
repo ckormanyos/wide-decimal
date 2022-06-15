@@ -29,7 +29,7 @@ using local_wide_decimal_type = ::math::wide_decimal::decwide_t<local_wide_decim
 std::uniform_int_distribution<std::uint32_t> dist_sgn    (UINT32_C(   0), UINT32_C(    1)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 std::uniform_int_distribution<std::uint32_t> dist_dig    (UINT32_C(0x31), UINT32_C( 0x39)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 std::uniform_int_distribution<std::uint32_t> dist_exp    (UINT32_C(   0), UINT32_C(10000)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
-std::uniform_int_distribution<std::uint32_t> dist_exp_lim(UINT32_C(   0), UINT32_C(   65)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+std::uniform_int_distribution<std::uint32_t> dist_exp_lim(UINT32_C(   0), UINT32_C(  129)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 
 using eng_sgn_type = std::ranlux24;
 using eng_dig_type = std::minstd_rand0;
@@ -38,6 +38,9 @@ using eng_exp_type = std::mt19937;
 eng_sgn_type eng_sgn; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 eng_dig_type eng_dig; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 eng_dig_type eng_exp; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+
+auto local_zero() -> const local_wide_decimal_type&;
+auto local_one () -> const local_wide_decimal_type&;
 
 template<typename FloatingPointTypeWithStringConstruction>
 auto generate_wide_decimal_value(bool is_positive     = false,
@@ -67,9 +70,9 @@ auto generate_wide_decimal_value(bool is_positive     = false,
   pstr_exp[static_cast<std::size_t>(UINT8_C(0))] = 'E';
   pstr_exp[static_cast<std::size_t>(UINT8_C(1))] = static_cast<char>(sgn_exp ? '-' : '+');
 
-  const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[2U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
-
   {
+    const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[2U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+
     for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto)
     {
       const auto len = str_x.length();
@@ -123,23 +126,24 @@ auto test_div_by_other_sign_same() -> bool
 
 auto test_various_zero_operations() -> bool
 {
-  const auto local_zero                 = local_wide_decimal_type(0U);
-  const auto local_zero_as_pow_to_raise = local_wide_decimal_type(0U);
-
   auto result_is_ok = true;
 
-  const auto zero_raised_to_the_zero = pow(local_zero, local_zero_as_pow_to_raise);
+  using std::pow;
 
-  const auto result_zero_raised_to_the_zero = (zero_raised_to_the_zero == 1);
+  {
+    const auto zero_raised_to_the_zero = pow(local_zero(), local_zero());
 
-  result_is_ok = (result_zero_raised_to_the_zero && result_is_ok);
+    const auto result_zero_raised_to_the_zero = (zero_raised_to_the_zero == 1);
+
+    result_is_ok = (result_zero_raised_to_the_zero && result_is_ok);
+  }
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(128));
            ++i)
   {
     const auto x          = generate_wide_decimal_value<local_wide_decimal_type>(true);
-    const auto x_pow_zero = pow(x, local_zero);
+    const auto x_pow_zero = pow(x, local_zero());
 
     result_is_ok = ((x_pow_zero == 1) && result_is_ok);
   }
@@ -148,10 +152,11 @@ auto test_various_zero_operations() -> bool
              i < static_cast<unsigned>(UINT32_C(128));
            ++i)
   {
-    const auto x          = generate_wide_decimal_value<local_wide_decimal_type>();
-    const auto x_div_zero = x / local_zero;
+    const auto x              = generate_wide_decimal_value<local_wide_decimal_type>();
+    const auto x_div_zero     = x / local_zero();
+    const auto x_div_zero_ull = x / static_cast<unsigned long long>(local_zero());
 
-    result_is_ok = ((x_div_zero == 0) && result_is_ok);
+    result_is_ok = ((x_div_zero == 0) && (x_div_zero_ull == 0) && result_is_ok);
   }
 
   return result_is_ok;
@@ -159,8 +164,6 @@ auto test_various_zero_operations() -> bool
 
 auto test_various_one_operations() -> bool
 {
-  const auto local_one = local_wide_decimal_type(1U);
-
   auto result_is_ok = true;
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
@@ -168,8 +171,8 @@ auto test_various_one_operations() -> bool
            ++i)
   {
     const auto x               = generate_wide_decimal_value<local_wide_decimal_type>();
-    const auto x_div_one       = x /  local_one;
-    const auto x_div_one_minus = x / -local_one;
+    const auto x_div_one       = x /  local_one();
+    const auto x_div_one_minus = x / -local_one();
 
     result_is_ok = ((x_div_one == x) && (x_div_one_minus == -x) && result_is_ok);
   }
@@ -294,3 +297,6 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
 
   return result_is_ok;
 }
+
+auto test_decwide_t_algebra_edge::local_zero() -> const local_wide_decimal_type& { static local_wide_decimal_type my_zero(0U); return my_zero; }
+auto test_decwide_t_algebra_edge::local_one () -> const local_wide_decimal_type& { static local_wide_decimal_type my_one (1U); return my_one; }

@@ -8,6 +8,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ckormanyos_wide-decimal&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ckormanyos_wide-decimal)
 [![codecov](https://codecov.io/gh/ckormanyos/wide-decimal/branch/main/graph/badge.svg?token=9SEP7RLNSO)](https://codecov.io/gh/ckormanyos/wide-decimal)
 [![Boost Software License 1.0](https://img.shields.io/badge/license-BSL%201.0-blue.svg)](https://github.com/ckormanyos/wide-decimal/blob/master/LICENSE_1_0.txt)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ckormanyos/wide-decimal)](https://img.shields.io/github/commit-activity/y/ckormanyos/wide-decimal)
 [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ckormanyos/wide-decimal)](https://github.com/ckormanyos/wide-decimal)
 
 Wide-decimal implements a generic C++ template for extended precision decimal float types.
