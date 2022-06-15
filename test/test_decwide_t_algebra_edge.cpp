@@ -39,8 +39,9 @@ eng_sgn_type eng_sgn; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppco
 eng_dig_type eng_dig; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 eng_dig_type eng_exp; // NOLINT(cert-msc32-c,cert-msc51-cpp,cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 
-auto local_zero() -> const local_wide_decimal_type&;
-auto local_one () -> const local_wide_decimal_type&;
+auto local_zero      () -> const local_wide_decimal_type&;
+auto local_one       () -> const local_wide_decimal_type&;
+auto local_nearly_one() -> const local_wide_decimal_type&;
 
 template<typename FloatingPointTypeWithStringConstruction>
 auto generate_wide_decimal_value(bool is_positive     = false,
@@ -166,15 +167,34 @@ auto test_various_one_operations() -> bool
 {
   auto result_is_ok = true;
 
+  {
+    std::stringstream strm;
+
+    strm << local_nearly_one();
+
+    result_is_ok = ((strm.str() == "1") && result_is_ok);
+  }
+
+  {
+    const auto one_div_nearly_one = local_one() / local_nearly_one();
+
+    std::stringstream strm;
+
+    strm << one_div_nearly_one;
+
+    result_is_ok = ((strm.str() == "1") && result_is_ok);
+  }
+
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(128));
            ++i)
   {
-    const auto x               = generate_wide_decimal_value<local_wide_decimal_type>();
-    const auto x_div_one       = x /  local_one();
-    const auto x_div_one_minus = x / -local_one();
+    const auto x                = generate_wide_decimal_value<local_wide_decimal_type>();
+    const auto x_div_one        = x /  local_one();
+    const auto x_div_nearly_one = x /  local_nearly_one();
+    const auto x_div_one_minus  = x / -local_one();
 
-    result_is_ok = ((x_div_one == x) && (x_div_one_minus == -x) && result_is_ok);
+    result_is_ok = ((x_div_one == x) && (x_div_nearly_one == x) && (x_div_one_minus == -x) && result_is_ok);
   }
 
   return result_is_ok;
@@ -298,5 +318,6 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   return result_is_ok;
 }
 
-auto test_decwide_t_algebra_edge::local_zero() -> const local_wide_decimal_type& { static local_wide_decimal_type my_zero(0U); return my_zero; }
-auto test_decwide_t_algebra_edge::local_one () -> const local_wide_decimal_type& { static local_wide_decimal_type my_one (1U); return my_one; }
+auto test_decwide_t_algebra_edge::local_zero      () -> const local_wide_decimal_type& { static const local_wide_decimal_type my_zero(0U); return my_zero; }
+auto test_decwide_t_algebra_edge::local_one       () -> const local_wide_decimal_type& { static const local_wide_decimal_type my_one (1U); return my_one; }
+auto test_decwide_t_algebra_edge::local_nearly_one() -> const local_wide_decimal_type& { static const local_wide_decimal_type my_nearly_one("0.999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"); return my_nearly_one; }
