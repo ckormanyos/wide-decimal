@@ -2240,22 +2240,28 @@
 
           auto scale = static_cast<long double>(1.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-          auto idx = static_cast<std::int32_t>(0U);
-
           for(auto i = decwide_t_elem_digits10;
-                      ( i   < static_cast<std::int32_t>(std::numeric_limits<long double>::max_digits10 + 2))
-                   && ((idx = static_cast<std::int32_t>(i / decwide_t_elem_digits10)) < static_cast<std::int32_t>(my_data.size()));
+                   i < static_cast<std::int32_t>(std::numeric_limits<long double>::max_digits10 + 2);
                    i = static_cast<std::int32_t>(i + decwide_t_elem_digits10))
           {
             scale = static_cast<long double>(scale / static_cast<long double>(decwide_t_elem_mask));
 
-            using local_size_type = typename representation_type::size_type;
+            {
+              using local_size_type = typename representation_type::size_type;
 
-            ld =
-              static_cast<long double>
-              (
-                ld + static_cast<long double>(static_cast<long double>(my_data[static_cast<local_size_type>(idx)]) * scale)
-              );
+              const auto idx = static_cast<std::int32_t>(i / decwide_t_elem_digits10);
+
+              if(idx == static_cast<std::int32_t>(my_data.size()))
+              {
+                break;
+              }
+
+              ld =
+                static_cast<long double>
+                (
+                  ld + static_cast<long double>(static_cast<long double>(my_data[static_cast<local_size_type>(idx)]) * scale)
+                );
+            }
           }
         }
 
@@ -2324,8 +2330,8 @@
 
             using local_size_type = typename representation_type::size_type;
 
-            for(auto  limb_index  = static_cast<local_size_type>(1);
-                      limb_index <= static_cast<local_size_type>(imax);
+            for(auto  limb_index  = static_cast<local_size_type>(UINT8_C(1));
+                      limb_index <= static_cast<local_size_type>(static_cast<std::uint32_t>(imax));
                     ++limb_index)
             {
               val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)
@@ -2383,8 +2389,8 @@
 
             using local_size_type = typename representation_type::size_type;
 
-            for(auto   limb_index  = static_cast<local_size_type>(1);
-                       limb_index <= static_cast<local_size_type>(imax);
+            for(auto   limb_index  = static_cast<local_size_type>(UINT8_C(1));
+                       limb_index <= static_cast<local_size_type>(static_cast<std::uint32_t>(imax));
                      ++limb_index)
             {
               val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)

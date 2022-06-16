@@ -424,7 +424,10 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   result_is_ok = (test_decwide_t_algebra_edge::test_string_round_tripping                () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<float>      () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<double>     () && result_is_ok);
+  #if (defined(__GNUC__) && (defined(__APPLE__) || defined(__MINGW__)))
+  #else
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<long double>() && result_is_ok);
+  #endif
 
   return result_is_ok;
 }
