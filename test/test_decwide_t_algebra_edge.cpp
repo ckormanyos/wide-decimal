@@ -18,7 +18,7 @@ namespace test_decwide_t_algebra_edge {
 
 using local_limb_type = std::uint16_t;
 
-constexpr std::int32_t local_wide_decimal_digits10 = INT32_C(65);
+constexpr std::int32_t local_wide_decimal_digits10 = INT32_C(51);
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
 using local_wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<local_wide_decimal_digits10, local_limb_type, std::allocator<void>>;
@@ -44,7 +44,7 @@ auto local_not_one () -> const local_wide_decimal_type&;
 
 template<typename FloatingPointTypeWithStringConstruction>
 auto generate_wide_decimal_value(bool is_positive     = false,
-                                 int  exp_range       = 10000,
+                                 int  exp_range       = 10000, // NOLINT(bugprone-easily-swappable-parameters)
                                  int  digits10_to_get = std::numeric_limits<FloatingPointTypeWithStringConstruction>::digits10 - 2) -> FloatingPointTypeWithStringConstruction
 {
   using local_floating_point_type = FloatingPointTypeWithStringConstruction;
