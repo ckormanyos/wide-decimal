@@ -391,7 +391,7 @@ auto test_to_native_float_and_back() -> bool
 
       strm << std::scientific << x << 'L';
 
-      auto x_as_long_double_from_strm = long double { };
+      auto x_as_long_double_from_strm = static_cast<long double>(0.0L);
 
       strm >> x_as_long_double_from_strm;
 

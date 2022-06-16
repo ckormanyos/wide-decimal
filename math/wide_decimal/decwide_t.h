@@ -3060,7 +3060,16 @@
         const auto least_digit_p10 = detail::pow10_maker_as_runtime_value(static_cast<std::uint32_t>(least_digit_pos));
 
         // Clear the lower base-10 digits of the rounded element.
-        my_data[static_cast<local_size_type>(least_digit_idx)] -= static_cast<local_limb_type>(my_data[static_cast<local_size_type>(least_digit_idx)] % least_digit_p10);
+        my_data[static_cast<local_size_type>(least_digit_idx)] =
+          static_cast<local_limb_type>
+          (
+              my_data[static_cast<local_size_type>(least_digit_idx)]
+            - static_cast<local_limb_type>
+              (
+                  my_data[static_cast<local_size_type>(least_digit_idx)]
+                % static_cast<local_limb_type>(least_digit_p10)
+              )
+          );
 
         // Clear the lower base-10 limbs.
         {
@@ -3081,10 +3090,10 @@
         if(round_digit_value >= static_cast<std::uint8_t>(UINT8_C(5)))
         {
           my_data[static_cast<local_size_type>(least_digit_idx)] =
-            static_cast<limb_type>
+            static_cast<local_limb_type>
             (
                 my_data[static_cast<local_size_type>(least_digit_idx)]
-              + static_cast<limb_type>(least_digit_p10)
+              + static_cast<local_limb_type>(least_digit_p10)
             );
 
           // There is a carry from rounding up.
@@ -3096,7 +3105,12 @@
           // Propogate the carry into the limbs of higher significance as needed.
           if(carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0)))
           {
-            my_data[static_cast<local_size_type>(least_digit_idx)] -= decwide_t_elem_mask;
+            my_data[static_cast<local_size_type>(least_digit_idx)] =
+              static_cast<limb_type>
+              (
+                  my_data[static_cast<local_size_type>(least_digit_idx)]
+                - static_cast<limb_type>(decwide_t_elem_mask)
+              );
 
             while(   (--least_digit_idx >= static_cast<std::int32_t>(0))
                   && (carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0))))
