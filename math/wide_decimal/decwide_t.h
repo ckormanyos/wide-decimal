@@ -614,7 +614,7 @@
       // Note: For long double, you need to verify that the
       // mantissa fits in unsigned long long.
 
-      explicit native_float_parts(const FloatingPointType f)
+      explicit native_float_parts(FloatingPointType f)
       {
         using native_float_type = FloatingPointType;
 
@@ -2035,7 +2035,7 @@
         else if((my_data[0U] == static_cast<limb_type>(decwide_t_elem_mask - INT32_C(1))) && (my_exp == static_cast<exponent_type>(-decwide_t_elem_digits10)))
         {
           const auto it_non_nine = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-            std::find_if(my_data.cbegin(),
+            std::find_if(my_data.cbegin() + 1U,
                          my_data.cend(),
                          [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
                          {
@@ -2215,7 +2215,7 @@
     {
       // Returns the long double conversion of a decwide_t.
 
-      auto ld = static_cast<long double>(0.0F);
+      auto ld = static_cast<long double>(0.0L);
 
       // Check for non-normal decwide_t.
       const decwide_t xx(fabs(*this));
@@ -2240,22 +2240,35 @@
 
           auto scale = static_cast<long double>(1.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
+          auto idx = static_cast<std::int32_t>(0U);
+
           for(auto i = decwide_t_elem_digits10;
-                   i < static_cast<std::int32_t>(std::numeric_limits<long double>::digits10 + 3);
+                      ( i   < static_cast<std::int32_t>(std::numeric_limits<long double>::max_digits10 + 2))
+                   && ((idx = static_cast<std::int32_t>(i / decwide_t_elem_digits10)) < static_cast<std::int32_t>(my_data.size()));
                    i = static_cast<std::int32_t>(i + decwide_t_elem_digits10))
           {
             scale = static_cast<long double>(scale / static_cast<long double>(decwide_t_elem_mask));
 
             using local_size_type = typename representation_type::size_type;
 
-            const auto idx = static_cast<local_size_type>(i / decwide_t_elem_digits10);
-
             ld =
               static_cast<long double>
               (
-                ld + static_cast<long double>(static_cast<long double>(my_data[idx]) * scale)
+                ld + static_cast<long double>(static_cast<long double>(my_data[static_cast<local_size_type>(idx)]) * scale)
               );
           }
+        }
+
+        if(my_exp != static_cast<exponent_type>(0))
+        {
+          using std::pow;
+
+          ld =
+            static_cast<long double>
+            (
+                ld
+              * pow(static_cast<long double>(10.0L), static_cast<long double>(my_exp)) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+            );
         }
 
         if(my_neg)
@@ -3067,7 +3080,12 @@
         // Perform round-to-nearest with no tie-breaking whatsoever.
         if(round_digit_value >= static_cast<std::uint8_t>(UINT8_C(5)))
         {
-          my_data[static_cast<local_size_type>(least_digit_idx)] += least_digit_p10;
+          my_data[static_cast<local_size_type>(least_digit_idx)] =
+            static_cast<limb_type>
+            (
+                my_data[static_cast<local_size_type>(least_digit_idx)]
+              + static_cast<limb_type>(least_digit_p10)
+            );
 
           // There is a carry from rounding up.
           std::uint_fast8_t carry_out =
