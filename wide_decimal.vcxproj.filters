@@ -301,6 +301,7 @@
     <None Include=".github\workflows\wide_decimal_codecov.yml">
       <Filter>.github\workflows</Filter>
     </None>
+    <None Include="codecov.yml" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="examples\CMakeLists.txt">
@@ -310,5 +311,6 @@
       <Filter>Source Files\test</Filter>
     </Text>
     <Text Include="CMakeLists.txt" />
+    <Text Include="LICENSE_1_0.txt" />
   </ItemGroup>
 </Project>
