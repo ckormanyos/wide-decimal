@@ -894,11 +894,6 @@
       if(mantissa_is_iszero)
       {
         my_data.fill(static_cast<limb_type>(UINT8_C(0)));
-
-        if(exponent == static_cast<exponent_type>(0))
-        {
-          my_data[0U] = static_cast<limb_type>(UINT8_C(1));
-        }
       }
       else
       {
