@@ -52,13 +52,6 @@ auto generate_wide_decimal_value(bool is_positive     = false,
   static_assert(std::numeric_limits<local_floating_point_type>::digits10 > static_cast<int>(INT8_C(9)),
                 "Error: Floating-point type destination does not have enough digits10");
 
-  std::uniform_int_distribution<std::uint32_t>
-    dist_exp
-    (
-      static_cast<std::uint32_t>(UINT32_C(0)),
-      static_cast<std::uint32_t>(exp_range)
-    );
-
   std::string str_x(static_cast<std::size_t>(digits10_to_get), '0');
 
   std::generate(str_x.begin(),
@@ -68,24 +61,37 @@ auto generate_wide_decimal_value(bool is_positive     = false,
                   return static_cast<char>(dist_dig(eng_dig));
                 });
 
-  const auto val_exp = dist_exp(eng_exp);
-
-  const auto sgn_exp = (dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT32_C(0)));
-
-  char pstr_exp[static_cast<std::size_t>(UINT8_C(32))] = { '\0' }; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
-
-  pstr_exp[static_cast<std::size_t>(UINT8_C(0))] = 'E';
-  pstr_exp[static_cast<std::size_t>(UINT8_C(1))] = static_cast<char>(sgn_exp ? '-' : '+');
-
+  if(exp_range != 0)
   {
-    const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[2U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+    std::uniform_int_distribution<std::uint32_t>
+      dist_exp
+      (
+        static_cast<std::uint32_t>(UINT32_C(0)),
+        static_cast<std::uint32_t>(exp_range)
+      );
 
-    for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+    const auto val_exp = dist_exp(eng_exp);
+
+    const auto sgn_exp = (dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT32_C(0)));
+
+    char pstr_exp[static_cast<std::size_t>(UINT8_C(32))] = { '\0' }; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
+
+    pstr_exp[static_cast<std::size_t>(UINT8_C(0))] = 'E';
+    pstr_exp[static_cast<std::size_t>(UINT8_C(1))] = static_cast<char>(sgn_exp ? '-' : '+');
+
     {
-      const auto len = str_x.length();
+      const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[2U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
-      str_x.insert(len, static_cast<std::size_t>(1U), *p);
+      for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+      {
+        const auto len = str_x.length();
+
+        str_x.insert(len, static_cast<std::size_t>(1U), *p);
+      }
     }
+
+    // Insert a decimal point.
+    str_x.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
   }
 
   // Insert either a positive sign or a negative sign
@@ -99,9 +105,6 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     );
 
   str_x.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), sign_char_to_insert);
-
-  // Insert a decimal point.
-  str_x.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
 
   return local_floating_point_type(str_x.c_str());
 }
@@ -135,14 +138,32 @@ auto test_various_zero_operations() -> bool
 {
   auto result_is_ok = true;
 
+  {
+    const std::string str_zeros(static_cast<std::size_t>(33U), '0');
+
+    const local_wide_decimal_type z(str_zeros.c_str());
+
+    result_is_ok = ((z == local_zero()) && (z == 0) && result_is_ok);
+  }
+
+  {
+    using std::exp;
+
+    const auto exp_zero = exp(local_zero());
+
+    const auto result_exp_zero_is_ok = (exp_zero == 1);
+
+    result_is_ok = (result_exp_zero_is_ok && result_is_ok);
+  }
+
   using std::pow;
 
   {
     const auto zero_raised_to_the_zero = pow(local_zero(), local_zero());
 
-    const auto result_zero_raised_to_the_zero = (zero_raised_to_the_zero == 1);
+    const auto result_zero_raised_to_the_zero_is_ok = (zero_raised_to_the_zero == 1);
 
-    result_is_ok = (result_zero_raised_to_the_zero && result_is_ok);
+    result_is_ok = (result_zero_raised_to_the_zero_is_ok && result_is_ok);
   }
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
@@ -172,6 +193,16 @@ auto test_various_zero_operations() -> bool
 auto test_various_one_operations() -> bool
 {
   auto result_is_ok = true;
+
+  {
+    using std::log;
+
+    const auto log_one = log(local_one());
+
+    const auto result_log_one_is_ok = (log_one == 0);
+
+    result_is_ok = (result_log_one_is_ok && result_is_ok);
+  }
 
   {
     std::stringstream strm;
@@ -408,6 +439,75 @@ auto test_to_native_float_and_back() -> bool
   return result_is_ok;
 }
 
+template<typename NativeUnsignedIntegralType>
+auto test_various_int_operations() -> bool
+{
+  using local_unsigned_type = NativeUnsignedIntegralType;
+  using local_signed_type   = std::make_signed_t<local_unsigned_type>;
+
+  constexpr auto unsigned_integral_digits10_to_use =
+    static_cast<unsigned>
+    (
+      std::numeric_limits<local_unsigned_type>::digits10 -1
+    );
+
+  static_assert(   (std::numeric_limits<local_unsigned_type>::digits >= static_cast<int>(INT8_C(16)))
+                && (unsigned_integral_digits10_to_use >= 3),
+                "Error: Template integral type parameter is not wide enough");
+
+  bool result_is_ok = true;
+
+  for(auto   i = static_cast<unsigned>(UINT32_C(0));
+             i < static_cast<unsigned>(UINT32_C(128));
+           ++i)
+  {
+    for(auto   nd  = static_cast<unsigned>(UINT32_C(2));
+               nd <= unsigned_integral_digits10_to_use;
+             ++nd)
+    {
+      const auto x =
+        generate_wide_decimal_value<local_wide_decimal_type>
+        (
+          true,
+          0,
+          static_cast<int>(nd)
+        );
+
+      const auto u = static_cast<local_unsigned_type>(x);
+
+      const auto result_native_convert_is_ok = (local_wide_decimal_type(u) == x);
+
+      result_is_ok = (result_native_convert_is_ok && result_is_ok);
+    }
+  }
+
+  for(auto   i = static_cast<unsigned>(UINT32_C(0));
+             i < static_cast<unsigned>(UINT32_C(128));
+           ++i)
+  {
+    for(auto   nd  = static_cast<unsigned>(UINT32_C(2));
+               nd <= unsigned_integral_digits10_to_use;
+             ++nd)
+    {
+      const auto x =
+        generate_wide_decimal_value<local_wide_decimal_type>
+        (
+          false,
+          0,
+          static_cast<int>(nd)
+        );
+
+      const auto n = static_cast<local_signed_type>(x);
+
+      const auto result_native_convert_is_ok = (local_wide_decimal_type(n) == x);
+
+      result_is_ok = (result_native_convert_is_ok && result_is_ok);
+    }
+  }
+
+  return result_is_ok;
+}
+
 } // namespace test_decwide_t_algebra_edge
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
@@ -427,6 +527,9 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   #if (!defined(__APPLE__) && !defined(__MINGW32__))
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<long double>() && result_is_ok);
   #endif
+  result_is_ok = (test_decwide_t_algebra_edge::test_various_int_operations<std::uint16_t>() && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_various_int_operations<std::uint32_t>() && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_various_int_operations<std::uint64_t>() && result_is_ok);
 
   return result_is_ok;
 }
