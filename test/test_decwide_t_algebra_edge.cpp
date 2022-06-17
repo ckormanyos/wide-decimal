@@ -443,7 +443,7 @@ template<typename NativeUnsignedIntegralType>
 auto test_various_int_operations() -> bool
 {
   using local_unsigned_type = NativeUnsignedIntegralType;
-  using local_signed_type   = std::make_signed_t<local_unsigned_type>;
+  using local_signed_type   = typename std::make_signed<local_unsigned_type>::type;
 
   constexpr auto unsigned_integral_digits10_to_use =
     static_cast<unsigned>
