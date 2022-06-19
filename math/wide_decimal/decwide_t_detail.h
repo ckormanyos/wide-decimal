@@ -158,10 +158,12 @@
       return ((value <= UINT32_C(        8)) ? UINT32_C(        8) : ((value <=  UINT32_C(       16)) ?  UINT32_C(       16) : ((value <= UINT32_C(       32)) ? UINT32_C(       32) : ((value <= UINT32_C(        64)) ? UINT32_C(        64) :
              ((value <= UINT32_C(      128)) ? UINT32_C(      128) : ((value <=  UINT32_C(      256)) ?  UINT32_C(      256) : ((value <= UINT32_C(      512)) ? UINT32_C(      512) : ((value <= UINT32_C(      1024)) ? UINT32_C(      1024) :
              ((value <= UINT32_C(     2048)) ? UINT32_C(     2048) : ((value <=  UINT32_C(     4096)) ?  UINT32_C(     4096) : ((value <= UINT32_C(     8192)) ? UINT32_C(     8192) : ((value <= UINT32_C(     16384)) ? UINT32_C(     16384) :
+             // LCOV_EXCL_START
              ((value <= UINT32_C(    32768)) ? UINT32_C(    32768) : ((value <=  UINT32_C(    65536)) ?  UINT32_C(    65536) : ((value <= UINT32_C(   131072)) ? UINT32_C(   131072) : ((value <= UINT32_C(    262144)) ? UINT32_C(    262144) :
              ((value <= UINT32_C(   524288)) ? UINT32_C(   524288) : ((value <=  UINT32_C(  1048576)) ?  UINT32_C(  1048576) : ((value <= UINT32_C(  2097152)) ? UINT32_C(  2097152) : ((value <= UINT32_C(   4194304)) ? UINT32_C(   4194304) :
              ((value <= UINT32_C(  8388608)) ? UINT32_C(  8388608) : ((value <=  UINT32_C( 16777216)) ?  UINT32_C( 16777216) : ((value <= UINT32_C( 33554432)) ? UINT32_C( 33554432) : ((value <= UINT32_C(  67108864)) ? UINT32_C(  67108864) :
              ((value <= UINT32_C(134217728)) ? UINT32_C(134217728) : ((value <=  UINT32_C(268435456)) ?  UINT32_C(268435456) : ((value <= UINT32_C(536870912)) ? UINT32_C(536870912) : ((value <= UINT32_C(1073741824)) ? UINT32_C(1073741824) : UINT32_C(2147483648)))))))))))))))))))))))))))));
+             // LCOV_EXCL_STOP
     }
 
     static auto a000079_as_runtime_value(const std::uint32_t value) noexcept -> std::uint32_t

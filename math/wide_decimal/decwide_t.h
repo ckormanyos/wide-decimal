@@ -1904,15 +1904,14 @@
 
     auto calculate_rootn_inv(std::int32_t p) -> decwide_t&
     {
-      if(p < static_cast<std::int32_t>(0))
+      // LCOV_EXCL_START
+      if(p < static_cast<std::int32_t>(1))
       {
-        *this = pow(*this, static_cast<std::int32_t>(-p));
+        *this = zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
       }
-      else if((p == static_cast<std::int32_t>(0)) || isneg())
-      {
-        *this = std::numeric_limits<decwide_t>::quiet_NaN();
-      }
-      else if(p > static_cast<std::int32_t>(1))
+      else if(p == static_cast<std::int32_t>(1)) { }
+      else
+      // LCOV_EXCL_STOP
       {
         // Compute the value of [1 / (rootn of x)] with n = p.
 
@@ -2558,32 +2557,27 @@
     {
       const auto b_neg = (l < static_cast<FloatingPointType>(0.0L));
 
-      const FloatingPointType my_ld = ((!b_neg) ? l : -l);
+      const native_float_parts<FloatingPointType> ld_parts(((!b_neg) ? l : -l));
 
-      if(my_ld < (std::numeric_limits<FloatingPointType>::min)())
-      {
-        operator=(zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
-      }
-      else
-      {
-        const native_float_parts<FloatingPointType> ld_parts(my_ld);
+      // Create a decwide_t from the fractional part of the
+      // mantissa expressed as an unsigned long long.
+      from_unsigned_long_long(ld_parts.get_mantissa());
 
-        // Create a decwide_t from the fractional part of the
-        // mantissa expressed as an unsigned long long.
-        from_unsigned_long_long(ld_parts.get_mantissa());
+      // Scale the unsigned long long representation to the fractional
+      // part of the long double and multiply with the base-2 exponent.
+      const auto p2 =
+        static_cast<int>
+        (
+          ld_parts.get_exponent() - (std::numeric_limits<FloatingPointType>::digits - 1)
+        );
 
-        // Scale the unsigned long long representation to the fractional
-        // part of the long double and multiply with the base-2 exponent.
-        const int p2 = ld_parts.get_exponent() - (std::numeric_limits<FloatingPointType>::digits - 1);
+      if     (p2 <  -1) { *this *= pow(half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), -p2); }
+      else if(p2 == -1) { *this *=     half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      else if(p2 ==  0) { ; }
+      else if(p2 ==  1) { *this *= 2U; }
+      else              { *this *= pow(two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), p2); }
 
-        if     (p2 <  -1) { *this *= pow(half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), -p2); }
-        else if(p2 == -1) { *this *=     half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
-        else if(p2 ==  0) { ; }
-        else if(p2 ==  1) { *this *= 2U; }
-        else              { *this *= pow(two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), p2); }
-
-        my_neg = b_neg;
-      }
+      my_neg = b_neg;
     }
 
     template<const std::int32_t OtherDigits10>

@@ -24,32 +24,14 @@ namespace example011_trig
   auto cos(const dec51_t& x) -> dec51_t;
 
   template<typename FloatType>
-  auto pi() -> FloatType { return FloatType(); }
-
-  template<>
-  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-  template<>
-  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-  template<>
-  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  auto pi() -> FloatType { using unknown_float_type = FloatType; return unknown_float_type(); }
 
   // N[Pi, 57]
   template<>
   auto pi() -> dec51_t { return dec51_t( "3.14159265358979323846264338327950288419716939937510582097"); }
 
   template<typename FloatType>
-  auto pi_half() -> FloatType { return FloatType(); }
-
-  template<>
-  auto pi_half() -> float { return static_cast<float>(1.57079632679489661923132169163975144209858469968755291049L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-  template<>
-  auto pi_half() -> double { return static_cast<double>(1.57079632679489661923132169163975144209858469968755291049L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-  template<>
-  auto pi_half() -> long double { return 1.57079632679489661923132169163975144209858469968755291049L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  auto pi_half() -> FloatType { using unknown_float_type = FloatType; return unknown_float_type(); }
 
   // N[Pi/2, 57]
   template<>
