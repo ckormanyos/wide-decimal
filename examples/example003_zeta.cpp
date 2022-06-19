@@ -21,16 +21,7 @@ namespace local_zeta
   #endif
 
   template<typename FloatType>
-  auto pi() -> FloatType { return FloatType(); }
-
-  template<>
-  auto pi() -> float { return static_cast<float>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-  template<>
-  auto pi() -> double { return static_cast<double>(3.14159265358979323846264338327950288419716939937510582097L); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-  template<>
-  auto pi() -> long double { return 3.14159265358979323846264338327950288419716939937510582097L; } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  auto pi() -> FloatType { using unknown_float_type = FloatType; return unknown_float_type(); }
 
   // N[Pi, 57]
   template<>

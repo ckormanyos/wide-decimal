@@ -413,6 +413,7 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
     std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
   }
   #else
+  // LCOV_EXCL_START
   catch(const ::boost::math::rounding_error& e)
   {
     result_is_ok = false;
@@ -425,6 +426,7 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
 
     std::cout << "Exception: std::domain_error: " << e.what() << std::endl;
   }
+  // LCOV_EXCL_STOP
   #endif
   #endif
 

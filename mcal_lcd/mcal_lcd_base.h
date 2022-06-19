@@ -32,7 +32,7 @@
   protected:
     lcd_base() = default;
 
-    virtual auto set_line_index(const std::uint8_t index) -> bool { static_cast<void>(index); return true; }
+    virtual auto set_line_index(const std::uint8_t index) -> bool { static_cast<void>(index); return true; } // LCOV_EXCL_LINE
   };
 
   #if(__cplusplus >= 201703L)

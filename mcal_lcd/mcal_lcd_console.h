@@ -50,7 +50,7 @@
       return write_is_ok;
     }
 
-    auto init() -> bool override { return true; }
+    auto init() -> bool override { return true; } // LCOV_EXCL_LINE
   };
 
   #if(__cplusplus >= 201703L)
