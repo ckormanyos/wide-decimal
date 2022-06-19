@@ -276,16 +276,39 @@ namespace example009b_boost
       const T x = T(static_cast<std::uint8_t>(i + static_cast<std::size_t>(UINT8_C(1U)))) / 10U;
       const T s = sin(x);
 
+      using std::fabs;
       const T closeness = fabs(1 - fabs(s / control[i])); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
       const bool result_sin_is_ok = (closeness < tol);
 
-      result_is_ok = (result_sin_is_ok && (closeness < tol));
+      result_is_ok = (result_sin_is_ok && result_is_ok);
 
       if(!result_is_ok)
       {
         break;
       }
+    }
+
+    {
+      // N[Sin[-123/100], 320]
+      const T control_sin_minus_123_over_100("-0.94248880193169751002382356538924454146128740562765030213503850580321337526239457699475330824324143921798706558129213165475867911532250057315531384606869197267570933343720037218122749721852711690388462263929347257007713356972691000813404786065726262784830938294586267540335750707839759066203851739553593520736083704283326");
+
+      const T s = sin(T(-123) / 100);
+
+      using std::fabs;
+      const T closeness = fabs(1 - fabs(s / control_sin_minus_123_over_100));
+
+      const auto result_sin_minus_123_over_100_is_ok = (closeness < tol);
+
+      result_is_ok = (result_sin_minus_123_over_100_is_ok && result_is_ok);
+    }
+
+    {
+      const T s0 = sin(T(0));
+
+      const auto result_s0_is_ok = (s0 == 0);
+
+      result_is_ok = (result_s0_is_ok && result_is_ok);
     }
 
     return result_is_ok;

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2021.                        //
+//  Copyright Christopher Kormanyos 2021 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -26,16 +26,13 @@ namespace example011_trig
   template<typename FloatType>
   auto pi() -> FloatType { using unknown_float_type = FloatType; return unknown_float_type(); }
 
-  // N[Pi, 57]
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   template<>
-  auto pi() -> dec51_t { return dec51_t( "3.14159265358979323846264338327950288419716939937510582097"); }
-
-  template<typename FloatType>
-  auto pi_half() -> FloatType { using unknown_float_type = FloatType; return unknown_float_type(); }
-
-  // N[Pi/2, 57]
+  auto pi() -> dec51_t { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<dec51_t::decwide_t_digits10, typename dec51_t::limb_type, void>(); }
+  #else
   template<>
-  auto pi_half() -> dec51_t { return dec51_t("1.57079632679489661923132169163975144209858469968755291049"); }
+  auto pi() -> dec51_t { return ::math::wide_decimal::pi<dec51_t::decwide_t_digits10, typename dec51_t::limb_type, void>(); }
+  #endif
 
   auto sin_pade(const dec51_t& x) -> dec51_t
   {
@@ -196,10 +193,12 @@ namespace example011_trig
       // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
       // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-      const auto k = static_cast<std::uint32_t>     (x / pi_half<dec51_t>());
+      const auto my_pi_half = pi<dec51_t>() / 2;
+
+      const auto k = static_cast<std::uint32_t>     (x / my_pi_half);
       const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
-      dec51_t r = x - (pi_half<dec51_t>() * k);
+      dec51_t r = x - (my_pi_half * k);
 
       const auto is_neg =  (n > 1U);
       const auto is_cos = ((n == 1U) || (n == 3U));
@@ -260,10 +259,12 @@ namespace example011_trig
       // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
       // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-      const auto k = static_cast<std::uint32_t>     (x / pi_half<dec51_t>());
+      const auto my_pi_half = pi<dec51_t>() / 2;
+
+      const auto k = static_cast<std::uint32_t>     (x / my_pi_half);
       const auto n = static_cast<std::uint_fast32_t>(k % 4U);
 
-      dec51_t r = x - (pi_half<dec51_t>() * k);
+      dec51_t r = x - (my_pi_half * k);
 
       const auto is_neg = ((n == 1U) || (n == 2U));
       const auto is_sin = ((n == 1U) || (n == 3U));
@@ -398,25 +399,30 @@ auto math::wide_decimal::example011_trig_trapezoid_integral() -> bool
   using std::fabs;
 
   // N[BesselJ[2, 123/100], 60]
-  const auto control2 = dec51_t("0.166369383786814073512678524315131594371033482453328555149562");
-
   // N[BesselJ[3, 456/100], 60]
-  const auto control3 = dec51_t("0.420388204867652161626134623430784757427481712020578485761744");
-
   // N[BesselJ[4, 789/100], 60]
-  const auto control4 = dec51_t("-0.0785068635721274384104855203288065696173271865920904171127153");
+  // N[Sin[-123/100], 60]
+  const auto control2   = dec51_t("0.166369383786814073512678524315131594371033482453328555149562");
+  const auto control3   = dec51_t("0.420388204867652161626134623430784757427481712020578485761744");
+  const auto control4   = dec51_t("-0.0785068635721274384104855203288065696173271865920904171127153");
+  const auto control_sn = dec51_t("-0.942488801931697510023823565389244541461287405627650302135039");
 
   using std::fabs;
 
-  const dec51_t closeness2 = fabs(1 - (j2 / control2));
-  const dec51_t closeness3 = fabs(1 - (j3 / control3));
-  const dec51_t closeness4 = fabs(1 - (j4 / control4));
+  const dec51_t closeness2   = fabs(1 - (j2 / control2));
+  const dec51_t closeness3   = fabs(1 - (j3 / control3));
+  const dec51_t closeness4   = fabs(1 - (j4 / control4));
+
+  // Ensure that the local sin() function is covered for negative argument.
+  using example011_trig::sin;
+  const dec51_t closeness_sn = fabs(1 - (sin(dec51_t(-123) / 100U) / control_sn));
 
   const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10));
 
-  const auto result_is_ok = (   (closeness2 < tol)
-                             && (closeness3 < tol)
-                             && (closeness4 < tol));
+  const auto result_is_ok = (   (closeness2   < tol)
+                             && (closeness3   < tol)
+                             && (closeness4   < tol)
+                             && (closeness_sn < tol));
 
   return result_is_ok;
 }
