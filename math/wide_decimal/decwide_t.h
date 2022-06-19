@@ -1857,7 +1857,7 @@
 
       decwide_t vi(inv_half_sqd, minus_half_ne);
 
-      // Compute the square root of x. Coupled Newton iteration
+      // Compute the square root of *this. Coupled Newton iteration
       // as described in "Pi Unleashed" is used. During the
       // iterative steps, the precision of the calculation is
       // limited to the minimum required in order to minimize
@@ -1904,82 +1904,86 @@
 
     auto calculate_rootn_inv(std::int32_t p) -> decwide_t&
     {
+      // Compute the inverse of the n'th root of *this.
+      // In other words compute the value of [1 / (rootn of *this)]
+      // with n = p.
+
       // LCOV_EXCL_START
       if(p < static_cast<std::int32_t>(1))
       {
-        *this = zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+        return (*this = zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
       }
-      else if(p == static_cast<std::int32_t>(1)) { }
-      else
-      // LCOV_EXCL_STOP
+
+      if(p == static_cast<std::int32_t>(1))
       {
-        // Compute the value of [1 / (rootn of x)] with n = p.
-
-        // Use the original value of *this for iteration below.
-        decwide_t x(*this);
-
-        // Generate the initial estimate using 1 / rootn.
-        // Extract the mantissa and exponent for a "manual"
-        // computation of the estimate.
-        InternalFloatType dd;
-        exponent_type     ne;
-
-        x.extract_parts(dd, ne);
-
-        // Adjust exponent and mantissa such that ne is an even power of p.
-        while(ne % static_cast<exponent_type>(p))
-        {
-          ++ne;
-          dd /= static_cast<InternalFloatType>(10.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        }
-
-        const std::int32_t original_prec_elem = x.my_prec_elem;
-
-        using std::pow;
-
-        // Estimate the initial guess of one over the root using simple manipulations.
-        const InternalFloatType one_over_rtn_d = pow(dd, static_cast<InternalFloatType>(-1) / static_cast<InternalFloatType>(p));
-
-        // Set the result equal to the initial guess.
-        *this = decwide_t(one_over_rtn_d, static_cast<exponent_type>(static_cast<exponent_type>(-ne) / p));
-
-        for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
-                 digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
-                 digits *= static_cast<std::int32_t>(2))
-        {
-          // Adjust precision of the terms.
-          const auto min_elem_digits10_plus_one =
-            (std::min)
-            (
-              static_cast<std::int32_t>(decwide_t_elem_digits10 + 1),
-              static_cast<std::int32_t>(INT8_C(9))
-            );
-
-          const auto new_prec_as_digits10 =
-            static_cast<std::int32_t>
-            (
-                static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
-              + min_elem_digits10_plus_one
-            );
-
-            precision(new_prec_as_digits10);
-          x.precision(new_prec_as_digits10);
-
-          // Perform the next iteration.
-          decwide_t
-            term
-            (
-                (((-pow(*this, p) * x) + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) / p)
-              + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
-            );
-
-          term.precision(new_prec_as_digits10);
-
-          operator*=(term);
-        }
-
-        my_prec_elem = original_prec_elem;
+        return *this;
       }
+      // LCOV_EXCL_STOP
+
+      // Use the original value of *this for iteration below.
+      decwide_t x(*this);
+
+      // Generate the initial estimate using 1 / rootn.
+      // Extract the mantissa and exponent for a "manual"
+      // computation of the estimate.
+      InternalFloatType dd;
+      exponent_type     ne;
+
+      x.extract_parts(dd, ne);
+
+      // Adjust exponent and mantissa such that ne is an even power of p.
+      while(ne % static_cast<exponent_type>(p))
+      {
+        ++ne;
+        dd /= static_cast<InternalFloatType>(10.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      }
+
+      const std::int32_t original_prec_elem = x.my_prec_elem;
+
+      using std::pow;
+
+      // Estimate the initial guess of one over the root using simple manipulations.
+      const InternalFloatType one_over_rtn_d = pow(dd, static_cast<InternalFloatType>(-1) / static_cast<InternalFloatType>(p));
+
+      // Set the result equal to the initial guess.
+      *this = decwide_t(one_over_rtn_d, static_cast<exponent_type>(static_cast<exponent_type>(-ne) / p));
+
+      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
+                digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
+                digits *= static_cast<std::int32_t>(2))
+      {
+        // Adjust precision of the terms.
+        const auto min_elem_digits10_plus_one =
+          (std::min)
+          (
+            static_cast<std::int32_t>(decwide_t_elem_digits10 + 1),
+            static_cast<std::int32_t>(INT8_C(9))
+          );
+
+        const auto new_prec_as_digits10 =
+          static_cast<std::int32_t>
+          (
+              static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
+            + min_elem_digits10_plus_one
+          );
+
+          precision(new_prec_as_digits10);
+        x.precision(new_prec_as_digits10);
+
+        // Perform the next iteration.
+        decwide_t
+          term
+          (
+              (((-pow(*this, p) * x) + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) / p)
+            + one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+          );
+
+        term.precision(new_prec_as_digits10);
+
+        operator*=(term);
+      }
+
+      my_prec_elem = original_prec_elem;
 
       return *this;
     }
@@ -2557,7 +2561,7 @@
     {
       const auto b_neg = (l < static_cast<FloatingPointType>(0.0L));
 
-      const native_float_parts<FloatingPointType> ld_parts(((!b_neg) ? l : -l));
+      const native_float_parts<FloatingPointType> ld_parts((!b_neg) ? l : -l);
 
       // Create a decwide_t from the fractional part of the
       // mantissa expressed as an unsigned long long.
