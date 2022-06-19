@@ -139,6 +139,19 @@ auto test_various_zero_operations() -> bool
   auto result_is_ok = true;
 
   {
+    using local_rep_type   = typename local_wide_decimal_type::representation_type;
+    using local_value_type = typename local_rep_type::value_type;
+
+    local_rep_type rep(local_rep_type::static_size(), (std::numeric_limits<local_value_type>::max)());
+
+    rep.fill(static_cast<local_value_type>(0U));
+
+    const auto zero_rep_is_ok = std::equal(rep.cbegin(), rep.cend(), local_zero().crepresentation().cbegin());
+
+    result_is_ok = (zero_rep_is_ok && result_is_ok);
+  }
+
+  {
     const std::string str_zeros(static_cast<std::size_t>(33U), '0');
 
     const local_wide_decimal_type z(str_zeros.c_str());
@@ -193,6 +206,21 @@ auto test_various_zero_operations() -> bool
 auto test_various_one_operations() -> bool
 {
   auto result_is_ok = true;
+
+  {
+    const auto local_ten = local_wide_decimal_type(10U);
+
+    for(auto u = static_cast<unsigned>(UINT8_C(1)); u < static_cast<unsigned>(UINT8_C(10)); ++u)
+    {
+      using std::ceil;
+
+      const auto ceil_frac = ceil(local_wide_decimal_type(u) / local_ten);
+
+      const auto result_ceil_frac_is_ok = (ceil_frac == local_one());
+
+      result_is_ok = (result_ceil_frac_is_ok && result_is_ok);
+    }
+  }
 
   {
     using std::log;
