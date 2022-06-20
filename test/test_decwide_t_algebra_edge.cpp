@@ -139,6 +139,63 @@ auto test_various_zero_operations() -> bool
   auto result_is_ok = true;
 
   {
+    using local_limb_type      = typename local_wide_decimal_type::limb_type;
+    using local_allocator_type = std::allocator<void>;
+
+    const auto pi_left =
+      #if defined(WIDE_DECIMAL_NAMESPACE)
+      WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, local_allocator_type>();
+      #else
+      ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, local_allocator_type>();
+      #endif
+
+    const auto pi_right =
+      #if defined(WIDE_DECIMAL_NAMESPACE)
+      WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, local_allocator_type>();
+      #else
+      ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, local_allocator_type>();
+      #endif
+
+    const auto result_of_sub_same_is_ok =
+      (((pi_left - pi_right) == 0) && ((pi_left - pi_right) == local_zero()));
+
+    result_is_ok = (result_of_sub_same_is_ok && result_is_ok);
+  }
+
+  {
+    local_wide_decimal_type small =
+      local_wide_decimal_type::from_lst
+      (
+        {
+          static_cast<typename local_wide_decimal_type::limb_type>(1U)
+        },
+        static_cast<typename local_wide_decimal_type::exponent_type>
+        (
+          local_wide_decimal_type::decwide_t_min_exp10 + static_cast<std::int32_t>(INT8_C(32))
+        )
+      );
+
+    auto result_underflow_is_ok = false;
+
+    for(auto   i = static_cast<unsigned>(UINT8_C(0));
+               i < static_cast<unsigned>(UINT8_C(200));
+             ++i)
+    {
+      small /= static_cast<unsigned>(UINT8_C(7));
+
+      if(   (small < (std::numeric_limits<local_wide_decimal_type>::min)())
+         && (small == 0))
+      {
+        result_underflow_is_ok = true;
+
+        break;
+      }
+    }
+
+    result_is_ok = (result_underflow_is_ok && result_is_ok);
+  }
+
+  {
     using local_rep_type   = typename local_wide_decimal_type::representation_type;
     using local_value_type = typename local_rep_type::value_type;
 
@@ -146,9 +203,9 @@ auto test_various_zero_operations() -> bool
 
     rep.fill(static_cast<local_value_type>(0U));
 
-    const auto zero_rep_is_ok = std::equal(rep.cbegin(), rep.cend(), local_zero().crepresentation().cbegin());
+    const auto result_zero_rep_is_ok = std::equal(rep.cbegin(), rep.cend(), local_zero().crepresentation().cbegin());
 
-    result_is_ok = (zero_rep_is_ok && result_is_ok);
+    result_is_ok = (result_zero_rep_is_ok && result_is_ok);
   }
 
   {
