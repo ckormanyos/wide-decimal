@@ -139,21 +139,18 @@ auto test_various_zero_operations() -> bool
   auto result_is_ok = true;
 
   {
-    using local_limb_type      = typename local_wide_decimal_type::limb_type;
-    using local_allocator_type = std::allocator<void>;
-
     const auto pi_left =
       #if defined(WIDE_DECIMAL_NAMESPACE)
-      WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, local_allocator_type>();
+      WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
       #else
-      ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, local_allocator_type>();
+      ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
       #endif
 
     const auto pi_right =
       #if defined(WIDE_DECIMAL_NAMESPACE)
-      WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, local_allocator_type>();
+      WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
       #else
-      ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, local_allocator_type>();
+      ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
       #endif
 
     const auto result_of_sub_same_is_ok =
