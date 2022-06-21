@@ -305,6 +305,19 @@ auto test_various_one_operations() -> bool
   {
     std::stringstream strm;
 
+    using std::ceil;
+
+    strm << std::setprecision(std::numeric_limits<local_wide_decimal_type>::digits10)
+         << ceil(local_near_one());
+
+    const std::string str_one_from_strm = strm.str();
+
+    result_is_ok = ((str_one_from_strm == "1") && result_is_ok);
+  }
+
+  {
+    std::stringstream strm;
+
     strm << local_not_one();
 
     const auto local_not_one_as_float = static_cast<float>(local_not_one());
