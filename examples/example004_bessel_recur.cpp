@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -36,17 +36,16 @@ namespace example004_bessel
     }
 
     // Orient the search such that f > 0 lies at x + dx.
-    floating_point_type dx;
+    floating_point_type dx = x_hi - x_lo;
     floating_point_type rtb;
 
     if(f_lo_is_neg)
     {
-      dx  = x_hi - x_lo;
       rtb = x_lo;
     }
     else
     {
-      dx  = x_lo - x_hi;
+      dx  = -dx;
       rtb = x_hi;
     }
 

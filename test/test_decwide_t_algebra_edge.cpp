@@ -546,6 +546,16 @@ auto test_various_int_operations() -> bool
       std::numeric_limits<local_unsigned_type>::digits10 -1
     );
 
+  const auto unsigned_integral_digits10_low_limit =
+    static_cast<unsigned>
+    (
+      (std::max)
+      (
+        static_cast<unsigned>(UINT32_C(2)),
+        static_cast<unsigned>(std::numeric_limits<std::uint8_t>::digits10)
+      )
+    );
+
   static_assert(   (std::numeric_limits<local_unsigned_type>::digits >= static_cast<int>(INT8_C(16)))
                 && (unsigned_integral_digits10_to_use >= 3),
                 "Error: Template integral type parameter is not wide enough");
@@ -556,7 +566,7 @@ auto test_various_int_operations() -> bool
              i < static_cast<unsigned>(UINT32_C(128));
            ++i)
   {
-    for(auto   nd  = static_cast<unsigned>(UINT32_C(2));
+    for(auto   nd  = unsigned_integral_digits10_low_limit;
                nd <= unsigned_integral_digits10_to_use;
              ++nd)
     {
@@ -580,7 +590,7 @@ auto test_various_int_operations() -> bool
              i < static_cast<unsigned>(UINT32_C(128));
            ++i)
   {
-    for(auto   nd  = static_cast<unsigned>(UINT32_C(2));
+    for(auto   nd  = unsigned_integral_digits10_low_limit;
                nd <= unsigned_integral_digits10_to_use;
              ++nd)
     {
@@ -598,6 +608,24 @@ auto test_various_int_operations() -> bool
 
       result_is_ok = (result_native_convert_is_ok && result_is_ok);
     }
+  }
+
+  auto u10 = static_cast<local_unsigned_type>(UINT8_C(1));
+
+  for(auto   i = static_cast<unsigned>(UINT32_C(0));
+             i < static_cast<unsigned>(std::numeric_limits<local_signed_type>::digits10);
+           ++i)
+  {
+    const auto s10 = static_cast<local_signed_type>(-static_cast<local_signed_type>(u10));
+
+    const auto x = local_wide_decimal_type(s10);
+
+    const auto result_native_convert_is_ok =
+      (static_cast<local_unsigned_type>(x) == static_cast<local_unsigned_type>(s10));
+
+    result_is_ok = (result_native_convert_is_ok && result_is_ok);
+
+    u10 = static_cast<local_unsigned_type>(u10 * static_cast<local_unsigned_type>(UINT8_C(10)));
   }
 
   return result_is_ok;
