@@ -217,7 +217,7 @@ WIDE_DECIMAL_NAMESPACE_END
 
 namespace example009b_boost
 {
-  template<class T>
+  template<typename T>
   auto test_sin_only() -> bool
   {
     // Table[N[Sin[i/10], 320], {i, 1, 40, 1}]

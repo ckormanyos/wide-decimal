@@ -134,29 +134,55 @@ auto test_div_by_other_sign_same() -> bool
   return result_is_ok;
 }
 
+auto pi_left = // NOLINT(cert-err58-cpp)
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
+  #else
+  ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
+  #endif
+
+auto pi_right = pi_left; // NOLINT(cert-err58-cpp)
+
 auto test_various_zero_operations() -> bool
 {
   auto result_is_ok = true;
 
   {
-    const auto pi_left =
-      #if defined(WIDE_DECIMAL_NAMESPACE)
-      WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
-      #else
-      ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
-      #endif
-
-    const auto pi_right =
-      #if defined(WIDE_DECIMAL_NAMESPACE)
-      WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
-      #else
-      ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
-      #endif
-
     const auto result_of_sub_same_is_ok =
-      (((pi_left - pi_right) == 0) && ((pi_left - pi_right) == local_zero()));
+    (
+          (pi_left  > 3.1F)
+      &&  (pi_right > 3.1F)
+      && ((pi_left - pi_right) == 0)
+      && ((pi_left - pi_right) == local_zero())
+    );
 
     result_is_ok = (result_of_sub_same_is_ok && result_is_ok);
+  }
+
+  {
+    std::stringstream strm;
+
+    strm << std::setprecision(0) << pi_left;
+
+    const auto str_pi_left = strm.str();
+
+    const auto str_pi_ctrl = std::string("3.14159265358979323846264338");
+
+    const auto str_pi_left_is_ok = (str_pi_ctrl.find(str_pi_left) != std::string::npos);
+
+    result_is_ok = (str_pi_left_is_ok && result_is_ok);
+  }
+
+  {
+    std::stringstream strm;
+
+    strm << std::setprecision(2) << std::fixed << pi_right;
+
+    const auto str_pi_right = strm.str();
+
+    const auto str_pi_right_is_ok = (str_pi_right == "3.14");
+
+    result_is_ok = (str_pi_right_is_ok && result_is_ok);
   }
 
   {
