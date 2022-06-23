@@ -134,14 +134,14 @@ auto test_div_by_other_sign_same() -> bool
   return result_is_ok;
 }
 
-auto pi_left = // NOLINT(cert-err58-cpp)
+auto pi_left = // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
   #if defined(WIDE_DECIMAL_NAMESPACE)
   WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
   #else
   ::math::wide_decimal::pi<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
   #endif
 
-auto pi_right = pi_left; // NOLINT(cert-err58-cpp)
+auto pi_right = pi_left; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
 auto test_various_zero_operations() -> bool
 {
