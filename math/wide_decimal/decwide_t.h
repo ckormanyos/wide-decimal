@@ -4577,7 +4577,7 @@
           UINT8_C(96), UINT8_C(96), UINT8_C(94), UINT8_C(71), UINT8_C(56), UINT8_C( 5), UINT8_C(86), UINT8_C(33),
           UINT8_C(26), UINT8_C(99), UINT8_C(64), UINT8_C(18), UINT8_C(68), UINT8_C(75), UINT8_C(42), UINT8_C( 0),
         },
-        static_cast<typename floating_point_type::exponent_type>(INT8_C(-8))
+        static_cast<typename floating_point_type::exponent_type>(INT8_C(-2))
       );
   }
 
@@ -4602,7 +4602,7 @@
           UINT16_C(9696), UINT16_C(9471), UINT16_C(5605), UINT16_C(8633),
           UINT16_C(2699), UINT16_C(6418), UINT16_C(6875), UINT16_C(4200),
         },
-        static_cast<typename floating_point_type::exponent_type>(INT8_C(-8))
+        static_cast<typename floating_point_type::exponent_type>(INT8_C(-4))
       );
   }
 
@@ -5256,11 +5256,12 @@
 
     if(p < static_cast<std::int32_t>(0))
     {
-      rtn = rootn(one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() / x, static_cast<std::int32_t>(-p));
+      rtn =   one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
+            / rootn(x, static_cast<std::int32_t>(-p));
     }
     else if((p == static_cast<std::int32_t>(0)) || ((x < 0) && (p != static_cast<std::int32_t>(3))))
     {
-      rtn = std::numeric_limits<decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::quiet_NaN();
+      rtn = zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
     }
     else if(p == static_cast<std::int32_t>(1))
     {
