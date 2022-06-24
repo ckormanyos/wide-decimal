@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -239,7 +239,7 @@ auto test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-
                                                                             std::int32_t,
                                                                             double>;
 
-  const auto result_is_ok =
+  const auto result_test_log_is_ok =
     test::independent_algebra::independent_algebra_test_decwide_t_log_<test_decwide_t::wide_decimal_digits10,
                                                                        test_decwide_t::local_limb_type,
                                                                        std::allocator<void>,
@@ -249,6 +249,35 @@ auto test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-
                                                                        test_decwide_t::independent_algebra_test_decwide_t_count_for_log,
                                                                        test_decwide_t::independent_algebra_test_decwide_t_round,
                                                                        independent_algebra_test_decwide_t_boost_cpp_type>();
+
+  auto result_is_ok = result_test_log_is_ok;
+
+  {
+    // Perform a special test of log(1), expected to result in 0.
+
+    using local_wide_decimal_for_log_type =
+      typename test::independent_algebra::independent_algebra_test_decwide_t_log_holder
+        <test_decwide_t::wide_decimal_digits10,
+         test_decwide_t::local_limb_type,
+         std::allocator<void>,
+         double,
+         std::int32_t,
+         double,
+         test_decwide_t::independent_algebra_test_decwide_t_count_for_log,
+         test_decwide_t::independent_algebra_test_decwide_t_round,
+         independent_algebra_test_decwide_t_boost_cpp_type>::independent_algebra_decwide_type::float_type;
+
+    const auto my_local_one = local_wide_decimal_for_log_type(static_cast<unsigned>(UINT8_C(1)));
+
+    using std::log;
+
+    const auto my_log_of_one = log(my_local_one);
+
+    const auto result_log_one_is_ok =
+      ((my_log_of_one == 0U) && (my_log_of_one == static_cast<unsigned>(UINT8_C(0))));
+
+    result_is_ok = (result_log_one_is_ok && result_is_ok);
+  }
 
   return result_is_ok;
 }

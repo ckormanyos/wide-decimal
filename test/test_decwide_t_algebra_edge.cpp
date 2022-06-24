@@ -449,6 +449,28 @@ auto test_frexp_in_all_ranges() -> bool
          static_cast<typename local_wide_decimal_type::exponent_type>(INT8_C(-4))
        );
 
+    using local_internal_float_type = typename local_wide_decimal_type::internal_float_type;
+    using local_exponent_type       = typename local_wide_decimal_type::exponent_type;
+
+    local_internal_float_type mantissa { };
+    local_exponent_type       expon    { };
+
+    special_neg_value.extract_parts(mantissa, expon);
+
+    const auto result_extract_parts_is_ok =
+      ((mantissa == static_cast<local_internal_float_type>(-0.3125F)) && (expon == -1));
+
+    result_is_ok = (result_extract_parts_is_ok && result_is_ok);
+  }
+
+  {
+    local_wide_decimal_type special_neg_value =
+      -local_wide_decimal_type::from_lst
+       (
+         { static_cast<local_limb_type>(UINT32_C(312)), static_cast<local_limb_type>(UINT32_C(5000)) },
+         static_cast<typename local_wide_decimal_type::exponent_type>(INT8_C(-4))
+       );
+
     {
       using std::frexp;
 
