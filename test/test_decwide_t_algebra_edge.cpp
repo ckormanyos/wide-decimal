@@ -288,7 +288,7 @@ auto test_various_one_operations() -> bool
   auto result_is_ok = true;
 
   {
-    const auto local_ten = local_wide_decimal_type(10U);
+    const auto local_ten = local_wide_decimal_type(static_cast<unsigned>(UINT8_C(10)));
 
     for(auto u = static_cast<unsigned>(UINT8_C(1)); u < static_cast<unsigned>(UINT8_C(10)); ++u)
     {
@@ -310,6 +310,45 @@ auto test_various_one_operations() -> bool
     const auto result_log_one_is_ok = (log_one == 0);
 
     result_is_ok = (result_log_one_is_ok && result_is_ok);
+  }
+
+  {
+    const auto tol = local_wide_decimal_type(std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000.0F);
+
+    for(auto   i = static_cast<unsigned>(UINT32_C( 11));
+               i < static_cast<unsigned>(UINT32_C(100));
+             ++i)
+    {
+      const auto x = local_wide_decimal_type(local_wide_decimal_type(i) / static_cast<unsigned>(UINT8_C(100)));
+
+      using std::log;
+      const auto lg_x      =  log(x);
+      const auto lg_x_ctrl = -log(local_one() / x);
+
+      using std::fabs;
+
+      const auto delta_lg_x = fabs(1 - (lg_x / lg_x_ctrl));
+
+      const auto result_lg_x_is_ok = (delta_lg_x < tol);
+
+      result_is_ok = (result_lg_x_is_ok && result_is_ok);
+
+      if(i == static_cast<unsigned>(UINT32_C(50)))
+      {
+        const auto& ln_two_ctrl = 
+          #if defined(WIDE_DECIMAL_NAMESPACE)
+          WIDE_DECIMAL_NAMESPACE::math::wide_decimal::ln_two<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
+          #else
+          ::math::wide_decimal::ln_two<local_wide_decimal_type::decwide_t_digits10, local_limb_type, std::allocator<void>>();
+          #endif
+
+        const auto delta_ln_half = fabs(1 - (lg_x / -ln_two_ctrl));
+
+        const auto result_ln_half_is_ok = (delta_ln_half < tol);
+
+        result_is_ok = (result_ln_half_is_ok && result_is_ok);
+      }
+    }
   }
 
   {
@@ -482,6 +521,88 @@ auto test_string_round_tripping() -> bool
 
       result_is_ok = ((x == local_wide_decimal_type(strm.str().c_str())) && result_is_ok);
     }
+  }
+
+  return result_is_ok;
+}
+
+auto test_various_rootn() -> bool
+{
+  auto result_is_ok = true;
+
+  const auto tol = local_wide_decimal_type(local_wide_decimal_type(1U) / 1000U);
+
+  for(auto   i = static_cast<unsigned>(UINT32_C(0));
+             i < static_cast<unsigned>(UINT32_C(256));
+           ++i)
+  {
+    const auto x = generate_wide_decimal_value<local_wide_decimal_type>(true);
+
+    const auto r = rootn(x, static_cast<std::int32_t>(INT8_C(2)));
+
+    using std::fabs;
+    using std::sqrt;
+
+    const auto delta = fabs(1 - (r / sqrt(x)));
+
+    const auto result_rootn_sqrt_is_ok = (delta < tol);
+
+    result_is_ok = (result_rootn_sqrt_is_ok && result_is_ok);
+  }
+
+  {
+    const auto x = local_wide_decimal_type(local_wide_decimal_type(static_cast<unsigned>(UINT32_C(1011))) / static_cast<unsigned>(UINT8_C(10)));
+
+    const auto r3_p = rootn(+x, static_cast<std::int32_t>(INT8_C(3)));
+    const auto r3_m = rootn(-x, static_cast<std::int32_t>(INT8_C(3)));
+
+    // N[(1011/10)^(1/3), 72]
+    const auto r3_ctrl = local_wide_decimal_type("4.65854596766714528445828561942593317263489860860972122382125818005540070");
+
+    using std::fabs;
+
+    const auto delta_p = fabs(1 - (r3_p / +r3_ctrl));
+    const auto delta_m = fabs(1 - (r3_m / -r3_ctrl));
+
+    const auto result_rootn_cbrt_p_is_ok = (delta_p < tol);
+    const auto result_rootn_cbrt_m_is_ok = (delta_m < tol);
+
+    result_is_ok = (result_rootn_cbrt_p_is_ok && result_is_ok);
+    result_is_ok = (result_rootn_cbrt_m_is_ok && result_is_ok);
+  }
+
+  {
+    const auto x = local_wide_decimal_type(local_wide_decimal_type(static_cast<unsigned>(UINT32_C(1011))) / static_cast<unsigned>(UINT8_C(10)));
+
+    const auto root_p4 = rootn(x, static_cast<std::int32_t>(INT8_C(4)));
+    const auto root_m4 = rootn(x, static_cast<std::int32_t>(INT8_C(-4)));
+
+    // N[(1011/10)^(1/4), 72]
+    const auto root_p4_ctrl = local_wide_decimal_type("3.17093828009936777476602468193014551551860637726903314273455186255021157");
+
+    // N[(1011/10)^(-1/4), 72]
+    const auto root_m4_ctrl = local_wide_decimal_type("0.315364069454124781696219443391001124974032476918702238114164357323042771");
+
+    using std::fabs;
+
+    const auto delta_root_p4 = fabs(1 - (root_p4 / root_p4_ctrl));
+    const auto delta_root_m4 = fabs(1 - (root_m4 / root_m4_ctrl));
+
+    const auto result_root_p4_is_ok = (delta_root_p4 < tol);
+    const auto result_root_m4_is_ok = (delta_root_m4 < tol);
+
+    result_is_ok = (result_root_p4_is_ok && result_is_ok);
+    result_is_ok = (result_root_m4_is_ok && result_is_ok);
+  }
+
+  {
+    const auto x_neg = local_wide_decimal_type(local_wide_decimal_type(static_cast<unsigned>(UINT32_C(1011))) / static_cast<signed>(INT8_C(-10)));
+
+    const auto root_x_neg = rootn(x_neg, static_cast<std::int32_t>(INT8_C(4)));
+
+    const auto result_root_x_neg_is_ok = (x_neg < 0) && (root_x_neg == 0);
+
+    result_is_ok = (result_root_x_neg_is_ok && result_is_ok);
   }
 
   return result_is_ok;
@@ -671,6 +792,7 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   result_is_ok = (test_decwide_t_algebra_edge::test_various_zero_operations              () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_one_operations               () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_string_round_tripping                () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_various_rootn                        () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<float>      () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<double>     () && result_is_ok);
   #if (!defined(__APPLE__) && !defined(__MINGW32__))
