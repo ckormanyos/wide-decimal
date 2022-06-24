@@ -1995,6 +1995,55 @@
       return *this;
     }
 
+    static auto calculate_frexp(decwide_t& result, const decwide_t& x, exponent_type* e) -> void
+    {
+      // This implementation of frexp follows closely that of eval_frexp
+      // in Boost.Multiprecision's cpp_dec_float template class.
+      result = x;
+
+      if(result.iszero())
+      {
+        *e = 0;
+        return;
+      }
+
+      if(result.isneg())
+      {
+        result.negate();
+      }
+
+      // N[1000/301, 44]
+      auto t =
+        static_cast<exponent_type>
+        (
+            static_cast<long double>(ilogb(result))
+          * static_cast<long double>(3.3222591362126245847176079734219269102990033L) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        );
+
+      result *= pow(two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), -t);
+
+      // TBD: Handle underflow/overflow if (or when) needed.
+
+      while(result.cmp(one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) >= INT8_C(0))
+      {
+        result /= static_cast<int>(INT8_C(2));
+        ++t;
+      }
+
+      while(result.cmp(half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) < INT8_C(0))
+      {
+        result *= static_cast<int>(INT8_C(2));
+        --t;
+      }
+
+      *e = t;
+
+      if(x.isneg())
+      {
+        result.negate();
+      }
+    }
+
     auto negate() -> decwide_t&
     {
       if(!iszero())
@@ -5211,17 +5260,19 @@
   auto frexp(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
              int* expon) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
-    using exponent_type =
-      typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::exponent_type;
+    using local_wide_decimal_type =
+      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
-    double        d { };
-    exponent_type i { };
+    using exponent_type = typename local_wide_decimal_type::exponent_type;
 
-    v.extract_parts(d, i);
+    local_wide_decimal_type result;
+    exponent_type           e;
 
-    *expon = static_cast<int>(i);
+    local_wide_decimal_type::calculate_frexp(result, v, &e);
 
-    return v * ldexp(one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), static_cast<int>(-i));
+    *expon = static_cast<int>(e);
+
+    return result;
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
