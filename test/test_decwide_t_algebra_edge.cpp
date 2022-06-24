@@ -421,6 +421,168 @@ auto test_various_one_operations() -> bool
   return result_is_ok;
 }
 
+auto test_frexp_in_all_ranges() -> bool
+{
+  auto result_is_ok = true;
+
+  {
+    using std::frexp;
+
+    int expon { };
+    const local_wide_decimal_type frexp_value = frexp(local_zero(), &expon);
+
+    const auto result_frexp_of_zero_is_ok = 
+      (
+           (frexp_value == 0)
+        && (frexp_value == local_zero())
+        && (expon == 0)
+      );
+
+    result_is_ok = (result_frexp_of_zero_is_ok && result_is_ok);
+  }
+
+  {
+    local_wide_decimal_type special_neg_value =
+      -local_wide_decimal_type::from_lst
+       (
+         { static_cast<local_limb_type>(UINT32_C(312)), static_cast<local_limb_type>(UINT32_C(5000)) },
+         static_cast<typename local_wide_decimal_type::exponent_type>(INT8_C(-4))
+       );
+
+    {
+      using std::frexp;
+
+      int expon { };
+      const local_wide_decimal_type frexp_value = frexp(special_neg_value, &expon);
+
+      std::stringstream strm;
+
+      strm << std::setprecision(static_cast<std::streamsize>(INT8_C(4)))
+           << std::fixed
+           << frexp_value;
+
+      const auto result_frexp_is_ok = ((strm.str() == "-0.5000") && (expon == -4));
+
+      result_is_ok = (result_frexp_is_ok && result_is_ok);
+    }
+
+    {
+      using std::frexp;
+
+      const auto special_neg_value_as_float = static_cast<float>(special_neg_value);
+
+      int expon_for_float { };
+      const auto frexp_value_as_float = frexp(special_neg_value_as_float, &expon_for_float);
+
+      const auto result_frexp_as_float_is_ok = ((frexp_value_as_float == -0.5F) && (expon_for_float == -4));
+
+      result_is_ok = (result_frexp_as_float_is_ok && result_is_ok);
+    }
+  }
+
+  for(auto   i = static_cast<unsigned>(UINT32_C(0));
+             i < static_cast<unsigned>(UINT32_C(2048));
+           ++i)
+  {
+    const auto x =
+      generate_wide_decimal_value<local_wide_decimal_type>
+      (
+        false,
+        static_cast<int>(static_cast<float>(std::numeric_limits<float>::max_exponent10) * 0.65),
+        std::numeric_limits<float>::digits10
+      );
+
+    using std::frexp;
+
+    int expon { };
+    const local_wide_decimal_type frexp_value = frexp(x, &expon);
+
+    std::stringstream strm;
+
+    strm << std::setprecision(static_cast<std::streamsize>(std::numeric_limits<float>::max_digits10))
+         << std::fixed
+         << frexp_value;
+
+    float frexp_value_as_float_from_strm { };
+    strm >> frexp_value_as_float_from_strm;
+
+    int expon_from_cast { };
+    const auto frexp_value_as_float_from_cast = frexp(static_cast<float>(x), &expon_from_cast);
+
+    const auto delta_frexp_as_float =
+      (1.0F - (frexp_value_as_float_from_strm / frexp_value_as_float_from_cast));
+
+    const auto result_frexp_as_float_is_ok =
+      (delta_frexp_as_float <= (std::numeric_limits<float>::epsilon() * 2.0F));
+
+    result_is_ok = (result_frexp_as_float_is_ok && result_is_ok);
+  }
+
+  for(auto   i = static_cast<unsigned>(UINT32_C(0));
+             i < static_cast<unsigned>(UINT32_C(2048));
+           ++i)
+  {
+    const auto x =
+      generate_wide_decimal_value<local_wide_decimal_type>
+      (
+        false,
+        0,
+        std::numeric_limits<float>::digits10
+      );
+
+    using std::frexp;
+
+    int expon { };
+    const local_wide_decimal_type frexp_value = frexp(x, &expon);
+
+    std::stringstream strm;
+
+    strm << std::setprecision(static_cast<std::streamsize>(std::numeric_limits<float>::max_digits10))
+         << std::fixed
+         << frexp_value;
+
+    float frexp_value_as_float_from_strm { };
+    strm >> frexp_value_as_float_from_strm;
+
+    int expon_from_cast { };
+    const auto frexp_value_as_float_from_cast = frexp(static_cast<float>(x), &expon_from_cast);
+
+    const auto delta_frexp_as_float =
+      (1.0F - (frexp_value_as_float_from_strm / frexp_value_as_float_from_cast));
+
+    const auto result_frexp_as_float_is_ok =
+      (delta_frexp_as_float <= (std::numeric_limits<float>::epsilon() * 2.0F));
+
+    result_is_ok = (result_frexp_as_float_is_ok && result_is_ok);
+  }
+
+  const auto tol = std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
+
+  for(auto   i = static_cast<unsigned>(UINT32_C(0));
+             i < static_cast<unsigned>(UINT32_C(2048));
+           ++i)
+  {
+    const auto x = generate_wide_decimal_value<local_wide_decimal_type>(false);
+
+    using std::frexp;
+    using std::ldexp;
+
+    int expon { };
+    const auto frexp_value = frexp(x, &expon);
+    const auto ldexp_value = ldexp(frexp_value, expon);
+
+    using std::fabs;
+
+    const auto delta = fabs(1 - (x / ldexp_value));
+
+    const auto result_frexp_ldexp_is_ok = (delta < tol);
+
+    result_is_ok = (result_frexp_ldexp_is_ok && result_is_ok);
+  }
+
+  return result_is_ok;
+}
+
 auto test_string_round_tripping() -> bool
 {
   auto result_is_ok = true;
@@ -791,6 +953,7 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   result_is_ok = (test_decwide_t_algebra_edge::test_div_by_other_sign_same               () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_zero_operations              () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_one_operations               () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_frexp_in_all_ranges                  () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_string_round_tripping                () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_rootn                        () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<float>      () && result_is_ok);
