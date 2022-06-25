@@ -515,8 +515,9 @@
   public:
     // Define the decwide_t digits characteristics.
 
-    using exponent_type  = ExponentType;
-    using fft_float_type = FftFloatType;
+    using exponent_type       = ExponentType;
+    using fft_float_type      = FftFloatType;
+    using internal_float_type = InternalFloatType;
 
     static_assert((   std::is_same<std::int8_t,  exponent_type>::value
                    || std::is_same<std::int16_t, exponent_type>::value
@@ -866,8 +867,8 @@
 
   private:
     // Constructor from mantissa and exponent.
-    explicit decwide_t(const InternalFloatType mantissa,
-                       const exponent_type     exponent)
+    explicit decwide_t(const internal_float_type mantissa,
+                       const exponent_type       exponent)
       : my_data     (),
         my_exp      (static_cast<exponent_type>(0)),
         my_neg      (false),
@@ -879,11 +880,11 @@
       // full precision of the InternalFloatType.
 
       const auto delta_zero =
-        static_cast<InternalFloatType>
+        static_cast<internal_float_type>
         (
           (
-              (std::numeric_limits<InternalFloatType>::min)()
-            * (static_cast<InternalFloatType>(1) + std::numeric_limits<InternalFloatType>::epsilon())
+              (std::numeric_limits<internal_float_type>::min)()
+            * (static_cast<internal_float_type>(1) + std::numeric_limits<internal_float_type>::epsilon())
           )
         );
 
@@ -899,13 +900,13 @@
       {
         const auto b_neg = (mantissa < static_cast<InternalFloatType>(0));
 
-        InternalFloatType d = ((!b_neg) ? mantissa : -mantissa);
-        exponent_type     e = exponent;
+        internal_float_type d = ((!b_neg) ? mantissa : -mantissa);
+        exponent_type       e = exponent;
 
-        constexpr InternalFloatType f10(static_cast<std::uint_fast8_t>(UINT8_C(10)));
+        constexpr internal_float_type f10(static_cast<std::uint_fast8_t>(UINT8_C(10)));
 
-        while(d > f10)                                  { d /= f10; ++e; }
-        while(d < static_cast<InternalFloatType>(1.0F)) { d *= f10; --e; }
+        while(d > f10)                                    { d /= f10; ++e; }
+        while(d < static_cast<internal_float_type>(1.0F)) { d *= f10; --e; }
 
         {
           auto shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
@@ -924,9 +925,9 @@
         constexpr auto digit_loops =
           static_cast<std::int32_t>
           (
-              static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+              static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
                                         / static_cast<std::int32_t>(decwide_t_elem_digits10))
-            + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+            + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
                                                                   % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0)
           );
 
@@ -1033,12 +1034,12 @@
       }
 
       // Do the add/sub operation.
-
-      typename representation_type::pointer       p_u    =   my_data.data();
-      typename representation_type::const_pointer p_v    = v.my_data.data();
-      bool                                        b_copy = false;
-      const std::int32_t                          ofs    = ((!ofs_exp.get_is_neg()) ? +static_cast<std::int32_t>(ofs_exp.get_value_unsigned() / static_cast<unsigned_exponent_type>(decwide_t_elem_digits10))
-                                                                                    : -static_cast<std::int32_t>(ofs_exp.get_value_unsigned() / static_cast<unsigned_exponent_type>(decwide_t_elem_digits10)));
+      const auto ofs =
+        static_cast<std::int32_t>
+        (
+          ((!ofs_exp.get_is_neg()) ? +static_cast<std::int32_t>(ofs_exp.get_value_unsigned() / static_cast<unsigned_exponent_type>(decwide_t_elem_digits10))
+                                   : -static_cast<std::int32_t>(ofs_exp.get_value_unsigned() / static_cast<unsigned_exponent_type>(decwide_t_elem_digits10)))
+        );
 
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       representation_type my_n_data_for_add_sub;
@@ -1046,6 +1047,8 @@
 
       if(my_neg == v.my_neg)
       {
+        limb_type carry { };
+
         // Add v to *this, where the data array of either *this or v
         // might have to be treated with a positive, negative or zero offset.
         // The result is stored in *this. The data are added one element
@@ -1060,7 +1063,13 @@
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(ofs),
                     static_cast<limb_type>(0));
 
-          p_v = my_n_data_for_add_sub.data();
+          using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
+
+          // Addition.
+          carry = detail::eval_add_n(my_data.data(),
+                                     const_limb_pointer_type(my_data.data()),
+                                     const_limb_pointer_type(my_n_data_for_add_sub.data()),
+                                     prec_elems_for_add_sub);
         }
         else
         {
@@ -1072,21 +1081,14 @@
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(-ofs),
                     static_cast<limb_type>(0));
 
-          p_u = my_n_data_for_add_sub.data();
-          b_copy = true;
-        }
+          using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
-        using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
+          // Addition.
+          carry = detail::eval_add_n(my_n_data_for_add_sub.data(),
+                                     const_limb_pointer_type(my_n_data_for_add_sub.data()), // LCOV_EXCL_LINE
+                                     const_limb_pointer_type(v.my_data.data()),
+                                     prec_elems_for_add_sub);
 
-        // Addition.
-        const limb_type carry =
-          detail::eval_add_n(p_u,
-                             const_limb_pointer_type(p_u),
-                             const_limb_pointer_type(p_v),
-                             prec_elems_for_add_sub);
-
-        if(b_copy)
-        {
           #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
           const auto memmove_dif =
             static_cast<std::ptrdiff_t>
@@ -1153,7 +1155,16 @@
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(ofs),
                     static_cast<limb_type>(0));
 
-          p_v = my_n_data_for_add_sub.data();
+          using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
+
+          // Subtraction.
+          const auto has_borrow =
+            detail::eval_subtract_n(my_data.data(),
+                                    const_limb_pointer_type(my_data.data()),
+                                    const_limb_pointer_type(my_n_data_for_add_sub.data()),
+                                    prec_elems_for_add_sub);
+
+          static_cast<void>(has_borrow);
         }
         else
         {
@@ -1177,26 +1188,18 @@
           std::copy(v.my_data.cbegin(),
                     v.my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_n_data_for_add_sub.begin());
-          p_u    = my_n_data_for_add_sub.data();
-          p_v    = my_data.data();
-          b_copy = true;
-        }
 
-        // Subtraction.
-        {
           using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
+          // Subtraction.
           const auto has_borrow =
-            detail::eval_subtract_n(p_u,
-                                    const_limb_pointer_type(p_u),
-                                    const_limb_pointer_type(p_v),
+            detail::eval_subtract_n(my_n_data_for_add_sub.data(),
+                                    const_limb_pointer_type(my_n_data_for_add_sub.data()),
+                                    const_limb_pointer_type(my_data.data()),
                                     prec_elems_for_add_sub);
 
           static_cast<void>(has_borrow);
-        }
 
-        if(b_copy)
-        {
           std::copy(my_n_data_for_add_sub.cbegin(),
                     my_n_data_for_add_sub.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_data.begin());
@@ -1752,8 +1755,8 @@
       // Generate the initial estimate using division.
       // Extract the mantissa and exponent for a "manual"
       // computation of the estimate.
-      InternalFloatType dd;
-      exponent_type     ne;
+      internal_float_type dd;
+      exponent_type       ne;
 
       x.extract_parts(dd, ne);
 
@@ -1762,9 +1765,9 @@
       // Do the inverse estimate using InternalFloatType precision estimates of mantissa and exponent.
       {
         const auto one_over_d =
-          static_cast<InternalFloatType>
+          static_cast<internal_float_type>
           (
-            static_cast<InternalFloatType>(1.0F) / dd
+            static_cast<internal_float_type>(1.0F) / dd
           );
 
         operator=(decwide_t(one_over_d, static_cast<exponent_type>(-ne)));
@@ -1774,7 +1777,7 @@
       // is used. During the iterative steps, the precision of the calculation is limited
       // to the minimum required in order to minimize the run-time.
 
-      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
+      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::digits10 - 1);
                digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
                digits *= static_cast<std::int32_t>(2))
       {
@@ -1836,7 +1839,7 @@
       if((ne % 2) != static_cast<exponent_type>(0))
       {
         ++ne;
-        dd /= static_cast<InternalFloatType>(10); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        dd /= static_cast<internal_float_type>(10); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       }
 
       using std::sqrt;
@@ -1853,7 +1856,7 @@
       const auto inv_half_sqd =
         static_cast<InternalFloatType>
         (
-          static_cast<InternalFloatType>(0.5F) / sqd
+          static_cast<internal_float_type>(0.5F) / sqd
         );
 
       const auto minus_half_ne =
@@ -1874,7 +1877,7 @@
       // http://www.jjj.de/pibook/pibook.html
       // http://www.springer.com/gp/book/9783642567353
 
-      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
+      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::digits10 - 1);
                digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
                digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
@@ -1942,7 +1945,7 @@
       while(ne % static_cast<exponent_type>(p))
       {
         ++ne;
-        dd /= static_cast<InternalFloatType>(10.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        dd /= static_cast<internal_float_type>(10.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       }
 
       const std::int32_t original_prec_elem = x.my_prec_elem;
@@ -1950,12 +1953,12 @@
       using std::pow;
 
       // Estimate the initial guess of one over the root using simple manipulations.
-      const InternalFloatType one_over_rtn_d = pow(dd, static_cast<InternalFloatType>(-1) / static_cast<InternalFloatType>(p));
+      const InternalFloatType one_over_rtn_d = pow(dd, static_cast<internal_float_type>(-1) / static_cast<internal_float_type>(p));
 
       // Set the result equal to the initial guess.
       *this = decwide_t(one_over_rtn_d, static_cast<exponent_type>(static_cast<exponent_type>(-ne) / p));
 
-      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
+      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::digits10 - 1);
                 digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
                 digits *= static_cast<std::int32_t>(2))
       {
@@ -2172,14 +2175,14 @@
     auto operator--(int) -> decwide_t { const decwide_t w(*this); static_cast<void>(--(*this)); return w; }
 
     // Conversion routines.
-    auto extract_parts(InternalFloatType& mantissa, exponent_type& exponent) const -> void
+    auto extract_parts(internal_float_type& mantissa, exponent_type& exponent) const -> void
     {
       // Extracts the mantissa as a decimal part less in magnitude
       // than 1 and the base-10 exponent parts of this decwide_t.
       // For instance 45.67e8 will be extracted as 0.4567 * e10.
 
       exponent = my_exp;
-      mantissa = static_cast<InternalFloatType>(0.0F);
+      mantissa = static_cast<internal_float_type>(0.0F);
 
       auto p10 = static_cast<limb_type>(1U);
 
@@ -2190,29 +2193,29 @@
         {
           d0 = static_cast<limb_type>(d0 / static_cast<limb_type>(UINT8_C(10)));
 
+          p10 = static_cast<limb_type>(p10 * static_cast<limb_type>(UINT8_C(10)));
+
+          ++exponent;
+
           if(d0 == static_cast<limb_type>(0U))
           {
             break;
           }
-
-          p10 = static_cast<limb_type>(p10 * static_cast<limb_type>(UINT8_C(10)));
-
-          ++exponent;
         }
       }
 
       auto scale =
-        static_cast<InternalFloatType>
+        static_cast<internal_float_type>
         (
-          static_cast<InternalFloatType>(1.0F) / static_cast<InternalFloatType>(p10)
+          static_cast<internal_float_type>(1.0F) / static_cast<internal_float_type>(p10)
         );
 
       constexpr auto digit_loops =
         static_cast<std::int32_t>
         (
-            static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+            static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
                                       / static_cast<std::int32_t>(decwide_t_elem_digits10))
-          + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::max_digits10)
+          + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
                                                                 % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0)
         );
 
@@ -2222,9 +2225,9 @@
                ((limb_index < my_data.size()) && (limb_index < static_cast<local_size_type>(digit_loops)));
                ++limb_index)
       {
-        mantissa += (static_cast<InternalFloatType>(my_data[limb_index]) * scale);
+        mantissa += (static_cast<internal_float_type>(my_data[limb_index]) * scale);
 
-        scale /= static_cast<InternalFloatType>(decwide_t_elem_mask);
+        scale /= static_cast<internal_float_type>(decwide_t_elem_mask);
       }
 
       if(my_neg)
@@ -3668,26 +3671,26 @@
       // Get the base-10 exponent.
       auto the_exp = static_cast<exponent_type>(ilogb(*this));
 
-      // Get the output stream's precision and limit it to max_digits10.
-      // Erroneous zero or negative precision (theoretically impossible)
-      // will be set to ostream's default precision.
-      static const std::stringstream str_default;
-      static const std::streamsize   prec_default = str_default.precision();
-
-      const auto os_precision =
-        static_cast<std::uint_fast32_t>
-        (
-          ((os.precision() <= static_cast<std::streamsize>(0))
-            ? static_cast<std::uint_fast32_t>(prec_default)
-            : static_cast<std::uint_fast32_t>(os.precision()))
-        );
-
       // Determine the kind of output format requested (scientific, fixed, none).
       detail::os_float_field_type my_float_field { };
 
       if     ((my_flags & std::ios::scientific) != static_cast<local_flags_type>(0U)) { my_float_field = detail::os_float_field_type::scientific; }
       else if((my_flags & std::ios::fixed)      != static_cast<local_flags_type>(0U)) { my_float_field = detail::os_float_field_type::fixed; }
       else                                                                            { my_float_field = detail::os_float_field_type::none; }
+
+      // Get the output stream's precision and limit it to max_digits10.
+      // Erroneous negative precision (theoretically impossible) will be
+      // set to ostream's default precision. Zero precision will be left
+      // at zero.
+      const auto prec_default = std::stringstream().precision();
+
+      auto os_precision =
+        static_cast<std::uint_fast32_t>
+        (
+          ((os.precision() <= static_cast<std::streamsize>(0))
+            ? ((my_float_field != detail::os_float_field_type::scientific) ? static_cast<std::uint_fast32_t>(prec_default) : static_cast<std::uint_fast32_t>(UINT8_C(0)))
+            : static_cast<std::uint_fast32_t>(os.precision()))
+        );
 
       bool use_scientific = false;
       bool use_fixed      = false;
