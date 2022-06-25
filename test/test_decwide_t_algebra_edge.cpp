@@ -605,9 +605,42 @@ auto test_frexp_in_all_ranges() -> bool
   return result_is_ok;
 }
 
-auto test_string_round_tripping() -> bool
+auto test_string_ops_and_round_trips() -> bool
 {
   auto result_is_ok = true;
+
+  for(auto i = static_cast<unsigned>(UINT32_C(100));
+           i < static_cast<unsigned>(UINT32_C(1000));
+           i = static_cast<unsigned>(i + static_cast<unsigned>(UINT32_C(100))))
+  {
+    std::stringstream strm1;
+    std::stringstream strm2;
+
+    const auto pi_frac1 = local_wide_decimal_type(pi_left / static_cast<unsigned>(UINT32_C(1000)));
+          auto pi_frac2 = local_wide_decimal_type { };
+
+    strm1 << std::fixed << std::setprecision(static_cast<int>(INT8_C(3))) << pi_frac1;
+
+    strm1 >> pi_frac2;
+
+    strm2 << std::fixed << std::setprecision(static_cast<int>(i)) << pi_frac2;
+
+    const auto str_pi_padded = strm2.str();
+
+    std::string str_pi_padded_ctrl(static_cast<std::size_t>(i - static_cast<unsigned>(UINT8_C(5))), '0');
+
+    str_pi_padded_ctrl.insert(str_pi_padded_ctrl.begin(), '4');
+    str_pi_padded_ctrl.insert(str_pi_padded_ctrl.begin(), '1');
+    str_pi_padded_ctrl.insert(str_pi_padded_ctrl.begin(), '3');
+    str_pi_padded_ctrl.insert(str_pi_padded_ctrl.begin(), '0');
+    str_pi_padded_ctrl.insert(str_pi_padded_ctrl.begin(), '0');
+    str_pi_padded_ctrl.insert(str_pi_padded_ctrl.begin(), '.');
+    str_pi_padded_ctrl.insert(str_pi_padded_ctrl.begin(), '0');
+
+    const auto result_str_pi_padded_is_ok = (str_pi_padded == str_pi_padded_ctrl);
+
+    result_is_ok = (result_str_pi_padded_is_ok && result_is_ok);
+  }
 
   for(auto   i = static_cast<unsigned>(UINT8_C(1));
              i < static_cast<unsigned>(UINT8_C(10));
@@ -1040,7 +1073,7 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   result_is_ok = (test_decwide_t_algebra_edge::test_various_zero_operations              () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_one_operations               () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_frexp_in_all_ranges                  () && result_is_ok);
-  result_is_ok = (test_decwide_t_algebra_edge::test_string_round_tripping                () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_string_ops_and_round_trips           () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_rootn                        () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<float>      () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<double>     () && result_is_ok);
