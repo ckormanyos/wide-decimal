@@ -3671,26 +3671,26 @@
       // Get the base-10 exponent.
       auto the_exp = static_cast<exponent_type>(ilogb(*this));
 
-      // Get the output stream's precision and limit it to max_digits10.
-      // Erroneous zero or negative precision (theoretically impossible)
-      // will be set to ostream's default precision.
-      static const std::stringstream str_default;
-      static const std::streamsize   prec_default = str_default.precision();
-
-      const auto os_precision =
-        static_cast<std::uint_fast32_t>
-        (
-          ((os.precision() <= static_cast<std::streamsize>(0))
-            ? static_cast<std::uint_fast32_t>(prec_default)
-            : static_cast<std::uint_fast32_t>(os.precision()))
-        );
-
       // Determine the kind of output format requested (scientific, fixed, none).
       detail::os_float_field_type my_float_field { };
 
       if     ((my_flags & std::ios::scientific) != static_cast<local_flags_type>(0U)) { my_float_field = detail::os_float_field_type::scientific; }
       else if((my_flags & std::ios::fixed)      != static_cast<local_flags_type>(0U)) { my_float_field = detail::os_float_field_type::fixed; }
       else                                                                            { my_float_field = detail::os_float_field_type::none; }
+
+      // Get the output stream's precision and limit it to max_digits10.
+      // Erroneous negative precision (theoretically impossible) will be
+      // set to ostream's default precision. Zero precision will be left
+      // at zero.
+      const auto prec_default = std::stringstream().precision();
+
+      auto os_precision =
+        static_cast<std::uint_fast32_t>
+        (
+          ((os.precision() <= static_cast<std::streamsize>(0))
+            ? ((my_float_field != detail::os_float_field_type::scientific) ? static_cast<std::uint_fast32_t>(prec_default) : static_cast<std::uint_fast32_t>(UINT8_C(0)))
+            : static_cast<std::uint_fast32_t>(os.precision()))
+        );
 
       bool use_scientific = false;
       bool use_fixed      = false;

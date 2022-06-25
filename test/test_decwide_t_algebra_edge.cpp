@@ -609,6 +609,70 @@ auto test_string_round_tripping() -> bool
 {
   auto result_is_ok = true;
 
+  for(auto   i = static_cast<unsigned>(UINT8_C(1));
+             i < static_cast<unsigned>(UINT8_C(10));
+           ++i)
+  {
+    const auto x = local_wide_decimal_type(i);
+
+    std::stringstream strm;
+
+    strm << std::scientific
+         << std::noshowpoint
+         << std::uppercase
+         << std::setprecision(static_cast<std::streamsize>(INT8_C(0)))
+         << x;
+
+    const auto str_of_digit = strm.str();
+
+    auto str_of_digit_ctrl = std::string("xE+000");
+
+    str_of_digit_ctrl.at(static_cast<std::size_t>(0U)) =
+      static_cast<char>
+      (
+        i + static_cast<unsigned>(UINT8_C(0x30))
+      );
+
+    const auto result_str_of_digit_is_ok = (str_of_digit == str_of_digit_ctrl);
+
+    result_is_ok = (result_str_of_digit_is_ok && result_is_ok);
+  }
+
+  for(auto   i = static_cast<unsigned>(UINT8_C(1));
+             i < static_cast<unsigned>(UINT8_C(10));
+           ++i)
+  {
+    std::array<char, 4U> digits_to_use =
+    {
+      static_cast<char>(i + static_cast<unsigned>(UINT8_C(0x30))),
+      '.',
+      static_cast<char>(i + static_cast<unsigned>(UINT8_C(0x30))),
+      '\0'
+    };
+
+    const auto x = local_wide_decimal_type(digits_to_use.data());
+
+    std::stringstream strm;
+
+    strm << std::fixed
+         << std::setw(static_cast<std::streamsize>(INT8_C(20)))
+         << std::setfill('#')
+         << std::setprecision(static_cast<std::streamsize>(INT8_C(1)))
+         << x;
+
+    const auto str_of_digits = strm.str();
+
+    auto str_of_digits_ctrl = std::string(static_cast<std::size_t>(UINT8_C(17)), '#');
+
+    str_of_digits_ctrl.insert(str_of_digits_ctrl.end(), digits_to_use.at(static_cast<std::size_t>(UINT8_C(2))));
+    str_of_digits_ctrl.insert(str_of_digits_ctrl.end(), digits_to_use.at(static_cast<std::size_t>(UINT8_C(1))));
+    str_of_digits_ctrl.insert(str_of_digits_ctrl.end(), digits_to_use.at(static_cast<std::size_t>(UINT8_C(0))));
+
+    const auto result_str_of_digit_is_ok = (str_of_digits == str_of_digits_ctrl);
+
+    result_is_ok = (result_str_of_digit_is_ok && result_is_ok);
+  }
+
   const auto tol = local_wide_decimal_type(local_wide_decimal_type(1U) / 1000U);
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
