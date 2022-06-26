@@ -2,7 +2,7 @@
 ==================
 
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
-[![Open Issues](https://github.com/ckormanyos/wide-decimal/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)](https://github.com/ckormanyos/wide-decimal/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+[![Open Issues](https://img.shields.io/github/issues-raw/ckormanyos/wide-decimal)](https://github.com/ckormanyos/wide-decimal/issues)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/context:cpp)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/alerts/)
 [![Coverity Scan](https://scan.coverity.com/projects/24792/badge.svg)](https://scan.coverity.com/projects/ckormanyos-wide-decimal)
