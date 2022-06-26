@@ -30,7 +30,7 @@
                              std::uint_fast8_t line_index) -> bool = 0;
 
   protected:
-    lcd_base() = default;
+    lcd_base() = default; // LCOV_EXCL_LINE
 
     virtual auto set_line_index(const std::uint8_t index) -> bool { static_cast<void>(index); return true; } // LCOV_EXCL_LINE
   };

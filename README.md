@@ -2,6 +2,7 @@
 ==================
 
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
+[![Open Issues](https://github.com/ckormanyos/wide-decimal/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)](https://github.com/ckormanyos/wide-decimal/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/context:cpp)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/alerts/)
 [![Coverity Scan](https://scan.coverity.com/projects/24792/badge.svg)](https://scan.coverity.com/projects/ckormanyos-wide-decimal)
@@ -24,14 +25,14 @@ Wide-decimal implements both common algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`,
 and also includes full support for `std::numeric_limits`.
 
-Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 17, 20.
+Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 17, 20, 23.
 
 ## Implementation goals
 
   - Wide precision range up to one million decimal digits
   - Moderately good efficiency over the entire wide precision range
   - Clean header-only C++11 design
-  - Seamless portability to any modern C++11, 14, 17, 20 compiler
+  - Seamless portability to any modern C++11, 14, 17, 20, 23 compiler
   - Scalability with small memory footprint and efficiency suitable for _bare-metal_ embedded systems
 
 ## Quick start
@@ -138,7 +139,7 @@ subroutines called from `main()` that exercise various test cases.
 
 Continuous integration runs on push using GitHub Actions.
 Various compilers, operating systems, and C++ standards
-ranging from C++11, 14, 17, 20 are included in CI.
+ranging from C++11, 14, 17, 20, 23 are included in CI.
 
 ### Build Status
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)

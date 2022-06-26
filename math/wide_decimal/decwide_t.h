@@ -689,7 +689,7 @@
 
       native_float_parts() = delete;
 
-      ~native_float_parts() = default;
+      ~native_float_parts() = default; // LCOV_EXCL_LINE
 
       auto operator=(const native_float_parts& other) noexcept -> native_float_parts& // NOLINT(cert-oop54-cpp)
       {
@@ -734,12 +734,14 @@
       auto operator=(const initializer&) -> initializer& = delete;
       auto operator=(initializer&&) noexcept -> initializer& = delete;
 
-      ~initializer() noexcept = default;
+      ~initializer() noexcept = default; // LCOV_EXCL_LINE
 
+      // LCOV_EXCL_START
       auto do_nothing() const noexcept -> void
       {
         // Do nothing on purpose.
       }
+      // LCOV_EXCL_STOP
     };
 
     static const initializer my_initializer;
@@ -1651,7 +1653,21 @@
       return
         from_lst
         (
-          { static_cast<limb_type>(detail::pow10_maker(decwide_t_power10_limb0_for_epsilon())) },
+          {
+            static_cast<limb_type>
+            (
+              detail::pow10_maker
+              (
+                static_cast<std::uint32_t>
+                (
+                  static_cast<std::int32_t>
+                  (
+                    static_cast<std::int32_t>(INT32_C(1) + decwide_t_digits10_for_epsilon()) - decwide_t_digits10
+                  )
+                )
+              )
+            )
+          },
           static_cast<exponent_type>(static_cast<std::int32_t>(-decwide_t_digits10_for_epsilon()))
         );
     }
@@ -1743,8 +1759,9 @@
 
       if(isone())
       {
-        *this = ((!b_neg) ?  one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
-                          : -one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
+        static_cast<void>(operator=(one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()));
+
+        my_neg = b_neg;
 
         return *this;
       }
@@ -1819,7 +1836,12 @@
         return operator=(zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
       }
 
-      if(iszero() || isone())
+      if(iszero())
+      {
+        return *this;
+      }
+
+      if(isone())
       {
         return *this;
       }
@@ -2512,6 +2534,20 @@
       return a;
     }
 
+    static constexpr auto decwide_t_digits10_for_epsilon() -> std::int32_t
+    {
+      return
+        static_cast<std::int32_t>
+        (
+            static_cast<std::int32_t>
+            (
+                static_cast<std::int32_t> (decwide_t_digits10 / decwide_t_elem_digits10)
+              + static_cast<std::int32_t>((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)
+            )
+          * decwide_t_elem_digits10
+        );
+    }
+
   private:
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
@@ -2527,32 +2563,6 @@
     bool                my_neg;       // NOLINT(readability-identifier-naming,modernize-use-default-member-init)
     fpclass_type        my_fpclass;   // NOLINT(readability-identifier-naming)
     std::int32_t        my_prec_elem; // NOLINT(readability-identifier-naming)
-
-    static constexpr auto decwide_t_digits10_for_epsilon() -> std::int32_t
-    {
-      return
-        static_cast<std::int32_t>
-        (
-            static_cast<std::int32_t>
-            (
-                static_cast<std::int32_t> (decwide_t_digits10 / decwide_t_elem_digits10)
-              + static_cast<std::int32_t>((decwide_t_digits10 % decwide_t_elem_digits10) != 0 ? 1 : 0)
-            )
-          * decwide_t_elem_digits10
-        );
-    }
-
-    static constexpr auto decwide_t_power10_limb0_for_epsilon() -> std::uint32_t
-    {
-      return
-        static_cast<std::uint32_t>
-        (
-          static_cast<std::int32_t>
-          (
-            static_cast<std::int32_t>(INT32_C(1) + decwide_t_digits10_for_epsilon()) - decwide_t_digits10
-          )
-        );
-    }
 
     auto from_unsigned_long_long(unsigned long long u) -> void // NOLINT(google-runtime-int)
     {
@@ -3735,7 +3745,8 @@
 
         the_number_of_digits_i_want_from_decwide_t = (std::min)(max10_plus_one, prec_plus_one);
       }
-      else if(use_fixed)
+
+      if(use_fixed)
       {
         // The float-field is scientific. The number of all-digits depends
         // on the form of the number.
@@ -5177,14 +5188,40 @@
       static constexpr bool                    traps             = false;
       static constexpr bool                    tinyness_before   = false;
 
-      static constexpr auto (min)        () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_min(); }
-      static constexpr auto (max)        () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_max(); }
+      static constexpr auto (min)  () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_min(); }
+      static constexpr auto (max)  () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_max(); }
       #if defined(WIDE_DECIMAL_NAMESPACE)
-      static constexpr auto lowest       () -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      static constexpr auto lowest () -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       #else
-      static constexpr auto lowest       () -> local_wide_decimal_type { return math::wide_decimal::zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
+      static constexpr auto lowest () -> local_wide_decimal_type { return math::wide_decimal::zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       #endif
-      static constexpr auto epsilon      () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_eps(); }
+      static constexpr auto epsilon() -> local_wide_decimal_type
+      {
+        return local_wide_decimal_type::from_lst
+        (
+          {
+            static_cast<typename local_wide_decimal_type::limb_type>
+            (
+              #if defined(WIDE_DECIMAL_NAMESPACE)
+              WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::pow10_maker
+              #else
+              math::wide_decimal::detail::pow10_maker
+              #endif
+              (
+                static_cast<std::uint32_t>
+                (
+                  static_cast<std::int32_t>
+                  (
+                    static_cast<std::int32_t>(INT32_C(1) + local_wide_decimal_type::decwide_t_digits10_for_epsilon()) - local_wide_decimal_type::decwide_t_digits10
+                  )
+                )
+              )
+            )
+          },
+          static_cast<typename local_wide_decimal_type::exponent_type>(static_cast<std::int32_t>(-local_wide_decimal_type::decwide_t_digits10_for_epsilon()))
+        );
+      }
+      // LCOV_EXCL_START
       #if defined(WIDE_DECIMAL_NAMESPACE)
       static constexpr auto round_error  () -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       static constexpr auto infinity     () -> local_wide_decimal_type { return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
@@ -5198,6 +5235,7 @@
       static constexpr auto signaling_NaN() -> local_wide_decimal_type { return math::wide_decimal::zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); } // NOLINT(readability-identifier-naming)
       static constexpr auto denorm_min   () -> local_wide_decimal_type { return math::wide_decimal::zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       #endif
+      // LCOV_EXCL_STOP
     };
   } // namespace std
 

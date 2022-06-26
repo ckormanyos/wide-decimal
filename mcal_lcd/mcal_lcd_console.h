@@ -22,7 +22,7 @@
   class lcd_console : public mcal::lcd::lcd_base // NOLINT(cppcoreguidelines-special-member-functions,hicpp-special-member-functions)
   {
   public:
-    lcd_console() = default;
+    lcd_console() = default; // LCOV_EXCL_LINE
 
     ~lcd_console() override = default;
 
