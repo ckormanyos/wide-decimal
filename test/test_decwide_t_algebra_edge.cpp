@@ -487,6 +487,7 @@ auto test_various_min_max_operations() -> bool
         && static_cast<signed long long>(local_min_sll_excess) == (std::numeric_limits<signed long long>::min)() // NOLINT(google-runtime-int)
       );
 
+    #if (!defined(__APPLE__) && !defined(__MINGW32__))
     const auto local_max_ldbl = local_wide_decimal_type((std::numeric_limits<long double>::max)());
 
     const auto local_max_ldbl_excess = local_max_ldbl * local_max_ldbl;
@@ -508,13 +509,16 @@ auto test_various_min_max_operations() -> bool
            (delta_ldbl        < tol_ldbl)
         && (isinf)(static_cast<long double>(local_max_ldbl_excess))
       );
+    #endif
 
     const auto result_min_max_is_ok =
       (
            result_local_max_ull_is_ok
         && result_local_max_sll_is_ok
         && result_local_min_sll_is_ok
+        #if (!defined(__APPLE__) && !defined(__MINGW32__))
         && result_local_max_ldbl_is_ok
+        #endif
       );
 
     result_is_ok = (result_min_max_is_ok && result_is_ok);
