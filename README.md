@@ -1,6 +1,7 @@
 ﻿Wide-decimal
 ==================
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d26e19cdb3534500b17e3c9033c5549b)](https://app.codacy.com/gh/ckormanyos/wide-decimal?utm_source=github.com&utm_medium=referral&utm_content=ckormanyos/wide-decimal&utm_campaign=Badge_Grade_Settings)
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
 [![Open Issues](https://img.shields.io/github/issues-raw/ckormanyos/wide-decimal)](https://github.com/ckormanyos/wide-decimal/issues)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/context:cpp)
