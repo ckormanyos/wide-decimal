@@ -1,27 +1,16 @@
 ﻿Wide-decimal
 ==================
-<p align="left">
-    <a href="https://github.com/ckormanyos/wide-decimal/actions">
-        <img src="https://github.com/ckormanyos/wide-decimal/actions/workflows/wide-decimal.yml/badge.svg" alt="Build Status"></a>
-    <a href="https://github.com/ckormanyos/wide-decimal/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">
-        <img src="https://custom-icon-badges.herokuapp.com/github/issues-raw/ckormanyos/wide-decimal?logo=github" alt="Issues"></a>
-    <a href="https://lgtm.com/projects/g/ckormanyos/wide-decimal/context:cpp">
-        <img src="https://img.shields.io/lgtm/grade/cpp/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18" alt="Language grade: C/C++"></a>
-    <a href="https://lgtm.com/projects/g/ckormanyos/wide-decimal/alerts/?mode=list">
-        <img src="https://img.shields.io/lgtm/alerts/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18" alt="Total alerts"></a>
-    <a href="https://scan.coverity.com/projects/ckormanyos-wide-decimal">
-        <img src="https://scan.coverity.com/projects/24792/badge.svg" alt="Coverity Scan Build Status"></a>
-    <a href="https://sonarcloud.io/summary/new_code?id=ckormanyos_wide-decimal">
-        <img src="https://sonarcloud.io/api/project_badges/measure?project=ckormanyos_wide-decimal&metric=alert_status" alt="Quality Gate Status"></a>
-    <a href="https://codecov.io/gh/ckormanyos/wide-decimal">
-        <img src="https://codecov.io/gh/ckormanyos/wide-decimal/branch/main/graph/badge.svg?token=3LIK8E96FC" alt="code coverage"></a>
-    <a href="https://github.com/ckormanyos/wide-decimal/blob/main/LICENSE_1_0.txt">
-        <img src="https://img.shields.io/badge/license-BSL%201.0-blue.svg" alt="Boost Software License 1.0"></a>
-    <a href="https://github.com/ckormanyos/wide-decimal" alt="Activity">
-        <img src="https://img.shields.io/github/commit-activity/y/ckormanyos/wide-decimal"></a>
-    <a href="https://github.com/ckormanyos/wide-decimal" alt="GitHub code size in bytes">
-        <img src="https://img.shields.io/github/languages/code-size/ckormanyos/wide-decimal"></a>
-</p>
+
+[![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
+[![Open Issues](https://img.shields.io/github/issues-raw/ckormanyos/wide-decimal)](https://github.com/ckormanyos/wide-decimal/issues)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/context:cpp)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/alerts/)
+[![Coverity Scan](https://scan.coverity.com/projects/24792/badge.svg)](https://scan.coverity.com/projects/ckormanyos-wide-decimal)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ckormanyos_wide-decimal&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ckormanyos_wide-decimal)
+[![codecov](https://codecov.io/gh/ckormanyos/wide-decimal/branch/main/graph/badge.svg?token=9SEP7RLNSO)](https://codecov.io/gh/ckormanyos/wide-decimal)
+[![Boost Software License 1.0](https://img.shields.io/badge/license-BSL%201.0-blue.svg)](https://github.com/ckormanyos/wide-decimal/blob/master/LICENSE_1_0.txt)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ckormanyos/wide-decimal)](https://img.shields.io/github/commit-activity/y/ckormanyos/wide-decimal)
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ckormanyos/wide-decimal)](https://github.com/ckormanyos/wide-decimal)
 
 Wide-decimal implements a generic C++ template for extended precision decimal float types.
 
