@@ -26,6 +26,7 @@
   namespace math { namespace wide_decimal { namespace detail { namespace fft { // NOLINT(modernize-concat-nested-namespaces)
   #endif
 
+  // LCOV_EXCL_START
   template<typename float_type>
   constexpr auto template_one() -> float_type { return static_cast<float_type>(1); }
 
@@ -61,6 +62,7 @@
 
   template<>
   constexpr auto template_fast_div_by_two<long double>(long double a) -> long double { return static_cast<long double>(a / 2); }
+  // LCOV_EXCL_STOP
 
   template<typename float_type>
   constexpr auto template_sin_order_1(std::uint32_t num_points) -> float_type // NOLINT(readability-function-cognitive-complexity)

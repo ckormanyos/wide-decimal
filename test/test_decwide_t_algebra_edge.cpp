@@ -232,6 +232,37 @@ auto test_various_zero_operations() -> bool
   }
 
   {
+    using local_value_type = typename local_wide_decimal_type::representation_type::value_type;
+
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    using static_array_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::fixed_static_array<local_value_type, local_wide_decimal_type::decwide_t_elem_number>;
+    #else
+    using static_array_type = math::wide_decimal::detail::fixed_static_array<local_value_type, local_wide_decimal_type::decwide_t_elem_number>;
+    #endif
+
+    static_array_type
+      other_rep
+      (
+        static_cast<typename static_array_type::size_type>(UINT8_C(2)),
+        static_cast<typename static_array_type::value_type>(UINT8_C(42))
+      );
+
+    const auto result_other_rep_is_ok =
+      (
+           (other_rep.at(static_cast<typename static_array_type::size_type>(UINT8_C(0))) == static_cast<typename static_array_type::value_type>(UINT8_C(42)))
+        && (other_rep.at(static_cast<typename static_array_type::size_type>(UINT8_C(1))) == static_cast<typename static_array_type::value_type>(UINT8_C(42)))
+        && std::equal
+           (
+             other_rep.cbegin() + static_cast<typename static_array_type::size_type>(UINT8_C(2)),
+             other_rep.cend(),
+             local_zero().crepresentation().cbegin() + static_cast<typename static_array_type::size_type>(UINT8_C(2))
+           )
+      );
+
+      result_is_ok = (result_other_rep_is_ok && result_is_ok);
+  }
+
+  {
     const std::string str_zeros(static_cast<std::size_t>(33U), '0');
 
     const local_wide_decimal_type z(str_zeros.c_str());
@@ -416,6 +447,81 @@ auto test_various_one_operations() -> bool
     const auto x_div_one_minus = x / -local_one();
 
     result_is_ok = ((x_div_one == x) && (x_div_near_one == x) && (x_div_one_minus == -x) && result_is_ok);
+  }
+
+  return result_is_ok;
+}
+
+auto test_various_min_max_operations() -> bool
+{
+  auto result_is_ok = true;
+
+  {
+    const auto local_max_ull = local_wide_decimal_type((std::numeric_limits<unsigned long long>::max)()); // NOLINT(google-runtime-int)
+
+    const auto local_max_ull_excess = local_max_ull * local_max_ull;
+
+    auto result_local_max_ull_is_ok =
+      (
+           static_cast<unsigned long long>(local_max_ull)        == (std::numeric_limits<unsigned long long>::max)() // NOLINT(google-runtime-int)
+        && static_cast<unsigned long long>(local_max_ull_excess) == (std::numeric_limits<unsigned long long>::max)() // NOLINT(google-runtime-int)
+      );
+
+    const auto local_max_sll = local_wide_decimal_type((std::numeric_limits<signed long long>::max)()); // NOLINT(google-runtime-int)
+
+    const auto local_max_sll_excess = local_max_sll * local_max_sll;
+
+    auto result_local_max_sll_is_ok =
+      (
+           static_cast<signed long long>(local_max_sll)        == (std::numeric_limits<signed long long>::max)() // NOLINT(google-runtime-int)
+        && static_cast<signed long long>(local_max_sll_excess) == (std::numeric_limits<signed long long>::max)() // NOLINT(google-runtime-int)
+      );
+
+    const auto local_min_sll = local_wide_decimal_type((std::numeric_limits<signed long long>::min)()); // NOLINT(google-runtime-int)
+
+    const auto local_min_sll_excess = -(local_min_sll * local_min_sll);
+
+    auto result_local_min_sll_is_ok =
+      (
+           static_cast<signed long long>(local_min_sll)        == (std::numeric_limits<signed long long>::min)() // NOLINT(google-runtime-int)
+        && static_cast<signed long long>(local_min_sll_excess) == (std::numeric_limits<signed long long>::min)() // NOLINT(google-runtime-int)
+      );
+
+    #if (!defined(__APPLE__) && !defined(__MINGW32__))
+    const auto local_max_ldbl = local_wide_decimal_type((std::numeric_limits<long double>::max)());
+
+    const auto local_max_ldbl_excess = local_max_ldbl * local_max_ldbl;
+
+    using std::fabs;
+
+    const auto delta_ldbl = fabs(static_cast<long double>(1.0L) - static_cast<long double>(static_cast<long double>(local_max_ldbl)        / (std::numeric_limits<long double>::max)()));
+
+    constexpr auto tol_ldbl =
+      static_cast<long double>
+      (
+        std::numeric_limits<long double>::epsilon() * static_cast<long double>(2.0L)
+      );
+
+    using std::isinf;
+
+    const auto result_local_max_ldbl_is_ok =
+      (
+           (delta_ldbl        < tol_ldbl)
+        && (isinf)(static_cast<long double>(local_max_ldbl_excess))
+      );
+    #endif
+
+    const auto result_min_max_is_ok =
+      (
+           result_local_max_ull_is_ok
+        && result_local_max_sll_is_ok
+        && result_local_min_sll_is_ok
+        #if (!defined(__APPLE__) && !defined(__MINGW32__))
+        && result_local_max_ldbl_is_ok
+        #endif
+      );
+
+    result_is_ok = (result_min_max_is_ok && result_is_ok);
   }
 
   return result_is_ok;
@@ -811,7 +917,37 @@ auto test_various_rootn() -> bool
 {
   auto result_is_ok = true;
 
+  {
+    using std::sqrt;
+
+    const auto sqrt_one  = sqrt(local_one());
+    const auto sqrt_zero = sqrt(local_zero());
+
+    const auto result_sqrt_one_zero_is_ok =
+      (
+           (sqrt_one  == 1)
+        && (sqrt_one  == local_one())
+        && (sqrt_zero == 0)
+        && (sqrt_zero == local_zero())
+      );
+
+    result_is_ok = (result_sqrt_one_zero_is_ok && result_is_ok);
+  }
+
   const auto tol = local_wide_decimal_type(local_wide_decimal_type(1U) / 1000U);
+
+  for(auto   i = static_cast<unsigned>(UINT32_C(0));
+             i < static_cast<unsigned>(UINT32_C(16));
+           ++i)
+  {
+    const auto x = generate_wide_decimal_value<local_wide_decimal_type>(true);
+
+    const auto r = rootn(x, static_cast<std::int32_t>(INT8_C(1)));
+
+    const auto result_rootn_self_one_is_ok = (r == x);
+
+    result_is_ok = (result_rootn_self_one_is_ok && result_is_ok);
+  }
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(256));
@@ -1072,6 +1208,7 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   result_is_ok = (test_decwide_t_algebra_edge::test_div_by_other_sign_same               () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_zero_operations              () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_one_operations               () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_various_min_max_operations           () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_frexp_in_all_ranges                  () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_string_ops_and_round_trips           () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_rootn                        () && result_is_ok);

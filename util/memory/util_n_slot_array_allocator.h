@@ -57,9 +57,9 @@
     using reference       = value_type&;
     using const_reference = const value_type&;
 
-    n_slot_array_allocator() = default;
+    n_slot_array_allocator() = default; // LCOV_EXCL_LINE
 
-    n_slot_array_allocator(const n_slot_array_allocator&) = default;
+    n_slot_array_allocator(const n_slot_array_allocator&) = default; // LCOV_EXCL_LINE
 
     template<typename U>
     struct rebind
@@ -117,10 +117,12 @@
       *p = x;
     }
 
+    // LCOV_EXCL_START
     auto destroy(pointer p) -> void
     {
       static_cast<void>(p);
     }
+    // LCOV_EXCL_STOP
 
     auto deallocate(pointer p_slot, size_type sz) -> void
     {

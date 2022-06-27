@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2022.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -45,12 +45,14 @@
       auto operator=(const initializer&) -> initializer& = delete;
       auto operator=(initializer&&) noexcept -> initializer& = delete;
 
-      ~initializer() = default;
+      ~initializer() = default; // LCOV_EXCL_LINE
 
+      // LCOV_EXCL_START
       auto do_nothing() const -> void
       {
         // Do nothing on purpose.
       }
+      // LCOV_EXCL_STOP
     };
 
     static initializer init; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
