@@ -1,16 +1,27 @@
 ﻿Wide-decimal
 ==================
-
-[![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
-[![Open Issues](https://img.shields.io/github/issues-raw/ckormanyos/wide-decimal)](https://github.com/ckormanyos/wide-decimal/issues)
-[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/context:cpp)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ckormanyos/wide-decimal/alerts/)
-[![Coverity Scan](https://scan.coverity.com/projects/24792/badge.svg)](https://scan.coverity.com/projects/ckormanyos-wide-decimal)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ckormanyos_wide-decimal&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ckormanyos_wide-decimal)
-[![codecov](https://codecov.io/gh/ckormanyos/wide-decimal/branch/main/graph/badge.svg?token=9SEP7RLNSO)](https://codecov.io/gh/ckormanyos/wide-decimal)
-[![Boost Software License 1.0](https://img.shields.io/badge/license-BSL%201.0-blue.svg)](https://github.com/ckormanyos/wide-decimal/blob/master/LICENSE_1_0.txt)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ckormanyos/wide-decimal)](https://img.shields.io/github/commit-activity/y/ckormanyos/wide-decimal)
-[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ckormanyos/wide-decimal)](https://github.com/ckormanyos/wide-decimal)
+<p align="left">
+    <a href="https://github.com/ckormanyos/wide-decimal/actions">
+        <img src="https://github.com/ckormanyos/wide-decimal/actions/workflows/wide-decimal.yml/badge.svg" alt="Build Status" /></a>
+    <a href="https://github.com/ckormanyos/wide-decimal/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">
+        <img src="https://custom-icon-badges.herokuapp.com/github/issues-raw/ckormanyos/wide-decimal?logo=github" alt="Issues" /></a>
+    <a href="https://lgtm.com/projects/g/ckormanyos/wide-decimal/context:cpp">
+        <img src="https://img.shields.io/lgtm/grade/cpp/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18" alt="Language grade: C/C++" /></a>
+    <a href="https://lgtm.com/projects/g/ckormanyos/wide-decimal/alerts/?mode=list">
+        <img src="https://img.shields.io/lgtm/alerts/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18" alt="Total alerts" /></a>
+    <a href="https://scan.coverity.com/projects/ckormanyos-wide-decimal">
+        <img src="https://scan.coverity.com/projects/24792/badge.svg" alt="Coverity Scan Build Status" /></a>
+    <a href="https://sonarcloud.io/summary/new_code?id=ckormanyos_wide-decimal">
+        <img src="https://sonarcloud.io/api/project_badges/measure?project=ckormanyos_wide-decimal&metric=alert_status" alt="Quality Gate Status" /></a>
+    <a href="https://codecov.io/gh/ckormanyos/wide-decimal">
+        <img src="https://codecov.io/gh/ckormanyos/wide-decimal/branch/main/graph/badge.svg?token=3LIK8E96FC" alt="code coverage" /></a>
+    <a href="https://github.com/ckormanyos/wide-decimal/blob/main/LICENSE_1_0.txt">
+        <img src="https://img.shields.io/badge/license-BSL%201.0-blue.svg" alt="Boost Software License 1.0" /></a>
+    <a href="https://github.com/ckormanyos/wide-decimal" alt="Activity">
+        <img src="https://img.shields.io/github/commit-activity/y/ckormanyos/wide-decimal" /></a>
+    <a href="https://github.com/ckormanyos/wide-decimal" alt="GitHub code size in bytes">
+        <img src="https://img.shields.io/github/languages/code-size/ckormanyos/wide-decimal" /></a>
+</p>
 
 Wide-decimal implements a generic C++ template for extended precision decimal float types.
 
@@ -372,13 +383,14 @@ on selected bare-metal OS-less microcontroller systems in
 
 ### Mixing Wide-Decimal with Wide-Integer
 
-Wide-decimal can be used simultaneously with
+[Wide-decimal](https://github.com/ckormanyos/wide-decimal)
+can be used simultaneously with
 [wide-integer](https://github.com/ckormanyos/wide-integer).
 Although this was not primarily foreseen in the designs
 of these libraries, harmonized mixing can be done in the same project,
 and even in the same file.
 This can, however, lead to a conflicting multiple definition
-of this container class, as has been shown in
+of the container class `util::dynamic_array<>`, as has been shown in
 [issue 166](https://github.com/ckormanyos/wide-decimal/issues/166).
 
 In order to use the
@@ -399,8 +411,8 @@ Alternatively, this preprocessor
 switch can be defined on the command line of the compiler call(s)
 for the project.
 
-The helper-container template class `util::dynamic_array<>`
-is used in both the
+The rational for this is as follows. The helper-container template class
+`util::dynamic_array<>` is used in both the
 [`decwide_t_detail.h`](https://github.com/ckormanyos/wide-decimal/tree/main/math/wide_decimal)
 header (secondarily included in `decwide_t.h`) as well as the
 [`uintwide_t.h`](https://github.com/ckormanyos/wide-integer/tree/master/math/wide_integer)
@@ -412,7 +424,14 @@ of `util::dynamic_array<>`, and ensures that
 only one definition is visivble in the file
 containing both big-number headers.
 
-A use-case (test file) called `test_mixed_wide_decimal_wide_integer_b2n.cpp` is included in
-the [test folder](https://github.com/ckormanyos/wide-decimal/tree/main/test)
+A use-case that uses both
+[wide-decimal](https://github.com/ckormanyos/wide-decimal)
+as well as
+[wide-integer](https://github.com/ckormanyos/wide-integer)
+simultaneously has been implemented in a test file.
+This file is called
+[`test_mixed_wide_decimal_wide_integer_b2n.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/test/test_mixed_wide_decimal_wide_integer_b2n.cpp).
+It is included in the
+[test folder](https://github.com/ckormanyos/wide-decimal/tree/main/test)
 and also included in continuous integration.
-This test file involves the computation of Bernoulli numbers.
+This test file involves computations and comparisons of Bernoulli numbers.
