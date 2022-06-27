@@ -372,13 +372,14 @@ on selected bare-metal OS-less microcontroller systems in
 
 ### Mixing Wide-Decimal with Wide-Integer
 
-Wide-decimal can be used simultaneously with
+[Wide-decimal](https://github.com/ckormanyos/wide-decimal)
+can be used simultaneously with
 [wide-integer](https://github.com/ckormanyos/wide-integer).
 Although this was not primarily foreseen in the designs
 of these libraries, harmonized mixing can be done in the same project,
 and even in the same file.
 This can, however, lead to a conflicting multiple definition
-of this container class, as has been shown in
+of the container class `util::dynamic_array<>`, as has been shown in
 [issue 166](https://github.com/ckormanyos/wide-decimal/issues/166).
 
 In order to use the
@@ -399,8 +400,8 @@ Alternatively, this preprocessor
 switch can be defined on the command line of the compiler call(s)
 for the project.
 
-The helper-container template class `util::dynamic_array<>`
-is used in both the
+The rational for this is as follows. The helper-container template class
+`util::dynamic_array<>` is used in both the
 [`decwide_t_detail.h`](https://github.com/ckormanyos/wide-decimal/tree/main/math/wide_decimal)
 header (secondarily included in `decwide_t.h`) as well as the
 [`uintwide_t.h`](https://github.com/ckormanyos/wide-integer/tree/master/math/wide_integer)
@@ -412,7 +413,14 @@ of `util::dynamic_array<>`, and ensures that
 only one definition is visivble in the file
 containing both big-number headers.
 
-A use-case (test file) called `test_mixed_wide_decimal_wide_integer_b2n.cpp` is included in
-the [test folder](https://github.com/ckormanyos/wide-decimal/tree/main/test)
+A use-case that uses both
+[wide-decimal](https://github.com/ckormanyos/wide-decimal)
+as well as
+[wide-integer](https://github.com/ckormanyos/wide-integer)
+simultaneously has been implemented in a test file.
+This file is called
+[`test_mixed_wide_decimal_wide_integer_b2n.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/test/test_mixed_wide_decimal_wide_integer_b2n.cpp).
+It is included in the
+[test folder](https://github.com/ckormanyos/wide-decimal/tree/main/test)
 and also included in continuous integration.
-This test file involves the computation of Bernoulli numbers.
+This test file involves computations and comparisons of Bernoulli numbers.
