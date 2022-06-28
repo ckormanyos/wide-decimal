@@ -14,6 +14,8 @@
         <img src="https://scan.coverity.com/projects/24792/badge.svg" alt="Coverity Scan"></a>
     <a href="https://sonarcloud.io/summary/new_code?id=ckormanyos_wide-decimal">
         <img src="https://sonarcloud.io/api/project_badges/measure?project=ckormanyos_wide-decimal&metric=alert_status" alt="Quality Gate Status"></a>
+    <a href="https://www.codacy.com/gh/ckormanyos/wide-decimal/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ckormanyos/wide-decimal&amp;utm_campaign=Badge_Grade">
+        <img src="https://app.codacy.com/project/badge/Grade/3f3d6624f20e4b53b95de69202cfe297"/></a>
     <a href="https://codecov.io/gh/ckormanyos/wide-decimal">
         <img src="https://codecov.io/gh/ckormanyos/wide-decimal/branch/main/graph/badge.svg?token=9SEP7RLNSO" alt="code coverage"></a>
     <a href="https://github.com/ckormanyos/wide-decimal/blob/master/LICENSE_1_0.txt">
