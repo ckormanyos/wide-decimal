@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <random>
+#include <sstream>
 #include <string>
 
 #include <math/wide_decimal/decwide_t.h>
@@ -487,7 +488,6 @@ auto test_various_min_max_operations() -> bool
         && static_cast<signed long long>(local_min_sll_excess) == (std::numeric_limits<signed long long>::min)() // NOLINT(google-runtime-int)
       );
 
-    #if (!defined(__APPLE__) && !defined(__MINGW32__))
     const auto local_max_ldbl = local_wide_decimal_type((std::numeric_limits<long double>::max)());
 
     const auto local_max_ldbl_excess = local_max_ldbl * local_max_ldbl;
@@ -506,19 +506,16 @@ auto test_various_min_max_operations() -> bool
 
     const auto result_local_max_ldbl_is_ok =
       (
-           (delta_ldbl        < tol_ldbl)
+           (delta_ldbl < tol_ldbl)
         && (isinf)(static_cast<long double>(local_max_ldbl_excess))
       );
-    #endif
 
     const auto result_min_max_is_ok =
       (
            result_local_max_ull_is_ok
         && result_local_max_sll_is_ok
         && result_local_min_sll_is_ok
-        #if (!defined(__APPLE__) && !defined(__MINGW32__))
         && result_local_max_ldbl_is_ok
-        #endif
       );
 
     result_is_ok = (result_min_max_is_ok && result_is_ok);
@@ -1035,15 +1032,10 @@ auto test_to_native_float_and_back() -> bool
 
   auto result_is_ok = true;
 
-  constexpr auto tol_factor =
-    static_cast<long double>
-    (
-      (std::numeric_limits<native_float_type>::digits10 <=  6) ?  32.0L :
-      (std::numeric_limits<native_float_type>::digits10 <= 15) ?  64.0L : 256.0L
-    );
+  constexpr auto tol_factor = static_cast<native_float_type>(2.0L);
 
-  const     auto tol1 = static_cast<local_wide_decimal_type>(static_cast<long double>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
-  constexpr auto tol2 = static_cast<native_float_type>      (static_cast<long double>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
+  const     auto tol1 = static_cast<local_wide_decimal_type>(static_cast<native_float_type>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
+  constexpr auto tol2 = static_cast<native_float_type>      (static_cast<native_float_type>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(4096));
@@ -1074,18 +1066,14 @@ auto test_to_native_float_and_back() -> bool
         (std::min)
         (
           std::numeric_limits<local_wide_decimal_type>::digits10,
-          static_cast<int>(std::numeric_limits<long double>::digits10 + static_cast<int>(INT8_C(20)))
+          static_cast<int>(std::numeric_limits<native_float_type>::max_digits10 + static_cast<int>(INT8_C(4)))
         );
 
-      strm.precision(prec_of_strm);
+      strm << std::scientific << std::setprecision(prec_of_strm) << x;
 
-      strm << std::scientific << x << 'L';
+      auto x_as_native_float_from_strm = static_cast<native_float_type>(0.0L);
 
-      auto x_as_long_double_from_strm = static_cast<long double>(0.0L);
-
-      strm >> x_as_long_double_from_strm;
-
-      const auto x_as_native_float_from_strm = static_cast<native_float_type>(x_as_long_double_from_strm);
+      strm >> x_as_native_float_from_strm;
 
       const auto delta3 = fabs(static_cast<native_float_type>(1.0L) - fabs(x_as_native_float / x_as_native_float_from_strm));
 
@@ -1214,9 +1202,7 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   result_is_ok = (test_decwide_t_algebra_edge::test_various_rootn                        () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<float>      () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<double>     () && result_is_ok);
-  #if (!defined(__APPLE__) && !defined(__MINGW32__))
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<long double>() && result_is_ok);
-  #endif
   result_is_ok = (test_decwide_t_algebra_edge::test_various_int_operations<std::uint16_t>() && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_int_operations<std::uint32_t>() && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_int_operations<std::uint64_t>() && result_is_ok);
