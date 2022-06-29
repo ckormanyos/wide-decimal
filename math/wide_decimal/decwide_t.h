@@ -23,7 +23,6 @@
   //#define WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION
   //#define WIDE_DECIMAL_NAMESPACE=something_unique // (best if done on the command line)
 
-  #include <algorithm>
   #include <cmath>
   #include <cstddef>
   #include <cstdlib>
@@ -38,13 +37,10 @@
   #include <iomanip>
   #include <ios>
   #include <iostream>
-  #else
   #endif
-  #include <iterator>
-  #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
+  #if (!defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING) && !defined(WIDE_DECIMAL_DISABLE_IOSTREAM))
   #include <string>
   #endif
-  #include <type_traits>
 
   #include <math/wide_decimal/decwide_t_detail_ops.h>
 
@@ -3564,6 +3560,64 @@
     }
     #endif //!(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
 
+    static auto get_output_digits(const decwide_t&         x,
+                                        char*              it_dst,
+                                  const std::uint_fast32_t number_of_elements,
+                                        std::size_t*       count_retrieved) -> void
+    {
+      // Extract the required digits from decwide_t, including
+      // digits both before as well as after the decimal point.
+      using data_elem_array_type =
+        std::array<char, static_cast<std::size_t>(decwide_t_elem_digits10 + INT8_C(1))>;
+
+      data_elem_array_type data_elem_buf { };
+
+      auto it_rep = x.crepresentation().cbegin(); // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+
+      const char* p_end = util::baselexical_cast(*it_rep, data_elem_buf.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+
+      ++it_rep;
+
+      *count_retrieved =
+        static_cast<std::size_t>
+        (
+          std::distance(static_cast<const char*>(data_elem_buf.data()), p_end)
+        );
+
+      it_dst = std::copy(data_elem_buf.cbegin(),
+                         data_elem_buf.cbegin() + *count_retrieved,
+                         it_dst);
+
+      data_elem_array_type data_elem_array { };
+
+      data_elem_array.back() = '\0';
+
+      // Extract all of the digits from decwide_t, beginning with the first data element.
+      while(it_rep !=  x.crepresentation().cbegin() + static_cast<std::size_t>(number_of_elements))
+      {
+        p_end = util::baselexical_cast(*it_rep, data_elem_buf.data());
+
+        ++it_rep;
+
+        auto rit = std::copy(std::reverse_iterator<const char*>(p_end),
+                             std::reverse_iterator<const char*>(static_cast<const char*>(data_elem_buf.data())),
+                             data_elem_array.rbegin() + static_cast<std::size_t>(UINT8_C(1)));
+
+        std::fill(rit, data_elem_array.rend(), '0');
+
+        it_dst = std::copy(data_elem_array.cbegin(),
+                           data_elem_array.cbegin() + static_cast<std::size_t>(decwide_t_elem_digits10),
+                           it_dst);
+
+        *count_retrieved =
+          static_cast<std::size_t>
+          (
+              *count_retrieved
+            + static_cast<std::size_t>(decwide_t_elem_digits10)
+          );
+      }
+    }
+
     #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
     static auto get_output_string(const decwide_t&         x,
                                         std::string&       str, // NOLINT(google-runtime-references)
@@ -3576,39 +3630,22 @@
                    static_cast<std::uint_fast32_t>(decwide_t_elem_number));
 
       // Extract the remaining digits from decwide_t after the decimal point.
-      std::array<char, static_cast<std::size_t>(UINT8_C(10))> ptr_str = {{ '\0' }};
 
-      char* ptr_end = util::baselexical_cast(x.crepresentation().at(0U), ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+      str.resize
+      (
+        static_cast<std::size_t>
+        (
+            static_cast<std::size_t>(number_of_elements)
+          * static_cast<std::size_t>(decwide_t_elem_digits10)
+        ),
+        ' '
+      );
 
-      str = std::string(ptr_str.data(), ptr_end);
+      auto count_retrieved = static_cast<std::size_t>(UINT8_C(0));
 
-      using data_elem_array_type = std::array<char, static_cast<std::size_t>(decwide_t_elem_digits10 + INT8_C(1))>;
+      get_output_digits(x, const_cast<char*>(str.data()), number_of_elements, &count_retrieved); // NOLINT(cppcoreguidelines-pro-type-const-cast)
 
-      data_elem_array_type data_elem_array { };
-      data_elem_array_type data_elem_buf   { };
-
-      data_elem_array.back() = '\0';
-
-      // Extract all of the digits from decwide_t, beginning with the first data element.
-      for(auto i = static_cast<std::uint_fast32_t>(1U); i < number_of_elements; i++)
-      {
-        using data_elem_rep_type = typename representation_type::value_type;
-
-        const char* p_end =
-          util::baselexical_cast
-          (
-            static_cast<data_elem_rep_type>(x.crepresentation().at(i)),
-            data_elem_buf.data()
-          );
-
-        auto rit = std::copy(std::reverse_iterator<const char*>(p_end),
-                             std::reverse_iterator<const char*>(static_cast<const char*>(data_elem_buf.data())),
-                             data_elem_array.rbegin() + static_cast<std::size_t>(UINT8_C(1)));
-
-        std::fill(rit, data_elem_array.rend(), '0');
-
-        str += std::string(data_elem_array.data());
-      }
+      str.resize(count_retrieved);
 
       // Cut the output to the size of the precision.
       if(str.length() > number_of_digits)
