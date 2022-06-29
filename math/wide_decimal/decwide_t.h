@@ -36,9 +36,9 @@
   #include <limits>
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   #include <iomanip>
+  #include <ios>
   #include <iostream>
   #else
-  #include <ios>
   #endif
   #include <iterator>
   #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
@@ -747,12 +747,14 @@
     static const initializer my_initializer;
     #endif
 
+    #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
     static auto wr_string(const decwide_t&         x,
                                 std::string&       str, // NOLINT(google-runtime-references)
                                 std::ios::fmtflags ostrm_flags,
                                 std::streamsize    ostrm_precision,
                                 std::streamsize    ostrm_width,
                                 char               ostrm_fill = ' ') -> void; // NOLINT(readability-function-cognitive-complexity,google-runtime-references)
+    #endif
 
   public:
     // Default constructor.
@@ -2297,6 +2299,7 @@
       return x;
     }
 
+    #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
     WIDE_DECIMAL_NODISCARD auto extract_long_double() const -> long double
     {
       // Returns the long double conversion of a decwide_t.
@@ -2339,6 +2342,7 @@
 
       return ldbl_retrieved;
     }
+    #endif
 
     WIDE_DECIMAL_NODISCARD auto extract_signed_long_long() const -> signed long long // NOLINT(google-runtime-int)
     {
@@ -2459,9 +2463,11 @@
       return unsigned_long_long_result;
     }
 
+    #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
     explicit operator long double() const { return                     extract_long_double(); }
     explicit operator double     () const { return static_cast<double>(extract_long_double()); }
     explicit operator float      () const { return static_cast<float> (extract_long_double()); }
+    #endif
 
     template<typename IntegralType,
              typename = typename std::enable_if<std::is_integral<IntegralType>::value>::type>
@@ -4100,13 +4106,14 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::representation_type decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_n_data_for_add_sub;                                                                                                                                                                                                                                                                        // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
   #endif
 
+  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::wr_string(const decwide_t&         x,
-                                                                                                                        std::string&       str, // NOLINT(google-runtime-references)
+  auto decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::wr_string(const decwide_t&   x,               // NOLINT(readability-function-cognitive-complexity)
+                                                                                                                        std::string&       str,             // NOLINT(google-runtime-references)
                                                                                                                         std::ios::fmtflags ostrm_flags,
-                                                                                                                        std::streamsize    ostrm_precision,
+                                                                                                                        std::streamsize    ostrm_precision, // NOLINT(bugprone-easily-swappable-parameters)
                                                                                                                         std::streamsize    ostrm_width,
-                                                                                                                        char               ostrm_fill) -> void // NOLINT(readability-function-cognitive-complexity,google-runtime-references)
+                                                                                                                        char               ostrm_fill) -> void
   {
     using local_flags_type = std::ios::fmtflags;
 
@@ -4260,6 +4267,7 @@
       str.insert((my_left ? str.end() : str.begin()), static_cast<std::size_t>(n_fill), ostrm_fill);
     }
   }
+  #endif
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
