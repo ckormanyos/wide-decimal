@@ -2345,15 +2345,17 @@
           )
         );
 
+      constexpr auto ldbl_max_width_for_exp = std::numeric_limits<std::uintmax_t>::max_digits10 + 1;
+
       constexpr auto ldbl_str_rep_char_cnt =
         static_cast<int>
         (
-            1                                         // +/- sign
+            1                                           // +/- sign
           +   elems_of_ldbl_to_get
-            * static_cast<int>(decwide_t_elem_number) // number of decimal digits
-          + 1                                         // decimal point
-          + 2                                         // E+ or E-
-          + 8                                         // eight-digit left-justified unsigned integral representation for exponent
+            * static_cast<int>(decwide_t_elem_digits10) // number of decimal digits
+          + 1                                           // decimal point
+          + 2                                           // E+ or E-
+          + ldbl_max_width_for_exp                      // unsigned integral representation of the exponent
         );
 
       using ldbl_str_array_type = std::array<char, static_cast<std::size_t>(ldbl_str_rep_char_cnt)>;
@@ -2389,22 +2391,27 @@
       ++ldbl_str_pos;
 
       // Obtain the absolute value of the exponent from decwide_t.
-      const auto ul_exp =
-        static_cast<std::uint32_t>
+      const auto umax_exp =
+        static_cast<std::uintmax_t>
         (
-          (!exp_is_neg) ? static_cast<std::uint32_t>(my_exp) : static_cast<std::uint32_t>(-my_exp)
+          (!exp_is_neg) ? static_cast<std::uintmax_t>(my_exp) : static_cast<std::uintmax_t>(-my_exp)
         );
 
-      // Extract the integral value of the absolute value of the exponent.
-      using exp_array_type = std::array<char, static_cast<std::size_t>(UINT8_C(6))>;
+      {
+        // Extract the integral value of the absolute value of the exponent.
+        using exp_array_type =
+          std::array<char, static_cast<std::size_t>(ldbl_max_width_for_exp)>;
 
-      exp_array_type data_exp_buf { };
+        exp_array_type data_exp_buf { };
 
-      const char* p_end = util::baselexical_cast(ul_exp, data_exp_buf.data());
+        const char* p_end = util::baselexical_cast(umax_exp, data_exp_buf.data());
 
-      std::copy(data_exp_buf.cbegin(),
-                data_exp_buf.cbegin() + std::distance(static_cast<const char*>(data_exp_buf.data()), p_end),
-                ldbl_str_rep.begin() + ldbl_str_pos);
+        const auto exp_len = std::distance(static_cast<const char*>(data_exp_buf.data()), p_end);
+
+        std::copy(data_exp_buf.cbegin(),
+                  data_exp_buf.cbegin() + static_cast<std::size_t>(exp_len),
+                  ldbl_str_rep.begin() + ldbl_str_pos);
+      }
 
       const auto ldbl_retrieved = std::strtold(ldbl_str_rep.data(), nullptr);
 
