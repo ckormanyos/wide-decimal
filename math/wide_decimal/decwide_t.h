@@ -2295,7 +2295,6 @@
       return x;
     }
 
-    #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
     WIDE_DECIMAL_NODISCARD auto extract_long_double() const -> long double
     {
       // Returns the long double conversion of a decwide_t.
@@ -2319,26 +2318,111 @@
                           : -std::numeric_limits<long double>::infinity());
       }
 
-      constexpr auto strm_prec_of_ldbl =
+      constexpr auto digs_of_ldbl_to_get = std::numeric_limits<long double>::max_digits10;
+
+      constexpr auto elems_of_ldbl_to_get_try =
         static_cast<int>
         (
-            std::numeric_limits<long double>::digits10
-          + static_cast<int>(INT8_C(3) + INT8_C(1))
+             (digs_of_ldbl_to_get / static_cast<int>(decwide_t_elem_digits10))
+          + ((digs_of_ldbl_to_get % static_cast<int>(decwide_t_elem_digits10)) != static_cast<int>(INT8_C(0)) ? static_cast<int>(INT8_C(1)) : static_cast<int>(INT8_C(0)))
+          + static_cast<int>(INT8_C(1))
         );
 
-      auto str_of_ldbl_to_get = std::string();
+      constexpr auto elems_of_ldbl_to_get =
+        static_cast<int>
+        (
+          // Caution: Do not use (std::min) here because some language
+          // standards (such as C++11) do not have constexpr-<algorithm>.
 
-      decwide_t::wr_string(*this,
-                           str_of_ldbl_to_get,
-                           std::ios::scientific,
-                           static_cast<std::streamsize>(strm_prec_of_ldbl),
-                           static_cast<std::streamsize>(strm_prec_of_ldbl));
+          (elems_of_ldbl_to_get_try < static_cast<int>(decwide_t_elem_number)
+            ? elems_of_ldbl_to_get_try
+            : static_cast<int>(decwide_t_elem_number)
+          )
+        );
 
-      const auto ldbl_retrieved = std::strtold(str_of_ldbl_to_get.c_str(), nullptr);
+      using ldbl_max_width_for_exp_type = typename std::make_unsigned<exponent_type>::type;
+
+      constexpr auto ldbl_max_width_for_exp = std::numeric_limits<ldbl_max_width_for_exp_type>::digits10;
+
+      constexpr auto ldbl_str_rep_char_cnt =
+        static_cast<int>
+        (
+            1                                           // +/- sign
+          +   elems_of_ldbl_to_get
+            * static_cast<int>(decwide_t_elem_digits10) // number of decimal digits
+          + 1                                           // decimal point
+          + 2                                           // E+ or E-
+          + ldbl_max_width_for_exp                      // unsigned integral representation of the exponent
+        );
+
+      using ldbl_str_array_type = std::array<char, static_cast<std::size_t>(ldbl_str_rep_char_cnt)>;
+
+      ldbl_str_array_type ldbl_str_rep = { '\0' };
+
+      auto ldbl_str_pos = static_cast<std::size_t>(UINT8_C(0));
+
+      ldbl_str_rep.at(ldbl_str_pos) = ((!my_neg) ? '+' : '-');
+
+      ++ldbl_str_pos;
+
+      std::size_t count_retrieved { };
+
+      get_output_digits(*this,
+                        ldbl_str_rep.data() + ldbl_str_pos,
+                        elems_of_ldbl_to_get,
+                        &count_retrieved,
+                        true);
+
+      // Note: Add an additional 1 to the long double string position
+      // in order to include both the retrieved decimal digits as well as
+      // the decimal point.
+
+      ldbl_str_pos =
+        static_cast<std::size_t>
+        (
+          ldbl_str_pos + static_cast<std::size_t>(count_retrieved + UINT8_C(1))
+        );
+
+      // Handle the letter 'E' for the exponent.
+      ldbl_str_rep.at(ldbl_str_pos) = 'E';
+
+      ++ldbl_str_pos;
+
+      // Handle the sign of the exponent.
+      const auto exp_is_neg = (my_exp < static_cast<exponent_type>(INT8_C(0)));
+
+      ldbl_str_rep.at(ldbl_str_pos) = ((!exp_is_neg) ? '+' : '-');
+
+      ++ldbl_str_pos;
+
+      // Obtain the absolute value of the exponent from decwide_t.
+      const auto ul_exp =
+        static_cast<ldbl_max_width_for_exp_type>
+        (
+          (!exp_is_neg) ? static_cast<ldbl_max_width_for_exp_type>(my_exp)
+                        : static_cast<ldbl_max_width_for_exp_type>(-my_exp)
+        );
+
+      {
+        // Extract the integral value of the absolute value of the exponent.
+        using exp_array_type =
+          std::array<char, static_cast<std::size_t>(ldbl_max_width_for_exp)>;
+
+        exp_array_type data_exp_buf { };
+
+        const char* p_end = util::baselexical_cast(ul_exp, data_exp_buf.data());
+
+        const auto exp_len = std::distance(static_cast<const char*>(data_exp_buf.data()), p_end);
+
+        std::copy(data_exp_buf.cbegin(),
+                  data_exp_buf.cbegin() + static_cast<std::size_t>(exp_len),
+                  ldbl_str_rep.begin() + ldbl_str_pos);
+      }
+
+      const auto ldbl_retrieved = std::strtold(ldbl_str_rep.data(), nullptr);
 
       return ldbl_retrieved;
     }
-    #endif
 
     WIDE_DECIMAL_NODISCARD auto extract_signed_long_long() const -> signed long long // NOLINT(google-runtime-int)
     {
@@ -2459,11 +2543,9 @@
       return unsigned_long_long_result;
     }
 
-    #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
     explicit operator long double() const { return                     extract_long_double(); }
     explicit operator double     () const { return static_cast<double>(extract_long_double()); }
     explicit operator float      () const { return static_cast<float> (extract_long_double()); }
-    #endif
 
     template<typename IntegralType,
              typename = typename std::enable_if<std::is_integral<IntegralType>::value>::type>
@@ -3563,15 +3645,18 @@
     static auto get_output_digits(const decwide_t&         x,
                                         char*              it_dst,
                                   const std::uint_fast32_t number_of_elements,
-                                        std::size_t*       count_retrieved) -> void
+                                        std::size_t*       count_retrieved,
+                                  const bool               include_decimal_point = false) -> void
     {
       // Extract the required digits from decwide_t, including
       // digits both before as well as after the decimal point.
+
       using data_elem_array_type =
-        std::array<char, static_cast<std::size_t>(decwide_t_elem_digits10 + INT8_C(1))>;
+        std::array<char, static_cast<std::size_t>(decwide_t_elem_digits10)>;
 
       data_elem_array_type data_elem_buf { };
 
+      // Obtain the digits in the first limb.
       auto it_rep = x.crepresentation().cbegin(); // NOLINT(llvm-qualified-auto,readability-qualified-auto)
 
       const char* p_end = util::baselexical_cast(*it_rep, data_elem_buf.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
@@ -3588,11 +3673,16 @@
                          data_elem_buf.cbegin() + *count_retrieved,
                          it_dst);
 
+      // Include the decimal point if requested.
+      if(include_decimal_point)
+      {
+        *it_dst++ = '.'; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      }
+
       data_elem_array_type data_elem_array { };
 
-      data_elem_array.back() = '\0';
-
-      // Extract all of the digits from decwide_t, beginning with the first data element.
+      // Extract the digits following the decimal point from decwide_t,
+      // beginning with the data element having index 1.
       while(it_rep !=  x.crepresentation().cbegin() + static_cast<std::size_t>(number_of_elements))
       {
         p_end = util::baselexical_cast(*it_rep, data_elem_buf.data());
@@ -3601,7 +3691,7 @@
 
         auto rit = std::copy(std::reverse_iterator<const char*>(p_end),
                              std::reverse_iterator<const char*>(static_cast<const char*>(data_elem_buf.data())),
-                             data_elem_array.rbegin() + static_cast<std::size_t>(UINT8_C(1)));
+                             data_elem_array.rbegin());
 
         std::fill(rit, data_elem_array.rend(), '0');
 
@@ -3642,6 +3732,11 @@
       );
 
       auto count_retrieved = static_cast<std::size_t>(UINT8_C(0));
+
+      // It seems like clang-tidy complains (perhaps wrongly)
+      // about potential const-ness of str.data(). For this reason,
+      // an explicit non-const cast (very uncommon) is used.
+      // TBD. Figure out what is actually happening/needed here.
 
       get_output_digits(x, const_cast<char*>(str.data()), number_of_elements, &count_retrieved); // NOLINT(cppcoreguidelines-pro-type-const-cast)
 
