@@ -2318,12 +2318,7 @@
                           : -std::numeric_limits<long double>::infinity());
       }
 
-      constexpr auto digs_of_ldbl_to_get =
-        static_cast<int>
-        (
-            std::numeric_limits<long double>::max_digits10
-          + static_cast<int>(INT8_C(2) + INT8_C(1))
-        );
+      constexpr auto digs_of_ldbl_to_get = std::numeric_limits<long double>::max_digits10;
 
       constexpr auto elems_of_ldbl_to_get_try =
         static_cast<int>
@@ -2345,7 +2340,9 @@
           )
         );
 
-      constexpr auto ldbl_max_width_for_exp = std::numeric_limits<std::uintmax_t>::max_digits10 + 1;
+      using ldbl_max_width_for_exp_type = typename std::make_unsigned<exponent_type>::type;
+
+      constexpr auto ldbl_max_width_for_exp = std::numeric_limits<ldbl_max_width_for_exp_type>::digits10;
 
       constexpr auto ldbl_str_rep_char_cnt =
         static_cast<int>
@@ -2362,21 +2359,29 @@
 
       ldbl_str_array_type ldbl_str_rep = { '\0' };
 
-      ldbl_str_rep.at(static_cast<std::size_t>(UINT8_C(0))) = ((!my_neg) ? '+' : '-');
+      auto ldbl_str_pos = static_cast<std::size_t>(UINT8_C(0));
+
+      ldbl_str_rep.at(ldbl_str_pos) = ((!my_neg) ? '+' : '-');
+
+      ++ldbl_str_pos;
 
       std::size_t count_retrieved { };
 
       get_output_digits(*this,
-                        ldbl_str_rep.data() + static_cast<std::size_t>(UINT8_C(1)),
+                        ldbl_str_rep.data() + ldbl_str_pos,
                         elems_of_ldbl_to_get,
                         &count_retrieved,
                         true);
 
-      // Note: Add two (2) to the long double string position,
-      // including both the retrieved decimal digits as well as
-      // 1 for the +/- sign and 1 for the decimal point.
+      // Note: Add an additional 1 to the long double string position
+      // in order to include both the retrieved decimal digits as well as
+      // the decimal point.
 
-      auto ldbl_str_pos = static_cast<std::size_t>(count_retrieved + UINT8_C(2));
+      ldbl_str_pos =
+        static_cast<std::size_t>
+        (
+          ldbl_str_pos + static_cast<std::size_t>(count_retrieved + UINT8_C(1))
+        );
 
       // Handle the letter 'E' for the exponent.
       ldbl_str_rep.at(ldbl_str_pos) = 'E';
@@ -2391,10 +2396,11 @@
       ++ldbl_str_pos;
 
       // Obtain the absolute value of the exponent from decwide_t.
-      const auto umax_exp =
-        static_cast<std::uintmax_t>
+      const auto ul_exp =
+        static_cast<ldbl_max_width_for_exp_type>
         (
-          (!exp_is_neg) ? static_cast<std::uintmax_t>(my_exp) : static_cast<std::uintmax_t>(-my_exp)
+          (!exp_is_neg) ? static_cast<ldbl_max_width_for_exp_type>(my_exp)
+                        : static_cast<ldbl_max_width_for_exp_type>(-my_exp)
         );
 
       {
@@ -2404,7 +2410,7 @@
 
         exp_array_type data_exp_buf { };
 
-        const char* p_end = util::baselexical_cast(umax_exp, data_exp_buf.data());
+        const char* p_end = util::baselexical_cast(ul_exp, data_exp_buf.data());
 
         const auto exp_len = std::distance(static_cast<const char*>(data_exp_buf.data()), p_end);
 
