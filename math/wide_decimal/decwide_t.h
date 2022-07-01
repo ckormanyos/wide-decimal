@@ -2340,19 +2340,19 @@
           )
         );
 
-      using ldbl_max_width_for_exp_type = typename std::make_unsigned<exponent_type>::type;
+      using local_unsigned_exponent_type = typename std::make_unsigned<exponent_type>::type;
 
-      constexpr auto ldbl_max_width_for_exp = std::numeric_limits<ldbl_max_width_for_exp_type>::digits10;
+      constexpr auto ldbl_max_width_for_exp = std::numeric_limits<local_unsigned_exponent_type>::digits10;
 
       constexpr auto ldbl_str_rep_char_cnt =
         static_cast<int>
         (
-            1                                           // +/- sign
-          +   elems_of_ldbl_to_get
-            * static_cast<int>(decwide_t_elem_digits10) // number of decimal digits
-          + 1                                           // decimal point
-          + 2                                           // E+ or E-
-          + ldbl_max_width_for_exp                      // unsigned integral representation of the exponent
+            1                                             // +/- sign
+          + (  elems_of_ldbl_to_get
+             * static_cast<int>(decwide_t_elem_digits10)) // number of decimal digits
+          + 1                                             // decimal point
+          + 2                                             // E+ or E-
+          + ldbl_max_width_for_exp                        // unsigned integral representation of the exponent
         );
 
       using ldbl_str_array_type = std::array<char, static_cast<std::size_t>(ldbl_str_rep_char_cnt)>;
@@ -2397,10 +2397,10 @@
 
       // Obtain the absolute value of the exponent from decwide_t.
       const auto ul_exp =
-        static_cast<ldbl_max_width_for_exp_type>
+        static_cast<local_unsigned_exponent_type>
         (
-          (!exp_is_neg) ? static_cast<ldbl_max_width_for_exp_type>(my_exp)
-                        : static_cast<ldbl_max_width_for_exp_type>(-my_exp)
+          (!exp_is_neg) ? static_cast<local_unsigned_exponent_type>(my_exp)
+                        : static_cast<local_unsigned_exponent_type>(-my_exp)
         );
 
       {
@@ -3651,6 +3651,10 @@
       // Extract the required digits from decwide_t, including
       // digits both before as well as after the decimal point.
 
+      // Include the decimal point in the retrieved characters
+      // if requested. Do not, however, count an inserted
+      // decimal point as one of the retrieved characters.
+
       using data_elem_array_type =
         std::array<char, static_cast<std::size_t>(decwide_t_elem_digits10)>;
 
@@ -3683,7 +3687,7 @@
 
       // Extract the digits following the decimal point from decwide_t,
       // beginning with the data element having index 1.
-      while(it_rep !=  x.crepresentation().cbegin() + static_cast<std::size_t>(number_of_elements))
+      while(it_rep != (x.crepresentation().cbegin() + static_cast<std::size_t>(number_of_elements)))
       {
         p_end = util::baselexical_cast(*it_rep, data_elem_buf.data());
 
@@ -3696,7 +3700,7 @@
         std::fill(rit, data_elem_array.rend(), '0');
 
         it_dst = std::copy(data_elem_array.cbegin(),
-                           data_elem_array.cbegin() + static_cast<std::size_t>(decwide_t_elem_digits10),
+                           data_elem_array.cend(),
                            it_dst);
 
         *count_retrieved =
