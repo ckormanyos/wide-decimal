@@ -722,19 +722,19 @@ auto test_string_ops_and_round_trips() -> bool
   auto result_is_ok = true;
 
   {
+    static constexpr auto zeros_to_insert =
+      static_cast<std::size_t>
+      (
+          static_cast<std::size_t>(std::numeric_limits<local_wide_decimal_type>::digits10)
+        * static_cast<std::size_t>(UINT8_C(3))
+      );
+
     const auto ten_pow_30 = local_wide_decimal_type("1E30");
 
     for(auto   i = static_cast<unsigned>(UINT8_C(0));
                i < static_cast<unsigned>(UINT8_C(8192));
              ++i)
     {
-      const auto zeros_to_insert =
-        static_cast<std::size_t>
-        (
-            static_cast<std::size_t>(std::numeric_limits<local_wide_decimal_type>::digits10)
-          * static_cast<std::size_t>(UINT8_C(3))
-        );
-
       using uint_digits_array_type = std::array<char, static_cast<std::size_t>(UINT8_C(5))>;
 
       const auto x =
@@ -746,7 +746,7 @@ auto test_string_ops_and_round_trips() -> bool
         );
 
       const auto big_uint_str_rep =
-        [&x, &zeros_to_insert]() // NOLINT(modernize-use-trailing-return-type)
+        [&x]() // NOLINT(modernize-use-trailing-return-type)
         {
           uint_digits_array_type data_uint_buf { };
 
@@ -774,7 +774,7 @@ auto test_string_ops_and_round_trips() -> bool
         }();
 
       const auto result_big_uint_is_ok =
-        [&x, &zeros_to_insert, &big_uint_str_rep, &ten_pow_30]() // NOLINT(modernize-use-trailing-return-type)
+        [&x, &big_uint_str_rep, &ten_pow_30]() // NOLINT(modernize-use-trailing-return-type)
         {
           std::stringstream strm;
 
