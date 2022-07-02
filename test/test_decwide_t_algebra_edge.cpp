@@ -116,6 +116,7 @@ auto test_div_by_other_sign_same() -> bool
 
   eng_sgn.seed(static_cast<typename eng_sgn_type::result_type>(std::random_device{ }()));
   eng_dig.seed(static_cast<typename eng_dig_type::result_type>(std::random_device{ }()));
+  eng_exp.seed(static_cast<typename eng_exp_type::result_type>(std::random_device{ }()));
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(1024));
@@ -526,6 +527,10 @@ auto test_various_min_max_operations() -> bool
 
 auto test_frexp_in_all_ranges() -> bool
 {
+  eng_sgn.seed(static_cast<typename eng_sgn_type::result_type>(std::random_device{ }()));
+  eng_dig.seed(static_cast<typename eng_dig_type::result_type>(std::random_device{ }()));
+  eng_exp.seed(static_cast<typename eng_exp_type::result_type>(std::random_device{ }()));
+
   auto result_is_ok = true;
 
   {
@@ -710,7 +715,61 @@ auto test_frexp_in_all_ranges() -> bool
 
 auto test_string_ops_and_round_trips() -> bool
 {
+  eng_sgn.seed(static_cast<typename eng_sgn_type::result_type>(std::random_device{ }()));
+  eng_dig.seed(static_cast<typename eng_dig_type::result_type>(std::random_device{ }()));
+  eng_exp.seed(static_cast<typename eng_exp_type::result_type>(std::random_device{ }()));
+
   auto result_is_ok = true;
+
+  {
+    const auto ten_pow_30 = local_wide_decimal_type("1E30");
+
+    for(auto   i = static_cast<unsigned>(UINT8_C(0));
+               i < static_cast<unsigned>(UINT8_C(8192));
+             ++i)
+    {
+      using uint_digits_array_type = std::array<char, static_cast<std::size_t>(UINT8_C(5))>;
+
+      const auto x =
+        generate_wide_decimal_value<local_wide_decimal_type>
+        (
+          true,
+          0,
+          static_cast<int>(std::tuple_size<uint_digits_array_type>::value)
+        );
+
+      uint_digits_array_type data_uint_buf { };
+
+      static_cast<void>(util::baselexical_cast(static_cast<std::uint32_t>(x), data_uint_buf.data()));
+
+      std::string
+        big_uint_str_rep
+        (
+          static_cast<std::size_t>
+          (
+              std::tuple_size<uint_digits_array_type>::value
+            + static_cast<std::size_t>(UINT8_C(30))
+          ),
+          '0'
+        );
+
+      std::copy(data_uint_buf.cbegin(),
+                data_uint_buf.cend(),
+                big_uint_str_rep.begin());
+
+      big_uint_str_rep.insert(big_uint_str_rep.end(), '.');
+      big_uint_str_rep.insert(big_uint_str_rep.end(), static_cast<std::size_t>(std::numeric_limits<local_wide_decimal_type>::digits10 * 3), '0');
+
+      const auto big_uint = local_wide_decimal_type(x * ten_pow_30);
+
+      std::stringstream strm;
+      strm << std::fixed << std::setprecision(std::numeric_limits<local_wide_decimal_type>::digits10 * 3) << big_uint;
+
+      const auto result_big_uint_is_ok = (big_uint_str_rep == strm.str());
+
+      result_is_ok = (result_big_uint_is_ok && result_is_ok);
+    }
+  }
 
   for(auto i = static_cast<unsigned>(UINT32_C(100));
            i < static_cast<unsigned>(UINT32_C(1000));
