@@ -2663,7 +2663,16 @@
 
       if(i > static_cast<std::uint_fast32_t>(1U))
       {
-        my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>((i - 1U) * static_cast<std::uint_fast32_t>(decwide_t_elem_digits10)));
+        my_exp =
+          static_cast<exponent_type>
+          (
+              my_exp
+            + static_cast<exponent_type>
+              (
+                  static_cast<std::uint_fast32_t>(i - 1U)
+                * static_cast<std::uint_fast32_t>(decwide_t_elem_digits10)
+              )
+          );
       }
 
       std::reverse(tmp.begin(), tmp.begin() + i);
@@ -3946,7 +3955,11 @@
 
         if(n_pad > static_cast<exponent_type>(0))
         {
-          str.insert(str.end(), static_cast<std::size_t>(n_pad), '0');
+          // This line is marked as lcov exclude line. Even though
+          // there are explicit test cases thought to cover this line,
+          // it is mysteriously sometimes not being hit.
+
+          str.insert(str.end(), static_cast<std::size_t>(n_pad), '0'); // LCOV_EXCL_LINE
         }
       }
 
