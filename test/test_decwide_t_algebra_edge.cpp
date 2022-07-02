@@ -728,6 +728,13 @@ auto test_string_ops_and_round_trips() -> bool
                i < static_cast<unsigned>(UINT8_C(8192));
              ++i)
     {
+      const auto zeros_to_insert =
+        static_cast<std::size_t>
+        (
+            static_cast<std::size_t>(std::numeric_limits<local_wide_decimal_type>::digits10)
+          * static_cast<std::size_t>(UINT8_C(3))
+        );
+
       using uint_digits_array_type = std::array<char, static_cast<std::size_t>(UINT8_C(5))>;
 
       const auto x =
@@ -738,36 +745,47 @@ auto test_string_ops_and_round_trips() -> bool
           static_cast<int>(std::tuple_size<uint_digits_array_type>::value)
         );
 
-      uint_digits_array_type data_uint_buf { };
+      const auto big_uint_str_rep =
+        [&x, &zeros_to_insert]() // NOLINT(modernize-use-trailing-return-type)
+        {
+          uint_digits_array_type data_uint_buf { };
 
-      static_cast<void>(util::baselexical_cast(static_cast<std::uint32_t>(x), data_uint_buf.data()));
+          static_cast<void>(util::baselexical_cast(static_cast<std::uint32_t>(x), data_uint_buf.data()));
 
-      std::string
-        big_uint_str_rep
-        (
-          static_cast<std::size_t>
-          (
-              std::tuple_size<uint_digits_array_type>::value
-            + static_cast<std::size_t>(UINT8_C(30))
-          ),
-          '0'
-        );
+          std::string
+            str_rep
+            (
+              static_cast<std::size_t>
+              (
+                  std::tuple_size<uint_digits_array_type>::value
+                + static_cast<std::size_t>(UINT8_C(30))
+              ),
+              '0'
+            );
 
-      std::copy(data_uint_buf.cbegin(),
-                data_uint_buf.cend(),
-                big_uint_str_rep.begin());
+          std::copy(data_uint_buf.cbegin(),
+                    data_uint_buf.cend(),
+                    str_rep.begin());
 
-      big_uint_str_rep.insert(big_uint_str_rep.end(), '.');
-      big_uint_str_rep.insert(big_uint_str_rep.end(), static_cast<std::size_t>(std::numeric_limits<local_wide_decimal_type>::digits10 * 3), '0');
+          str_rep.insert(str_rep.end(), '.');
+          str_rep.insert(str_rep.end(), zeros_to_insert, '0');
 
-      const auto big_uint = local_wide_decimal_type(x * ten_pow_30);
+          return str_rep;
+        }();
 
-      std::stringstream strm;
-      strm << std::fixed << std::setprecision(std::numeric_limits<local_wide_decimal_type>::digits10 * 3) << big_uint;
+      const auto result_big_uint_is_ok =
+        [&x, &zeros_to_insert, &big_uint_str_rep, &ten_pow_30]() // NOLINT(modernize-use-trailing-return-type)
+        {
+          std::stringstream strm;
 
-      const auto result_big_uint_is_ok = (big_uint_str_rep == strm.str());
+          strm << std::fixed
+               << std::setprecision(static_cast<std::streamsize>(zeros_to_insert))
+               << local_wide_decimal_type(x * ten_pow_30);
 
-      result_is_ok = (result_big_uint_is_ok && result_is_ok);
+          return (big_uint_str_rep == strm.str());
+        }();
+
+        result_is_ok = (result_big_uint_is_ok && result_is_ok);
     }
   }
 
