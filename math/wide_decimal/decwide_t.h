@@ -575,21 +575,9 @@
                                                           std::uint32_t,
                                                           std::uint16_t>::type>::type;
 
-    using signed_limb_type =
-      typename std::conditional<std::is_same<limb_type, std::uint32_t>::value,
-                                std::int32_t,
-                                typename std::conditional<std::is_same<limb_type, std::uint16_t>::value,
-                                                          std::int16_t,
-                                                          std::int8_t>::type>::type;
+    using signed_limb_type = typename std::make_signed<limb_type>::type;
 
-    using unsigned_exponent_type =
-      typename std::conditional<std::is_same<exponent_type, std::int64_t>::value,
-                                std::uint64_t,
-                                typename std::conditional<std::is_same<exponent_type, std::int32_t>::value,
-                                                          std::uint32_t,
-                                                          typename std::conditional<std::is_same<exponent_type, std::int16_t>::value,
-                                                                                    std::uint16_t,
-                                                                                    std::uint8_t>::type>::type>::type;
+    using unsigned_exponent_type = typename std::make_unsigned<exponent_type>::type;
 
     // TBD: Consider supporting more floating-point classes.
     // In particular, support for NaN is already being
