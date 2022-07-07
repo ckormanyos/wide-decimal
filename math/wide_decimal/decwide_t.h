@@ -11,7 +11,8 @@
 
 // This file implements the class decwide_t and most of its
 // basic functions including constructors, binary arithmetic
-// operations, comparison operators and more.
+// operations, comparison operators, selected elementary
+// functions and more.
 
 #ifndef DECWIDE_T_2004_06_01_H // NOLINT(llvm-header-guard)
   #define DECWIDE_T_2004_06_01_H
