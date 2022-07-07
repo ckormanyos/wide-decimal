@@ -274,7 +274,10 @@ auto test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-
     const auto my_log_of_one = log(my_local_one);
 
     const auto result_log_one_is_ok =
-      ((my_log_of_one == 0U) && (my_log_of_one == static_cast<unsigned>(UINT8_C(0))));
+      (
+           (my_log_of_one == 0U)
+        && (static_cast<unsigned>(my_log_of_one) == static_cast<unsigned>(UINT8_C(0)))
+      );
 
     result_is_ok = (result_log_one_is_ok && result_is_ok);
   }
