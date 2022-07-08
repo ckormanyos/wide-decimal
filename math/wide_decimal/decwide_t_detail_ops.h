@@ -608,12 +608,12 @@
            typename OutputLimbIteratorType,
            typename FftFloatIteratorType>
   auto mul_loop_fft(      OutputLimbIteratorType r,
-                          InputLimbIteratorType  u, // NOLINT(bugprone-easily-swappable-parameters)
+                          InputLimbIteratorType  u,                       // NOLINT(bugprone-easily-swappable-parameters)
                           InputLimbIteratorType  v,
                           FftFloatIteratorType   af,
                           FftFloatIteratorType   bf,
-                    const std::int32_t           prec_elems_for_multiply,
-                    const std::uint32_t          n_fft) -> void
+                    const std::int32_t           prec_elems_for_multiply, // NOLINT(bugprone-easily-swappable-parameters)
+                    const std::uint32_t          n_fft) -> void           // NOLINT(bugprone-easily-swappable-parameters)
   {
     using local_limb_type = typename std::iterator_traits<OutputLimbIteratorType>::value_type;
 
