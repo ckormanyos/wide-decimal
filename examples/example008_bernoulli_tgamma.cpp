@@ -42,7 +42,22 @@ namespace example008_bernoulli
 
   auto bernoulli_table() -> util::dynamic_array<wide_decimal_type>&
   {
-    static util::dynamic_array<wide_decimal_type> bernoulli_table(static_cast<std::uint_fast32_t>(static_cast<float>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95F)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,cppcoreguidelines-avoid-non-const-global-variables,readability-magic-numbers,cert-err58-cpp)
+    using bernoulli_table_array_type = util::dynamic_array<wide_decimal_type>;
+    using local_size_type            = typename bernoulli_table_array_type::size_type;
+
+    constexpr auto bernoulli_table_size =
+      static_cast<local_size_type>
+      (
+        static_cast<local_size_type>
+        (
+          static_cast<float>
+          (
+            static_cast<double>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95
+          )
+        )
+      );
+
+    static bernoulli_table_array_type bernoulli_table(bernoulli_table_size); // NOLINT(cppcoreguidelines-avoid-magic-numbers,cppcoreguidelines-avoid-non-const-global-variables,readability-magic-numbers,cert-err58-cpp)
 
     return bernoulli_table;
   }
@@ -56,23 +71,29 @@ namespace example008_bernoulli
     // See also the book Richard P. Brent and Paul Zimmermann, "Modern Computer Arithmetic",
     // Cambridge University Press, 2010, p. 237.
 
-    const auto m = static_cast<std::uint32_t>(n / 2U);
+    using tangent_numbers_array_type = util::dynamic_array<floating_point_type>;
+    using local_size_type = typename tangent_numbers_array_type::size_type;
 
-    util::dynamic_array<floating_point_type> tangent_numbers(m + 1U);
+    const auto m          = static_cast<local_size_type>(static_cast<local_size_type>(n) / static_cast<local_size_type>(UINT8_C(2)));
+    const auto m_plus_one = static_cast<local_size_type>(m + static_cast<local_size_type>(UINT8_C(1)));
 
-    tangent_numbers[0U] = 0U;
-    tangent_numbers[1U] = 1U;
+    util::dynamic_array<floating_point_type> tangent_numbers(m_plus_one);
 
-    for(std::uint32_t k = 1U; k < m; ++k)
+    tangent_numbers[static_cast<local_size_type>(UINT8_C(0))] = 0U;
+    tangent_numbers[static_cast<local_size_type>(UINT8_C(1))] = 1U;
+
+    for(auto k = static_cast<local_size_type>(UINT8_C(1)); k < m; ++k)
     {
-      tangent_numbers[k + 1U] = tangent_numbers[k] * k;
+      const auto k_plus_one = static_cast<local_size_type>(k + static_cast<local_size_type>(UINT8_C(1)));
+
+      tangent_numbers[k_plus_one] = tangent_numbers[k] * k;
     }
 
-    for(auto k = static_cast<std::uint32_t>(2U); k <= m; ++k)
+    for(auto k = static_cast<local_size_type>(UINT8_C(2)); k <= m; ++k)
     {
       for(auto j = k; j <= m; ++j)
       {
-        const std::uint32_t j_minus_k = j - k;
+        const auto j_minus_k = static_cast<local_size_type>(j - k);
 
         tangent_numbers[j] =   (tangent_numbers[j - 1] *  j_minus_k)
                              + (tangent_numbers[j]     * (j_minus_k + 2U));
@@ -81,13 +102,16 @@ namespace example008_bernoulli
 
     floating_point_type two_pow_two_m(4U);
 
-    for(std::uint32_t i = 1U; i < static_cast<std::uint32_t>(n / 2U); ++i)
+    for(auto   i = static_cast<local_size_type>(UINT8_C(1));
+               i < static_cast<local_size_type>(n / static_cast<local_size_type>(UINT8_C(2)));
+             ++i)
     {
-      const auto two_i = static_cast<std::uint32_t>(2U * i);
+      const auto two_i = static_cast<local_size_type>(static_cast<local_size_type>(UINT8_C(2)) * i);
 
       const floating_point_type b = (tangent_numbers[i] * two_i) / (two_pow_two_m * (two_pow_two_m - 1));
 
-      const auto b_neg = ((two_i % 4U) == 0U);
+      const auto b_neg =
+        (static_cast<local_size_type>(two_i % static_cast<local_size_type>(UINT8_C(4))) == static_cast<local_size_type>(UINT8_C(0)));
 
       bn[two_i] = ((!b_neg) ? b : -b); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
