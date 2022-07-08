@@ -2664,8 +2664,7 @@
               my_exp
             + static_cast<exponent_type>
               (
-                  static_cast<std::uint_fast32_t>(i - 1U)
-                * static_cast<std::uint_fast32_t>(decwide_t_elem_digits10)
+                static_cast<exponent_type>(i - 1U) * decwide_t_elem_digits10
               )
           );
       }
@@ -3459,7 +3458,15 @@
 
           str.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
 
-          my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(delta_exp + 1U));
+          my_exp =
+            static_cast<exponent_type>
+            (
+                my_exp
+              - static_cast<exponent_type>
+                (
+                  static_cast<exponent_type>(delta_exp) + static_cast<exponent_type>(INT8_C(1))
+                )
+            );
         }
       }
       else
@@ -3531,7 +3538,8 @@
         const auto pos_to_insert =
           static_cast<std::size_t>
           (
-            static_cast<std::int32_t>(n_pos - static_cast<std::int32_t>(n * decwide_t_elem_digits10))
+              static_cast<std::size_t>(n_pos)
+            - static_cast<std::size_t>(static_cast<std::size_t>(n) * static_cast<std::size_t>(decwide_t_elem_digits10))
           );
 
         str.insert(pos_to_insert, static_cast<std::size_t>(1U), '.');

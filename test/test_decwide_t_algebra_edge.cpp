@@ -763,9 +763,7 @@ auto test_string_ops_and_round_trips() -> bool
               '0'
             );
 
-          std::copy(data_uint_buf.cbegin(),
-                    data_uint_buf.cend(),
-                    str_rep.begin());
+          std::copy(data_uint_buf.cbegin(), data_uint_buf.cend(), str_rep.begin());
 
           str_rep.insert(str_rep.end(), '.');
           str_rep.insert(str_rep.end(), zeros_to_insert, '0');
