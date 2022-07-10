@@ -90,17 +90,18 @@ the default limb type is 32 bits in width and unsigned.
 The template signature of the `decwide_t` class is shown below.
 
 ```cpp
+// Forward declaration of the decwide_t template class.
 template<const std::int32_t ParamDigitsBaseTen,
-         typename LimbType = std::uint32_t,
-         typename AllocatorType = std::allocator<void>,
+         typename LimbType          = std::uint32_t,
+         typename AllocatorType     = std::allocator<void>,
          typename InternalFloatType = double,
-         typename ExponentType = std::int64_t,
-         typename FftFloatType = double>
-  class decwide_t;
+         typename ExponentType      = std::int64_t,
+         typename FftFloatType      = double>
+class decwide_t;
 ```
 
 `decwide_t` also has a third (and a few more) optional template paramter(s).
-The third template parameter
+The third template parameter `AllocatorType`
 can be used to set the allocator type for internal storage of the
 wide decimal type. The default allocator type is
 `std::allocator<limb_type>` which helps to reduce
@@ -438,3 +439,23 @@ It is included in the
 [test folder](https://github.com/ckormanyos/wide-decimal/tree/main/test)
 and also included in continuous integration.
 This test file involves computations and comparisons of Bernoulli numbers.
+
+### Alternatives and limitations
+
+Alternative libraries for big float types include,
+among others, most notably
+[GMP](https://gmplib.org/)
+and
+[`Boost.Multiprecision`](https://www.boost.org/doc/libs/1_79_0/libs/multiprecision/doc/html/index.html).
+
+At the moment, wide-decimal has a rather large number of
+so-called _guard_ _digits_. In addition, wide-decimal
+does not make use of rounding when performing multiplication
+or other common algebraic operations. The combined
+result is that exact calculations such as those potentially
+needed in some areas requiring pure, exact decimal calculations
+may not work well with this library. In this sense, wide-decimal suffers
+from the same rounding limitations as the
+[`cpp_dec_float`](https://www.boost.org/doc/libs/1_79_0/libs/multiprecision/doc/html/boost_multiprecision/tut/floats/cpp_dec_float.html)
+class known from
+[`Boost.Multiprecision`](https://www.boost.org/doc/libs/1_79_0/libs/multiprecision/doc/html/index.html).
