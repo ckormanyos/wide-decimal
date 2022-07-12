@@ -60,7 +60,7 @@ called `dec101_t` having
 decimal digits of precision.
 The subroutine `do_something()` initializes the variable `d`
 of type `dec101_t` with
-![onethird](https://latex.codecogs.com/svg.image?{1}/{3})
+![onethird](https://latex.codecogs.com/svg.image?1{/}3)
 and subsequently prints the
 ![hundredone](https://latex.codecogs.com/svg.image?101)
 digit value of `d` to the console.
