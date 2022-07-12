@@ -33,7 +33,7 @@ such as `dec51_t`, `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
 that can be used essentially like regular built-in floating-point types.
 Wide-decimal supports decimal float types having digit counts ranging
 roughly from about
-![digitrange](https://latex.codecogs.com/svg.image?\sim\,10\,{\ldots}\,10,000,000)
+![digitrange](https://latex.codecogs.com/svg.image?{\sim}10{\ldots}10,000,000)
 
 Wide-decimal implements both common algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`,
@@ -60,7 +60,7 @@ called `dec101_t` having
 decimal digits of precision.
 The subroutine `do_something()` initializes the variable `d`
 of type `dec101_t` with
-![onethird](https://latex.codecogs.com/svg.image?\frac{1}{3})
+![onethird](https://latex.codecogs.com/svg.image?{1}/{3})
 and subsequently prints the
 ![hundredone](https://latex.codecogs.com/svg.image?101)
 digit value of `d` to the console.
@@ -127,7 +127,7 @@ how to use wide-decimal.
   - ![`example001a_roots_seventh.cpp`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
   - ![`example001b_roots_almost_integer.cpp`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operations to compute ![fivethousandandone](https://latex.codecogs.com/svg.image?5,001) decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
   - ![`example001c_roots_sqrt_limb08.cpp`](./examples/example001c_roots_sqrt_limb08.cpp) computes a square root with a wide decimal representation having 8-bit limbs.
-  - ![`example001d_pow2_from_list.cpp`](./examples/example001d_pow2_from_list.cpp) verifies a list of values ![twopown](https://latex.codecogs.com/svg.image?2^n) with ![rangeinteight](https://latex.codecogs.com/svg.image?-128\,\le\,n\,\le\,127).
+  - ![`example001d_pow2_from_list.cpp`](./examples/example001d_pow2_from_list.cpp) verifies a list of values ![twopown](https://latex.codecogs.com/svg.image?2^n) with ![rangeinteight](https://latex.codecogs.com/svg.image?-128{\le}n{\le}127).
   - ![`example002_pi.cpp`](./examples/example002_pi.cpp) calculates ![millionandone](https://latex.codecogs.com/svg.image?1,000,001) decimal digits of ![pi](https://latex.codecogs.com/svg.image?\pi) using a Gauss AGM iteration.
   - ![`example002a_pi_small_limb.cpp`](./examples/example002a_pi_small_limb.cpp) calculates ![millionandone](https://latex.codecogs.com/svg.image?1,000,001) decimal digits of ![pi](https://latex.codecogs.com/svg.image?\pi) using a 16-bit internal limb type.
   - ![`example002b_pi_100k.cpp`](./examples/example002b_pi_100k.cpp) calculates ![hundredthousandandone](https://latex.codecogs.com/svg.image?100,001) decimal digits of ![pi](https://latex.codecogs.com/svg.image?\pi).
@@ -141,7 +141,7 @@ how to use wide-decimal.
   - ![`example008_bernoulli_tgamma.cpp`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates ![thousandandone](https://latex.codecogs.com/svg.image?1,001) decimal digits of ![gammanhalf](https://latex.codecogs.com/svg.image?\Gamma(n/2)) for small integer ![smallintegern](https://latex.codecogs.com/svg.image?n).
   - ![`example009_boost_math_standalone.cpp`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
   - ![`example009a_boost_math_standalone.cpp`](./examples/example009a_boost_math_standalone.cpp) also checks standalone `decwide_t` with significantly more of `Boost.Math` by testing a ![thousandandone](https://latex.codecogs.com/svg.image?1,001) digit generalized Legendre function value (using `boost::math::tgamma` and more to do so).
-  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ![approxhundred](https://latex.codecogs.com/svg.image?\lesssim\,100) decimal digits.
+  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ![approxhundred](https://latex.codecogs.com/svg.image?{\lesssim}100) decimal digits.
   - ![`example010_hypergeometric_2f1.cpp`](./examples/example010_hypergeometric_2f1.cpp) calculates a ![thousandandone](https://latex.codecogs.com/svg.image?1,001) decimal digit hypergeometric function value using an iterative rational approximation scheme.
   - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another ![thousandandone](https://latex.codecogs.com/svg.image?1,001) decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
@@ -301,7 +301,7 @@ In the following code, we compute
 (one million and one) decimal digits of the fundamental constant
 ![pi](https://latex.codecogs.com/svg.image?\pi)
 The truncated (non-rounded) expected result is
-![pimilliontrunc](https://latex.codecogs.com/svg.image?3.14159265\,\ldots\,79458151)
+![pimilliontrunc](https://latex.codecogs.com/svg.image?3.14159265{\ldots}79458151)
 In this particular example, all _heavy-weight_ components are deactivated and
 this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit pi calculation.
 
