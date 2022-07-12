@@ -33,7 +33,7 @@ such as `dec51_t`, `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
 that can be used essentially like regular built-in floating-point types.
 Wide-decimal supports decimal float types having digit counts ranging
 roughly from about
-<img src="https://render.githubusercontent.com/render/math?math=\sim\,10{\ldots}10,000,000">.
+![digitrange](https://latex.codecogs.com/svg.image?{\sim}10{\ldots}10,000,000)
 
 Wide-decimal implements both common algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`,
@@ -56,11 +56,14 @@ The defined type can be used very much like a built-in floating-point type.
 
 The following sample, for instance, defines and uses a decimal type
 called `dec101_t` having
-<img src="https://render.githubusercontent.com/render/math?math=101">
+![hundredone](https://latex.codecogs.com/svg.image?101)
 decimal digits of precision.
 The subroutine `do_something()` initializes the variable `d`
-of type `dec101_t` with 1/3 and subsequently prints the 101 digit
-value of `d` to the console.
+of type `dec101_t` with
+![onethird](https://latex.codecogs.com/svg.image?1{/}3)
+and subsequently prints the
+![hundredone](https://latex.codecogs.com/svg.image?101)
+digit value of `d` to the console.
 
 In particular,
 
@@ -119,31 +122,31 @@ It is hoped that the examples provide inspiration and guidance on
 how to use wide-decimal.
 
   - ![`example000_multiply_nines.cpp`](./examples/example000_multiply_nines.cpp) performa a check of shoolbook multiplication using a small digit range and small 8-bit limb.
-  - ![`example000a_multiply_pi_squared.cpp`](./examples/example000a_multiply_pi_squared.cpp) performs a hard-coded multiplication check resulting in <img src="https://render.githubusercontent.com/render/math?math=\pi^2">.
+  - ![`example000a_multiply_pi_squared.cpp`](./examples/example000a_multiply_pi_squared.cpp) performs a hard-coded multiplication check resulting in ![pisquared](https://latex.codecogs.com/svg.image?\pi^2).
   - ![`example001_roots_sqrt.cpp`](./examples/example001_roots_sqrt.cpp) computes a square root.
   - ![`example001a_roots_seventh.cpp`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
-  - ![`example001b_roots_almost_integer.cpp`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operations to compute <img src="https://render.githubusercontent.com/render/math?math=5,001"> decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
+  - ![`example001b_roots_almost_integer.cpp`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operations to compute ![fivethousandandone](https://latex.codecogs.com/svg.image?5,001) decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
   - ![`example001c_roots_sqrt_limb08.cpp`](./examples/example001c_roots_sqrt_limb08.cpp) computes a square root with a wide decimal representation having 8-bit limbs.
-  - ![`example001d_pow2_from_list.cpp`](./examples/example001d_pow2_from_list.cpp) verifies a list of values <img src="https://render.githubusercontent.com/render/math?math=2^n"> with <img src="https://render.githubusercontent.com/render/math?math=-128\,\le\,n\,\le\,127">.
-  - ![`example002_pi.cpp`](./examples/example002_pi.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Gauss AGM iteration.
-  - ![`example002a_pi_small_limb.cpp`](./examples/example002a_pi_small_limb.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a 16-bit internal limb type.
-  - ![`example002b_pi_100k.cpp`](./examples/example002b_pi_100k.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=100,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi">.
-  - ![`example002c_pi_quintic.cpp`](./examples/example002c_pi_quintic.cpp) calculates <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using a Borwein quintic iteration.
-  - ![`example002d_pi_limb08.cpp`](./examples/example002d_pi_limb08.cpp) calculates yet again <img src="https://render.githubusercontent.com/render/math?math=1,000,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\pi"> using an 8-bit internal limb type and `float` internal floating-point type.
+  - ![`example001d_pow2_from_list.cpp`](./examples/example001d_pow2_from_list.cpp) verifies a list of values ![twopown](https://latex.codecogs.com/svg.image?2^n) with ![rangeinteight](https://latex.codecogs.com/svg.image?-128{\le}n{\le}127).
+  - ![`example002_pi.cpp`](./examples/example002_pi.cpp) calculates ![millionandone](https://latex.codecogs.com/svg.image?1,000,001) decimal digits of ![pi](https://latex.codecogs.com/svg.image?\pi) using a Gauss AGM iteration.
+  - ![`example002a_pi_small_limb.cpp`](./examples/example002a_pi_small_limb.cpp) calculates ![millionandone](https://latex.codecogs.com/svg.image?1,000,001) decimal digits of ![pi](https://latex.codecogs.com/svg.image?\pi) using a 16-bit internal limb type.
+  - ![`example002b_pi_100k.cpp`](./examples/example002b_pi_100k.cpp) calculates ![hundredthousandandone](https://latex.codecogs.com/svg.image?100,001) decimal digits of ![pi](https://latex.codecogs.com/svg.image?\pi).
+  - ![`example002c_pi_quintic.cpp`](./examples/example002c_pi_quintic.cpp) calculates ![millionandone](https://latex.codecogs.com/svg.image?1,000,001) decimal digits of ![pi](https://latex.codecogs.com/svg.image?\pi) using a Borwein quintic iteration.
+  - ![`example002d_pi_limb08.cpp`](./examples/example002d_pi_limb08.cpp) calculates yet again ![millionandone](https://latex.codecogs.com/svg.image?1,000,001) decimal digits of ![pi](https://latex.codecogs.com/svg.image?\pi) using an 8-bit internal limb type and `float` internal floating-point type.
   - ![`example003_zeta.cpp`](./examples/example003_zeta.cpp) computes a Riemann zeta function value.
   - ![`example004_bessel_recur.cpp`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
   - ![`example005_polylog_series.cpp`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
   - ![`example006_logarithm.cpp`](./examples/example006_logarithm.cpp) calculates the value of a logarithm (internally using a Gauss AGM method).
-  - ![`example007_catalan_series.cpp`](./examples/example007_catalan_series.cpp) computes <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of Catalan's constant using an accelerated series.
-  - ![`example008_bernoulli_tgamma.cpp`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digits of <img src="https://render.githubusercontent.com/render/math?math=\Gamma(n/2)"> for small integer <img src="https://render.githubusercontent.com/render/math?math=n">.
+  - ![`example007_catalan_series.cpp`](./examples/example007_catalan_series.cpp) computes ![thousandandone](https://latex.codecogs.com/svg.image?1,001) decimal digits of Catalan's constant using an accelerated series.
+  - ![`example008_bernoulli_tgamma.cpp`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates ![thousandandone](https://latex.codecogs.com/svg.image?1,001) decimal digits of ![gammanhalf](https://latex.codecogs.com/svg.image?\Gamma(n/2)) for small integer ![smallintegern](https://latex.codecogs.com/svg.image?n).
   - ![`example009_boost_math_standalone.cpp`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
-  - ![`example009a_boost_math_standalone.cpp`](./examples/example009a_boost_math_standalone.cpp) also checks standalone `decwide_t` with significantly more of `Boost.Math` by testing a <img src="https://render.githubusercontent.com/render/math?math=1,001"> digit generalized Legendre function value (using `boost::math::tgamma` and more to do so).
-  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having <img src="https://render.githubusercontent.com/render/math?math=\lesssim\,100"> decimal digits.
-  - ![`example010_hypergeometric_2f1.cpp`](./examples/example010_hypergeometric_2f1.cpp) calculates a <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function value using an iterative rational approximation scheme.
-  - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another <img src="https://render.githubusercontent.com/render/math?math=1,001"> decimal digit hypergeometric function in a similar fashion.
+  - ![`example009a_boost_math_standalone.cpp`](./examples/example009a_boost_math_standalone.cpp) also checks standalone `decwide_t` with significantly more of `Boost.Math` by testing a ![thousandandone](https://latex.codecogs.com/svg.image?1,001) digit generalized Legendre function value (using `boost::math::tgamma` and more to do so).
+  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ![approxhundred](https://latex.codecogs.com/svg.image?{\lesssim}100) decimal digits.
+  - ![`example010_hypergeometric_2f1.cpp`](./examples/example010_hypergeometric_2f1.cpp) calculates a ![thousandandone](https://latex.codecogs.com/svg.image?1,001) decimal digit hypergeometric function value using an iterative rational approximation scheme.
+  - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another ![thousandandone](https://latex.codecogs.com/svg.image?1,001) decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
   - ![`example012_rational_floor_ceil.cpp`](./examples/example012_rational_floor_ceil.cpp) verifies the proper representation of a wide selection of small-valued, pure integral rational quotients.
-  - ![`example013_embeddable_sqrt.cpp`](./examples/example013_embeddable_sqrt.cpp) and ![`example013a_embeddable_agm.cpp`](./examples/example013a_embeddable_agm.cpp) exercise calculations that also run on tiny bare-metal embedded systems, featuring a <img src="https://render.githubusercontent.com/render/math?math=101"> digit square root calculation and a <img src="https://render.githubusercontent.com/render/math?math=53"> digit AGM iteration for <img src="https://render.githubusercontent.com/render/math?math=\pi">.
+  - ![`example013_embeddable_sqrt.cpp`](./examples/example013_embeddable_sqrt.cpp) and ![`example013a_embeddable_agm.cpp`](./examples/example013a_embeddable_agm.cpp) exercise calculations that also run on tiny bare-metal embedded systems, featuring a ![hundredandone](https://latex.codecogs.com/svg.image?101) digit square root calculation and a ![fiftythree](https://latex.codecogs.com/svg.image?53) digit AGM iteration for ![pi](https://latex.codecogs.com/svg.image?\pi).
 
 ## Testing and CI
 
@@ -155,6 +158,10 @@ subroutines called from `main()` that exercise various test cases.
 Continuous integration runs on push using GitHub Actions.
 Various compilers, operating systems, and C++ standards
 ranging from C++11, 14, 17, 20, 23 are included in CI.
+An assortment of syntax checkers including enhanced GCC warnings,
+`clang-tidy` and various third party tools run in and
+also in association with CI and pull requests.
+Badges can be found above.
 
 ### Build Status
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
@@ -165,8 +172,8 @@ Wide-Decimal has been tested with numerous compilers for target systems ranging 
 The library is specifically designed for modest efficiency (not the world's fastest)
 over the entire range of small to large digit counts.
 How efficient is the code? Based on a very general
-comparison, a million digit AGM calculation
-of <img src="https://render.githubusercontent.com/render/math?math=\pi">
+comparison, a million digit AGM calculation of
+![pi](https://latex.codecogs.com/svg.image?\pi)
 is about five times slower than an equivalent calculation
 performed with a big float data type based on
 [GMP](https://gmplib.org/).
@@ -180,9 +187,9 @@ various _heavy-wieght_ features such as I/O streaming,
 dynamic memory allocation,
 construction from character string
 and caching constant values such as
-<img src="https://render.githubusercontent.com/render/math?math=\pi">
+![pi](https://latex.codecogs.com/svg.image?\pi)
 and
-<img src="https://render.githubusercontent.com/render/math?math=\log(2)">
+![lntwo](https://latex.codecogs.com/svg.image?\log(2))
 can optionally be disabled with the compiler switches:
 
 ```cpp
@@ -254,9 +261,9 @@ details reside therein.
 ### Basic Square Root
 
 The example below calculates the square root of the decimal representation of
-<img src="https://render.githubusercontent.com/render/math?math=\sqrt{1234.56}">,
+![sqrtonetwothreedotetc](https://latex.codecogs.com/svg.image?\sqrt{1234.56})
 the result of which is approximately
-<img src="https://render.githubusercontent.com/render/math?math=35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220\ldots">.
+![sqrtresult](https://latex.codecogs.com/svg.image?35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220\ldots)
 
 ```cpp
 #include <cstdint>
@@ -289,11 +296,12 @@ auto main() -> int
 
 ### 1,000,001 digits of pi
 
-In the following code, we compute <img src="https://render.githubusercontent.com/render/math?math=1,000,001">
+In the following code, we compute
+![millionandone](https://latex.codecogs.com/svg.image?1,000,001)
 (one million and one) decimal digits of the fundamental constant
-<img src="https://render.githubusercontent.com/render/math?math=\pi">.
+![pi](https://latex.codecogs.com/svg.image?\pi)
 The truncated (non-rounded) expected result is
-<img src="https://render.githubusercontent.com/render/math?math=3.14159265\,\ldots\,79458151">.
+![pimilliontrunc](https://latex.codecogs.com/svg.image?3.14159265{\ldots}79458151)
 In this particular example, all _heavy-weight_ components are deactivated and
 this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit pi calculation.
 
@@ -377,9 +385,9 @@ a very nice calculational result.
 ### 1,000,001 digits of pi on a bare metal microcontroller
 
 The wide-decimal float back end is used to compute
-<img src="https://render.githubusercontent.com/render/math?math=1,000,001">
+![millionandone](https://latex.codecogs.com/svg.image?1,000,001)
 decimal digits of the mathematical constant
-<img src="https://render.githubusercontent.com/render/math?math=\pi">
+![pi](https://latex.codecogs.com/svg.image?\pi)
 on selected bare-metal OS-less microcontroller systems in
 [pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 
