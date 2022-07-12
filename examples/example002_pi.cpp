@@ -39,7 +39,9 @@ auto example002_pi_digits10_callback(const std::uint32_t d10) -> void
 
   const char* p_end = util::baselexical_cast(d10, p_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
-  example002_pi::lcd0().write(p_str.data(), static_cast<std::uint_fast8_t>(p_end - p_str.data()), 0U);
+  const auto len = static_cast<std::uint_fast8_t>(p_end - p_str.data());
+
+  example002_pi::lcd0().write(p_str.data(), len, 0U);
 }
 
 #if defined(WIDE_DECIMAL_NAMESPACE)

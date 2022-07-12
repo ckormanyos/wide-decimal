@@ -2428,6 +2428,9 @@
                   ldbl_str_rep.begin() + ldbl_str_pos);
       }
 
+      // Use the C-style library function strtold() in order
+      // to convert string representation to native long double.
+
       const auto ldbl_retrieved = std::strtold(ldbl_str_rep.data(), nullptr);
 
       return ldbl_retrieved;
@@ -3257,7 +3260,7 @@
               ? static_cast<std::uint_fast8_t>(1U)
               : static_cast<std::uint_fast8_t>(0U));
 
-          // Propogate the carry into the limbs of higher significance as needed.
+          // Propagate the carry into the limbs of higher significance as needed.
           if(carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0)))
           {
             my_data[static_cast<local_size_type>(least_digit_idx)] =
@@ -3450,10 +3453,13 @@
           }
         }
 
-        // Remove leading significant zeros just after the decimal point
-        // and adjust the exponent accordingly.
-        // Note that the while-loop operates only on strings of the form ".000abcd..."
-        // and peels away the zeros just after the decimal point.
+        // Remove leading significant zeros just after the
+        // decimal point and adjust the exponent accordingly.
+
+        // Note that the while-loop operates only on strings
+        // of the form ".000abcd..." and peels away the trailing
+        // zeros following the decimal point.
+
         if(str.at(static_cast<std::uint_fast32_t>(0U)) == '.')
         {
           const auto it_non_zero =
@@ -3493,7 +3499,8 @@
         str.append(static_cast<std::size_t>(1U), '.');
       }
 
-      // Shift the decimal point such that the exponent is an even multiple of decwide_t_elem_digits10.
+      // Shift the decimal point such that the exponent
+      // is an even multiple of decwide_t_elem_digits10.
       auto n_shift   = static_cast<std::ptrdiff_t>(0);
 
       {
@@ -3604,8 +3611,8 @@
                          static_cast<std::string::size_type>(pos_plus_one + max_dec));
       }
 
-      // Now the input string has the standard decwide_t input form.
-      // (See the comment above.)
+      // Now the input string has the standard decwide_t
+      // input form as described in the comment above.
 
       // Set all the data elements to 0.
       std::fill(my_data.begin(), my_data.end(), static_cast<limb_type>(0));
