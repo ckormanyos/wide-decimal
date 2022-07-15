@@ -652,14 +652,15 @@
 
         // Ensure that the value is normalized and adjust the exponent.
 
-        // TBD: Need to properly handle this left shif amount
+        // TBD: Need to properly handle this left shift amount
         // when GCC's __float128 is active (in case of -std=gnu++XX).
         // This happens when native_float_type is of type __float128.
-        const auto max_left_shift_amount =
-          (std::min)
+        constexpr auto max_left_shift_amount =
+          static_cast<int>
           (
-            std::numeric_limits<native_float_type>::digits,
-            std::numeric_limits<long double>::digits
+            (std::numeric_limits<native_float_type>::digits < std::numeric_limits<long double>::digits)
+              ? std::numeric_limits<native_float_type>::digits
+              : std::numeric_limits<long double>::digits
           );
 
         my_mantissa_part |= static_cast<unsigned long long>(1ULL << static_cast<unsigned>(max_left_shift_amount - 1)); // NOLINT(google-runtime-int)
@@ -874,8 +875,8 @@
         my_prec_elem(decwide_t_elem_number)
     {
       // Create a decwide_t from mantissa and exponent.
-      // This constructor is intended to maintain the
-      // full precision of the InternalFloatType.
+      // This constructor is, in fact, intended to maintain
+      // the full precision of the internal_float_type.
 
       const auto delta_zero =
         static_cast<internal_float_type>
@@ -901,17 +902,20 @@
         internal_float_type d = ((!b_neg) ? mantissa : -mantissa);
         exponent_type       e = exponent;
 
-        constexpr auto f10 = static_cast<internal_float_type>(static_cast<std::uint_fast8_t>(UINT8_C(10)));
-
-        while(d > f10)                                    { d /= f10; ++e; }
-        while(d < static_cast<internal_float_type>(1.0F)) { d *= f10; --e; }
-
         {
+          // Scale the input mantissa to lie between 1 and 10.
+
+          constexpr auto f_ten = static_cast<internal_float_type>(static_cast<std::uint_fast8_t>(UINT8_C(10)));
+          constexpr auto f_one = static_cast<internal_float_type>(static_cast<std::uint_fast8_t>(UINT8_C(1)));
+
+          while(d > f_ten) { d /= f_ten; ++e; }
+          while(d < f_one) { d *= f_ten; --e; }
+
           auto shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
 
           while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(0))
           {
-            d *= f10;
+            d *= f_ten;
             --e;
             --shift;
           }
@@ -920,18 +924,31 @@
         my_exp = e;
         my_neg = b_neg;
 
-        constexpr auto digit_loops =
-          static_cast<std::int32_t>
+        constexpr auto digit_elem_whole =
+          static_cast<int>
           (
-              static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
-                                        / static_cast<std::int32_t>(decwide_t_elem_digits10))
-            + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
-                                                                  % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0)
+              std::numeric_limits<internal_float_type>::max_digits10
+            / static_cast<int>(decwide_t_elem_digits10)
+          );
+
+        constexpr auto digit_elem_mod =
+          static_cast<int>
+          (
+              std::numeric_limits<internal_float_type>::max_digits10
+            % static_cast<int>(decwide_t_elem_digits10)
+          );
+
+        constexpr auto digit_loops =
+          static_cast<int>
+          (
+            digit_elem_whole + ((digit_elem_mod != 0) ? 1 : 0)
           );
 
         using local_size_type = typename representation_type::size_type;
 
         local_size_type limb_index;
+
+        // Extract the mantissa's decimal digits.
 
         for(  limb_index = static_cast<local_size_type>(0);
               limb_index < static_cast<local_size_type>(digit_loops);
@@ -939,9 +956,10 @@
         {
           const auto n = static_cast<limb_type>(d);
 
-          my_data[limb_index]  = static_cast<limb_type>(n);
-          d                   -= static_cast<InternalFloatType>(n);
-          d                   *= static_cast<InternalFloatType>(decwide_t_elem_mask);
+          my_data[limb_index] = n;
+
+          d -= static_cast<internal_float_type>(n);
+          d *= static_cast<internal_float_type>(decwide_t_elem_mask);
         }
 
         std::fill(my_data.begin() + static_cast<std::ptrdiff_t>(limb_index),
