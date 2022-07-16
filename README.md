@@ -256,7 +256,7 @@ details reside therein.
 The example below calculates the square root of the decimal representation of
 $\sqrt{1234.56}$
 the result of which is approximately
-$35.136306009596398663933384640418055759751518287169314528165976164717710895452890928635031219132220\ldots$
+$35.1363060095963986639333846404180557597515{\ldots}$
 
 ```cpp
 #include <cstdint>
