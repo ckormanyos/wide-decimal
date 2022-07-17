@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 //  Copyright Christopher Kormanyos 2020 - 2022.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
@@ -12,16 +12,33 @@
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+#include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_dynamic_array.h>
 
 namespace example008_bernoulli
 {
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(1001);
 
+  using wide_decimal_limb_type = std::uint32_t;
+
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  using wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  using wide_decimal_digits_helper_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, wide_decimal_limb_type>;
   #else
-  using wide_decimal_type = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  using wide_decimal_digits_helper_type = math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, wide_decimal_limb_type>;
+  #endif
+
+  using wide_decimal_allocator_type =
+    util::n_slot_array_allocator<wide_decimal_limb_type,
+                                 wide_decimal_digits_helper_type::elem_number,
+                                 static_cast<std::size_t>(UINT32_C(1536))>;
+
+  static_assert(wide_decimal_allocator_type::max_size() > static_cast<std::size_t>(UINT32_C(1500)),
+                "Error: Not enough slots available for tgamma calculation");
+
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>;
+  #else
+  using wide_decimal_type = math::wide_decimal::decwide_t<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>;
   #endif
 
   template<typename FloatingPointType>
@@ -34,9 +51,9 @@ namespace example008_bernoulli
   auto pi() -> wide_decimal_type
   {
     #if defined(WIDE_DECIMAL_NAMESPACE)
-    return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<wide_decimal_digits10>();
+    return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>();
     #else
-    return math::wide_decimal::pi<wide_decimal_digits10>();
+    return math::wide_decimal::pi<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>();
     #endif
   }
 
