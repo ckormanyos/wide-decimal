@@ -32,8 +32,10 @@ namespace example008_bernoulli
                                  wide_decimal_digits_helper_type::elem_number,
                                  static_cast<std::size_t>(UINT32_C(1536))>;
 
-  static_assert(wide_decimal_allocator_type::max_size() > static_cast<std::size_t>(UINT32_C(1500)),
+  #if defined(__cpp_constexpr_dynamic_alloc)
+  static_assert(std::allocator_traits<wide_decimal_allocator_type>::max_size(wide_decimal_allocator_type()) > static_cast<std::size_t>(UINT32_C(1500)),
                 "Error: Not enough slots available for tgamma calculation");
+  #endif
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>;

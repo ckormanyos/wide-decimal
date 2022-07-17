@@ -67,14 +67,7 @@
       using other = n_slot_array_allocator<U, SlotWidth, SlotCount>;
     };
 
-    static constexpr auto max_size() noexcept -> size_type
-    {
-      return
-        static_cast<size_type>
-        (
-          std::tuple_size<slot_array_type>::value * slot_count
-        );
-    }
+    constexpr auto max_size() const noexcept -> size_type { return slot_count; }
 
     constexpr auto address(      reference x) const ->       pointer { return &x; }
     constexpr auto address(const_reference x) const -> const_pointer { return &x; }
