@@ -6,9 +6,20 @@
 ///////////////////////////////////////////////////////////////////
 
 #include <array>
+#include <chrono>
 #include <cstdint>
-#include <ctime>
+#if !(defined(__GNUC__) && defined(__ARM__))
+#include <iostream>
+#endif
 #include <utility>
+
+#if (defined(__GNUC__) && defined(__ARM__))
+#define WIDE_DECIMAL_DISABLE_IOSTREAM
+#endif
+#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
+#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
+#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
+#define WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
@@ -67,12 +78,9 @@ namespace example008_bernoulli
     constexpr auto bernoulli_table_size =
       static_cast<local_size_type>
       (
-        static_cast<local_size_type>
+        static_cast<float>
         (
-          static_cast<float>
-          (
-            static_cast<double>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95
-          )
+          static_cast<long double>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95L
         )
       );
 
@@ -239,7 +247,10 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example008_bernoulli_tgamma() -
 auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #endif
 {
-  const auto start = std::clock();
+  using local_clock_type = std::chrono::high_resolution_clock;
+  using time_point_type  = typename local_clock_type::time_point;
+
+  const auto start = local_clock_type::now();
 
   // Initialize the table of Bernoulli numbers.
   example008_bernoulli::bernoulli_b
@@ -304,11 +315,20 @@ auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
     result_is_ok &= (closeness < tol);
   }
 
-  const auto stop = std::clock();
+  const auto stop = local_clock_type::now();
 
+  const auto elapsed =
+    static_cast<float>
+    (
+        static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())
+      / static_cast<float>(1000.0L)
+    );
+
+  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   std::cout << "Time example008_bernoulli_tgamma(): "
-            << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
+            << elapsed
             << std::endl;
+  #endif
 
   return result_is_ok;
 }
@@ -323,7 +343,11 @@ auto main() -> int
 {
   const auto result_is_ok = math::wide_decimal::example008_bernoulli_tgamma();
 
+  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
+  #endif
+
+  return (result_is_ok ? 0 : -1);
 }
 
 #endif

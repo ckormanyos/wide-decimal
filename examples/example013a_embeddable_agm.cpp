@@ -9,7 +9,7 @@
 #include <array>
 #include <cstdint>
 
-#if defined(__GNUC__) && defined(__AVR__)
+#if (defined(__GNUC__) && defined(__AVR__))
 #include <avr/pgmspace.h>
 
 #define MY_PROGMEM PROGMEM
