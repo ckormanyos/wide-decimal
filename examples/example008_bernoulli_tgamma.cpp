@@ -248,7 +248,6 @@ auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #endif
 {
   using local_clock_type = std::chrono::high_resolution_clock;
-  using time_point_type  = typename local_clock_type::time_point;
 
   const auto start = local_clock_type::now();
 
