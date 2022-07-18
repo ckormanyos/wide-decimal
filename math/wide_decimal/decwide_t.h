@@ -2931,6 +2931,9 @@
         #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
 
         {
+          #pragma GCC diagnostic push
+          #pragma GCC diagnostic ignored "-Warray-bounds"
+
           const auto memmove_dif =
             static_cast<std::ptrdiff_t>
             (
@@ -2939,6 +2942,7 @@
             );
 
           std::memmove(static_cast<void*>(v_local), static_cast<const void*>(v.my_data.data()), static_cast<std::size_t>(memmove_dif));
+          #pragma GCC diagnostic pop
         }
 
         #else
