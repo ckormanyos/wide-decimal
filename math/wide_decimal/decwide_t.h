@@ -551,11 +551,20 @@
     static constexpr exponent_type decwide_t_min_exp        = decwide_t_min_exp10;
 
   private:
+    #if (defined(_MSC_VER) && (_MSC_VER < 1920))
+    #else
     static constexpr auto is_void_allocator() noexcept -> bool { return std::is_same<AllocatorType, void>::value; }
+    #endif
 
     // Rebind the decwide_t allocator to the granularity of the LimbType.
     using allocator_conditional_type =
-      typename std::conditional<is_void_allocator(), std::allocator<void>, AllocatorType>::type;
+      #if (defined(_MSC_VER) && (_MSC_VER < 1920))
+      typename std::conditional<is_void_allocator(),
+      #else
+      typename std::conditional<std::is_same<AllocatorType, void>::value,
+      #endif
+                                std::allocator<void>,
+                                AllocatorType>::type;
 
   public:
     using allocator_type =
@@ -567,7 +576,11 @@
     // nature of the allocator type being used.
 
     using representation_type =
+      #if (defined(_MSC_VER) && (_MSC_VER < 1920))
+      typename std::conditional<std::is_same<AllocatorType, void>::value,
+      #else
       typename std::conditional<is_void_allocator(),
+      #endif
                                 detail::fixed_static_array <limb_type, static_cast<std::size_t>(decwide_t_elem_number)>,
                                 detail::fixed_dynamic_array<limb_type, static_cast<std::size_t>(decwide_t_elem_number), allocator_type>>::type;
 
@@ -1106,18 +1119,24 @@
                                      prec_elems_for_add_sub); // LCOV_EXCL_LINE
 
           #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-          const auto memmove_dif =
-            static_cast<std::ptrdiff_t>
-            (
-                static_cast<std::ptrdiff_t>(prec_elems_for_add_sub)
-              * static_cast<std::ptrdiff_t>(sizeof(limb_type))
-            );
 
-          std::memmove(my_data.data(), my_n_data_for_add_sub.data(), static_cast<std::size_t>(memmove_dif));
+          {
+            const auto memmove_dif =
+              static_cast<std::ptrdiff_t>
+              (
+                  static_cast<std::ptrdiff_t>(prec_elems_for_add_sub)
+                * static_cast<std::ptrdiff_t>(sizeof(limb_type))
+              );
+
+            std::memmove(static_cast<void*>(my_data.data()), static_cast<const void*>(my_n_data_for_add_sub.data()), static_cast<std::size_t>(memmove_dif));
+          }
+
           #else
+
           std::copy(my_n_data_for_add_sub.data(),
                     my_n_data_for_add_sub.data() + static_cast<std::size_t>(prec_elems_for_add_sub),
                     my_data.begin());
+
           #endif
 
           my_exp = v.my_exp;
@@ -2907,8 +2926,27 @@
         limb_type* result  = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(2))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         limb_type* t       = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-        std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
+        std::copy(my_data.cbegin(), my_data.cbegin() + prec_elems_for_multiply, u_local);
+
+        #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+
+        {
+          const auto memmove_dif =
+            static_cast<std::ptrdiff_t>
+            (
+                static_cast<std::ptrdiff_t>(prec_elems_for_multiply)
+              * static_cast<std::ptrdiff_t>(sizeof(limb_type))
+            );
+
+          std::memmove(static_cast<void*>(v_local), static_cast<const void*>(v.my_data.data()), static_cast<std::size_t>(memmove_dif));
+        }
+
+        #else
+
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
+
+        #endif
+
         std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply, static_cast<limb_type>(0U)); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply, static_cast<limb_type>(0U)); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
