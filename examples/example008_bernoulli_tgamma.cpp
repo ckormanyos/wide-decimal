@@ -376,7 +376,6 @@ auto main() -> int
   const auto result_is_ok = math::wide_decimal::example008_bernoulli_tgamma();
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-dfwfdsf
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
   #endif
 
