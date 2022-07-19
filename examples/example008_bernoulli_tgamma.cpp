@@ -59,7 +59,11 @@ namespace example008_bernoulli
                                  )>;
 
   #if defined(__cpp_constexpr_dynamic_alloc)
+  #if (defined(__GNUC__) && defined(__arm__))
+  static_assert(std::allocator_traits<wide_decimal_allocator_type>::max_size(wide_decimal_allocator_type()) > static_cast<std::size_t>(UINT32_C(200)),
+  #else
   static_assert(std::allocator_traits<wide_decimal_allocator_type>::max_size(wide_decimal_allocator_type()) > static_cast<std::size_t>(UINT32_C(1500)),
+  #endif
                 "Error: Not enough slots available for tgamma calculation");
   #endif
 
