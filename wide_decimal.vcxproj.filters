@@ -77,6 +77,21 @@
     <Filter Include=".props">
       <UniqueIdentifier>{59e7db7d-a414-437c-9f04-692b65f8bcec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\test\target">
+      <UniqueIdentifier>{fe70179d-bb5f-43de-b828-223a1fffa6ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\micros">
+      <UniqueIdentifier>{6dd8c4df-555d-4da4-932d-96ad8b6bb1c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\micros\stm32f429">
+      <UniqueIdentifier>{7d18e187-e8e4-4d3d-8f2d-1d9b65101c35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\micros\stm32f429\make">
+      <UniqueIdentifier>{219d1eac-b2ed-4d33-9f60-13cd6b04d327}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\micros\stm32f429\make\single">
+      <UniqueIdentifier>{e09b2fb7-4d32-431a-80c4-4cd9b1cdc52d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -186,6 +201,9 @@
     </ClCompile>
     <ClCompile Include="test\test_decwide_t_algebra_edge.cpp">
       <Filter>Source Files\test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\target\micros\stm32f429\make\single\crt.cpp">
+      <Filter>Source Files\test\target\micros\stm32f429\make\single</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,6 +320,9 @@
       <Filter>.github\workflows</Filter>
     </None>
     <None Include="codecov.yml" />
+    <None Include="test\target\micros\stm32f429\make\stm32f429.ld">
+      <Filter>Source Files\test\target\micros\stm32f429\make</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="examples\CMakeLists.txt">

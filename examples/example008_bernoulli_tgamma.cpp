@@ -7,8 +7,19 @@
 
 #include <array>
 #include <cstdint>
-#include <ctime>
 #include <utility>
+
+#if (defined(__GNUC__) && defined(__arm__))
+#define WIDE_DECIMAL_DISABLE_IOSTREAM
+#endif
+#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
+#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
+#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
+#define WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION
+
+#if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
+#include <chrono>
+#endif
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
@@ -17,7 +28,11 @@
 
 namespace example008_bernoulli
 {
+  #if (defined(__GNUC__) && defined(__arm__))
+  constexpr std::int32_t wide_decimal_digits10 = INT32_C(101);
+  #else
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(1001);
+  #endif
 
   using wide_decimal_limb_type = std::uint32_t;
 
@@ -27,13 +42,28 @@ namespace example008_bernoulli
   using wide_decimal_digits_helper_type = math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, wide_decimal_limb_type>;
   #endif
 
+  // For n decimal digits, the following slot counts are needed.
+  // Decimal Digits  Slots needed
+  //     1001            1536
+  //      251             512
+  //      101             256
+
   using wide_decimal_allocator_type =
     util::n_slot_array_allocator<wide_decimal_limb_type,
                                  wide_decimal_digits_helper_type::elem_number,
-                                 static_cast<std::size_t>(UINT32_C(1536))>;
+                                 #if (defined(__GNUC__) && defined(__arm__))
+                                 static_cast<std::size_t>(UINT32_C(256)
+                                 #else
+                                 static_cast<std::size_t>(UINT32_C(1536)
+                                 #endif
+                                 )>;
 
   #if defined(__cpp_constexpr_dynamic_alloc)
+  #if (defined(__GNUC__) && defined(__arm__))
+  static_assert(std::allocator_traits<wide_decimal_allocator_type>::max_size(wide_decimal_allocator_type()) > static_cast<std::size_t>(UINT32_C(200)),
+  #else
   static_assert(std::allocator_traits<wide_decimal_allocator_type>::max_size(wide_decimal_allocator_type()) > static_cast<std::size_t>(UINT32_C(1500)),
+  #endif
                 "Error: Not enough slots available for tgamma calculation");
   #endif
 
@@ -50,7 +80,7 @@ namespace example008_bernoulli
   }
 
   template<>
-  auto pi() -> wide_decimal_type
+  auto pi() -> wide_decimal_type // LCOV_EXCL_LINE
   {
     #if defined(WIDE_DECIMAL_NAMESPACE)
     return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>();
@@ -67,12 +97,9 @@ namespace example008_bernoulli
     constexpr auto bernoulli_table_size =
       static_cast<local_size_type>
       (
-        static_cast<local_size_type>
+        static_cast<float>
         (
-          static_cast<float>
-          (
-            static_cast<double>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95
-          )
+          static_cast<long double>(std::numeric_limits<wide_decimal_type>::digits10) * 0.95L
         )
       );
 
@@ -231,7 +258,81 @@ namespace example008_bernoulli
 
     return g;
   }
+
+  auto example008_bernoulli_tgamma_run() -> bool
+  {
+    // Initialize the table of Bernoulli numbers.
+    bernoulli_b
+    (
+      bernoulli_table().data(),
+      static_cast<std::uint32_t>(bernoulli_table().size())
+    );
+
+    // In this example, we compute values of Gamma[1/2 + n].
+
+    // We will make use of the relation
+    //                     (2n)!
+    //   Gamma[1/2 + n] = -------- * Sqrt[Pi].
+    //                    (4^n) n!
+
+    // Table[Factorial[2 n]/((4^n) Factorial[n]), {n, 0, 17, 1}]
+    constexpr std::array<std::pair<std::uint64_t, std::uint32_t>, 18U> ratios =
+    {{
+      { UINT64_C(                  1), UINT32_C(     1) },
+      { UINT64_C(                  1), UINT32_C(     2) },
+      { UINT64_C(                  3), UINT32_C(     4) },
+      { UINT64_C(                 15), UINT32_C(     8) },
+      { UINT64_C(                105), UINT32_C(    16) },
+      { UINT64_C(                945), UINT32_C(    32) },
+      { UINT64_C(              10395), UINT32_C(    64) },
+      { UINT64_C(             135135), UINT32_C(   128) },
+      { UINT64_C(            2027025), UINT32_C(   256) },
+      { UINT64_C(           34459425), UINT32_C(   512) },
+      { UINT64_C(          654729075), UINT32_C(  1024) },
+      { UINT64_C(        13749310575), UINT32_C(  2048) },
+      { UINT64_C(       316234143225), UINT32_C(  4096) },
+      { UINT64_C(      7905853580625), UINT32_C(  8192) },
+      { UINT64_C(    213458046676875), UINT32_C( 16384) },
+      { UINT64_C(   6190283353629375), UINT32_C( 32768) },
+      { UINT64_C( 191898783962510625), UINT32_C( 65536) },
+      { UINT64_C(6332659870762850625), UINT32_C(131072) }
+    }};
+
+    bool result_is_ok = true;
+
+    const wide_decimal_type tol (std::numeric_limits<wide_decimal_type>::epsilon() * static_cast<std::uint32_t>(UINT32_C(100000)));
+    const wide_decimal_type half(0.5F);
+
+    for(auto i = static_cast<std::size_t>(0U); i < ratios.size(); ++i)
+    {
+      // Calculate Gamma[1/2 + i]
+
+      using example008_bernoulli::tgamma;
+      using std::tgamma;
+
+      const wide_decimal_type g = tgamma(half + i);
+
+      // Calculate the control value.
+
+      using example008_bernoulli::pi;
+      using std::fabs;
+      using std::sqrt;
+
+      const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * ratios[i].first) / ratios[i].second; // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
+
+      const wide_decimal_type closeness = fabs(1 - (g / control));
+
+      result_is_ok &= (closeness < tol);
+    }
+
+    return result_is_ok;
+  }
 } // namespace example008_bernoulli
+
+#if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
+#include <iomanip>
+#include <iostream>
+#endif
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example008_bernoulli_tgamma() -> bool
@@ -239,76 +340,30 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example008_bernoulli_tgamma() -
 auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #endif
 {
-  const auto start = std::clock();
+  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
+  using local_clock_type = std::chrono::high_resolution_clock;
 
-  // Initialize the table of Bernoulli numbers.
-  example008_bernoulli::bernoulli_b
-  (
-    example008_bernoulli::bernoulli_table().data(),
-    static_cast<std::uint32_t>(example008_bernoulli::bernoulli_table().size())
-  );
+  const auto start = local_clock_type::now();
+  #endif
 
-  // In this example, we compute values of Gamma[1/2 + n].
+  const auto result_is_ok = example008_bernoulli::example008_bernoulli_tgamma_run();
 
-  // We will make use of the relation
-  //                     (2n)!
-  //   Gamma[1/2 + n] = -------- * Sqrt[Pi].
-  //                    (4^n) n!
+  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
+  const auto stop = local_clock_type::now();
+  #endif
 
-  // Table[Factorial[2 n]/((4^n) Factorial[n]), {n, 0, 17, 1}]
-  const std::array<std::pair<std::uint64_t, std::uint32_t>, 18U> ratios =
-  {{
-    { UINT64_C(                  1), UINT32_C(     1) },
-    { UINT64_C(                  1), UINT32_C(     2) },
-    { UINT64_C(                  3), UINT32_C(     4) },
-    { UINT64_C(                 15), UINT32_C(     8) },
-    { UINT64_C(                105), UINT32_C(    16) },
-    { UINT64_C(                945), UINT32_C(    32) },
-    { UINT64_C(              10395), UINT32_C(    64) },
-    { UINT64_C(             135135), UINT32_C(   128) },
-    { UINT64_C(            2027025), UINT32_C(   256) },
-    { UINT64_C(           34459425), UINT32_C(   512) },
-    { UINT64_C(          654729075), UINT32_C(  1024) },
-    { UINT64_C(        13749310575), UINT32_C(  2048) },
-    { UINT64_C(       316234143225), UINT32_C(  4096) },
-    { UINT64_C(      7905853580625), UINT32_C(  8192) },
-    { UINT64_C(    213458046676875), UINT32_C( 16384) },
-    { UINT64_C(   6190283353629375), UINT32_C( 32768) },
-    { UINT64_C( 191898783962510625), UINT32_C( 65536) },
-    { UINT64_C(6332659870762850625), UINT32_C(131072) }
-  }};
-
-  bool result_is_ok = true;
-
-  using example008_bernoulli::wide_decimal_type;
-
-  const wide_decimal_type tol (std::numeric_limits<wide_decimal_type>::epsilon() * static_cast<std::uint32_t>(UINT32_C(100000)));
-  const wide_decimal_type half(0.5F);
-
-  for(auto i = static_cast<std::size_t>(0U); i < ratios.size(); ++i)
-  {
-    // Calculate Gamma[1/2 + i]
-
-    const wide_decimal_type g = example008_bernoulli::tgamma(half + i);
-
-    // Calculate the control value.
-
-    using example008_bernoulli::pi;
-    using std::fabs;
-    using std::sqrt;
-
-    const wide_decimal_type control = (sqrt(pi<wide_decimal_type>()) * ratios[i].first) / ratios[i].second; // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
-
-    const wide_decimal_type closeness = fabs(1 - (g / control));
-
-    result_is_ok &= (closeness < tol);
-  }
-
-  const auto stop = std::clock();
+  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
+  const auto elapsed =
+    static_cast<float>
+    (
+        static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())
+      / static_cast<float>(1000.0L)
+    );
 
   std::cout << "Time example008_bernoulli_tgamma(): "
-            << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
+            << elapsed
             << std::endl;
+  #endif
 
   return result_is_ok;
 }
@@ -316,14 +371,15 @@ auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
 // Enable this if you would like to activate this main() as a standalone example.
 #if defined(WIDE_DECIMAL_STANDALONE_EXAMPLE008_BERNOULLI_TGAMMA)
 
-#include <iomanip>
-#include <iostream>
-
 auto main() -> int
 {
   const auto result_is_ok = math::wide_decimal::example008_bernoulli_tgamma();
 
+  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
+  #endif
+
+  return (result_is_ok ? 0 : -1);
 }
 
 #endif
