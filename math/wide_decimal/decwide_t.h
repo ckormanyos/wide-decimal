@@ -125,11 +125,11 @@
   auto ln_two() -> const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&;
   #else
   template<const std::int32_t ParamDigitsBaseTen,
-           typename LimbType = std::uint32_t,
-           typename AllocatorType = std::allocator<void>,
+           typename LimbType          = std::uint32_t,
+           typename AllocatorType     = std::allocator<void>,
            typename InternalFloatType = double,
-           typename ExponentType = std::int64_t,
-           typename FftFloatType = double>
+           typename ExponentType      = std::int64_t,
+           typename FftFloatType      = double>
   auto ln_two() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   #endif
 

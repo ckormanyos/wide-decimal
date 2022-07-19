@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <utility>
 
-#if (defined(__GNUC__) && defined(__ARM__))
+#if (defined(__GNUC__) && defined(__arm__))
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #endif
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
@@ -28,7 +28,11 @@
 
 namespace example008_bernoulli
 {
+  #if (defined(__GNUC__) && defined(__arm__))
+  constexpr std::int32_t wide_decimal_digits10 = INT32_C(101);
+  #else
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(1001);
+  #endif
 
   using wide_decimal_limb_type = std::uint32_t;
 
@@ -38,10 +42,21 @@ namespace example008_bernoulli
   using wide_decimal_digits_helper_type = math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, wide_decimal_limb_type>;
   #endif
 
+  // For n decimal digits, the following slot counts are needed.
+  // Decimal Digits  Slots needed
+  //     1001            1536
+  //      251             512
+  //      101             256
+
   using wide_decimal_allocator_type =
     util::n_slot_array_allocator<wide_decimal_limb_type,
                                  wide_decimal_digits_helper_type::elem_number,
-                                 static_cast<std::size_t>(UINT32_C(1536))>;
+                                 #if (defined(__GNUC__) && defined(__arm__))
+                                 static_cast<std::size_t>(UINT32_C(256)
+                                 #else
+                                 static_cast<std::size_t>(UINT32_C(1536)
+                                 #endif
+                                 )>;
 
   #if defined(__cpp_constexpr_dynamic_alloc)
   static_assert(std::allocator_traits<wide_decimal_allocator_type>::max_size(wide_decimal_allocator_type()) > static_cast<std::size_t>(UINT32_C(1500)),
@@ -357,6 +372,7 @@ auto main() -> int
   const auto result_is_ok = math::wide_decimal::example008_bernoulli_tgamma();
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
+dfwfdsf
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
   #endif
 
