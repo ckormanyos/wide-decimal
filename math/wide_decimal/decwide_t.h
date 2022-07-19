@@ -2933,6 +2933,8 @@
         {
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
+          #pragma GCC diagnostic push
+          #pragma GCC diagnostic ignored "-Wstringop-overflow"
 
           const auto memmove_dif =
             static_cast<std::ptrdiff_t>
@@ -2942,6 +2944,7 @@
             );
 
           std::memmove(static_cast<void*>(v_local), static_cast<const void*>(v.my_data.data()), static_cast<std::size_t>(memmove_dif));
+          #pragma GCC diagnostic pop
           #pragma GCC diagnostic pop
         }
 
