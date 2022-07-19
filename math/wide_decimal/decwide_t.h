@@ -559,9 +559,9 @@
     // Rebind the decwide_t allocator to the granularity of the LimbType.
     using allocator_conditional_type =
       #if (defined(_MSC_VER) && (_MSC_VER < 1920))
-      typename std::conditional<is_void_allocator(),
-      #else
       typename std::conditional<std::is_same<AllocatorType, void>::value,
+      #else
+      typename std::conditional<is_void_allocator(),
       #endif
                                 std::allocator<void>,
                                 AllocatorType>::type;
@@ -1520,7 +1520,7 @@
             const auto index_prev =
               static_cast<local_size_type>
               (
-                static_cast<std::ptrdiff_t>(my_prec_elem) - static_cast<std::ptrdiff_t>(1)
+                static_cast<std::ptrdiff_t>(my_prec_elem) - static_cast<std::ptrdiff_t>(INT8_C(1))
               );
 
             const auto val_prev =
@@ -1611,17 +1611,17 @@
       if(iszero())
       {
         // The value of *this is zero and v is either zero or non-zero.
-        n_result = (v.iszero() ? static_cast<std::int_fast8_t>(0)
-                               : (v.my_neg ? static_cast<std::int_fast8_t>(1)
-                                           : static_cast<std::int_fast8_t>(-1)));
+        n_result = (v.iszero() ? static_cast<std::int_fast8_t>(INT8_C(0))
+                               : (v.my_neg ? static_cast<std::int_fast8_t>(INT8_C(1))
+                                           : static_cast<std::int_fast8_t>(INT8_C(-1))));
       }
       else
       {
         if(v.iszero())
         {
           // The value of v is zero and *this is non-zero.
-          n_result = (my_neg ? static_cast<std::int_fast8_t>(-1)
-                             : static_cast<std::int_fast8_t>(1));
+          n_result = (my_neg ? static_cast<std::int_fast8_t>(INT8_C(-1))
+                             : static_cast<std::int_fast8_t>(INT8_C(1)));
         }
         else
         {
@@ -1630,8 +1630,8 @@
           if(my_neg != v.my_neg)
           {
             // The signs are different.
-            n_result = (my_neg ? static_cast<std::int_fast8_t>(-1)
-                               : static_cast<std::int_fast8_t>(1));
+            n_result = (my_neg ? static_cast<std::int_fast8_t>(INT8_C(-1))
+                               : static_cast<std::int_fast8_t>(INT8_C(1)));
           }
           else
           {
@@ -1641,8 +1641,8 @@
               const auto val_cmp_exp =
                 static_cast<std::int_fast8_t>
                 (
-                  ((my_exp < v.my_exp) ? static_cast<std::int_fast8_t>(1)
-                                       : static_cast<std::int_fast8_t>(-1))
+                  ((my_exp < v.my_exp) ? static_cast<std::int_fast8_t>(INT8_C(1))
+                                       : static_cast<std::int_fast8_t>(INT8_C(-1)))
                 );
 
               n_result =
@@ -1695,7 +1695,7 @@
                 (
                   static_cast<std::int32_t>
                   (
-                    static_cast<std::int32_t>(INT32_C(1) + decwide_t_digits10_for_epsilon()) - decwide_t_digits10
+                    static_cast<std::int32_t>(static_cast<std::int32_t>(INT8_C(1)) + decwide_t_digits10_for_epsilon()) - decwide_t_digits10
                   )
                 )
               )
@@ -1748,7 +1748,7 @@
         );
 
       {
-        const auto elems_least = (std::max)(elems_needed_for_digits, static_cast<std::int32_t>(2));
+        const auto elems_least = (std::max)(elems_needed_for_digits, static_cast<std::int32_t>(INT8_C(2)));
 
         my_prec_elem = (std::min)(decwide_t_elem_number, elems_least);
       }
@@ -1834,7 +1834,7 @@
 
       for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::digits10 - 1);
                digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
-               digits *= static_cast<std::int32_t>(2))
+               digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
         // Adjust precision of the terms.
         const auto min_elem_digits10_plus_one =
@@ -1847,7 +1847,7 @@
         const auto new_prec_as_digits10 =
           static_cast<std::int32_t>
           (
-              static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
+              static_cast<std::int32_t>(digits * static_cast<std::int32_t>(INT8_C(2)))
             + min_elem_digits10_plus_one
           );
 
@@ -1979,12 +1979,12 @@
       // with n = p.
 
       // LCOV_EXCL_START
-      if(p < static_cast<std::int32_t>(1))
+      if(p < static_cast<std::int32_t>(INT8_C(1)))
       {
         return operator=(zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
       }
 
-      if(p == static_cast<std::int32_t>(1))
+      if(p == static_cast<std::int32_t>(INT8_C(1)))
       {
         return *this;
       }
@@ -2020,20 +2020,20 @@
 
       for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::digits10 - 1);
                digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
-               digits *= static_cast<std::int32_t>(2))
+               digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
         // Adjust precision of the terms.
         const auto min_elem_digits10_plus_one =
           (std::min)
           (
-            static_cast<std::int32_t>(decwide_t_elem_digits10 + 1),
+            static_cast<std::int32_t>(decwide_t_elem_digits10 + static_cast<std::int32_t>(INT8_C(1))),
             static_cast<std::int32_t>(INT8_C(9))
           );
 
         const auto new_prec_as_digits10 =
           static_cast<std::int32_t>
           (
-              static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
+              static_cast<std::int32_t>(digits * static_cast<std::int32_t>(INT8_C(2)))
             + min_elem_digits10_plus_one
           );
 
