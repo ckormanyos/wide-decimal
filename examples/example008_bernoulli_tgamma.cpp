@@ -380,7 +380,7 @@ constexpr auto app_benchmark_standalone_foodcafe = static_cast<std::uint32_t>(UI
 
 extern "C"
 {
-  extern volatile std::uint32_t app_benchmark_standalone_result;
+  extern volatile std::uint32_t app_benchmark_standalone_result; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
   auto app_benchmark_run_standalone       (void) -> bool;
   auto app_benchmark_get_standalone_result(void) -> bool;
@@ -423,7 +423,7 @@ auto main() -> int
 
 extern "C"
 {
-  volatile std::uint32_t app_benchmark_standalone_result;
+  volatile std::uint32_t app_benchmark_standalone_result; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 }
 
 #endif
