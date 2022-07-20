@@ -193,24 +193,6 @@
     <ClCompile Include="examples\example013a_embeddable_agm.cpp" />
     <ClCompile Include="examples\example013_embeddable_sqrt.cpp" />
     <ClCompile Include="test\coverity.c" />
-    <ClCompile Include="test\target\micros\stm32f429\hw\mcal_cpu.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="test\target\micros\stm32f429\hw\mcal_osc.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="test\target\micros\stm32f429\hw\mcal_osc_detail.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="test\target\micros\stm32f429\make\single\crt.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
@@ -265,30 +247,6 @@
     <ClInclude Include="test\parallel_for.h" />
     <ClInclude Include="test\target\micros\mcal\mcal_reg_access_dynamic.h" />
     <ClInclude Include="test\target\micros\mcal\mcal_reg_access_static.h" />
-    <ClInclude Include="test\target\micros\stm32f429\hw\mcal_cpu.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="test\target\micros\stm32f429\hw\mcal_osc.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="test\target\micros\stm32f429\hw\mcal_osc_detail.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="test\target\micros\stm32f429\hw\mcal_reg.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="test\test_decwide_t_algebra.h" />
     <ClInclude Include="test\test_decwide_t_examples.h" />
     <ClInclude Include="util\memory\util_n_slot_array_allocator.h" />
