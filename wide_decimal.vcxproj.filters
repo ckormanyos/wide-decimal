@@ -92,6 +92,12 @@
     <Filter Include="Source Files\test\target\micros\stm32f429\make\single">
       <UniqueIdentifier>{e09b2fb7-4d32-431a-80c4-4cd9b1cdc52d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\test\target\micros\stm32f429\hw">
+      <UniqueIdentifier>{18474c6c-0c7d-4e19-bb06-db38188691a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\micros\mcal">
+      <UniqueIdentifier>{1197967f-be66-475a-9a37-bb98609e4e95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -205,6 +211,15 @@
     <ClCompile Include="test\target\micros\stm32f429\make\single\crt.cpp">
       <Filter>Source Files\test\target\micros\stm32f429\make\single</Filter>
     </ClCompile>
+    <ClCompile Include="test\target\micros\stm32f429\hw\mcal_osc.cpp">
+      <Filter>Source Files\test\target\micros\stm32f429\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="test\target\micros\stm32f429\hw\mcal_osc_detail.cpp">
+      <Filter>Source Files\test\target\micros\stm32f429\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="test\target\micros\stm32f429\hw\mcal_cpu.cpp">
+      <Filter>Source Files\test\target\micros\stm32f429\hw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h">
@@ -278,6 +293,24 @@
     </ClInclude>
     <ClInclude Include="boost\multiprecision\detail\check_cpp11_config.hpp">
       <Filter>Source Files\boost\multiprecision\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="test\target\micros\stm32f429\hw\mcal_osc.h">
+      <Filter>Source Files\test\target\micros\stm32f429\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="test\target\micros\stm32f429\hw\mcal_osc_detail.h">
+      <Filter>Source Files\test\target\micros\stm32f429\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="test\target\micros\stm32f429\hw\mcal_reg.h">
+      <Filter>Source Files\test\target\micros\stm32f429\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="test\target\micros\stm32f429\hw\mcal_cpu.h">
+      <Filter>Source Files\test\target\micros\stm32f429\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="test\target\micros\mcal\mcal_reg_access_dynamic.h">
+      <Filter>Source Files\test\target\micros\mcal</Filter>
+    </ClInclude>
+    <ClInclude Include="test\target\micros\mcal\mcal_reg_access_static.h">
+      <Filter>Source Files\test\target\micros\mcal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
