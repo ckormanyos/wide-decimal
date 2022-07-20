@@ -5,8 +5,6 @@
 #include <cstdlib>
 #include <iterator>
 
-#include <mcal_cpu.h>
-
 extern "C"
 {
   // Patched labels.
@@ -31,9 +29,6 @@ void __my_startup(void)
   // The stack pointer is automatically loaded from
   // the base position of the interrupt vector table.
   // So we do nothing here.
-
-  // Chip initialization: Watchdog, port, and oscillator, if any needed.
-  mcal::cpu::init();
 
   // Initialize statics from ROM to RAM.
   // Zero-clear default-initialized static RAM.
