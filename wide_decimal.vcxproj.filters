@@ -92,6 +92,12 @@
     <Filter Include="Source Files\test\target\micros\stm32f429\make\single">
       <UniqueIdentifier>{e09b2fb7-4d32-431a-80c4-4cd9b1cdc52d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\test\target\micros\mcal">
+      <UniqueIdentifier>{1197967f-be66-475a-9a37-bb98609e4e95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\build">
+      <UniqueIdentifier>{053c6fec-f289-46e2-b0d1-9cdf87ac87c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -279,6 +285,12 @@
     <ClInclude Include="boost\multiprecision\detail\check_cpp11_config.hpp">
       <Filter>Source Files\boost\multiprecision\detail</Filter>
     </ClInclude>
+    <ClInclude Include="test\target\micros\mcal\mcal_reg_access_dynamic.h">
+      <Filter>Source Files\test\target\micros\mcal</Filter>
+    </ClInclude>
+    <ClInclude Include="test\target\micros\mcal\mcal_reg_access_static.h">
+      <Filter>Source Files\test\target\micros\mcal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\wide_decimal.yml">
@@ -322,6 +334,9 @@
     <None Include="codecov.yml" />
     <None Include="test\target\micros\stm32f429\make\stm32f429.ld">
       <Filter>Source Files\test\target\micros\stm32f429\make</Filter>
+    </None>
+    <None Include="test\target\build\test_app_benchmarks_emulator.py">
+      <Filter>Source Files\test\target\build</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
