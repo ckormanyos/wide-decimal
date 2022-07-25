@@ -77,6 +77,24 @@
     <Filter Include=".props">
       <UniqueIdentifier>{5e8867a6-4552-4667-a2c3-87203a8ac998}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\test\target">
+      <UniqueIdentifier>{54a7a6a6-88fa-4c27-91fd-9f9c594161d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\build">
+      <UniqueIdentifier>{40533d34-a2db-4a58-b619-f4509d002e7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\micros">
+      <UniqueIdentifier>{33d53f45-fe9c-440c-846e-8d054a551a15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\micros\stm32f429">
+      <UniqueIdentifier>{bcacf48a-2c51-45dc-a0aa-526e814757cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\micros\stm32f429\make">
+      <UniqueIdentifier>{88a085af-bfcd-479f-930d-cde53277d226}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test\target\micros\stm32f429\make\single">
+      <UniqueIdentifier>{2a2623af-1324-415f-b5b3-028151a951b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp">
@@ -186,6 +204,9 @@
     </ClCompile>
     <ClCompile Include="test\test_decwide_t_algebra_edge.cpp">
       <Filter>Source Files\test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\target\micros\stm32f429\make\single\crt.cpp">
+      <Filter>Source Files\test\target\micros\stm32f429\make\single</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,6 +323,12 @@
       <Filter>.github\workflows</Filter>
     </None>
     <None Include="codecov.yml" />
+    <None Include="test\target\build\test_app_benchmarks_emulator.py">
+      <Filter>Source Files\test\target\build</Filter>
+    </None>
+    <None Include="test\target\micros\stm32f429\make\stm32f429.ld">
+      <Filter>Source Files\test\target\micros\stm32f429\make</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="examples\CMakeLists.txt">
