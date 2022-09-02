@@ -27,8 +27,8 @@ using local_wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decw
 using local_wide_decimal_type = ::math::wide_decimal::decwide_t<local_wide_decimal_digits10, local_limb_type, std::allocator<void>>;
 #endif
 
-std::uniform_int_distribution<std::uint32_t> dist_sgn    (UINT32_C(   0), UINT32_C(    1)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
-std::uniform_int_distribution<std::uint32_t> dist_dig    (UINT32_C(0x31), UINT32_C( 0x39)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+std::uniform_int_distribution<std::uint32_t> dist_sgn(UINT32_C(   0), UINT32_C(    1)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+std::uniform_int_distribution<std::uint32_t> dist_dig(UINT32_C(0x31), UINT32_C( 0x39)); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 
 using eng_sgn_type = std::ranlux24;
 using eng_dig_type = std::minstd_rand0;
