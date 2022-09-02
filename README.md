@@ -1,4 +1,4 @@
-Wide-decimal
+﻿Wide-decimal
 ==================
 
 <p align="center">
@@ -54,9 +54,12 @@ Easy application follows via a traditional C-style typedef or C++11 alias.
 The defined type can be used very much like a built-in floating-point type.
 
 The following sample, for instance, defines and uses a decimal type
-called `dec101_t` having $101$ decimal digits of precision.  
-The subroutine `do_something()` initializes the variable `d`
-of type `dec101_t` with $1{/}3$ and subsequently prints the $101$ digit value of `d` to the console.
+called `dec101_t` having $101$ decimal digits of precision.
+In this example, the subroutine `do_something()` initializes the variable `d`
+of type `dec101_t` with $\frac{1}{3}$. The $101$ digit value of `d`
+is subsequently printed to the console. The console precision is set with
+`std::setprecision` in combination with `dec101_t`'s specialization
+of `std::numeric_limits`.
 
 In particular,
 
@@ -113,6 +116,8 @@ Various interesting and algorithmically challenging
 [examples](./examples) have been implemented.
 It is hoped that the examples provide inspiration and guidance on
 how to use wide-decimal.
+
+The examples include the following.
 
   - ![`example000_multiply_nines.cpp`](./examples/example000_multiply_nines.cpp) performa a check of shoolbook multiplication using a small digit range and small 8-bit limb.
   - ![`example000a_multiply_pi_squared.cpp`](./examples/example000a_multiply_pi_squared.cpp) performs a hard-coded multiplication check resulting in $\pi^2$.
@@ -222,21 +227,20 @@ We recall that all parts of the wide-decimal implementation,
 such as the `decwide_t` class and its associated implementation
 details reside within `namespace` `::math::wide_decimal`
 
-Defining the macro `WIDE_DECIMAL_NAMESPACE` to be something like,
-for instance,
+Consider defining the macro `WIDE_DECIMAL_NAMESPACE` to be a self-chosen,
+unique namespace name, for instance something like
 
 ```sh
 -DWIDE_DECIMAL_NAMESPACE=something_unique
 ```
 
-places all parts of the wide-decimal's `uintwide_t` template class implementation
+This places all parts of the wide-decimal's `uintwide_t` template class implementation
 and its associated details within the prepended outer namespace
-`something_unique` --- as in
+`something_unique` - as in
 
 ```cpp
 namespace something_unique::math::wide_decimal
 {
-  // ...
 }
 ```
 
