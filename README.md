@@ -1,4 +1,4 @@
-﻿Wide-decimal
+Wide-decimal
 ==================
 
 <p align="center">
@@ -161,10 +161,10 @@ An assortment of syntax checkers including enhanced GCC warnings,
 also in association with CI and pull requests.
 Badges can be found above.
 
-### Build Status
+### Build status
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
 
-## Additional Details
+## Additional details
 
 Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
@@ -241,11 +241,20 @@ and its associated details within the prepended outer namespace
 ```cpp
 namespace something_unique::math::wide_decimal
 {
+  template<const std::int32_t ParamDigitsBaseTen,
+           typename LimbType          = std::uint32_t,
+           typename AllocatorType     = std::allocator<void>,
+           typename InternalFloatType = double,
+           typename ExponentType      = std::int64_t,
+           typename FftFloatType      = double>
+  class decwide_t;
+
+  // And also all its related types and functions.
 }
 ```
 
 When utilizing the `WIDE_DECIMAL_NAMESPACE` option,
-vary the actual name or nesting depth of the desired prepended
+it is easy to vary the actual name or nesting depth of the desired prepended
 outer namespace if/as needed for your particular project.
 
 By default the macro `WIDE_DECIMAL_NAMESPACE` is not defined.
@@ -255,12 +264,12 @@ details reside therein.
 
 ## Examples
 
-### Basic Square Root
+### Basic square root
 
-The example below calculates the square root of the decimal representation of
-$\sqrt{1234.56}$
-the result of which is approximately
-$35.1363060095963986639333846404180557597515{\ldots}$
+The example below performs a basic square root calculation,
+given by approximately
+
+$$\sqrt{\frac{123456}{100}} \approx 35.1363060095963986639333846404180557597515{\ldots}$$
 
 ```cpp
 #include <cstdint>
@@ -387,9 +396,9 @@ $\pi$
 on selected bare-metal OS-less microcontroller systems in
 [pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 
-## Further Details
+## Further details
 
-### Mixing Wide-Decimal with Wide-Integer
+### Mixing wide-decimal with wide-integer
 
 [Wide-decimal](https://github.com/ckormanyos/wide-decimal)
 can be used simultaneously with
