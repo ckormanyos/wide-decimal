@@ -6,10 +6,8 @@ Wide-decimal
         <img src="https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg" alt="Build Status"></a>
     <a href="https://github.com/ckormanyos/wide-decimal/issues">
         <img src="https://img.shields.io/github/issues-raw/ckormanyos/wide-decimal" alt="Open Issues" /></a>
-    <a href="https://lgtm.com/projects/g/ckormanyos/wide-decimal/context:cpp">
-        <img src="https://img.shields.io/lgtm/grade/cpp/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18" alt="Language grade: C/C++"></a>
-    <a href="https://lgtm.com/projects/g/ckormanyos/wide-decimal/alerts/">
-        <img src="https://img.shields.io/lgtm/alerts/g/ckormanyos/wide-decimal.svg?logo=lgtm&logoWidth=18" alt="Total alerts" /></a>
+    <a href="https://github.com/ckormanyos/wide-decimal/actions?query=workflow%3ACodeQL">
+        <img src="https://github.com/ckormanyos/wide-decimal/actions/workflows/CodeQL.yml/badge.svg" alt="CodeQL" /></a>
     <a href="https://scan.coverity.com/projects/ckormanyos-wide-decimal">
         <img src="https://scan.coverity.com/projects/24792/badge.svg" alt="Coverity Scan"></a>
     <a href="https://sonarcloud.io/summary/new_code?id=ckormanyos_wide-decimal">
