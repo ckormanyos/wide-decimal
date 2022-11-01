@@ -1,4 +1,4 @@
-Wide-decimal
+﻿Wide-decimal
 ==================
 
 <p align="center">
@@ -38,7 +38,7 @@ Wide-decimal implements both common algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`,
 and also includes full support for `std::numeric_limits`.
 
-Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 17, 20, 23.
+Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 17, 20, 23 and beyond.
 
 ## Implementation goals
 
@@ -84,7 +84,7 @@ The local data type `dec101_t` is defined with a C++11 alias.
 The first template parameter `INT32_C(101)` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
-the default limb type is 32 bits in width and unsigned.
+the default limb type is thirty-two bits in width and unsigned.
 
 The template signature of the `decwide_t` class is shown below.
 
@@ -166,12 +166,11 @@ Badges can be found above.
 
 ## Additional details
 
-Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
+Wide-decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
 over the entire range of small to large digit counts.
 How efficient is the code? Based on a very general
-comparison, a million digit AGM calculation of
-$\pi$
+comparison, a million digit AGM calculation of $\pi$
 is about five times slower than an equivalent calculation
 performed with a big float data type based on
 [GMP](https://gmplib.org/).
@@ -182,12 +181,8 @@ programming environments.
 
 When working with even the most tiny microcontroller systems,
 various _heavy-wieght_ features such as I/O streaming,
-dynamic memory allocation,
-construction from character string
-and caching constant values such as
-$\pi$
-and
-$\log(2)$
+dynamic memory allocation, construction from character string
+and caching constant values such as $\pi$ and $\log(2)$
 can optionally be disabled with the compiler switches:
 
 ```cpp
@@ -218,7 +213,7 @@ allocation is needed and can not be disabled. In other words,
 Let's consider also the macro `WIDE_DECIMAL_NAMESPACE` in greater detail.
 
 ```cpp
-#define WIDE_DECIMAL_NAMESPACE
+#define WIDE_DECIMAL_NAMESPACE something_unique
 ```
 
 This is an advanced macro intended to be used in strict, exacting applications for which
@@ -302,18 +297,17 @@ auto main() -> int
 
 ### 1,000,001 digits of pi
 
-In the following code, we compute $1,000,001$
-(one million and one) decimal digits of the fundamental constant
-$\pi$
+In the following code, we compute $1,000,001$ (one million and one)
+decimal digits of the fundamental constant $\pi$.
 The truncated (non-rounded) expected result is
 $3.14159265{\ldots}79458151$
-In this particular example, all _heavy-weight_ components are deactivated and
-this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit pi calculation.
+In this particular example, all _heavyweight_ components are deactivated and
+this particular calculation is, in fact, suitable for a bare-metal mega-digit pi calculation.
 
 In this example, note how a specialized custom allocator called
 `util::n_slot_array_allocator` is utilized for exact, efficient memory management
 of a certain number of temporary storages of mega-digit numbers
-(tuned to 18 in this particular example).
+(tuned to $18$ in this particular example).
 
 ```cpp
 #include <iomanip>
@@ -390,9 +384,7 @@ a very nice calculational result.
 ### 1,000,001 digits of pi on a bare metal microcontroller
 
 The wide-decimal float back end is used to compute
-$1,000,001$
-decimal digits of the mathematical constant
-$\pi$
+$1,000,001$ decimal digits of the mathematical constant $\pi$
 on selected bare-metal OS-less microcontroller systems in
 [pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 

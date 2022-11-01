@@ -611,7 +611,7 @@ jobs:
           dir %cd%\wide_decimal.exe
           %cd%\wide_decimal.exe
   gcc-arm-none-eabi:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         shell: bash
