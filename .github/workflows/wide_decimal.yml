@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-20.04
     container: ${{matrix.container}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: create build directory
         run: mkdir $GITHUB_WORKSPACE/build
       - name: install Boost
@@ -62,7 +62,7 @@ jobs:
         standard: [ c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: update-tools
@@ -101,7 +101,7 @@ jobs:
         standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -132,7 +132,7 @@ jobs:
         standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -163,7 +163,7 @@ jobs:
         standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -194,7 +194,7 @@ jobs:
         standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -225,7 +225,7 @@ jobs:
         standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -256,7 +256,7 @@ jobs:
         standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -287,7 +287,7 @@ jobs:
         standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -318,7 +318,7 @@ jobs:
         standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -349,7 +349,7 @@ jobs:
         standard: [ c++14, c++17, c++20 ]
         compiler: [ g++-10, g++-11, clang++-10, clang++-11 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -382,7 +382,7 @@ jobs:
         standard: [ c++14, c++17, c++20 ]
         compiler: [ g++-11, clang++-12 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -415,7 +415,7 @@ jobs:
         standard: [ c++14, c++17, c++20, c++2b ]
         compiler: [ g++-12, clang++-14 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -448,7 +448,7 @@ jobs:
         standard: [ c++14, c++17, c++20 ]
         compiler: [ g++-10, clang++-10 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -481,7 +481,7 @@ jobs:
         standard: [ c++14, c++17, c++2a ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -504,7 +504,7 @@ jobs:
   msvc-release-x64:
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -530,7 +530,7 @@ jobs:
   msvc-release-x64-vs2022:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -556,7 +556,7 @@ jobs:
   msvc-release-x64-vs2022-asan:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -588,7 +588,7 @@ jobs:
         compiler: [ g++ ]
         standard: [ c++14, c++17, c++2a ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -611,7 +611,7 @@ jobs:
           dir %cd%\wide_decimal.exe
           %cd%\wide_decimal.exe
   gcc-arm-none-eabi:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         shell: bash
@@ -621,7 +621,7 @@ jobs:
         example: [ example013_embeddable_sqrt, example013a_embeddable_agm ]
         standard: [ c++11, c++14, c++17, c++2a ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: update-tools
@@ -656,7 +656,7 @@ jobs:
         example: [ example013_embeddable_sqrt, example013a_embeddable_agm ]
         standard: [ c++11, c++14 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: update-tools
@@ -690,7 +690,7 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: update-tools
@@ -702,10 +702,10 @@ jobs:
           wget --no-check-certificate https://github.com/xpack-dev-tools/qemu-arm-xpack/releases/download/v7.1.0-1/xpack-qemu-arm-7.1.0-1-linux-x64.tar.gz
           tar -xvzf xpack-qemu-arm-7.1.0-1-linux-x64.tar.gz
         working-directory: ./
-      - name: gcc-arm-none-eabi-example008-stm32f429-qemu
+      - name: build-example-stm32f429
         run: |
           mkdir -p bin
-          emu_env/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-g++ -std=c++20 -Wall -Wextra -Wpedantic -O2 -g -gdwarf-2 -ffunction-sections -fdata-sections -x c++ -fno-rtti -fno-use-cxa-atexit -fno-exceptions -fno-nonansi-builtins -fno-threadsafe-statics -fno-enforce-eh-specs -ftemplate-depth=32 -mcpu=cortex-m4 -mtune=cortex-m4 -mthumb -mfloat-abi=soft -mno-unaligned-access -mno-long-calls -I. -DWIDE_DECIMAL_STANDALONE_EXAMPLE008_BERNOULLI_TGAMMA ./examples/example008_bernoulli_tgamma.cpp ./test/target/micros/stm32f429/make/single/crt.cpp -nostartfiles -Wl,--gc-sections -Wl,-Map,./bin/example008_bernoulli_tgamma.map -T ./test/target/micros/stm32f429/make/stm32f429.ld --specs=nano.specs --specs=nosys.specs -o ./bin/example008_bernoulli_tgamma.elf
+          emu_env/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-g++ -std=c++20 -Wall -Wextra -Wpedantic -O2 -g -gdwarf-2 -ffunction-sections -fdata-sections -x c++ -fno-rtti -fno-use-cxa-atexit -fno-exceptions -fno-nonansi-builtins -fno-threadsafe-statics -fno-enforce-eh-specs -ftemplate-depth=32 -mcpu=cortex-m4 -mtune=cortex-m4 -mthumb -mfloat-abi=soft -mno-unaligned-access -mno-long-calls -I. -DWIDE_DECIMAL_STANDALONE_EXAMPLE008_BERNOULLI_TGAMMA ./examples/example008_bernoulli_tgamma.cpp ./target/micros/stm32f429/make/single/crt.cpp -nostartfiles -Wl,--gc-sections -Wl,-Map,./bin/example008_bernoulli_tgamma.map -T ./target/micros/stm32f429/make/stm32f429.ld --specs=nano.specs --specs=nosys.specs -o ./bin/example008_bernoulli_tgamma.elf
           emu_env/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-objcopy ./bin/example008_bernoulli_tgamma.elf -O ihex ./bin/example008_bernoulli_tgamma.hex
           ls -la ./bin/example008_bernoulli_tgamma.elf ./bin/example008_bernoulli_tgamma.hex ./bin/example008_bernoulli_tgamma.map
         working-directory: ./
@@ -713,11 +713,12 @@ jobs:
         run: |
           ./emu_env/xpack-qemu-arm-7.1.0-1/bin/qemu-system-gnuarmeclipse --verbose --mcu STM32F429ZI --nographic --gdb tcp::9999 -d unimp,guest_errors &
         working-directory: ./
-      - name: run-test-on-target-stm32f429
+      - name: run-test-on-target
         run: |
-          ./emu_env/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gdb-py ./bin/example008_bernoulli_tgamma.elf -x ./test/target/build/test_app_benchmarks_emulator.py > arm-none-eabi-gdb-py.txt
-          cat arm-none-eabi-gdb-py.txt
-          sed -n l arm-none-eabi-gdb-py.txt | grep 4027435774
+          ./emu_env/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gdb-py ./bin/example008_bernoulli_tgamma.elf -x ./target/build/test_examples_emulator.py
+          qemu_result=$?
+          echo "qemu_result" "$qemu_result"
+          echo "qemu_result" "$qemu_result" | grep 'qemu_result 0'
         working-directory: ./
   gcc-clang-high-precision:
     runs-on: ubuntu-20.04
@@ -731,7 +732,7 @@ jobs:
         compiler: [ g++, clang++ ]
         suite: [ test_high_precision_exp, test_high_precision_log ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -765,7 +766,7 @@ jobs:
         compiler: [ g++-12, clang++-14 ]
         suite: [ test_mixed_wide_decimal_wide_integer_b2n ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
       - name: clone-wide_integer

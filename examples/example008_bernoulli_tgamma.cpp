@@ -401,7 +401,7 @@ extern "C"
   auto app_benchmark_get_standalone_result(void) -> bool
   {
     volatile auto result_is_ok =
-      (app_benchmark_standalone_result == UINT32_C(0xF00DCAFE));
+      (app_benchmark_standalone_result == static_cast<std::uint32_t>(UINT32_C(0xF00DCAFE)));
 
     return result_is_ok;
   }

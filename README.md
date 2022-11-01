@@ -32,13 +32,13 @@ This C++ template header-only library implements drop-in big decimal float types
 such as `dec51_t`, `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
 that can be used essentially like regular built-in floating-point types.
 Wide-decimal supports decimal float types having digit counts ranging
-roughly from about ${\sim}10{\ldots}10,000,000$
+roughly from about ${\sim} {\phantom{.}} 10 {\phantom{.}} {\ldots} {\phantom{.}} 10,000,000$
 
 Wide-decimal implements both common algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`,
 and also includes full support for `std::numeric_limits`.
 
-Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 17, 20, 23.
+Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 17, 20, 23 and beyond.
 
 ## Implementation goals
 
@@ -84,7 +84,7 @@ The local data type `dec101_t` is defined with a C++11 alias.
 The first template parameter `INT32_C(101)` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
-the default limb type is 32 bits in width and unsigned.
+the default limb type is thirty-two bits in width and unsigned.
 
 The template signature of the `decwide_t` class is shown below.
 
@@ -125,7 +125,7 @@ The examples include the following.
   - ![`example001a_roots_seventh.cpp`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
   - ![`example001b_roots_almost_integer.cpp`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operations to compute $5,001$ decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
   - ![`example001c_roots_sqrt_limb08.cpp`](./examples/example001c_roots_sqrt_limb08.cpp) computes a square root with a wide decimal representation having 8-bit limbs.
-  - ![`example001d_pow2_from_list.cpp`](./examples/example001d_pow2_from_list.cpp) verifies a list of values $2^n$ with $-128{\le}n{\le}127$.
+  - ![`example001d_pow2_from_list.cpp`](./examples/example001d_pow2_from_list.cpp) verifies a list of values $2^n$ with $-128 {\phantom{.}} {\le} {\phantom{.}} n {\phantom{.}} {\le} {\phantom{.}} 127$.
   - ![`example002_pi.cpp`](./examples/example002_pi.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a Gauss AGM iteration.
   - ![`example002a_pi_small_limb.cpp`](./examples/example002a_pi_small_limb.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a 16-bit internal limb type.
   - ![`example002b_pi_100k.cpp`](./examples/example002b_pi_100k.cpp) calculates $100,001$ decimal digits of $\pi$.
@@ -139,7 +139,7 @@ The examples include the following.
   - ![`example008_bernoulli_tgamma.cpp`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates $1,001$ decimal digits of $\Gamma(n/2)$ for small integer $n$.
   - ![`example009_boost_math_standalone.cpp`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
   - ![`example009a_boost_math_standalone.cpp`](./examples/example009a_boost_math_standalone.cpp) also checks standalone `decwide_t` with significantly more of `Boost.Math` by testing a $1,001$ digit generalized Legendre function value (using `boost::math::tgamma` and more to do so).
-  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having $\lesssim100$ decimal digits.
+  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ${\lesssim} {\phantom{.}} 100$ decimal digits.
   - ![`example010_hypergeometric_2f1.cpp`](./examples/example010_hypergeometric_2f1.cpp) calculates a $1,001$ decimal digit hypergeometric function value using an iterative rational approximation scheme.
   - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another $1,001$ decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
@@ -166,12 +166,11 @@ Badges can be found above.
 
 ## Additional details
 
-Wide-Decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
+Wide-decimal has been tested with numerous compilers for target systems ranging from 8 to 64 bits.
 The library is specifically designed for modest efficiency (not the world's fastest)
 over the entire range of small to large digit counts.
 How efficient is the code? Based on a very general
-comparison, a million digit AGM calculation of
-$\pi$
+comparison, a million digit AGM calculation of $\pi$
 is about five times slower than an equivalent calculation
 performed with a big float data type based on
 [GMP](https://gmplib.org/).
@@ -182,12 +181,8 @@ programming environments.
 
 When working with even the most tiny microcontroller systems,
 various _heavy-wieght_ features such as I/O streaming,
-dynamic memory allocation,
-construction from character string
-and caching constant values such as
-$\pi$
-and
-$\log(2)$
+dynamic memory allocation, construction from character string
+and caching constant values such as $\pi$ and $\log(2)$
 can optionally be disabled with the compiler switches:
 
 ```cpp
@@ -218,7 +213,7 @@ allocation is needed and can not be disabled. In other words,
 Let's consider also the macro `WIDE_DECIMAL_NAMESPACE` in greater detail.
 
 ```cpp
-#define WIDE_DECIMAL_NAMESPACE
+#define WIDE_DECIMAL_NAMESPACE something_unique
 ```
 
 This is an advanced macro intended to be used in strict, exacting applications for which
@@ -302,18 +297,17 @@ auto main() -> int
 
 ### 1,000,001 digits of pi
 
-In the following code, we compute $1,000,001$
-(one million and one) decimal digits of the fundamental constant
-$\pi$
+In the following code, we compute $1,000,001$ (one million and one)
+decimal digits of the fundamental constant $\pi$.
 The truncated (non-rounded) expected result is
 $3.14159265{\ldots}79458151$
-In this particular example, all _heavy-weight_ components are deactivated and
-this particular calculation is, in fact, suitable for a _bare-metal_ mega-digit pi calculation.
+In this particular example, all _heavyweight_ components are deactivated and
+this particular calculation is, in fact, suitable for a bare-metal mega-digit pi calculation.
 
 In this example, note how a specialized custom allocator called
 `util::n_slot_array_allocator` is utilized for exact, efficient memory management
 of a certain number of temporary storages of mega-digit numbers
-(tuned to 18 in this particular example).
+(tuned to $18$ in this particular example).
 
 ```cpp
 #include <iomanip>
@@ -352,7 +346,7 @@ auto main() -> int
   const auto stop = std::clock();
 
   std::cout << "Time example002_pi(): "
-            << (float) (stop - start) / (float) CLOCKS_PER_SEC
+            << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 
   const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
@@ -383,16 +377,14 @@ auto main() -> int
 ```
 
 The million digit run is comparatively slow and requires approximately
-10 seconds on a modern PC. Considering, however, the design goals
+ten seconds on a modern PC. Considering, however, the design goals
 of header-only and capable of running on bare-metal, this is
 a very nice calculational result.
 
 ### 1,000,001 digits of pi on a bare metal microcontroller
 
 The wide-decimal float back end is used to compute
-$1,000,001$
-decimal digits of the mathematical constant
-$\pi$
+$1,000,001$ decimal digits of the mathematical constant $\pi$
 on selected bare-metal OS-less microcontroller systems in
 [pi-crunch-metal](https://github.com/ckormanyos/pi-crunch-metal)
 
