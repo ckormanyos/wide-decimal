@@ -192,13 +192,8 @@
     <ClCompile Include="examples\example012_rational_floor_ceil.cpp" />
     <ClCompile Include="examples\example013a_embeddable_agm.cpp" />
     <ClCompile Include="examples\example013_embeddable_sqrt.cpp" />
+    <ClCompile Include="target\micros\stm32f429\make\single\crt.cpp" />
     <ClCompile Include="test\coverity.c" />
-    <ClCompile Include="test\target\micros\stm32f429\make\single\crt.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra_edge.cpp" />
@@ -270,18 +265,8 @@
     <None Include="codecov.yml" />
     <None Include="README.md" />
     <None Include="sonar-project.properties" />
-    <None Include="test\target\build\test_app_benchmarks_emulator.py">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </None>
-    <None Include="test\target\micros\stm32f429\make\stm32f429.ld">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
-    </None>
+    <None Include="target\build\test_examples_emulator.py" />
+    <None Include="target\micros\stm32f429\make\stm32f429.ld" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
