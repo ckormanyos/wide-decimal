@@ -14,7 +14,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   gnumake-gcc-gcov-native:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
