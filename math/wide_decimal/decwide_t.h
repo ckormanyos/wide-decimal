@@ -1735,13 +1735,16 @@
 
     auto precision(std::int32_t prec_digits) noexcept -> void
     {
+      const auto prec_digits_elem_digits10_div = static_cast<std::int32_t>(prec_digits / decwide_t_elem_digits10);
+      const auto prec_digits_elem_digits10_mod = static_cast<std::int32_t>(prec_digits % decwide_t_elem_digits10);
+
       const auto elems_needed_for_digits =
         static_cast<std::int32_t>
         (
-            static_cast<std::int32_t>(prec_digits / decwide_t_elem_digits10)
+            prec_digits_elem_digits10_div
           + static_cast<std::int32_t>
             (
-              (static_cast<std::int32_t>(prec_digits % decwide_t_elem_digits10) != static_cast<std::int32_t>(INT8_C(0)))
+              (prec_digits_elem_digits10_mod != static_cast<std::int32_t>(INT8_C(0)))
                 ? static_cast<std::int32_t>(INT8_C(1))
                 : static_cast<std::int32_t>(INT8_C(0))
             )
@@ -1896,10 +1899,16 @@
       extract_parts(dd, ne);
 
       // Force the exponent to be an even multiple of two.
-      if(static_cast<exponent_type>(ne % static_cast<exponent_type>(INT8_C(2))) != static_cast<exponent_type>(0))
+      const auto exponent_is_odd =
+      (
+        static_cast<exponent_type>(ne % static_cast<exponent_type>(INT8_C(2))) != static_cast<exponent_type>(INT8_C(0))
+      );
+
+      if(exponent_is_odd)
       {
         ++ne;
-        dd /= static_cast<internal_float_type>(10); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        dd /= static_cast<internal_float_type>(10.0F); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       }
 
       using std::sqrt;
@@ -2005,7 +2014,8 @@
       while(static_cast<exponent_type>(ne % static_cast<exponent_type>(p)) != static_cast<exponent_type>(INT8_C(0)))
       {
         ++ne;
-        dd /= static_cast<internal_float_type>(10.0L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        dd /= static_cast<internal_float_type>(10.0F); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       }
 
       const std::int32_t original_prec_elem = x.my_prec_elem;
@@ -2066,7 +2076,8 @@
 
       if(result.iszero())
       {
-        *e = 0;
+        *e = static_cast<exponent_type>(INT8_C(0));
+
         return;
       }
 
@@ -2092,12 +2103,14 @@
       while(result.cmp(one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) >= INT8_C(0))
       {
         result /= static_cast<int>(INT8_C(2));
+
         ++t;
       }
 
       while(result.cmp(half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) < INT8_C(0))
       {
         result *= static_cast<int>(INT8_C(2));
+
         --t;
       }
 
@@ -2274,13 +2287,30 @@
           static_cast<internal_float_type>(1.0F) / static_cast<internal_float_type>(p10)
         );
 
+      constexpr auto digit_loops_elem_digits10_div =
+        static_cast<std::int32_t>
+        (
+            static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
+          / static_cast<std::int32_t>(decwide_t_elem_digits10)
+        );
+
+      constexpr auto digit_loops_elem_digits10_mod =
+        static_cast<std::int32_t>
+        (
+            static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
+          % static_cast<std::int32_t>(decwide_t_elem_digits10)
+        );
+
       constexpr auto digit_loops =
         static_cast<std::int32_t>
         (
-            static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
-                                      / static_cast<std::int32_t>(decwide_t_elem_digits10))
-          + static_cast<std::int32_t>(static_cast<std::int32_t>(  static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::max_digits10)
-                                                                % static_cast<std::int32_t>(decwide_t_elem_digits10)) != 0 ? 1 : 0)
+            digit_loops_elem_digits10_div
+          + static_cast<std::int32_t>
+            (
+              (digit_loops_elem_digits10_mod != static_cast<std::int32_t>(INT8_C(0)))
+                ? static_cast<std::int32_t>(INT8_C(1))
+                : static_cast<std::int32_t>(INT8_C(0))
+            )
         );
 
       using local_size_type = typename representation_type::size_type;
@@ -2311,7 +2341,12 @@
         return zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
       }
 
-      if(my_exp >= static_cast<exponent_type>(decwide_t_digits10 - 1))
+      const auto is_too_large_to_resolve =
+      (
+        my_exp >= static_cast<exponent_type>(decwide_t_digits10 - static_cast<std::int32_t>(INT8_C(1)))
+      );
+
+      if(is_too_large_to_resolve)
       {
         // The number is too large to resolve the integer part.
         // Thus it is already a pure integer part.
