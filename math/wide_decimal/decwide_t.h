@@ -3255,18 +3255,30 @@
           ++digits_limb_0;
         }
 
-        constexpr auto local_max_digits10 = static_cast<std::int32_t>(decwide_t_max_digits10);
+        constexpr auto local_max_digits10 = decwide_t_max_digits10;
 
         const auto digits_limb_1_to_n = static_cast<std::int32_t>(local_max_digits10 - digits_limb_0);
+
+        const auto digits_limb_1_to_n_elem_digits10_div =
+          static_cast<std::int32_t>
+          (
+            digits_limb_1_to_n / decwide_t_elem_digits10
+          );
+
+        const auto digits_limb_1_to_n_elem_digits10_mod =
+          static_cast<std::int32_t>
+          (
+            digits_limb_1_to_n % decwide_t_elem_digits10
+          );
 
         // Find the index of the element that contains the least-significant base-10 digit.
         auto least_digit_idx =
           static_cast<std::int32_t>
           (
-              static_cast<std::int32_t> (digits_limb_1_to_n / decwide_t_elem_digits10)
+              digits_limb_1_to_n_elem_digits10_div
             + static_cast<std::int32_t>
               (
-                (digits_limb_1_to_n % decwide_t_elem_digits10) != static_cast<std::int32_t>(INT32_C(0))
+                (digits_limb_1_to_n_elem_digits10_mod != static_cast<std::int32_t>(INT32_C(0)))
                   ? static_cast<std::int32_t>(INT32_C(1))
                   : static_cast<std::int32_t>(INT32_C(0))
               )
@@ -3276,20 +3288,20 @@
         const auto round_digit_idx =
           static_cast<std::int32_t>
           (
-            ((digits_limb_1_to_n % decwide_t_elem_digits10) != static_cast<std::int32_t>(INT32_C(0)))
+            (digits_limb_1_to_n_elem_digits10_mod != static_cast<std::int32_t>(INT8_C(0)))
               ?                           least_digit_idx
-              : static_cast<std::int32_t>(least_digit_idx + static_cast<std::int32_t>(1))
+              : static_cast<std::int32_t>(least_digit_idx + static_cast<std::int32_t>(INT8_C(1)))
           );
 
         // Find the base-10 order (position) of the least-significant base-10 digit.
         const auto least_digit_pos =
           static_cast<std::int32_t>
           (
-            (static_cast<std::int32_t>(digits_limb_1_to_n % decwide_t_elem_digits10) != static_cast<std::int32_t>(INT32_C(0)))
+            (digits_limb_1_to_n_elem_digits10_mod != static_cast<std::int32_t>(INT32_C(0)))
               ? static_cast<std::int32_t>
                 (
                     decwide_t_elem_digits10
-                  - static_cast<std::int32_t>(digits_limb_1_to_n % decwide_t_elem_digits10)
+                  - digits_limb_1_to_n_elem_digits10_mod
                 )
               : static_cast<std::int32_t>(INT32_C(0))
           );
@@ -3329,16 +3341,16 @@
 
         // Clear the lower base-10 limbs.
         {
-          const auto least_digit_idx_plus_one = static_cast<std::int32_t>(least_digit_idx + 1);
+          const auto least_digit_idx_plus_one = static_cast<std::int32_t>(least_digit_idx + static_cast<std::int32_t>(INT8_C(1)));
 
           const auto do_clear_lower_limbs =
-            (least_digit_idx_plus_one < static_cast<std::int32_t>(my_data.size() - 1U));
+            (least_digit_idx_plus_one < static_cast<std::int32_t>(my_data.size() - static_cast<std::size_t>(UINT8_C(1))));
 
           if(do_clear_lower_limbs)
           {
             std::fill(my_data.begin() + static_cast<local_size_type>(least_digit_idx_plus_one),
                       my_data.end(),
-                      static_cast<local_limb_type>(0U));
+                      static_cast<local_limb_type>(UINT8_C(0)));
           }
         }
 
@@ -3355,8 +3367,8 @@
           // There is a carry from rounding up.
           std::uint_fast8_t carry_out =
             ((my_data[static_cast<local_size_type>(least_digit_idx)] >= decwide_t_elem_mask)
-              ? static_cast<std::uint_fast8_t>(1U)
-              : static_cast<std::uint_fast8_t>(0U));
+              ? static_cast<std::uint_fast8_t>(UINT8_C(1))
+              : static_cast<std::uint_fast8_t>(UINT8_C(0)));
 
           // Propagate the carry into the limbs of higher significance as needed.
           if(carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0)))
@@ -3378,18 +3390,23 @@
                   + static_cast<local_limb_type>(carry_out)
                 );
 
-              carry_out = ((tt >= decwide_t_elem_mask) ? static_cast<std::uint_fast8_t>(1U)
-                                                       : static_cast<std::uint_fast8_t>(0U));
+              carry_out = ((tt >= decwide_t_elem_mask) ? static_cast<std::uint_fast8_t>(UINT8_C(1))
+                                                       : static_cast<std::uint_fast8_t>(UINT8_C(0)));
+
+              const auto has_carry = (carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0)));
 
               my_data[static_cast<local_size_type>(least_digit_idx)] =
                 static_cast<local_limb_type>
                 (
-                  tt - ((carry_out != 0U) ? decwide_t_elem_mask
-                                          : static_cast<local_limb_type>(0U))
+                    tt
+                  - static_cast<local_limb_type>
+                    (
+                      has_carry ? decwide_t_elem_mask : static_cast<local_limb_type>(UINT8_C(0))
+                    )
                 );
             }
 
-            if(   (least_digit_idx < static_cast<std::int32_t>(0))
+            if(   (least_digit_idx < static_cast<std::int32_t>(INT8_C(0)))
                && (carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0))))
             {
               // In rare cases, propagation of the carry reaches the zero'th limb
@@ -3414,7 +3431,7 @@
       std::string str(s);
 
       // Get a possible exponent and remove it.
-      my_exp = static_cast<exponent_type>(0);
+      my_exp = static_cast<exponent_type>(INT8_C(0));
 
       auto pos_of_e_func =
         [](const std::string& local_str) // NOLINT(modernize-use-trailing-return-type)
@@ -3456,7 +3473,7 @@
             std::strtoll(static_cast<const char*>(str.c_str() + (pos + 1U)), &ptr_end, 10) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
           );
 
-        str = str.substr(static_cast<std::size_t>(0U), pos);
+        str = str.substr(static_cast<std::size_t>(UINT8_C(0)), pos);
       }
 
       // Get a possible +/- sign and remove it.
@@ -3466,12 +3483,12 @@
       {
         my_neg = true;
 
-        str.erase(pos, static_cast<std::uint_fast32_t>(1U));
+        str.erase(pos, static_cast<std::uint_fast32_t>(UINT8_C(1)));
       }
 
       if((pos = str.find('+')) != std::string::npos)
       {
-        str.erase(pos, static_cast<std::uint_fast32_t>(1U));
+        str.erase(pos, static_cast<std::uint_fast32_t>(UINT8_C(1)));
       }
 
       // Remove leading zeros for all input types.
@@ -3558,7 +3575,7 @@
         // of the form ".000abcd..." and peels away the trailing
         // zeros following the decimal point.
 
-        if(str.at(static_cast<std::uint_fast32_t>(0U)) == '.')
+        if(str.at(static_cast<std::uint_fast32_t>(UINT8_C(0))) == '.')
         {
           const auto it_non_zero =
             std::find_if(str.begin() + 1U,
@@ -3568,7 +3585,7 @@
                            return (c != '0');
                          });
 
-          auto delta_exp = static_cast<std::uint_fast32_t>(0U);
+          auto delta_exp = static_cast<std::uint_fast32_t>(UINT8_C(0));
 
           if(str.at(static_cast<std::uint_fast32_t>(1U)) == '0')
           {
@@ -3578,7 +3595,7 @@
           // Bring one single digit into the mantissa and adjust exponent accordingly.
           str.erase(str.begin(), it_non_zero);
 
-          str.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
+          str.insert(static_cast<std::size_t>(UINT8_C(1)), static_cast<std::size_t>(UINT8_C(1)), '.');
 
           my_exp =
             static_cast<exponent_type>
@@ -3594,12 +3611,12 @@
       else
       {
         // Input string has no decimal point: Append decimal point.
-        str.append(static_cast<std::size_t>(1U), '.');
+        str.append(static_cast<std::size_t>(UINT8_C(1)), '.');
       }
 
       // Shift the decimal point such that the exponent
       // is an even multiple of decwide_t_elem_digits10.
-      auto n_shift   = static_cast<std::ptrdiff_t>(0);
+      auto n_shift   = static_cast<std::ptrdiff_t>(INT8_C(0));
 
       {
         const auto n_exp_rem =
@@ -3614,11 +3631,15 @@
             my_exp % static_cast<exponent_type>(decwide_t_elem_digits10)
           );
 
-        if(n_exp_mod != static_cast<exponent_type>(0))
+        if(n_exp_mod != static_cast<exponent_type>(INT8_C(0)))
         {
-          n_shift = ((my_exp < static_cast<exponent_type>(0))
+          n_shift =
+            static_cast<std::ptrdiff_t>
+            (
+              (my_exp < static_cast<exponent_type>(INT8_C(0)))
                       ? static_cast<std::ptrdiff_t>(n_exp_rem + static_cast<std::ptrdiff_t>(decwide_t_elem_digits10))
-                      : static_cast<std::ptrdiff_t>(n_exp_rem));
+                      : static_cast<std::ptrdiff_t>(n_exp_rem)
+            );
         }
       }
 
@@ -3643,7 +3664,7 @@
       {
         str.insert(static_cast<std::size_t>(pos_plus_one + n_shift), static_cast<std::size_t>(1U), '.');
 
-        str.erase(pos, static_cast<std::ptrdiff_t>(1));
+        str.erase(pos, static_cast<std::ptrdiff_t>(INT8_C(1)));
 
         my_exp = static_cast<exponent_type>(my_exp - static_cast<exponent_type>(n_shift));
       }
@@ -3690,7 +3711,7 @@
       const auto n_cnt = static_cast<std::int32_t>((n_rem != static_cast<std::int32_t>(0)) ? static_cast<std::int32_t>(decwide_t_elem_digits10 - n_rem)
                                                                                            : static_cast<std::int32_t>(0));
 
-      if(n_cnt != static_cast<std::int32_t>(0))
+      if(n_cnt != static_cast<std::int32_t>(INT8_C(0)))
       {
         str.append(static_cast<std::size_t>(n_cnt), '0');
       }
@@ -3699,13 +3720,13 @@
       const auto max_dec =
         static_cast<std::ptrdiff_t>
         (
-            static_cast<std::ptrdiff_t>(decwide_t_elem_number - INT32_C(1))
+            static_cast<std::ptrdiff_t>(decwide_t_elem_number - static_cast<std::int32_t>(INT32_C(1)))
           * static_cast<std::ptrdiff_t>(decwide_t_elem_digits10)
         );
 
       if(static_cast<std::ptrdiff_t>(str.length() - pos) > max_dec)
       {
-        str = str.substr(static_cast<std::string::size_type>(0),
+        str = str.substr(static_cast<std::string::size_type>(UINT8_C(0)),
                          static_cast<std::string::size_type>(pos_plus_one + max_dec));
       }
 
@@ -3713,7 +3734,7 @@
       // input form as described in the comment above.
 
       // Set all the data elements to 0.
-      std::fill(my_data.begin(), my_data.end(), static_cast<limb_type>(0));
+      std::fill(my_data.begin(), my_data.end(), static_cast<limb_type>(UINT8_C(0)));
 
       // Extract the data.
 
@@ -3727,12 +3748,12 @@
 
         // First get the digits to the left of the decimal point...
 
-        const auto str_zeroth_limb = str.substr(static_cast<std::ptrdiff_t>(0), pos);
+        const auto str_zeroth_limb = str.substr(static_cast<std::ptrdiff_t>(INT8_C(0)), pos);
 
-        my_data[static_cast<local_size_type>(0U)] =
+        my_data[static_cast<local_size_type>(UINT8_C(0))] =
           static_cast<limb_type>
           (
-            std::strtoul(str_zeroth_limb.c_str(), &ptr_end, 10) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+            std::strtoul(str_zeroth_limb.c_str(), &ptr_end, static_cast<int>(INT8_C(10))) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
           );
       }
 
@@ -3744,7 +3765,7 @@
           / static_cast<std::string::difference_type>(decwide_t_elem_digits10)
         );
 
-      for(auto i = static_cast<std::string::difference_type>(0); i < i_end; ++i)
+      for(auto i = static_cast<std::string::difference_type>(INT8_C(0)); i < i_end; ++i)
       {
         const auto idigits =
           static_cast<std::string::difference_type>
@@ -3904,7 +3925,7 @@
           );
 
         // Truncate the string
-        str = str.substr(static_cast<std::uint_fast32_t>(0U), number_of_digits);
+        str = str.substr(static_cast<std::uint_fast32_t>(UINT8_C(0)), number_of_digits);
 
         if(round >= static_cast<std::uint32_t>(UINT8_C(5)))
         {
@@ -3950,16 +3971,21 @@
                                      const bool               my_uppercase,
                                      const bool               trim_trailing_zeros = false) -> void
     {
-      if(os_precision > static_cast<std::uint_fast32_t>(str.length() - 1U))
+      if(os_precision > static_cast<std::uint_fast32_t>(str.length() - static_cast<std::size_t>(UINT8_C(1))))
       {
         // Zero-extend the string to the given precision if necessary.
-        const auto n_pad = static_cast<std::uint_fast32_t>(os_precision - (str.length() - 1U));
+        const auto n_pad =
+          static_cast<std::uint_fast32_t>
+          (
+              os_precision
+            - static_cast<std::uint_fast32_t>(str.length() - static_cast<std::size_t>(UINT8_C(1)))
+          );
 
         str.insert(str.end(), static_cast<std::size_t>(n_pad), '0');
       }
 
       // Insert the decimal point.
-      str.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
+      str.insert(static_cast<std::size_t>(UINT8_C(1)), static_cast<std::size_t>(UINT8_C(1)), '.');
 
       // Trim the trailing zeros, where the trim-characteristics depend on the showpoint flag.
       if(trim_trailing_zeros)
@@ -3974,8 +4000,12 @@
 
         if(rit_non_zero != str.rbegin())
         {
-          const std::ptrdiff_t ofs =   static_cast<std::ptrdiff_t>(str.length())
-                                     - static_cast<std::ptrdiff_t>(rit_non_zero - str.crbegin());
+          const auto ofs =
+            static_cast<std::ptrdiff_t>
+            (
+                static_cast<std::ptrdiff_t>(str.length())
+              - std::distance(str.crbegin(), rit_non_zero)
+            );
 
           str.erase(str.begin() + ofs, str.end());
         }
@@ -3996,7 +4026,7 @@
       }
 
       // Append the exponent in uppercase or lower case, including its sign.
-      const auto b_exp_is_neg = (the_exp < static_cast<exponent_type>(0));
+      const auto b_exp_is_neg = (the_exp < static_cast<exponent_type>(INT8_C(0)));
 
       const auto u_exp =
         static_cast<std::uint64_t>
@@ -4016,13 +4046,15 @@
 
       // Format the exponent string to have a width that is an even multiple of three.
       const auto str_exp_len      = static_cast<std::size_t>(str_exp.length());
-      const auto str_exp_len_mod3 = static_cast<std::size_t>(str_exp_len % 3U);
+      const auto str_exp_len_mod3 = static_cast<std::size_t>(str_exp_len % static_cast<std::size_t>(UINT8_C(3)));
+
+      const auto exp_has_mod3 = (str_exp_len_mod3 != static_cast<std::size_t>(UINT8_C(0)));
 
       const auto str_exp_len_pad =
         static_cast<std::size_t>
         (
-          ((str_exp_len_mod3 != static_cast<std::size_t>(0U)) ? static_cast<std::uint_fast32_t>(3U - (str_exp_len % 3U))
-                                                              : static_cast<std::uint_fast32_t>(0U))
+          exp_has_mod3 ? static_cast<std::size_t>(static_cast<std::size_t>(UINT8_C(3)) - str_exp_len_mod3)
+                       : static_cast<std::size_t>(UINT8_C(0))
         );
 
       str.insert(str.end(), static_cast<std::size_t>(str_exp_len_pad), '0');
@@ -4038,14 +4070,15 @@
     {
       const auto input_str_len = static_cast<std::size_t>(str.length());
 
-      if(the_exp < static_cast<exponent_type>(0))
+      if(the_exp < static_cast<exponent_type>(INT8_C(0)))
       {
         // The number is less than one in magnitude. Insert the decimal
         // point using "0." as well as the needed number of leading zeros.
         const auto zero_insert_length =
           static_cast<std::size_t>
           (
-            static_cast<exponent_type>(-the_exp) - 1
+              static_cast<exponent_type>(-the_exp)
+            - static_cast<exponent_type>(INT8_C(1))
           );
 
         const auto n_pad =
@@ -4055,12 +4088,12 @@
             - static_cast<exponent_type>(str.length() + zero_insert_length)
           );
 
-        str.insert(static_cast<std::size_t>(0U), zero_insert_length, '0');
-        str.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), '.');
-        str.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), '0');
+        str.insert(static_cast<std::size_t>(UINT8_C(0)), zero_insert_length,                   '0');
+        str.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(UINT8_C(1)), '.');
+        str.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(UINT8_C(1)), '0');
 
         // Zero-extend the string to the given precision if necessary.
-        if(n_pad > static_cast<exponent_type>(0))
+        if(n_pad > static_cast<exponent_type>(INT8_C(0)))
         {
           str.insert(str.end(), static_cast<std::size_t>(n_pad), '0');
         }
@@ -4084,7 +4117,7 @@
           str.insert(str.end(), static_cast<std::size_t>(my_exp_plus_one - static_cast<std::uint_fast32_t>(str.length())), '0');
         }
 
-        str.insert(static_cast<std::size_t>(my_exp_plus_one), static_cast<std::size_t>(1U), '.');
+        str.insert(static_cast<std::size_t>(my_exp_plus_one), static_cast<std::size_t>(UINT8_C(1)), '.');
 
         // Zero-extend the string to the given precision if necessary.
         const auto n_pad =
@@ -4093,12 +4126,12 @@
               static_cast<exponent_type>(os_precision)
             - static_cast<exponent_type>
               (
-                  static_cast<exponent_type>(str.length() - static_cast<std::size_t>(1U))
-                - static_cast<exponent_type>(the_exp + static_cast<exponent_type>(1))
+                  static_cast<exponent_type>(str.length() - static_cast<std::size_t>(UINT8_C(1)))
+                - static_cast<exponent_type>(the_exp + static_cast<exponent_type>(INT8_C(1)))
               )
           );
 
-        if(n_pad > static_cast<exponent_type>(0))
+        if(n_pad > static_cast<exponent_type>(INT8_C(0)))
         {
           // This line is marked as lcov exclude line. Even though
           // there are explicit test cases thought to cover this line,
