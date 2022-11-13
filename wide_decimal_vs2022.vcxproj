@@ -259,6 +259,7 @@
     <None Include=".gcov\make\make_gcov_02_files.gmk" />
     <None Include=".gcov\make\make_gcov_03_flags.gmk" />
     <None Include=".github\toolchains\gcc.cmake" />
+    <None Include=".github\workflows\CodeQL.yml" />
     <None Include=".github\workflows\wide_decimal.yml" />
     <None Include=".github\workflows\wide_decimal_codecov.yml" />
     <None Include=".github\workflows\wide_decimal_sonar.yml" />
