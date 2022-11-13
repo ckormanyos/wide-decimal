@@ -201,14 +201,14 @@
           )
         );
 
-      for(auto k = static_cast<std::int32_t>(0); k < static_cast<std::int32_t>(64); ++k) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      for(auto k = static_cast<std::int32_t>(INT8_C(0)); k < static_cast<std::int32_t>(INT8_C(64)); ++k) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       {
         // Check for the number of significant digits to be
         // at least half of the requested digits. If at least
         // half of the requested digits have been achieved,
         // then break after the upcoming iteration.
 
-        const auto ilogb_of_ak_minus_bk = (std::max)(static_cast<std::int32_t>(0),
+        const auto ilogb_of_ak_minus_bk = (std::max)(static_cast<std::int32_t>(INT8_C(0)),
                                                      static_cast<std::int32_t>(-ilogb(ak - bk)));
 
         const floating_point_type ak_tmp(ak);

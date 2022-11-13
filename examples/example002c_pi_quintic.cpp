@@ -94,7 +94,7 @@ auto pi_borwein_quintic(std::ostream* p_ostream) -> FloatingPointType
     - (  ((sk_squared - local_five) / 2U)
         +  sqrt(sk * (sk_squared - (sk * 2U) + local_five))) * five_pow_k;
 
-    const auto ib = (std::max)(static_cast<std::int32_t>(0),
+    const auto ib = (std::max)(static_cast<std::int32_t>(INT8_C(0)),
                                static_cast<std::int32_t>(-ilogb(val_pi - previous_ak)));
 
     const auto digits10_of_iteration =

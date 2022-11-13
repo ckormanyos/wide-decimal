@@ -226,7 +226,7 @@ auto test_various_zero_operations() -> bool
 
     local_rep_type rep(local_rep_type::static_size(), (std::numeric_limits<local_value_type>::max)());
 
-    rep.fill(static_cast<local_value_type>(0U));
+    rep.fill(static_cast<local_value_type>(UINT8_C(0)));
 
     const auto result_zero_rep_is_ok = std::equal(rep.cbegin(), rep.cend(), local_zero().crepresentation().cbegin());
 
@@ -838,7 +838,7 @@ auto test_string_ops_and_round_trips() -> bool
 
     auto str_of_digit_ctrl = std::string("xE+000");
 
-    str_of_digit_ctrl.at(static_cast<std::size_t>(0U)) =
+    str_of_digit_ctrl.at(static_cast<std::size_t>(UINT8_C(0))) =
       static_cast<char>
       (
         i + static_cast<unsigned>(UINT8_C(0x30))

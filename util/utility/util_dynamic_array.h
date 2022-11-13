@@ -193,8 +193,8 @@
     auto front()       -> reference       { return elems[0U]; }
     auto front() const -> const_reference { return elems[0U]; }
 
-    auto back()       -> reference       { return ((elem_count > static_cast<size_type>(0U)) ? elems[elem_count - 1U] : elems[0U]); }
-    auto back() const -> const_reference { return ((elem_count > static_cast<size_type>(0U)) ? elems[elem_count - 1U] : elems[0U]); }
+    auto back()       -> reference       { return ((elem_count > static_cast<size_type>(UINT8_C(0))) ? elems[elem_count - 1U] : elems[0U]); }
+    auto back() const -> const_reference { return ((elem_count > static_cast<size_type>(UINT8_C(0))) ? elems[elem_count - 1U] : elems[0U]); }
 
     auto at(const size_type i)       -> reference       { return ((i < elem_count) ? elems[i] : elems[0U]); }
     auto at(const size_type i) const -> const_reference { return ((i < elem_count) ? elems[i] : elems[0U]); }
@@ -237,7 +237,7 @@
     {
       using size_type = typename dynamic_array<ValueType, AllocatorType>::size_type;
 
-      const auto size_of_left_is_zero = (lhs.size() == static_cast<size_type>(0U));
+      const auto size_of_left_is_zero = (lhs.size() == static_cast<size_type>(UINT8_C(0)));
 
       left_and_right_are_equal =
         (size_of_left_is_zero || std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin()));
@@ -252,13 +252,13 @@
   {
     using size_type = typename dynamic_array<ValueType, AllocatorType>::size_type;
 
-    const auto size_of_left_is_zero = (lhs.size() == static_cast<size_type>(0U));
+    const auto size_of_left_is_zero = (lhs.size() == static_cast<size_type>(UINT8_C(0)));
 
     bool b_result { };
 
     if(size_of_left_is_zero)
     {
-      const auto size_of_right_is_zero = (rhs.size() == static_cast<size_type>(0U));
+      const auto size_of_right_is_zero = (rhs.size() == static_cast<size_type>(UINT8_C(0)));
 
       b_result = (!size_of_right_is_zero);
     }
@@ -266,7 +266,7 @@
     {
       if(size_of_left_is_zero)
       {
-        const auto size_of_right_is_zero = (rhs.size() == static_cast<size_type>(0U));
+        const auto size_of_right_is_zero = (rhs.size() == static_cast<size_type>(UINT8_C(0)));
 
         b_result = (!size_of_right_is_zero);
       }

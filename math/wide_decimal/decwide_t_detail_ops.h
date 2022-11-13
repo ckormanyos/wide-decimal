@@ -9,8 +9,8 @@
 // "Algorithm 910: A Portable C++ Multiple-Precision System for Special-Function Calculations",
 // in ACM TOMS, {VOL 37, ISSUE 4, (February 2011)} (C) ACM, 2011. http://doi.acm.org/10.1145/1916461.1916469
 
-// This file implements low-level decwide_t operations such as
-// the loops for comparison, addition, subtraction, multiplication
+// This file implements low-level decwide_t algorithms such as
+// the operations for comparison, addition, subtraction, multiplication
 // (including Karatsuba and FFT loops), and division (but only
 // division by 1 limb).
 
@@ -79,9 +79,9 @@
       static_cast<local_limb_type>(decwide_t_helper_base<local_limb_type>::elem_mask);
 
     // Addition algorithm
-    auto carry = static_cast<std::uint_fast8_t>(0U);
+    auto carry = static_cast<std::uint_fast8_t>(UINT8_C(0));
 
-    auto j = static_cast<std::int32_t>(count - static_cast<std::int32_t>(1));
+    auto j = static_cast<std::int32_t>(count - static_cast<std::int32_t>(INT8_C(1)));
 
     while(j >= static_cast<std::int32_t>(INT8_C(0)))
     {
@@ -92,10 +92,12 @@
         );
 
       carry = ((t >= static_cast<local_limb_type>(local_elem_mask)) ? static_cast<std::uint_fast8_t>(1U)
-                                                                    : static_cast<std::uint_fast8_t>(0U));
+                                                                    : static_cast<std::uint_fast8_t>(UINT8_C(0)));
 
-      r[j]  = static_cast<local_limb_type>(t - ((carry != 0U) ? static_cast<local_limb_type>(local_elem_mask)
-                                                              : static_cast<local_limb_type>(0U)));
+      const auto has_carry = (carry != static_cast<std::uint_fast8_t>(UINT8_C(0)));
+
+      r[j]  = static_cast<local_limb_type>(t - (has_carry ? static_cast<local_limb_type>(local_elem_mask)
+                                                          : static_cast<local_limb_type>(UINT8_C(0))));
 
       --j;
     }
@@ -117,11 +119,11 @@
       static_cast<local_limb_type>(decwide_t_helper_base<local_limb_type>::elem_mask);
 
     // Subtraction algorithm
-    auto borrow = static_cast<std::uint_fast8_t>(0U);
+    auto borrow = static_cast<std::uint_fast8_t>(UINT8_C(0));
 
     auto j = static_cast<std::int32_t>(count - static_cast<std::int32_t>(INT8_C(1)));
 
-    while(static_cast<std::int32_t>(j) >= static_cast<std::int32_t>(0))
+    while(static_cast<std::int32_t>(j) >= static_cast<std::int32_t>(INT8_C(0)))
     {
       const auto vjb =
         static_cast<local_limb_type>
@@ -189,11 +191,17 @@
 
     std::fill(r, r + (count * 2), static_cast<local_limb_type>(UINT8_C(0)));
 
-    for(auto   i  = static_cast<std::int_fast32_t>(count - 1);
+    const auto count_minus_one =
+      static_cast<std::int_fast32_t>
+      (
+        count - static_cast<std::int_fast32_t>(INT8_C(1))
+      );
+
+    for(auto   i  = count_minus_one;
                i >= static_cast<std::int_fast32_t>(INT8_C(0));
              --i)
     {
-      auto j = static_cast<std::int_fast32_t>(count - static_cast<std::int_fast32_t>(INT8_C(1)));
+      auto j = count_minus_one;
 
       auto carry = static_cast<local_double_limb_type>(UINT8_C(0));
 
@@ -204,7 +212,7 @@
           + static_cast<std::int_fast32_t>(i + j)
         );
 
-      while(j >= static_cast<std::int_fast32_t>(0))
+      while(j >= static_cast<std::int_fast32_t>(INT8_C(0)))
       {
         carry = static_cast<local_double_limb_type>(carry + static_cast<local_double_limb_type>(static_cast<local_double_limb_type>(a[i]) * b[j]));
         carry = static_cast<local_double_limb_type>(carry + r[one_plus_i_plus_j]);
@@ -272,11 +280,12 @@
 
       for(auto i = static_cast<std::int32_t>(count_minus_one); i >= j; --i)
       {
-        sum += static_cast<local_double_limb_type>
-               (
-                 static_cast<local_double_limb_type>(a[i]) * b[  static_cast<std::int32_t>(count_minus_one)
-                                                               - static_cast<std::int32_t>(i - j)]
-               );
+        sum +=
+          static_cast<local_double_limb_type>
+          (
+              static_cast<local_double_limb_type>(a[i])
+            * b[count_minus_one - static_cast<std::int32_t>(i - j)]
+          );
       }
 
       carry = static_cast<local_double_limb_type>(sum / local_elem_mask);
@@ -321,7 +330,7 @@
     auto carry = static_cast<local_limb_type>(UINT8_C(0));
 
     // Multiplication loop.
-    for(auto   j  = static_cast<std::int32_t>(p - 1);
+    for(auto   j  = static_cast<std::int32_t>(p - static_cast<std::int32_t>(INT8_C(1)));
                j >= static_cast<std::int32_t>(INT8_C(0));
              --j)
     {
@@ -356,9 +365,9 @@
                                                           std::uint32_t,
                                                           std::uint16_t>::type>::type;
 
-    auto prev = static_cast<local_limb_type>(0U);
+    auto prev = static_cast<local_limb_type>(UINT8_C(0));
 
-    for(auto j = static_cast<std::int32_t>(0); j < p; ++j)
+    for(auto j = static_cast<std::int32_t>(INT8_C(0)); j < p; ++j)
     {
       const auto t =
         static_cast<local_double_limb_type>
@@ -672,7 +681,7 @@
 
     using local_fft_float_type = typename std::iterator_traits<FftFloatIteratorType>::value_type;
 
-    for(auto   i = static_cast<std::uint32_t>(0U);
+    for(auto   i = static_cast<std::uint32_t>(UINT8_C(0));
                i < static_cast<std::uint32_t>(prec_elems_for_multiply);
              ++i)
     {
@@ -701,7 +710,9 @@
     af[0U] *= bf[0U];
     af[1U] *= bf[1U];
 
-    for(auto j = static_cast<std::uint32_t>(2U); j < n_fft; j += 2U)
+    for(auto j  = static_cast<std::uint32_t>(UINT8_C(2));
+             j  < n_fft;
+             j += static_cast<std::uint32_t>(UINT8_C(2)))
     {
       const local_fft_float_type tmp_aj = af[j];
 
@@ -717,7 +728,7 @@
     // to the result of multiplication.
     using fft_carry_type = std::uint_fast64_t;
 
-    auto carry = static_cast<fft_carry_type>(0U);
+    auto carry = static_cast<fft_carry_type>(UINT8_C(0));
 
     const auto recombine_size =
       static_cast<std::int32_t>
@@ -735,7 +746,9 @@
                  carry = static_cast<fft_carry_type> (xlo / local_elem_mask_half);
       const auto nlo   = static_cast<local_limb_type>(xlo - static_cast<fft_carry_type>(carry * local_elem_mask_half));
 
-                 xaj   = ((j != 0) ? static_cast<local_fft_float_type>(af[j - 1U] / (n_fft / 2U)) : static_cast<local_fft_float_type>(0)); // NOLINT(bugprone-integer-division)
+      const auto j_is_non_zero = (j != static_cast<std::uint32_t>(UINT8_C(0)));
+
+                 xaj   = (j_is_non_zero ? static_cast<local_fft_float_type>(af[j - 1U] / (n_fft / 2U)) : static_cast<local_fft_float_type>(0)); // NOLINT(bugprone-integer-division)
       const auto xhi   = static_cast<fft_carry_type> (xaj + detail::fft::template_half<local_fft_float_type>()) + carry;
                  carry = static_cast<fft_carry_type> (xhi / local_elem_mask_half);
       const auto nhi   = static_cast<local_limb_type>(xhi - static_cast<fft_carry_type>(carry * local_elem_mask_half));

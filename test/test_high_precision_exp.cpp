@@ -95,7 +95,7 @@ namespace test_high_precision_exp
         const auto ib =
           (std::max)
           (
-            static_cast<std::int32_t>(0),
+            static_cast<std::int32_t>(INT8_C(0)),
             static_cast<std::int32_t>(-ilogb(iterate_term))
           );
 
