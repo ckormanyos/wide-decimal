@@ -91,7 +91,7 @@
           static_cast<local_limb_type>(u[j] + v[j]) + carry
         );
 
-      carry = ((t >= static_cast<local_limb_type>(local_elem_mask)) ? static_cast<std::uint_fast8_t>(1U)
+      carry = ((t >= static_cast<local_limb_type>(local_elem_mask)) ? static_cast<std::uint_fast8_t>(UINT8_C(1))
                                                                     : static_cast<std::uint_fast8_t>(UINT8_C(0)));
 
       const auto has_carry = (carry != static_cast<std::uint_fast8_t>(UINT8_C(0)));

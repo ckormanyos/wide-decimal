@@ -87,12 +87,12 @@ auto generate_wide_decimal_value(bool is_positive     = false,
       {
         const auto len = str_x.length();
 
-        str_x.insert(len, static_cast<std::size_t>(1U), *p);
+        str_x.insert(len, static_cast<std::size_t>(UINT8_C(1)), *p);
       }
     }
 
     // Insert a decimal point.
-    str_x.insert(static_cast<std::size_t>(1U), static_cast<std::size_t>(1U), '.');
+    str_x.insert(static_cast<std::size_t>(UINT8_C(1)), static_cast<std::size_t>(UINT8_C(1)), '.');
   }
 
   // Insert either a positive sign or a negative sign
@@ -105,7 +105,7 @@ auto generate_wide_decimal_value(bool is_positive     = false,
         : static_cast<char>((dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT32_C(0))) ? '+' : '-')
     );
 
-  str_x.insert(static_cast<std::size_t>(0U), static_cast<std::size_t>(1U), sign_char_to_insert);
+  str_x.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(UINT8_C(1)), sign_char_to_insert);
 
   return local_floating_point_type(str_x.c_str());
 }
@@ -192,7 +192,7 @@ auto test_various_zero_operations() -> bool
       local_wide_decimal_type::from_lst
       (
         {
-          static_cast<typename local_wide_decimal_type::limb_type>(1U)
+          static_cast<typename local_wide_decimal_type::limb_type>(UINT8_C(1))
         },
         static_cast<typename local_wide_decimal_type::exponent_type>
         (

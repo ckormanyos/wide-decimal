@@ -135,7 +135,7 @@
 
       result_type lim = std::numeric_limits<result_type>::epsilon();
 
-      auto k = static_cast<unsigned>(1U);
+      auto k = static_cast<unsigned>(UINT8_C(1));
 
       do
       {

@@ -71,8 +71,8 @@ auto pi_borwein_quintic(std::ostream* p_ostream) -> FloatingPointType
       lround(static_cast<float>(1000.0F * log(static_cast<float>(std::numeric_limits<floating_point_type>::radix))) / log(10.0F))
     );
 
-  for(auto   k = static_cast<std::int32_t>(1);
-             k < static_cast<std::int32_t>(INT32_C(30));
+  for(auto   k = static_cast<std::int32_t>(INT8_C(1));
+             k < static_cast<std::int32_t>(INT8_C(30));
            ++k)
   {
     using std::ilogb;

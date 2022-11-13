@@ -311,7 +311,7 @@ namespace example011_trig
                 const real_value_type&   tol,
                       real_function_type real_function) -> real_value_type
   {
-    auto n2 = static_cast<std::uint_fast32_t>(1);
+    auto n2 = static_cast<std::uint_fast32_t>(INT8_C(1));
 
     real_value_type step = ((b - a) / 2U);
 

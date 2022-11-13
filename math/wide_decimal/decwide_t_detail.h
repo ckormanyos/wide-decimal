@@ -75,7 +75,7 @@
     return
       static_cast<local_unsigned_integral_type>
       (
-        (static_cast<local_unsigned_integral_type>(~u)) + static_cast<local_unsigned_integral_type>(1U)
+        (static_cast<local_unsigned_integral_type>(~u)) + static_cast<local_unsigned_integral_type>(UINT8_C(1))
       );
   }
 
