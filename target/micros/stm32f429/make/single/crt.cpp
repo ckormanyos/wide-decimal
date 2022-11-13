@@ -69,7 +69,7 @@ void crt::init_ram()
   // Note that the bss segment is aligned by 4.
   std::fill(static_cast<memory_aligned_type*>(static_cast<void*>(&_bss_begin)),
             static_cast<memory_aligned_type*>(static_cast<void*>(&_bss_end)),
-            static_cast<memory_aligned_type>(0U));
+            static_cast<memory_aligned_type>(UINT8_C(0)));
 }
 
 extern "C"

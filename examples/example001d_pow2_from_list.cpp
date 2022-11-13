@@ -292,7 +292,7 @@ auto math::wide_decimal::example001d_pow2_from_list() -> bool
   wide_decimal_type local_one (1U);
   wide_decimal_type local_two (2U);
 
-  for(auto i = static_cast<std::ptrdiff_t>(0); i < static_cast<std::ptrdiff_t>(local_pow2_data.size()); ++i)
+  for(auto i = static_cast<std::ptrdiff_t>(INT8_C(0)); i < static_cast<std::ptrdiff_t>(local_pow2_data.size()); ++i)
   {
     wide_decimal_type x2;
 
