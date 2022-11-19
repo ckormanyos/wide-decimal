@@ -1523,8 +1523,6 @@
                     my_data.cbegin() + prec_minus_one,
                     my_data.begin());
 
-          using local_size_type = typename representation_type::size_type;
-
           const auto index_prev =
             static_cast<local_size_type>
             (
@@ -3460,8 +3458,6 @@
               std::copy_backward(my_data.cbegin(),
                                  my_data.cend() - 1,
                                  my_data.end());
-
-              using local_size_type = typename representation_type::size_type;
 
               my_data[static_cast<local_size_type>(UINT8_C(0))] = carry_out;
 
