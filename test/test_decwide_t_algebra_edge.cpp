@@ -67,13 +67,13 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     std::uniform_int_distribution<std::uint32_t>
       dist_exp
       (
-        static_cast<std::uint32_t>(UINT32_C(0)),
+        static_cast<std::uint32_t>(UINT8_C(0)),
         static_cast<std::uint32_t>(exp_range)
       );
 
     const auto val_exp = dist_exp(eng_exp);
 
-    const auto sgn_exp = (dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT32_C(0)));
+    const auto sgn_exp = (dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT8_C(0)));
 
     char pstr_exp[static_cast<std::size_t>(UINT8_C(32))] = { '\0' }; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
 
@@ -102,7 +102,7 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     (
       is_positive
         ? '+'
-        : static_cast<char>((dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT32_C(0))) ? '+' : '-')
+        : static_cast<char>((dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT8_C(0))) ? '+' : '-')
     );
 
   str_x.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(UINT8_C(1)), sign_char_to_insert);
@@ -292,8 +292,8 @@ auto test_various_zero_operations() -> bool
     result_is_ok = (result_zero_raised_to_the_zero_is_ok && result_is_ok);
   }
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(128));
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
            ++i)
   {
     const auto x          = generate_wide_decimal_value<local_wide_decimal_type>(true);
@@ -302,8 +302,8 @@ auto test_various_zero_operations() -> bool
     result_is_ok = ((x_pow_zero == 1) && result_is_ok);
   }
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(128));
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
            ++i)
   {
     const auto x              = generate_wide_decimal_value<local_wide_decimal_type>();
@@ -439,8 +439,8 @@ auto test_various_one_operations() -> bool
     result_is_ok = ((strm.str() == "1") && result_is_ok);
   }
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(128));
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
            ++i)
   {
     const auto x               = generate_wide_decimal_value<local_wide_decimal_type>();
@@ -1008,8 +1008,8 @@ auto test_various_rootn() -> bool
 
   const auto tol = local_wide_decimal_type(local_wide_decimal_type(1U) / 1000U);
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(16));
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(16));
            ++i)
   {
     const auto x = generate_wide_decimal_value<local_wide_decimal_type>(true);
@@ -1189,8 +1189,8 @@ auto test_various_int_operations() -> bool
 
   bool result_is_ok = true;
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(128));
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
            ++i)
   {
     for(auto   nd  = unsigned_integral_digits10_low_limit;
@@ -1213,8 +1213,8 @@ auto test_various_int_operations() -> bool
     }
   }
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(128));
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
            ++i)
   {
     for(auto   nd  = unsigned_integral_digits10_low_limit;
@@ -1239,7 +1239,7 @@ auto test_various_int_operations() -> bool
 
   auto u10 = static_cast<local_unsigned_type>(UINT8_C(1));
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
              i < static_cast<unsigned>(std::numeric_limits<local_signed_type>::digits10);
            ++i)
   {

@@ -197,7 +197,7 @@ namespace example008_bernoulli
     floating_point_type xx(x);
 
     // Scale the argument up and use downward recursion later for the final result.
-    if(n_recur != 0U)
+    if(n_recur != static_cast<std::uint32_t>(UINT8_C(0)))
     {
       xx += n_recur;
     }

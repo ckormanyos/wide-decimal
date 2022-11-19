@@ -406,7 +406,7 @@
     local_reverse_iterator_type ri_t  (t + n);
     local_reverse_iterator_type rend_t(t);
 
-    while((carry_out != 0U) && (ri_t != rend_t))
+    while((carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0))) && (ri_t != rend_t))
     {
       const auto tt = static_cast<local_limb_type>(*ri_t + static_cast<local_limb_type>(carry_out));
 
