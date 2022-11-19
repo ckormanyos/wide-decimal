@@ -59,7 +59,7 @@ auto pi_borwein_quintic(std::ostream* p_ostream) -> FloatingPointType
     static_cast<std::uint32_t>
     (
         static_cast<std::uint32_t>(static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::max_digits10 * 2) + static_cast<std::uint32_t>(5U))
-      / static_cast<std::uint32_t>(10U)
+      / static_cast<std::uint32_t>(UINT8_C(10))
     );
 
   using std::log;

@@ -230,7 +230,7 @@
 
       str = ss.str() + "." + str;
 
-      if((!value_is_unsigned) && (u_sign != static_cast<std::uint32_t>(UINT32_C(0))))
+      if((!value_is_unsigned) && (u_sign != static_cast<std::uint32_t>(UINT8_C(0))))
       {
         str.insert(str.begin(), '-');
       }
@@ -256,19 +256,20 @@
   typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_eng_man_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::eng_man; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,cert-msc32-c,cert-msc51-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_sgn(UINT32_C(0), UINT32_C(1)); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_sgn(static_cast<std::uint32_t>(UINT8_C(0)), static_cast<std::uint32_t>(UINT8_C(1))); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_exp(UINT32_C(0), static_cast<std::uint32_t>((static_cast<std::uintmax_t>(math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10) * UINTMAX_C(6)) / UINTMAX_C(10))); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+  typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_exp(static_cast<std::uint32_t>(UINT8_C(0)), static_cast<std::uint32_t>((static_cast<std::uintmax_t>(math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType>::decwide_t_digits10) * UINTMAX_C(6)) / UINTMAX_C(10))); // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   typename control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_dst_type // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
     control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::dst_man               // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
     (
-      static_cast<std::uint32_t>(UINT32_C(0)),
+      static_cast<std::uint32_t>(UINT8_C(0)),
       static_cast<std::uint32_t>
       (
-        control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_wide_decimal_type::decwide_t_elem_mask - INT32_C(1) // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+          control<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::local_wide_decimal_type::decwide_t_elem_mask // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+        - static_cast<std::int32_t>(INT8_C(1))
       )
     );
 
@@ -311,7 +312,7 @@
           std::string str_b;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == UINT32_C(0)));
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == static_cast<std::size_t>(UINT8_C(0))));
           independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_b, false);
           algebra_test_lock.clear();
 
@@ -372,7 +373,7 @@
           std::string str_b;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == UINT32_C(0)));
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == static_cast<std::size_t>(UINT8_C(0))));
           independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_b, false);
           algebra_test_lock.clear();
 
@@ -433,7 +434,7 @@
           std::string str_b;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == UINT32_C(0)));
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == static_cast<std::size_t>(UINT8_C(0))));
           independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_b, false);
           algebra_test_lock.clear();
 
@@ -494,7 +495,7 @@
           std::string str_b;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == UINT32_C(0)));
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == static_cast<std::size_t>(UINT8_C(0))));
           independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_b, false);
           algebra_test_lock.clear();
 
@@ -554,7 +555,7 @@
           std::string str_a;
 
           while(algebra_test_lock.test_and_set()) { ; }
-          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == UINT32_C(0)), true);
+          independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == static_cast<std::size_t>(UINT8_C(0))), true);
           algebra_test_lock.clear();
 
           independent_algebra_test_decwide_t_control_type result_ctrl;
@@ -615,7 +616,7 @@
             std::string str_a;
 
             while(algebra_test_lock.test_and_set()) { ; }
-            independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == UINT32_C(0)), true);
+            independent_algebra_test_decwide_t_control_struct::get_random_float_string(str_a, (j == static_cast<std::size_t>(UINT8_C(0))), true);
             algebra_test_lock.clear();
 
             independent_algebra_test_decwide_t_control_type result_ctrl;

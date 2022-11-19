@@ -215,8 +215,8 @@
           )
         );
 
-      for(auto   k = static_cast<std::int32_t>(INT32_C(0));
-                 k < static_cast<std::int32_t>(INT32_C(64));
+      for(auto   k = static_cast<std::int32_t>(INT8_C(0));
+                 k < static_cast<std::int32_t>(INT8_C(64));
                ++k)
       {
         using std::ilogb;
