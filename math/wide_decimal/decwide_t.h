@@ -2380,11 +2380,11 @@
       const auto first_clear =
         static_cast<std::ptrdiff_t>
         (
-            static_cast<exponent_type>
+            static_cast<std::ptrdiff_t>
             (
-              x.my_exp / static_cast<exponent_type>(decwide_t_elem_digits10)
+              static_cast<std::ptrdiff_t>(x.my_exp) / static_cast<std::ptrdiff_t>(decwide_t_elem_digits10)
             )
-          + static_cast<exponent_type>(INT8_C(1))
+          + static_cast<std::ptrdiff_t>(INT8_C(1))
         );
 
       const auto last_clear  = static_cast<std::ptrdiff_t>(decwide_t_elem_number);
