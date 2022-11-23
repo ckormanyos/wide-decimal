@@ -1242,6 +1242,7 @@
           std::copy(my_n_data_for_add_sub.cbegin(),
                     my_n_data_for_add_sub.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_data.begin());
+
           my_exp  = v.my_exp;
           my_neg  = v.my_neg;
         }
@@ -1493,7 +1494,7 @@
       {
         my_neg = b_neg;
 
-        return operator/=(decwide_t(n));
+        return (operator/=(decwide_t(n)));
       }
 
       const auto nn = static_cast<limb_type>(n);
@@ -1743,7 +1744,7 @@
     }
     #endif
 
-    auto precision(std::int32_t prec_digits) noexcept -> void
+    auto precision(const std::int32_t prec_digits) noexcept -> void
     {
       const auto prec_digits_elem_digits10_div = static_cast<std::int32_t>(prec_digits / decwide_t_elem_digits10);
       const auto prec_digits_elem_digits10_mod = static_cast<std::int32_t>(prec_digits % decwide_t_elem_digits10);
@@ -1930,9 +1931,9 @@
       // Estimate the square root using simple manipulations.
       const internal_float_type sqd = sqrt(dd);
 
-      const std::int32_t original_prec_elem = my_prec_elem;
+      const auto original_prec_elem = my_prec_elem;
 
-      *this = decwide_t(sqd, static_cast<exponent_type>(ne / 2));
+      operator=(decwide_t(sqd, static_cast<exponent_type>(ne / 2)));
 
       // Estimate 1.0 / (2.0 * x0) using simple manipulations.
       const auto inv_half_sqd =
@@ -2034,7 +2035,7 @@
         dd /= static_cast<internal_float_type>(10.0F); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
       }
 
-      const std::int32_t original_prec_elem = x.my_prec_elem;
+      const auto original_prec_elem = x.my_prec_elem;
 
       using std::pow;
 
@@ -2203,7 +2204,7 @@
       return value_is_one;
     }
 
-    WIDE_DECIMAL_NODISCARD auto isint() const -> bool
+    WIDE_DECIMAL_NODISCARD auto isint() const noexcept -> bool
     {
       auto value_is_int = bool { };
 
@@ -3972,7 +3973,7 @@
 
         if(round >= static_cast<std::uint32_t>(UINT8_C(5)))
         {
-          auto ix = static_cast<std::string::size_type>(str.length() - 1U);
+          auto ix = static_cast<std::string::size_type>(str.length() - static_cast<std::size_t>(UINT8_C(1)));
 
           // Every trailing 9 must be rounded up.
           while(   (ix != static_cast<std::size_t>(UINT8_C(0)))
@@ -3990,6 +3991,7 @@
             {
               // Increment up to the next order and adjust exponent.
               str.at(ix) = '1';
+
               ++the_exp;
             }
             else
@@ -4248,14 +4250,18 @@
         {
           // This is a non-zero decimal less than 1 that needs zero extension.
           const auto it_non_zero =
-            std::find_if(str.begin() + 2U,
-                         str.end(),
+            std::find_if(str.cbegin() + 2U,
+                         str.cend(),
                          [](const char& c) // NOLINT(modernize-use-trailing-return-type)
                          {
                            return (c != '0');
                          });
 
-          const auto len_non_zero_part = static_cast<std::uint_fast32_t>(str.end() - it_non_zero);
+          const auto len_non_zero_part =
+            static_cast<std::uint_fast32_t>
+            (
+              static_cast<std::size_t>(std::distance(it_non_zero, str.cend()))
+            );
 
           const auto u_pad = static_cast<std::uint_fast32_t>(os_precision - len_non_zero_part);
 
@@ -4271,7 +4277,10 @@
               os_precision
             - static_cast<std::uint_fast32_t>
               (
-                str.length() - static_cast<std::uint_fast32_t>(UINT8_C(1))
+                static_cast<std::size_t>
+                (
+                  str.length() - static_cast<std::size_t>(UINT8_C(1))
+                )
               )
           );
 
