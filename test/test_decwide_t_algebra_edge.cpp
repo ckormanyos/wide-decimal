@@ -495,12 +495,12 @@ auto test_various_min_max_operations() -> bool
 
     using std::fabs;
 
-    const auto delta_ldbl = fabs(static_cast<long double>(1.0L) - static_cast<long double>(static_cast<long double>(local_max_ldbl)        / (std::numeric_limits<long double>::max)()));
+    const auto delta_ldbl = fabs(static_cast<long double>(1.0F) - static_cast<long double>(static_cast<long double>(local_max_ldbl)        / (std::numeric_limits<long double>::max)()));
 
     constexpr auto tol_ldbl =
       static_cast<long double>
       (
-        std::numeric_limits<long double>::epsilon() * static_cast<long double>(2.0L)
+        std::numeric_limits<long double>::epsilon() * static_cast<long double>(2.0F)
       );
 
     using std::isinf;
@@ -1107,7 +1107,7 @@ auto test_to_native_float_and_back() -> bool
 
   auto result_is_ok = true;
 
-  constexpr auto tol_factor = static_cast<native_float_type>(2.0L);
+  constexpr auto tol_factor = static_cast<native_float_type>(2.0F);
 
   const     auto tol1 = static_cast<local_wide_decimal_type>(static_cast<native_float_type>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
   constexpr auto tol2 = static_cast<native_float_type>      (static_cast<native_float_type>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
@@ -1130,7 +1130,7 @@ auto test_to_native_float_and_back() -> bool
     using std::fabs;
 
     const auto delta1 = fabs(local_one() - fabs(x / x_reloaded_from_native_float));
-    const auto delta2 = fabs(static_cast<native_float_type>(1.0L) - fabs(x_as_native_float / static_cast<native_float_type>(x_reloaded_from_native_float)));
+    const auto delta2 = fabs(static_cast<native_float_type>(1.0F) - fabs(x_as_native_float / static_cast<native_float_type>(x_reloaded_from_native_float)));
 
     result_is_ok = ((delta1 < tol1) && (delta2 < tol2) && result_is_ok);
 
@@ -1146,11 +1146,11 @@ auto test_to_native_float_and_back() -> bool
 
       strm << std::scientific << std::setprecision(prec_of_strm) << x;
 
-      auto x_as_native_float_from_strm = static_cast<native_float_type>(0.0L);
+      auto x_as_native_float_from_strm = static_cast<native_float_type>(0.0F);
 
       strm >> x_as_native_float_from_strm;
 
-      const auto delta3 = fabs(static_cast<native_float_type>(1.0L) - fabs(x_as_native_float / x_as_native_float_from_strm));
+      const auto delta3 = fabs(static_cast<native_float_type>(1.0F) - fabs(x_as_native_float / x_as_native_float_from_strm));
 
       const auto tol3 = tol2;
 

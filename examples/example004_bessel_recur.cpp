@@ -24,8 +24,8 @@ namespace example004_bessel
     const floating_point_type f_lo = pfn(x_lo);
     const floating_point_type f_hi = pfn(x_hi);
 
-    const auto f_lo_is_neg = (f_lo < static_cast<floating_point_type>(0.0L));
-    const auto f_hi_is_neg = (f_hi < static_cast<floating_point_type>(0.0L));
+    const auto f_lo_is_neg = (f_lo < static_cast<floating_point_type>(0.0F));
+    const auto f_hi_is_neg = (f_hi < static_cast<floating_point_type>(0.0F));
 
     // Make sure that there is at least one root in the interval.
     if(f_lo_is_neg == f_hi_is_neg)
@@ -57,7 +57,7 @@ namespace example004_bessel
       const floating_point_type xmid = rtb + dx;
       const floating_point_type fmid = pfn(xmid);
 
-      if(fmid <= static_cast<floating_point_type>(0.0L))
+      if(fmid <= static_cast<floating_point_type>(0.0F))
       {
         rtb = xmid;
       }
