@@ -409,12 +409,12 @@
     using unsigned_type = UnsignedIntegerType;
     using   signed_type =   SignedIntegerType;
 
-    constexpr explicit unsigned_wrap(signed_type n)
+    constexpr explicit unsigned_wrap(signed_type n) noexcept
       : my_neg  (n < static_cast<signed_type>(INT8_C(0))),
         my_value(static_cast<unsigned_type>((!my_neg ) ? static_cast<unsigned_type>(n)
                                                        : static_cast<unsigned_type>(static_cast<unsigned_type>(~static_cast<unsigned_type>(n)) + static_cast<unsigned_type>(UINT8_C(1))))) { }
 
-    constexpr unsigned_wrap(const unsigned_wrap& other)
+    constexpr unsigned_wrap(const unsigned_wrap& other) noexcept
       : my_neg  (other.my_neg),
         my_value(other.my_value) { }
 
@@ -422,9 +422,9 @@
       : my_neg  (other.my_neg),
         my_value(other.my_value) { }
 
-    ~unsigned_wrap() = default; // LCOV_EXCL_LINE
+    ~unsigned_wrap() noexcept = default; // LCOV_EXCL_LINE
 
-    auto operator=(const unsigned_wrap& other) -> unsigned_wrap&
+    auto operator=(const unsigned_wrap& other) noexcept -> unsigned_wrap&
     {
       if(this != &other)
       {
@@ -443,15 +443,14 @@
       return *this;
     }
 
-    WIDE_DECIMAL_NODISCARD auto constexpr get_value_unsigned() const -> unsigned_type { return my_value; }
-    WIDE_DECIMAL_NODISCARD auto constexpr get_value_signed  () const ->   signed_type { return ((!my_neg) ? static_cast<signed_type>(my_value) : -static_cast<signed_type>(my_value)); }
-
-    WIDE_DECIMAL_NODISCARD auto constexpr get_is_neg        () const -> bool { return my_neg; }
+    WIDE_DECIMAL_NODISCARD auto constexpr get_value_unsigned() const noexcept -> unsigned_type { return my_value; }
+    WIDE_DECIMAL_NODISCARD auto constexpr get_value_signed  () const noexcept ->   signed_type { return static_cast<signed_type>((!my_neg) ? static_cast<signed_type>(my_value) : -static_cast<signed_type>(my_value)); }
+    WIDE_DECIMAL_NODISCARD auto constexpr get_is_neg        () const noexcept -> bool          { return my_neg; }
 
     bool          my_neg;   // NOLINT(misc-non-private-member-variables-in-classes)
     unsigned_type my_value; // NOLINT(misc-non-private-member-variables-in-classes)
 
-    auto operator+=(const unsigned_wrap& other) -> unsigned_wrap&
+    auto operator+=(const unsigned_wrap& other) noexcept -> unsigned_wrap&
     {
       if(my_neg == other.my_neg)
       {
@@ -496,7 +495,7 @@
       return *this;
     }
 
-    auto operator-=(const unsigned_wrap& other) -> unsigned_wrap&
+    auto operator-=(const unsigned_wrap& other) noexcept -> unsigned_wrap&
     {
       if(my_value == static_cast<unsigned_type>(UINT8_C(0)))
       {
@@ -511,7 +510,7 @@
       {
         my_neg = (!my_neg);
         operator+=(other);
-        my_neg = (my_value != static_cast<unsigned_type>(UINT8_C(0))) ? (!my_neg) : false;
+        my_neg = ((my_value != static_cast<unsigned_type>(UINT8_C(0))) ? (!my_neg) : false);
       }
 
       return *this;
