@@ -3514,7 +3514,7 @@
         static_assert(std::numeric_limits<signed long long>::digits >= std::numeric_limits<exponent_type>::digits, // NOLINT(google-runtime-int)
                       "Error: Type long long is not wide enough to hold result of type exponent_type");
 
-        auto ptr_end = static_cast<char*>(nullptr); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,cppcoreguidelines-init-variables)
+        auto ptr_end = static_cast<char*>(nullptr); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,cppcoreguidelines-init-variables,llvm-qualified-auto,readability-qualified-auto)
 
         my_exp =
           static_cast<exponent_type>
@@ -3803,7 +3803,7 @@
         static_assert(std::numeric_limits<unsigned long>::digits >= std::numeric_limits<limb_type>::digits, // NOLINT(google-runtime-int)
                       "Error: Type unsigned long is not wide enough to hold result of type limb_type");
 
-        auto ptr_end = static_cast<char*>(nullptr); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+        auto ptr_end = static_cast<char*>(nullptr); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,llvm-qualified-auto,readability-qualified-auto)
 
         // First get the digits to the left of the decimal point...
 
@@ -3853,7 +3853,7 @@
         static_assert(std::numeric_limits<unsigned long>::digits >= std::numeric_limits<limb_type>::digits, // NOLINT(google-runtime-int)
                       "Error: Type unsigned long is not wide enough to hold result of type limb_type");
 
-        auto ptr_end = static_cast<char*>(nullptr); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+        auto ptr_end = static_cast<char*>(nullptr); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,llvm-qualified-auto,readability-qualified-auto)
 
         my_data[i1] =
           static_cast<limb_type>
@@ -4100,7 +4100,7 @@
 
       std::array<char, static_cast<std::size_t>(UINT8_C(20))> ptr_str = {{ '\0' }}; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-      auto ptr_end = util::baselexical_cast(u_exp, ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+      auto ptr_end = util::baselexical_cast(u_exp, ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,llvm-qualified-auto,readability-qualified-auto)
 
       auto str_exp = std::string(ptr_str.data(), ptr_end);
 
@@ -5533,7 +5533,7 @@
   WIDE_DECIMAL_NAMESPACE_END
 
   // Specialization of std::numeric_limits<decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>.
-  namespace std
+  namespace std // NOLINT(cert-dcl58-cpp)
   {
     namespace nonstd
     {
