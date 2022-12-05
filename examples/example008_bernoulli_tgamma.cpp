@@ -362,7 +362,7 @@ auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
     static_cast<float>
     (
         static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())
-      / static_cast<float>(1000.0L)
+      / static_cast<float>(1000.0F)
     );
 
   std::cout << "Time example008_bernoulli_tgamma(): "
