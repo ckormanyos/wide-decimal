@@ -3002,7 +3002,6 @@
         std::copy(my_data.cbegin(), my_data.cbegin() + prec_elems_for_multiply, u_local);
 
         #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-
         {
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
@@ -3020,11 +3019,8 @@
           #pragma GCC diagnostic pop
           #pragma GCC diagnostic pop
         }
-
         #else
-
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
-
         #endif
 
         std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply, static_cast<limb_type>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -3145,7 +3141,6 @@
               * static_cast<typename kara_mul_pool_type::size_type>(UINT8_C(8))
             )
           );
-
         #endif
 
         limb_type* u_local = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -3153,8 +3148,30 @@
         limb_type* result  = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(2))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         limb_type* t       = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-        std::copy(  my_data.cbegin(),   my_data.cbegin() + prec_elems_for_multiply, u_local);
+        std::copy(my_data.cbegin(), my_data.cbegin() + prec_elems_for_multiply, u_local);
+
+        #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+        {
+          #pragma GCC diagnostic push
+          #pragma GCC diagnostic ignored "-Warray-bounds"
+          #pragma GCC diagnostic push
+          #pragma GCC diagnostic ignored "-Wstringop-overflow"
+
+          const auto memmove_dif =
+            static_cast<std::ptrdiff_t>
+            (
+                static_cast<std::ptrdiff_t>(prec_elems_for_multiply)
+              * static_cast<std::ptrdiff_t>(sizeof(limb_type))
+            );
+
+          std::memmove(static_cast<void*>(v_local), static_cast<const void*>(v.my_data.data()), static_cast<std::size_t>(memmove_dif));
+          #pragma GCC diagnostic pop
+          #pragma GCC diagnostic pop
+        }
+        #else
         std::copy(v.my_data.cbegin(), v.my_data.cbegin() + prec_elems_for_multiply, v_local);
+        #endif
+
         std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply, static_cast<limb_type>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply, static_cast<limb_type>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
