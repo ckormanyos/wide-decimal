@@ -3007,14 +3007,14 @@
           #if defined(__GNUC__)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
-          #if (!defined(__clang__) && (__GNUC__ >= 12))
+          #if (!defined(__clang__) && (__GNUC__ >= 10))
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Wstringop-overflow"
           #endif
           #endif
           std::memmove(static_cast<void*>(v_local), static_cast<const void*>(v.my_data.data()), static_cast<std::size_t>(memmove_dif));
           #if defined(__GNUC__)
-          #if (!defined(__clang__) && (__GNUC__ >= 12))
+          #if (!defined(__clang__) && (__GNUC__ >= 10))
           #pragma GCC diagnostic pop
           #endif
           #pragma GCC diagnostic pop
@@ -3159,14 +3159,14 @@
           #if defined(__GNUC__)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
-          #if (!defined(__clang__) && (__GNUC__ >= 12))
+          #if (!defined(__clang__) && (__GNUC__ >= 10))
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Wstringop-overflow"
           #endif
           #endif
           std::memmove(static_cast<void*>(v_local), static_cast<const void*>(v.my_data.data()), static_cast<std::size_t>(memmove_dif));
           #if defined(__GNUC__)
-          #if (!defined(__clang__) && (__GNUC__ >= 12))
+          #if (!defined(__clang__) && (__GNUC__ >= 10))
           #pragma GCC diagnostic pop
           #endif
           #pragma GCC diagnostic pop
