@@ -2900,7 +2900,7 @@
           static_cast<std::ptrdiff_t>
           (
             (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                       decwide_t_elem_number)
+                       (std::min)(decwide_t_elem_number, decwide_t_elems_for_kara))
           );
 
         std::copy(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -2952,15 +2952,9 @@
         {
           my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
-          const auto copy_limit =
-            static_cast<std::ptrdiff_t>
-            (
-              (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara)
-            );
-
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + copy_limit, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
@@ -2969,7 +2963,7 @@
             static_cast<std::ptrdiff_t>
             (
               (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                         decwide_t_elems_for_kara)
+                         (std::min)(decwide_t_elem_number, decwide_t_elems_for_kara))
             );
 
           std::copy(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -3047,15 +3041,9 @@
         {
           my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
-          const auto copy_limit =
-            static_cast<std::ptrdiff_t>
-            (
-              (std::min)(prec_elems_for_multiply, decwide_t_elem_number)
-            );
-
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + copy_limit, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
@@ -3064,7 +3052,7 @@
             static_cast<std::ptrdiff_t>
             (
               (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                         decwide_t_elem_number)
+                         (std::min)(decwide_t_elem_number, decwide_t_elems_for_fft))
             );
 
           std::copy(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -3117,15 +3105,9 @@
         {
           my_exp += static_cast<exponent_type>(decwide_t_elem_digits10);
 
-          const auto copy_limit =
-            static_cast<std::ptrdiff_t>
-            (
-              (std::min)(prec_elems_for_multiply, decwide_t_elems_for_kara)
-            );
-
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + copy_limit, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
@@ -3134,7 +3116,7 @@
             static_cast<std::ptrdiff_t>
             (
               (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                         decwide_t_elems_for_kara)
+                         (std::min)(decwide_t_elem_number, decwide_t_elems_for_kara))
             );
 
           std::copy(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -3145,12 +3127,11 @@
       else if(   (prec_elems_for_multiply >= decwide_t_elems_for_kara)
               && (prec_elems_for_multiply <  decwide_t_elems_for_fft))
       {
-        // Use Karatsuba multiplication multiplication.
+        // Use Karatsuba multiplication.
 
         // Sloanes's A029750: Numbers of the form 2^k times 1, 3, 5 or 7.
         const auto kara_elems_for_multiply =
-          (std::min)(detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply)),
-                     static_cast<std::uint32_t>(detail::a029750::a029750_as_runtime_value(decwide_t_elems_for_fft - 1) * static_cast<std::uint32_t>(UINT8_C(8))));
+          detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
         using kara_mul_pool_type = util::dynamic_array<limb_type>;
@@ -3188,15 +3169,9 @@
         {
           my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
-          const auto copy_limit =
-            static_cast<std::ptrdiff_t>
-            (
-              (std::min)(prec_elems_for_multiply, decwide_t_elems_for_fft)
-            );
-
           // Shift the result of the multiplication one element to the right.
           std::copy(result,
-                    result + copy_limit, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    result + static_cast<std::ptrdiff_t>(prec_elems_for_multiply), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.begin());
         }
         else
@@ -3205,7 +3180,7 @@
             static_cast<std::ptrdiff_t>
             (
               (std::min)(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                         decwide_t_elems_for_fft)
+                         (std::min)(decwide_t_elem_number, decwide_t_elems_for_fft))
             );
 
           std::copy(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
