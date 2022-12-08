@@ -27,7 +27,7 @@
   #include <cmath>
   #include <cstddef>
   #include <cstdlib>
-  #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+  #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
   #include <cstring>
   #endif
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
@@ -1116,7 +1116,7 @@
                                      const_limb_pointer_type(v.my_data.data()),
                                      prec_elems_for_add_sub); // LCOV_EXCL_LINE
 
-          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
 
           {
             const auto memmove_dif =
@@ -3001,7 +3001,7 @@
 
         std::copy(my_data.cbegin(), my_data.cbegin() + prec_elems_for_multiply, u_local);
 
-        #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+        #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
         {
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
@@ -3150,7 +3150,7 @@
 
         std::copy(my_data.cbegin(), my_data.cbegin() + prec_elems_for_multiply, u_local);
 
-        #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+        #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
         {
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
