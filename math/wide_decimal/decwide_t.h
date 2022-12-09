@@ -1109,28 +1109,16 @@
           using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
           // Addition.
+          // LCOV_EXCL_START
           carry = detail::eval_add_n(my_n_data_for_add_sub.data(),
-                                     const_limb_pointer_type(my_n_data_for_add_sub.data()), // LCOV_EXCL_LINE
+                                     const_limb_pointer_type(my_n_data_for_add_sub.data()),
                                      const_limb_pointer_type(v.my_data.data()),
-                                     prec_elems_for_add_sub); // LCOV_EXCL_LINE
+                                     prec_elems_for_add_sub);
+          // LCOV_EXCL_STOP
 
-          {
-            const auto memmove_dif =
-              static_cast<std::ptrdiff_t>
-              (
-                  static_cast<std::ptrdiff_t>(prec_elems_for_add_sub)
-                * static_cast<std::ptrdiff_t>(sizeof(limb_type))
-              );
-
-            #if defined(__GNUC__)
-            #pragma GCC diagnostic push
-            #pragma GCC diagnostic ignored "-Warray-bounds"
-            #endif
-            std::memmove(static_cast<void*>(my_data.data()), static_cast<const void*>(my_n_data_for_add_sub.data()), static_cast<std::size_t>(memmove_dif));
-            #if defined(__GNUC__)
-            #pragma GCC diagnostic pop
-            #endif
-          }
+          std::copy(const_limb_pointer_type(my_n_data_for_add_sub.data()),
+                    const_limb_pointer_type(my_n_data_for_add_sub.data()) + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
+                    my_data.data());
 
           my_exp = v.my_exp;
         }
@@ -1351,14 +1339,7 @@
 
           const auto prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
-          #if (!defined(__clang__) && (__GNUC__ >= 10))
-          #pragma GCC diagnostic push
-          #pragma GCC diagnostic ignored "-Wstringop-overflow="
-          #endif
           eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
-          #if (!defined(__clang__) && (__GNUC__ >= 10))
-          #pragma GCC diagnostic pop
-          #endif
         }
       }
 
@@ -3002,24 +2983,7 @@
         limb_type* t       = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
         std::copy(my_data.cbegin(), my_data.cbegin() + prec_elems_for_multiply, u_local);
-
-        {
-          const auto memmove_dif =
-            static_cast<std::ptrdiff_t>
-            (
-                static_cast<std::ptrdiff_t>((std::min)(decwide_t_elem_number, prec_elems_for_multiply))
-              * static_cast<std::ptrdiff_t>(sizeof(limb_type))
-            );
-
-          #if defined(__GNUC__)
-          #pragma GCC diagnostic push
-          #pragma GCC diagnostic ignored "-Warray-bounds"
-          #endif
-          std::memmove(static_cast<void*>(v_local), static_cast<const void*>(v.my_data.data()), static_cast<std::size_t>(memmove_dif));
-          #if defined(__GNUC__)
-          #pragma GCC diagnostic pop
-          #endif
-        }
+        std::copy(v.my_data.cbegin(), v.my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_multiply), v_local);
 
         std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply, static_cast<limb_type>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply, static_cast<limb_type>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -3147,31 +3111,7 @@
         limb_type* t       = my_kara_mul_pool.data() + static_cast<std::size_t>(static_cast<std::size_t>(kara_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(4))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
         std::copy(my_data.cbegin(), my_data.cbegin() + prec_elems_for_multiply, u_local);
-
-        {
-          const auto memmove_dif =
-            static_cast<std::ptrdiff_t>
-            (
-                static_cast<std::ptrdiff_t>((std::min)(decwide_t_elem_number, prec_elems_for_multiply))
-              * static_cast<std::ptrdiff_t>(sizeof(limb_type))
-            );
-
-          #if defined(__GNUC__)
-          #pragma GCC diagnostic push
-          #pragma GCC diagnostic ignored "-Warray-bounds"
-          #if (!defined(__clang__) && (__GNUC__ >= 10))
-          #pragma GCC diagnostic push
-          #pragma GCC diagnostic ignored "-Wstringop-overflow="
-          #endif
-          #endif
-          std::memmove(static_cast<void*>(v_local), static_cast<const void*>(v.my_data.data()), static_cast<std::size_t>(memmove_dif));
-          #if defined(__GNUC__)
-          #if (!defined(__clang__) && (__GNUC__ >= 10))
-          #pragma GCC diagnostic pop
-          #endif
-          #pragma GCC diagnostic pop
-          #endif
-        }
+        std::copy(v.my_data.cbegin(), v.my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_multiply), v_local);
 
         std::fill(u_local + prec_elems_for_multiply, u_local + kara_elems_for_multiply, static_cast<limb_type>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         std::fill(v_local + prec_elems_for_multiply, v_local + kara_elems_for_multiply, static_cast<limb_type>(UINT8_C(0))); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
