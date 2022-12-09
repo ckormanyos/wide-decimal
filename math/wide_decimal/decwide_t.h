@@ -1351,7 +1351,14 @@
 
           const auto prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
+          #if (!defined(__clang__) && (__GNUC__ >= 10))
+          #pragma GCC diagnostic push
+          #pragma GCC diagnostic ignored "-Wstringop-overflow="
+          #endif
           eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
+          #if (!defined(__clang__) && (__GNUC__ >= 10))
+          #pragma GCC diagnostic pop
+          #endif
         }
       }
 
