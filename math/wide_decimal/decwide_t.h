@@ -922,7 +922,7 @@
 
           auto shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
 
-          while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(INT8_C(0)))
+          while(static_cast<std::int32_t>(shift % decwide_t_elem_digits10) != static_cast<std::int32_t>(INT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
           {
             d *= f_ten;
             --e;
@@ -960,7 +960,7 @@
         // Extract the mantissa's decimal digits.
 
         for(  limb_index = static_cast<local_size_type>(UINT8_C(0));
-              limb_index < static_cast<local_size_type>(digit_loops);
+              limb_index < static_cast<local_size_type>(digit_loops); // NOLINT(altera-id-dependent-backward-branch)
             ++limb_index)
         {
           const auto n = static_cast<limb_type>(d);
@@ -1092,8 +1092,8 @@
 
           // Addition.
           carry = detail::eval_add_n(my_data.data(),
-                                     const_limb_pointer_type(my_data.data()),
-                                     const_limb_pointer_type(my_n_data_for_add_sub.data()),
+                                     static_cast<const_limb_pointer_type>(my_data.data()),
+                                     static_cast<const_limb_pointer_type>(my_n_data_for_add_sub.data()),
                                      prec_elems_for_add_sub);
         }
         else
@@ -1111,8 +1111,8 @@
           // Addition.
           // LCOV_EXCL_START
           carry = detail::eval_add_n(my_n_data_for_add_sub.data(),
-                                     const_limb_pointer_type(my_n_data_for_add_sub.data()),
-                                     const_limb_pointer_type(v.my_data.data()),
+                                     const_cast<const_limb_pointer_type>(my_n_data_for_add_sub.data()),
+                                     const_cast<const_limb_pointer_type>(v.my_data.data()),
                                      prec_elems_for_add_sub);
           // LCOV_EXCL_STOP
 
@@ -1120,6 +1120,8 @@
           #if(__GNUC__ >= 12)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
+          #pragma GCC diagnostic push
+          #pragma GCC diagnostic ignored "-Wrestrict"
           #endif
           #if(__GNUC__ >= 8)
           #pragma GCC diagnostic push
@@ -1127,12 +1129,13 @@
           #endif
           #endif
 
-          std::copy(const_limb_pointer_type(my_n_data_for_add_sub.data()),
-                    const_limb_pointer_type(my_n_data_for_add_sub.data()) + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
+          std::copy(static_cast<const_limb_pointer_type>(my_n_data_for_add_sub.data()),
+                    static_cast<const_limb_pointer_type>(my_n_data_for_add_sub.data()) + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_data.data());
 
           #if (defined(__GNUC__) && !defined(__clang__))
           #if(__GNUC__ >= 12)
+          #pragma GCC diagnostic pop
           #pragma GCC diagnostic pop
           #endif
           #if(__GNUC__ >= 8)
@@ -1198,8 +1201,8 @@
           // Subtraction.
           const auto has_borrow =
             detail::eval_subtract_n(my_data.data(),
-                                    const_limb_pointer_type(my_data.data()),
-                                    const_limb_pointer_type(my_n_data_for_add_sub.data()),
+                                    static_cast<const_limb_pointer_type>(my_data.data()),
+                                    static_cast<const_limb_pointer_type>(my_n_data_for_add_sub.data()),
                                     prec_elems_for_add_sub);
 
           static_cast<void>(has_borrow);
@@ -1232,8 +1235,8 @@
           // Subtraction.
           const auto has_borrow =
             detail::eval_subtract_n(my_n_data_for_add_sub.data(),
-                                    const_limb_pointer_type(my_n_data_for_add_sub.data()),
-                                    const_limb_pointer_type(my_data.data()),
+                                    static_cast<const_limb_pointer_type>(my_n_data_for_add_sub.data()),
+                                    static_cast<const_limb_pointer_type>(my_data.data()),
                                     prec_elems_for_add_sub);
 
           static_cast<void>(has_borrow);
@@ -1872,7 +1875,7 @@
       // to the minimum required in order to minimize the run-time.
 
       for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::digits10 - 1);
-               digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
+               digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10); // NOLINT(altera-id-dependent-backward-branch)
                digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
         // Adjust precision of the terms.
@@ -1986,7 +1989,7 @@
       // http://www.springer.com/gp/book/9783642567353
 
       for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::digits10 - 1);
-               digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
+               digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10); // NOLINT(altera-id-dependent-backward-branch)
                digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
         // Adjust precision of the terms.
@@ -2071,7 +2074,7 @@
       *this = decwide_t(one_over_rtn_d, static_cast<exponent_type>(static_cast<exponent_type>(-ne) / p));
 
       for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<internal_float_type>::digits10 - 1);
-               digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10);
+               digits  < static_cast<std::int32_t>(original_prec_elem * decwide_t_elem_digits10); // NOLINT(altera-id-dependent-backward-branch)
                digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
         // Adjust precision of the terms.
@@ -2362,7 +2365,7 @@
       using local_size_type = typename representation_type::size_type;
 
       for(auto   limb_index = static_cast<local_size_type>(UINT8_C(0));
-               ((limb_index < my_data.size()) && (limb_index < static_cast<local_size_type>(digit_loops)));
+               ((limb_index < my_data.size()) && (limb_index < static_cast<local_size_type>(digit_loops))); // NOLINT(altera-id-dependent-backward-branch)
                ++limb_index)
       {
         mantissa += (static_cast<internal_float_type>(my_data[limb_index]) * scale);
@@ -2605,7 +2608,7 @@
             using local_size_type = typename representation_type::size_type;
 
             for(auto  limb_index  = static_cast<local_size_type>(UINT8_C(1));
-                      limb_index <= static_cast<local_size_type>(static_cast<std::uint32_t>(imax));
+                      limb_index <= static_cast<local_size_type>(static_cast<std::uint32_t>(imax)); // NOLINT(altera-id-dependent-backward-branch)
                     ++limb_index)
             {
               val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)
@@ -2666,7 +2669,7 @@
             using local_size_type = typename representation_type::size_type;
 
             for(auto   limb_index  = static_cast<local_size_type>(UINT8_C(1));
-                       limb_index <= static_cast<local_size_type>(static_cast<std::uint32_t>(imax));
+                       limb_index <= static_cast<local_size_type>(static_cast<std::uint32_t>(imax)); // NOLINT(altera-id-dependent-backward-branch)
                      ++limb_index)
             {
               val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)
@@ -2797,7 +2800,7 @@
 
       while
       (
-           (uu != static_cast<unsigned long long>(UINT8_C(0))) // NOLINT(google-runtime-int)
+           (uu != static_cast<unsigned long long>(UINT8_C(0))) // NOLINT(google-runtime-int,altera-id-dependent-backward-branch)
         && (i  <  static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value))
       )
       {
@@ -2903,8 +2906,8 @@
       using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
       detail::eval_multiply_n_by_n_to_2n(result,
-                                         const_limb_pointer_type(my_data.data()),
-                                         const_limb_pointer_type(v.my_data.data()),
+                                         const_cast<const_limb_pointer_type>(my_data.data()),
+                                         const_cast<const_limb_pointer_type>(v.my_data.data()),
                                          prec_elems_for_multiply);
 
       // Handle a potential carry.
@@ -3267,7 +3270,7 @@
         auto tmp_limb_0 = my_data[static_cast<local_size_type>(UINT8_C(0))];
 
         // Manually count the number of base-10 digits on the zero'th limb.
-        while(tmp_limb_0 > static_cast<local_limb_type>(UINT8_C(0)))
+        while(tmp_limb_0 > static_cast<local_limb_type>(UINT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
         {
           tmp_limb_0 = static_cast<local_limb_type>(tmp_limb_0 / static_cast<local_limb_type>(UINT8_C(10))); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
@@ -3402,7 +3405,7 @@
                 - static_cast<limb_type>(decwide_t_elem_mask)
               );
 
-            while(   (--least_digit_idx >= static_cast<std::int32_t>(0))
+            while(   (--least_digit_idx >= static_cast<std::int32_t>(0)) // NOLINT(altera-id-dependent-backward-branch)
                   && (carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0))))
             {
               const auto tt =
@@ -3797,7 +3800,7 @@
           / static_cast<std::string::difference_type>(decwide_t_elem_digits10)
         );
 
-      for(auto i = static_cast<std::string::difference_type>(INT8_C(0)); i < i_end; ++i)
+      for(auto i = static_cast<std::string::difference_type>(INT8_C(0)); i < i_end; ++i) // NOLINT(altera-id-dependent-backward-branch)
       {
         const auto idigits =
           static_cast<std::string::difference_type>
@@ -3884,14 +3887,14 @@
 
       // Extract the digits following the decimal point from decwide_t,
       // beginning with the data element having index 1.
-      while(it_rep != (x.crepresentation().cbegin() + static_cast<std::size_t>(number_of_elements)))
+      while(it_rep != (x.crepresentation().cbegin() + static_cast<std::size_t>(number_of_elements))) // NOLINT(altera-id-dependent-backward-branch)
       {
         p_end = util::baselexical_cast(*it_rep, data_elem_buf.data());
 
         ++it_rep;
 
-        auto rit = std::copy(std::reverse_iterator<const char*>(p_end),
-                             std::reverse_iterator<const char*>(static_cast<const char*>(data_elem_buf.data())),
+        auto rit = std::copy(static_cast<std::reverse_iterator<const char*>>(p_end),
+                             static_cast<std::reverse_iterator<const char*>>(static_cast<const char*>(data_elem_buf.data())),
                              data_elem_array.rbegin());
 
         std::fill(rit, data_elem_array.rend(), '0');
@@ -3964,7 +3967,7 @@
           auto ix = static_cast<std::string::size_type>(str.length() - static_cast<std::size_t>(UINT8_C(1)));
 
           // Every trailing 9 must be rounded up.
-          while(   (ix != static_cast<std::size_t>(UINT8_C(0)))
+          while(   (ix != static_cast<std::size_t>(UINT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
                 && (static_cast<int>(static_cast<int>(str.at(ix)) - static_cast<int>('0')) == static_cast<int>(INT8_C(9))))
           {
             str.at(ix) = '0';
@@ -4366,7 +4369,7 @@
 
       auto p10 = static_cast<exponent_type>(-1);
 
-      while(static_cast<limb_type>(static_cast<limb_type>(xx + static_cast<std::uint8_t>(UINT8_C(9))) / static_cast<std::uint8_t>(UINT8_C(10))) > static_cast<std::uint8_t>(UINT8_C(0)))
+      while(static_cast<limb_type>(static_cast<limb_type>(xx + static_cast<std::uint8_t>(UINT8_C(9))) / static_cast<std::uint8_t>(UINT8_C(10))) > static_cast<std::uint8_t>(UINT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
       {
         xx = static_cast<limb_type>(xx / static_cast<std::uint8_t>(UINT8_C(10)));
 
@@ -6086,7 +6089,7 @@
         exp_result = exp_estimate;
 
         for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
-                 digits  < precision_of_x;
+                 digits  < precision_of_x; // NOLINT(altera-id-dependent-backward-branch)
                  digits *= static_cast<std::int32_t>(INT8_C(2)))
         {
           // Adjust precision of the terms.
