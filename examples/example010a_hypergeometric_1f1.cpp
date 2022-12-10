@@ -102,7 +102,7 @@ namespace example010a_hypergeometric
       G[0U] = my_one + (CT2 * (N[2U] - AP));
       CT2   =  (CT2 *  (AP + N[1U])) / (CP + N[2U]);
       G[1U] =   CT2 * ((CP - N[1U]) + (((AP + N[0U]) / (CT1 + 2U)) * Z2));
-      G[2U] = ((CT2 *  (AP - N[2U])) * ((AP + N[2U]) *  Z2Z2)) / (std::uint32_t(std::uint32_t(CT1 - my_two) * CT1) * (CP + N[3U]));
+      G[2U] = ((CT2 *  (AP - N[2U])) * ((AP + N[2U]) *  Z2Z2)) / (static_cast<std::uint32_t>(static_cast<std::uint32_t>(CT1 - my_two) * CT1) * (CP + N[3U]));
 
       // C -----------------------------------------------------------------
       // C THE RECURRENCE RELATIONS FOR A(I) and B(I) ARE AS FOLLOWS
@@ -146,7 +146,7 @@ namespace example010a_hypergeometric
       std::copy(A.cbegin() + 1U, A.cend(), A.begin());
       std::copy(B.cbegin() + 1U, B.cend(), B.begin());
 
-      CT1 = std::uint_fast16_t(CT1 + UINT16_C(2));
+      CT1 = static_cast<std::uint_fast16_t>(CT1 + UINT16_C(2));
     }
 
     // Return the rational approximation. This is given

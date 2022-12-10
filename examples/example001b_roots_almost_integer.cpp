@@ -126,7 +126,7 @@ auto math::wide_decimal::example001b_roots_almost_integer() -> bool
   const auto result_integer_part_equality_is_ok = (p.extract_integer_part() == control_integer_part);
 
   const auto tol =
-    dec5001_t
+    static_cast<dec5001_t>
     (
       std::numeric_limits<dec5001_t>::epsilon() * static_cast<unsigned>(UINT8_C(10))
     );

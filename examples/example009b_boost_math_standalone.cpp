@@ -80,8 +80,8 @@ auto sin_series(const FloatingPointType& x) -> FloatingPointType
         auto term_is_neg = true;
   const auto tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
 
-  for(auto k = static_cast<std::uint32_t>(UINT32_C(3));
-           k < static_cast<std::uint32_t>(UINT32_C(10000));
+  for(auto k = static_cast<std::uint32_t>(UINT32_C(3));     // NOLINT(altera-id-dependent-backward-branch)
+           k < static_cast<std::uint32_t>(UINT32_C(10000)); // NOLINT(altera-id-dependent-backward-branch)
            k = static_cast<std::uint32_t>(k + static_cast<std::uint32_t>(UINT8_C(2))))
   {
     const auto k_times_k_minus_one =
@@ -117,12 +117,12 @@ auto cos_series(const FloatingPointType& x) -> FloatingPointType
         auto term_is_neg = true;
   const auto tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
 
-  for(auto k = static_cast<std::uint32_t>(UINT32_C(4));
-           k < static_cast<std::uint32_t>(UINT32_C(10000));
+  for(auto k = static_cast<std::uint32_t>(UINT32_C(4));     // NOLINT(altera-id-dependent-backward-branch)
+           k < static_cast<std::uint32_t>(UINT32_C(10000)); // NOLINT(altera-id-dependent-backward-branch)
            k = static_cast<std::uint32_t>(k + static_cast<std::uint32_t>(UINT8_C(2))))
   {
     term *= x2;
-    term /= std::uint32_t(k * std::uint32_t(k - 1U));
+    term /= static_cast<std::uint32_t>(k * static_cast<std::uint32_t>(k - 1U));
 
     if(term < tol)
     {
@@ -176,7 +176,7 @@ auto sin(const FloatingPointType& x) -> FloatingPointType // NOLINT(misc-no-recu
     static const floating_point_type one_tenth = floating_point_type(1U) / 10U;
 
     // Reduce the argument with factors of three until it is less than 1/10.
-    while(r > one_tenth)
+    while(r > one_tenth) // NOLINT(altera-id-dependent-backward-branch)
     {
       r /= 3U;
 

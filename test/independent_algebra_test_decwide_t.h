@@ -186,7 +186,7 @@
 
       std::uint32_t u { };
 
-      while(str.length() < std::string::size_type(std::numeric_limits<local_wide_decimal_type>::digits10))
+      while(str.length() < static_cast<std::string::size_type>(std::numeric_limits<local_wide_decimal_type>::digits10))
       {
         u = dst_man(eng_man);
 

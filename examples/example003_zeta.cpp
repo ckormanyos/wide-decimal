@@ -35,7 +35,7 @@ namespace local_zeta
     // ranging from 3 up to the square root of the largest expected prime.
 
     for(auto i  = static_cast<std::uint_fast16_t>(UINT16_C(3));
-             i <= maximum_value;
+             i <= maximum_value; // NOLINT(altera-id-dependent-backward-branch)
              i  = static_cast<std::uint_fast16_t>(i + UINT16_C(2)))
     {
       using std::sqrt;
@@ -49,7 +49,7 @@ namespace local_zeta
       bool is_prime = true;
 
       for(auto   j = static_cast<std::uint_fast16_t>(UINT16_C(3));
-                 j <= maximum_square_root_value;
+                 j <= maximum_square_root_value; // NOLINT(altera-id-dependent-backward-branch)
                ++j)
       {
         if(static_cast<std::uint_fast16_t>(i % j) == UINT16_C(0))
@@ -122,7 +122,7 @@ auto math::wide_decimal::example003_zeta() -> bool
   // Check the closeness of the result.
   const dec51_t control
   {
-    dec51_t(3617U * pow(local_zeta::pi<dec51_t>(), 16U)) / 325641566250ULL
+    static_cast<dec51_t>(3617U * pow(local_zeta::pi<dec51_t>(), 16U)) / 325641566250ULL
   };
 
   const dec51_t closeness = fabs(1 - (r16 / control));
