@@ -3097,8 +3097,8 @@
         using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
         detail::eval_multiply_n_by_n_to_2n(result,
-                                           const_limb_pointer_type(my_data.data()),
-                                           const_limb_pointer_type(v.my_data.data()),
+                                           const_cast<const_limb_pointer_type>(my_data.data()),   // NOLINT(cppcoreguidelines-pro-type-const-cast)
+                                           const_cast<const_limb_pointer_type>(v.my_data.data()), // NOLINT(cppcoreguidelines-pro-type-const-cast)
                                            prec_elems_for_multiply);
 
         // Handle a potential carry.
@@ -3225,8 +3225,8 @@
         using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
         detail::mul_loop_fft(my_data.data(),
-                             const_limb_pointer_type(  my_data.data()),
-                             const_limb_pointer_type(v.my_data.data()),
+                             const_cast<const_limb_pointer_type>(  my_data.data()), // NOLINT(cppcoreguidelines-pro-type-const-cast)
+                             const_cast<const_limb_pointer_type>(v.my_data.data()), // NOLINT(cppcoreguidelines-pro-type-const-cast)
                              my_af_fft_mul_pool.data(),
                              my_bf_fft_mul_pool.data(),
                              static_cast<std::int32_t>(prec_elems_for_multiply),

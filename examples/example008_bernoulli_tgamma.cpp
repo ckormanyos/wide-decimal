@@ -133,16 +133,16 @@ namespace example008_bernoulli
     tangent_numbers[static_cast<local_size_type>(UINT8_C(0))] = 0U;
     tangent_numbers[static_cast<local_size_type>(UINT8_C(1))] = 1U;
 
-    for(auto k = static_cast<local_size_type>(UINT8_C(1)); k < m; ++k)
+    for(auto k = static_cast<local_size_type>(UINT8_C(1)); k < m; ++k) // NOLINT(altera-id-dependent-backward-branch)
     {
       const auto k_plus_one = static_cast<local_size_type>(k + static_cast<local_size_type>(UINT8_C(1)));
 
       tangent_numbers[k_plus_one] = tangent_numbers[k] * k;
     }
 
-    for(auto k = static_cast<local_size_type>(UINT8_C(2)); k <= m; ++k)
+    for(auto k = static_cast<local_size_type>(UINT8_C(2)); k <= m; ++k) // NOLINT(altera-id-dependent-backward-branch)
     {
-      for(auto j = k; j <= m; ++j)
+      for(auto j = k; j <= m; ++j) // NOLINT(altera-id-dependent-backward-branch)
       {
         const auto j_minus_k = static_cast<local_size_type>(j - k);
 
@@ -256,7 +256,7 @@ namespace example008_bernoulli
     floating_point_type g = exp(((((xx - half) * log(xx)) - xx) + half_ln_two_pi) + sum);
 
     // Rescale the result using downward recursion if necessary.
-    for(auto k = static_cast<std::uint32_t>(0U); k < n_recur; ++k)
+    for(auto k = static_cast<std::uint32_t>(0U); k < n_recur; ++k) // NOLINT(altera-id-dependent-backward-branch)
     {
       g /= --xx;
     }

@@ -91,8 +91,8 @@ auto sin_series(const FloatingPointType& x) -> FloatingPointType
         auto term_is_neg = true;
   const auto tol         = std::numeric_limits<floating_point_type>::epsilon() * x;
 
-  for(auto k = static_cast<std::uint32_t>(UINT32_C(3));
-           k < static_cast<std::uint32_t>(UINT32_C(10000));
+  for(auto k = static_cast<std::uint32_t>(UINT32_C(3));     // NOLINT(altera-id-dependent-backward-branch)
+           k < static_cast<std::uint32_t>(UINT32_C(10000)); // NOLINT(altera-id-dependent-backward-branch)
            k = static_cast<std::uint32_t>(k + static_cast<std::uint32_t>(UINT8_C(2))))
   {
     const auto k_times_k_minus_one =
@@ -184,7 +184,7 @@ auto sin(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
     static const dec1001_t one_tenth = dec1001_t(1U) / 10U;
 
     // Reduce the argument with factors of three until it is less than 1/10.
-    while(r > one_tenth)
+    while(r > one_tenth) // NOLINT(altera-id-dependent-backward-branch)
     {
       r /= 3U;
 
@@ -248,7 +248,7 @@ auto cos(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
     static const dec1001_t one_tenth = dec1001_t(1U) / 10U;
 
     // Reduce the argument with factors of three until it is less than 1/10.
-    while(r > one_tenth)
+    while(r > one_tenth) // NOLINT(altera-id-dependent-backward-branch)
     {
       r /= 3U;
 
@@ -420,7 +420,7 @@ auto test_sin_cos_zero_neg_only() -> bool
   const auto val_s2 = sin(x2);
   const auto val_c2 = cos(x2);
 
-  const auto tol = T(std::numeric_limits<T>::epsilon() * 1000U);
+  const auto tol = static_cast<T>(std::numeric_limits<T>::epsilon() * 1000U);
 
   using std::fabs;
 

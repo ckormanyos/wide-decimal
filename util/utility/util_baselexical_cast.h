@@ -105,7 +105,7 @@
 
       auto out_first = out;
 
-      while(x != static_cast<unsigned_integer_type>(UINT8_C(0)))
+      while(x != static_cast<unsigned_integer_type>(UINT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
       {
         const auto c =
           static_cast<output_value_type>
