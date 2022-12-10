@@ -164,6 +164,34 @@ auto test_various_zero_operations() -> bool
   {
     std::stringstream strm;
 
+    strm << std::setprecision(3) << std::showpoint << local_wide_decimal_type(0);
+
+    const auto str_zero_ctrl = std::string("0.000");
+
+    const auto str_zero = strm.str();
+
+    const auto str_zero_is_ok = (str_zero == str_zero_ctrl);
+
+    result_is_ok = (str_zero_is_ok && result_is_ok);
+  }
+
+  {
+    std::stringstream strm;
+
+    strm << std::setprecision(3) << std::showpoint << std::showpos << local_wide_decimal_type(0);
+
+    const auto str_zero_ctrl = std::string("+0.000");
+
+    const auto str_zero = strm.str();
+
+    const auto str_zero_is_ok = (str_zero == str_zero_ctrl);
+
+    result_is_ok = (str_zero_is_ok && result_is_ok);
+  }
+
+  {
+    std::stringstream strm;
+
     strm << std::setprecision(0) << pi_left;
 
     const auto str_pi_left = strm.str();
