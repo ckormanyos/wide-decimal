@@ -41,6 +41,7 @@ C_INCLUDES  :=$(addprefix -I,$(C_INCLUDES))
 
 
 TIDY_CHECKS  = "*,                                                             \
+                -portability-simd-*,                                           \
                 -readability-identifier-length,                                \
                 -altera-struct-pack-align,                                     \
                 -altera-unroll-loops,                                          \
