@@ -1116,20 +1116,28 @@
                                      prec_elems_for_add_sub);
           // LCOV_EXCL_STOP
 
-          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+          #if (defined(__GNUC__) && !defined(__clang__))
+          #if(__GNUC__ >= 12)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
+          #endif
+          #if(__GNUC__ >= 8)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Wstringop-overflow="
+          #endif
           #endif
 
           std::copy(const_limb_pointer_type(my_n_data_for_add_sub.data()),
                     const_limb_pointer_type(my_n_data_for_add_sub.data()) + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_data.data());
 
-          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+          #if (defined(__GNUC__) && !defined(__clang__))
+          #if(__GNUC__ >= 12)
           #pragma GCC diagnostic pop
+          #endif
+          #if(__GNUC__ >= 8)
           #pragma GCC diagnostic pop
+          #endif
           #endif
 
           my_exp = v.my_exp;
@@ -1351,18 +1359,26 @@
 
           const auto prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
-          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+          #if (defined(__GNUC__) && !defined(__clang__))
+          #if(__GNUC__ >= 12)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
+          #endif
+          #if(__GNUC__ >= 8)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Wstringop-overflow="
+          #endif
           #endif
 
           eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
 
-          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+          #if (defined(__GNUC__) && !defined(__clang__))
+          #if(__GNUC__ >= 12)
           #pragma GCC diagnostic pop
+          #endif
+          #if(__GNUC__ >= 8)
           #pragma GCC diagnostic pop
+          #endif
           #endif
         }
       }

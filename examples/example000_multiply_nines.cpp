@@ -31,13 +31,13 @@ auto math::wide_decimal::example000_multiply_nines() -> bool
   const wide_decimal_type a
   {
     (  std::string("9.")
-     + std::string(wide_decimal_digits10 - 1, char('9'))).c_str()
+     + std::string(wide_decimal_digits10 - 1, '9')).c_str()
   };
 
   const wide_decimal_type control
   {
     (  std::string("99.")
-     + std::string(wide_decimal_digits10 - 3, char('9'))
+     + std::string(wide_decimal_digits10 - 3, '9')
      + std::string("8")).c_str()
   };
 
