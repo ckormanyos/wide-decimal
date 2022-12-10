@@ -917,8 +917,8 @@
           constexpr auto f_ten = static_cast<internal_float_type>(static_cast<std::uint_fast8_t>(UINT8_C(10)));
           constexpr auto f_one = static_cast<internal_float_type>(static_cast<std::uint_fast8_t>(UINT8_C(1)));
 
-          while(d > f_ten) { d /= f_ten; ++e; }
-          while(d < f_one) { d *= f_ten; --e; }
+          while(d > f_ten) { d /= f_ten; ++e; } // NOLINT(altera-id-dependent-backward-branch)
+          while(d < f_one) { d *= f_ten; --e; } // NOLINT(altera-id-dependent-backward-branch)
 
           auto shift = static_cast<std::int32_t>(e % static_cast<std::int32_t>(decwide_t_elem_digits10));
 
@@ -1116,9 +1116,21 @@
                                      prec_elems_for_add_sub);
           // LCOV_EXCL_STOP
 
+          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+          #pragma GCC diagnostic push
+          #pragma GCC diagnostic ignored "-Warray-bounds"
+          #pragma GCC diagnostic push
+          #pragma GCC diagnostic ignored "-Wstringop-overflow="
+          #endif
+
           std::copy(const_limb_pointer_type(my_n_data_for_add_sub.data()),
                     const_limb_pointer_type(my_n_data_for_add_sub.data()) + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
                     my_data.data());
+
+          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+          #pragma GCC diagnostic pop
+          #pragma GCC diagnostic pop
+          #endif
 
           my_exp = v.my_exp;
         }
@@ -1339,14 +1351,17 @@
 
           const auto prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
-          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 8))
+          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+          #pragma GCC diagnostic push
+          #pragma GCC diagnostic ignored "-Warray-bounds"
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Wstringop-overflow="
           #endif
 
           eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
 
-          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 8))
+          #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+          #pragma GCC diagnostic pop
           #pragma GCC diagnostic pop
           #endif
         }
