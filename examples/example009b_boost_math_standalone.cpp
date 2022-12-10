@@ -122,7 +122,7 @@ auto cos_series(const FloatingPointType& x) -> FloatingPointType
            k = static_cast<std::uint32_t>(k + static_cast<std::uint32_t>(UINT8_C(2))))
   {
     term *= x2;
-    term /= std::uint32_t(k * std::uint32_t(k - 1U));
+    term /= static_cast<std::uint32_t>(k * static_cast<std::uint32_t>(k - 1U));
 
     if(term < tol)
     {

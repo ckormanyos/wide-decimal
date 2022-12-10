@@ -123,7 +123,7 @@
 
       ss << ((!use_fixed) ? std::scientific : std::fixed)
          << std::uppercase
-         << std::setprecision(std::streamsize(std::numeric_limits<local_float_type>::digits10 + 1))
+         << std::setprecision(static_cast<std::streamsize>(std::numeric_limits<local_float_type>::digits10 + 1))
          << my_cpp_boost_float;
 
       str = ss.str();

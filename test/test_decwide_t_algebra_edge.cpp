@@ -83,7 +83,7 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     {
       const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[2U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
-      for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+      for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
       {
         const auto len = str_x.length();
 
@@ -346,7 +346,7 @@ auto test_various_one_operations() -> bool
   }
 
   {
-    const auto tol = local_wide_decimal_type(std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000.0F);
+    const auto tol = static_cast<local_wide_decimal_type>(std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000.0F);
 
     for(auto   i = static_cast<unsigned>(UINT32_C( 11));
                i < static_cast<unsigned>(UINT32_C(100));
@@ -778,7 +778,7 @@ auto test_string_ops_and_round_trips() -> bool
 
           strm << std::fixed
                << std::setprecision(static_cast<std::streamsize>(zeros_to_insert))
-               << local_wide_decimal_type(x * ten_pow_30);
+               << static_cast<local_wide_decimal_type>(x * ten_pow_30);
 
           return (big_uint_str_rep == strm.str());
         }();
@@ -788,13 +788,13 @@ auto test_string_ops_and_round_trips() -> bool
   }
 
   for(auto i = static_cast<unsigned>(UINT32_C(100));
-           i < static_cast<unsigned>(UINT32_C(1000));
+           i < static_cast<unsigned>(UINT32_C(1000)); // NOLINT(altera-id-dependent-backward-branch)
            i = static_cast<unsigned>(i + static_cast<unsigned>(UINT32_C(100))))
   {
     std::stringstream strm1;
     std::stringstream strm2;
 
-    const auto pi_frac1 = local_wide_decimal_type(pi_left / static_cast<unsigned>(UINT32_C(1000)));
+    const auto pi_frac1 = static_cast<local_wide_decimal_type>(pi_left / static_cast<unsigned>(UINT32_C(1000)));
           auto pi_frac2 = local_wide_decimal_type { };
 
     strm1 << std::fixed << std::setprecision(static_cast<int>(INT8_C(3))) << pi_frac1;
@@ -1193,8 +1193,8 @@ auto test_various_int_operations() -> bool
              i < static_cast<unsigned>(UINT8_C(128));
            ++i)
   {
-    for(auto   nd  = unsigned_integral_digits10_low_limit;
-               nd <= unsigned_integral_digits10_to_use;
+    for(auto   nd  = unsigned_integral_digits10_low_limit; // NOLINT(altera-id-dependent-backward-branch)
+               nd <= unsigned_integral_digits10_to_use;    // NOLINT(altera-id-dependent-backward-branch)
              ++nd)
     {
       const auto x =
@@ -1217,8 +1217,8 @@ auto test_various_int_operations() -> bool
              i < static_cast<unsigned>(UINT8_C(128));
            ++i)
   {
-    for(auto   nd  = unsigned_integral_digits10_low_limit;
-               nd <= unsigned_integral_digits10_to_use;
+    for(auto   nd  = unsigned_integral_digits10_low_limit; // NOLINT(altera-id-dependent-backward-branch)
+               nd <= unsigned_integral_digits10_to_use;    // NOLINT(altera-id-dependent-backward-branch)
              ++nd)
     {
       const auto x =

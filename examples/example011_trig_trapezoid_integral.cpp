@@ -208,7 +208,7 @@ namespace example011_trig
       static const dec51_t two_tenths = dec51_t(2U) / 10U;
 
       // Reduce the argument with factors of three until it is less than 2/10.
-      while(r > two_tenths)
+      while(r > two_tenths) // NOLINT(altera-id-dependent-backward-branch)
       {
         r /= 3U;
 
@@ -274,7 +274,7 @@ namespace example011_trig
       static const dec51_t two_tenths = dec51_t(2U) / 10U;
 
       // Reduce the argument with factors of three until it is less than 2/10.
-      while(r > two_tenths)
+      while(r > two_tenths) // NOLINT(altera-id-dependent-backward-branch)
       {
         r /= 3U;
 

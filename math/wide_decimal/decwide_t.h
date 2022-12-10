@@ -1111,8 +1111,8 @@
           // Addition.
           // LCOV_EXCL_START
           carry = detail::eval_add_n(my_n_data_for_add_sub.data(),
-                                     const_cast<const_limb_pointer_type>(my_n_data_for_add_sub.data()),
-                                     const_cast<const_limb_pointer_type>(v.my_data.data()),
+                                     const_cast<const_limb_pointer_type>(my_n_data_for_add_sub.data()), // NOLINT(cppcoreguidelines-pro-type-const-cast)
+                                     const_cast<const_limb_pointer_type>(v.my_data.data()),             // NOLINT(cppcoreguidelines-pro-type-const-cast)
                                      prec_elems_for_add_sub);
           // LCOV_EXCL_STOP
 
@@ -2906,8 +2906,8 @@
       using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
       detail::eval_multiply_n_by_n_to_2n(result,
-                                         const_cast<const_limb_pointer_type>(my_data.data()),
-                                         const_cast<const_limb_pointer_type>(v.my_data.data()),
+                                         const_cast<const_limb_pointer_type>(my_data.data()),   // NOLINT(cppcoreguidelines-pro-type-const-cast)
+                                         const_cast<const_limb_pointer_type>(v.my_data.data()), // NOLINT(cppcoreguidelines-pro-type-const-cast)
                                          prec_elems_for_multiply);
 
       // Handle a potential carry.
@@ -2969,8 +2969,8 @@
         using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 
         detail::eval_multiply_n_by_n_to_2n(result,
-                                           const_limb_pointer_type(my_data.data()),
-                                           const_limb_pointer_type(v.my_data.data()),
+                                           const_cast<const_limb_pointer_type>(my_data.data()),   // NOLINT(cppcoreguidelines-pro-type-const-cast)
+                                           const_cast<const_limb_pointer_type>(v.my_data.data()), // NOLINT(cppcoreguidelines-pro-type-const-cast)
                                            prec_elems_for_multiply);
 
         // Handle a potential carry.
@@ -6170,7 +6170,7 @@
 
       const auto precision_of_x = floating_point_type::get_precision(x);
 
-      floating_point_type xh((xx - floating_point_type(nf * ln2)) / p2);
+      floating_point_type xh((xx - static_cast<floating_point_type>(nf * ln2)) / p2);
 
       xh.precision(precision_of_x);
 
