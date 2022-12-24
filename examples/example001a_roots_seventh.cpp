@@ -13,10 +13,14 @@
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example001a_roots_seventh() -> bool
 #else
-auto math::wide_decimal::example001a_roots_seventh() -> bool
+auto ::math::wide_decimal::example001a_roots_seventh() -> bool
 #endif
 {
-  using dec101_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(101)), std::uint32_t, void>;
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec101_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(101)), std::uint32_t, void>;
+  #else
+  using dec101_t = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(101)), std::uint32_t, void>;
+  #endif
 
   const dec101_t r7 = rootn(dec101_t(123456U) / 100, 7);
 
@@ -41,7 +45,7 @@ auto math::wide_decimal::example001a_roots_seventh() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example001a_roots_seventh();
+  const auto result_is_ok = ::math::wide_decimal::example001a_roots_seventh();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

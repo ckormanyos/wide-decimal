@@ -14,19 +14,28 @@
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example000_multiply_nines() -> bool
 #else
-auto math::wide_decimal::example000_multiply_nines() -> bool
+auto ::math::wide_decimal::example000_multiply_nines() -> bool
 #endif
 {
   using local_limb_type = std::uint8_t;
 
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(50);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   using wide_decimal_type =
-    math::wide_decimal::decwide_t<wide_decimal_digits10,
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10,
+                                                          local_limb_type,
+                                                          void,
+                                                          float,
+                                                          std::int16_t>;
+  #else
+  using wide_decimal_type =
+    ::math::wide_decimal::decwide_t<wide_decimal_digits10,
                                   local_limb_type,
                                   void,
                                   float,
                                   std::int16_t>;
+  #endif
 
   const wide_decimal_type a
   {
@@ -58,7 +67,7 @@ auto math::wide_decimal::example000_multiply_nines() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example000_multiply_nines();
+  const auto result_is_ok = ::math::wide_decimal::example000_multiply_nines();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

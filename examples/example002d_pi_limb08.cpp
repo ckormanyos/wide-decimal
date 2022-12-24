@@ -47,28 +47,48 @@ auto example002d_pi_limb8_digits10_callback(const std::uint32_t d10) -> void
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example002d_pi_limb08() -> bool
 #else
-auto math::wide_decimal::example002d_pi_limb08() -> bool
+auto ::math::wide_decimal::example002d_pi_limb08() -> bool
 #endif
 {
   using local_limb_type = std::uint8_t;
 
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(1000001);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   constexpr std::int32_t local_elem_number =
-    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+  #else
+  constexpr std::int32_t local_elem_number =
+    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+  #endif
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   constexpr std::int32_t local_elem_digits10 =
-    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
+  #else
+  constexpr std::int32_t local_elem_digits10 =
+    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
+  #endif
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   using local_wide_decimal_type =
-    math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, float, std::int32_t>;
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, float, std::int32_t>;
+  #else
+  using local_wide_decimal_type =
+    ::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, float, std::int32_t>;
+  #endif
 
   const auto start = std::clock();
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   const local_wide_decimal_type my_pi =
-    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, float, std::int32_t>(example002d_pi_limb8_digits10_callback);
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, float, std::int32_t>(example002d_pi_limb8_digits10_callback);
+  #else
+  const local_wide_decimal_type my_pi =
+    ::math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, float, std::int32_t>(example002d_pi_limb8_digits10_callback);
+  #endif
 
   const auto stop = std::clock();
 
@@ -76,12 +96,19 @@ auto math::wide_decimal::example002d_pi_limb08() -> bool
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_08.size(),
-                                     math::constants::const_pi_control_head_08.begin());
+                                     my_pi.crepresentation().cbegin() + WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_head_08.size(),
+                                     WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_head_08.begin());
+  #else
+  const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
+                                     my_pi.crepresentation().cbegin() + ::math::constants::const_pi_control_head_08.size(),
+                                     ::math::constants::const_pi_control_head_08.begin());
+  #endif
 
   using const_iterator_type = typename local_wide_decimal_type::representation_type::const_iterator;
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   const_iterator_type
     fi
     (
@@ -89,14 +116,32 @@ auto math::wide_decimal::example002d_pi_limb08() -> bool
       + static_cast<std::uint32_t>
         (
             static_cast<std::uint32_t>(1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
-          - static_cast<std::uint32_t>(math::constants::const_pi_control_tail_08_1000001.size())
+          - static_cast<std::uint32_t>(WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_tail_08_1000001.size())
         )
     );
+  #else
+  const_iterator_type
+    fi
+    (
+        my_pi.crepresentation().cbegin()
+      + static_cast<std::uint32_t>
+        (
+            static_cast<std::uint32_t>(1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
+          - static_cast<std::uint32_t>(::math::constants::const_pi_control_tail_08_1000001.size())
+        )
+    );
+  #endif
 
   // When using 8-bit limb size, the two least significant limbs are imprecise.
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   const auto tail_is_ok = std::equal(fi,
-                                     fi + (math::constants::const_pi_control_tail_08_1000001.size() - 3U),
-                                           math::constants::const_pi_control_tail_08_1000001.begin());
+                                     fi + (WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_tail_08_1000001.size() - 3U),
+                                           WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_tail_08_1000001.begin());
+  #else
+  const auto tail_is_ok = std::equal(fi,
+                                     fi + (::math::constants::const_pi_control_tail_08_1000001.size() - 3U),
+                                           ::math::constants::const_pi_control_tail_08_1000001.begin());
+  #endif
 
   const auto result_is_ok = (head_is_ok && tail_is_ok);
 
@@ -111,7 +156,7 @@ auto math::wide_decimal::example002d_pi_limb08() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example002d_pi_limb08();
+  const auto result_is_ok = ::math::wide_decimal::example002d_pi_limb08();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

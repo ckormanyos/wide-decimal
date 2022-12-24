@@ -390,13 +390,20 @@ namespace example009b_boost
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009b_boost_math_standalone() -> bool
 #else
-auto math::wide_decimal::example009b_boost_math_standalone() -> bool
+auto ::math::wide_decimal::example009b_boost_math_standalone() -> bool
 #endif
 {
-  using wide_decimal_010_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 10)), std::uint32_t, void>;
-  using wide_decimal_035_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 35)), std::uint32_t, void>;
-  using wide_decimal_105_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(105)), std::uint32_t, void>;
-  using wide_decimal_305_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(305)), std::uint32_t, void>;
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using wide_decimal_010_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 10)), std::uint32_t, void>;
+  using wide_decimal_035_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 35)), std::uint32_t, void>;
+  using wide_decimal_105_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(105)), std::uint32_t, void>;
+  using wide_decimal_305_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(305)), std::uint32_t, void>;
+  #else
+  using wide_decimal_010_type = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 10)), std::uint32_t, void>;
+  using wide_decimal_035_type = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C( 35)), std::uint32_t, void>;
+  using wide_decimal_105_type = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(105)), std::uint32_t, void>;
+  using wide_decimal_305_type = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(305)), std::uint32_t, void>;
+  #endif
 
   #if (BOOST_VERSION < 107900)
   using boost_wrapexcept_round_type  = ::boost::wrapexcept<::boost::math::rounding_error>;
@@ -465,7 +472,7 @@ auto math::wide_decimal::example009b_boost_math_standalone() -> bool
 // TBD: Handle exception catching in example009b_boost_math_standalone at a later time.
 auto main() -> int // NOLINT(bugprone-exception-escape)
 {
-  const auto result_is_ok = math::wide_decimal::example009b_boost_math_standalone();
+  const auto result_is_ok = ::math::wide_decimal::example009b_boost_math_standalone();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

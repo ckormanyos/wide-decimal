@@ -44,7 +44,7 @@ namespace example008_bernoulli
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using wide_decimal_digits_helper_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, wide_decimal_limb_type>;
   #else
-  using wide_decimal_digits_helper_type = math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, wide_decimal_limb_type>;
+  using wide_decimal_digits_helper_type = ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, wide_decimal_limb_type>;
   #endif
 
   // For n decimal digits, the following slot counts are needed.
@@ -75,7 +75,7 @@ namespace example008_bernoulli
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>;
   #else
-  using wide_decimal_type = math::wide_decimal::decwide_t<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>;
+  using wide_decimal_type = ::math::wide_decimal::decwide_t<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>;
   #endif
 
   template<typename FloatingPointType>
@@ -90,7 +90,7 @@ namespace example008_bernoulli
     #if defined(WIDE_DECIMAL_NAMESPACE)
     return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>();
     #else
-    return math::wide_decimal::pi<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>();
+    return ::math::wide_decimal::pi<wide_decimal_digits10, wide_decimal_limb_type, wide_decimal_allocator_type>();
     #endif
   }
 
@@ -342,7 +342,7 @@ namespace example008_bernoulli
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #else
-auto math::wide_decimal::example008_bernoulli_tgamma() -> bool
+auto ::math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #endif
 {
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
@@ -387,7 +387,7 @@ extern "C"
 
   auto app_benchmark_run_standalone(void) -> bool
   {
-    const auto result_is_ok = math::wide_decimal::example008_bernoulli_tgamma();
+    const auto result_is_ok = ::math::wide_decimal::example008_bernoulli_tgamma();
 
     app_benchmark_standalone_result =
       static_cast<std::uint32_t>

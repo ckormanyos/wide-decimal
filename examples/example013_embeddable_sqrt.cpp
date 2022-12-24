@@ -23,19 +23,28 @@
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example013_embeddable_sqrt() -> bool
 #else
-auto math::wide_decimal::example013_embeddable_sqrt() -> bool
+auto ::math::wide_decimal::example013_embeddable_sqrt() -> bool
 #endif
 {
   using local_limb_type = std::uint16_t;
 
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(101);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   constexpr std::int32_t local_elem_number =
-    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+  #else
+  constexpr std::int32_t local_elem_number =
+    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+  #endif
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 14U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-  using dec101_t = math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, float>;
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec101_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, float>;
+  #else
+  using dec101_t = ::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, float>;
+  #endif
 
   using std::sqrt;
 
@@ -72,7 +81,7 @@ auto math::wide_decimal::example013_embeddable_sqrt() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example013_embeddable_sqrt();
+  const auto result_is_ok = ::math::wide_decimal::example013_embeddable_sqrt();
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;

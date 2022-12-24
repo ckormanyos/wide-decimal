@@ -66,7 +66,7 @@ namespace example009a_boost
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
   #else
-  using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  using dec1001_t = ::math::wide_decimal::decwide_t<wide_decimal_digits10>;
   #endif
 } // namespace example009a_boost
 
@@ -517,7 +517,7 @@ namespace example009a_boost
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009a_boost_math_standalone() -> bool
 #else
-auto math::wide_decimal::example009a_boost_math_standalone() -> bool
+auto ::math::wide_decimal::example009a_boost_math_standalone() -> bool
 #endif
 {
   using std::fabs;
@@ -682,7 +682,7 @@ auto math::wide_decimal::example009a_boost_math_standalone() -> bool
 // TBD: Handle exception catching in example009a_boost_math_standalone at a later time.
 auto main() -> int // NOLINT(bugprone-exception-escape)
 {
-  const auto result_is_ok = math::wide_decimal::example009a_boost_math_standalone();
+  const auto result_is_ok = ::math::wide_decimal::example009a_boost_math_standalone();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

@@ -63,8 +63,13 @@
   class independent_algebra_test_decwide_t_boost_cpp : public independent_algebra_test_decwide_t_base
   {
   public:
+    #if defined(WIDE_DECIMAL_NAMESPACE)
     using other_decwide_t_type =
-      math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+      WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    #else
+    using other_decwide_t_type =
+      ::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    #endif
 
     #if defined(DECWIDE_T_TEST_OPTION_TEST_CPP_DEC_FLOAT)
     using local_float_backend_type =

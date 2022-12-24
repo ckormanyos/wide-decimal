@@ -17,7 +17,7 @@ namespace example011_trig
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec51_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
   #else
-  using dec51_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
+  using dec51_t = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
   #endif
 
   auto sin(const dec51_t& x) -> dec51_t;
@@ -387,7 +387,7 @@ namespace example011_trig
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example011_trig_trapezoid_integral() -> bool
 #else
-auto math::wide_decimal::example011_trig_trapezoid_integral() -> bool
+auto ::math::wide_decimal::example011_trig_trapezoid_integral() -> bool
 #endif
 {
   using example011_trig::dec51_t;
@@ -435,7 +435,7 @@ auto math::wide_decimal::example011_trig_trapezoid_integral() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example011_trig_trapezoid_integral();
+  const auto result_is_ok = ::math::wide_decimal::example011_trig_trapezoid_integral();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

@@ -46,7 +46,7 @@ using std::array;
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example013a_embeddable_agm() -> bool
 #else
-auto math::wide_decimal::example013a_embeddable_agm() -> bool
+auto ::math::wide_decimal::example013a_embeddable_agm() -> bool
 #endif
 {
   // N[Pi, 106] and truncate the final digit.
@@ -54,17 +54,31 @@ auto math::wide_decimal::example013a_embeddable_agm() -> bool
 
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(53);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   constexpr std::int32_t local_elem_number =
-    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+  #else
+  constexpr std::int32_t local_elem_number =
+    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+  #endif
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-  using dec53_t = math::wide_decimal::decwide_t<wide_decimal_digits10,
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec53_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10,
+                                                                        local_limb_type,
+                                                                        local_allocator_type,
+                                                                        float,
+                                                                        std::int16_t,
+                                                                        float>;
+  #else
+  using dec53_t = ::math::wide_decimal::decwide_t<wide_decimal_digits10,
                                                 local_limb_type,
                                                 local_allocator_type,
                                                 float,
                                                 std::int16_t,
                                                 float>;
+  #endif
 
   static const mcal::memory::progmem::array<typename dec53_t::limb_type, 14U> app_benchmark_pi_agm_control MY_PROGMEM =
   {{
@@ -84,13 +98,23 @@ auto math::wide_decimal::example013a_embeddable_agm() -> bool
     static_cast<typename dec53_t::limb_type>(UINT16_C(1058))
   }};
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   const dec53_t my_pi =
-    math::wide_decimal::pi<wide_decimal_digits10,
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<wide_decimal_digits10,
+                                                   local_limb_type,
+                                                   local_allocator_type,
+                                                   float,
+                                                   std::int16_t,
+                                                   float>();
+  #else
+  const dec53_t my_pi =
+    ::math::wide_decimal::pi<wide_decimal_digits10,
                            local_limb_type,
                            local_allocator_type,
                            float,
                            std::int16_t,
                            float>();
+  #endif
 
   const auto result_is_ok = std::equal(app_benchmark_pi_agm_control.cbegin(),
                                        app_benchmark_pi_agm_control.cend(),
@@ -109,7 +133,7 @@ auto math::wide_decimal::example013a_embeddable_agm() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example013a_embeddable_agm();
+  const auto result_is_ok = ::math::wide_decimal::example013a_embeddable_agm();
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;

@@ -136,23 +136,38 @@ auto pi_borwein_quintic(std::ostream* p_ostream) -> FloatingPointType
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example002c_pi_quintic() -> bool
 #else
-auto math::wide_decimal::example002c_pi_quintic() -> bool
+auto ::math::wide_decimal::example002c_pi_quintic() -> bool
 #endif
 {
   using local_limb_type = std::uint32_t;
 
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(1000001);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   constexpr std::int32_t local_elem_digits10 =
-    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
+  #else
+  constexpr std::int32_t local_elem_digits10 =
+    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
+  #endif
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   using local_wide_decimal_type =
-    math::wide_decimal::decwide_t<wide_decimal_digits10>;
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #else
+  using local_wide_decimal_type =
+    ::math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  #endif
 
   const auto start = std::clock();
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   const auto my_pi =
-    example002c_pi::pi_borwein_quintic<math::wide_decimal::decwide_t<wide_decimal_digits10>>(&std::cout);
+    example002c_pi::pi_borwein_quintic<WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>>(&std::cout);
+  #else
+  const auto my_pi =
+    example002c_pi::pi_borwein_quintic<::math::wide_decimal::decwide_t<wide_decimal_digits10>>(&std::cout);
+  #endif
 
   const auto stop = std::clock();
 
@@ -160,12 +175,19 @@ auto math::wide_decimal::example002c_pi_quintic() -> bool
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_32.size(),
-                                     math::constants::const_pi_control_head_32.begin());
+                                     my_pi.crepresentation().cbegin() + WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_head_32.size(),
+                                     WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_head_32.begin());
+  #else
+  const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
+                                     my_pi.crepresentation().cbegin() + ::math::constants::const_pi_control_head_32.size(),
+                                     ::math::constants::const_pi_control_head_32.begin());
+  #endif
 
   using const_iterator_type = typename local_wide_decimal_type::representation_type::const_iterator;
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   const_iterator_type
     fi
     (
@@ -173,13 +195,31 @@ auto math::wide_decimal::example002c_pi_quintic() -> bool
       + static_cast<std::uint32_t>
         (
             static_cast<std::uint32_t>(1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
-          - static_cast<std::uint32_t>(math::constants::const_pi_control_tail_32_1000001.size())
+          - static_cast<std::uint32_t>(WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_tail_32_1000001.size())
         )
     );
+  #else
+  const_iterator_type
+    fi
+    (
+        my_pi.crepresentation().cbegin()
+      + static_cast<std::uint32_t>
+        (
+            static_cast<std::uint32_t>(1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
+          - static_cast<std::uint32_t>(::math::constants::const_pi_control_tail_32_1000001.size())
+        )
+    );
+  #endif
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   const auto tail_is_ok = std::equal(fi,
-                                     fi + math::constants::const_pi_control_tail_32_1000001.size(),
-                                          math::constants::const_pi_control_tail_32_1000001.begin());
+                                     fi + WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_tail_32_1000001.size(),
+                                          WIDE_DECIMAL_NAMESPACE::math::constants::const_pi_control_tail_32_1000001.begin());
+  #else
+  const auto tail_is_ok = std::equal(fi,
+                                     fi + ::math::constants::const_pi_control_tail_32_1000001.size(),
+                                          ::math::constants::const_pi_control_tail_32_1000001.begin());
+  #endif
 
   const auto result_is_ok = (head_is_ok && tail_is_ok);
 
@@ -194,7 +234,7 @@ auto math::wide_decimal::example002c_pi_quintic() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example002c_pi_quintic();
+  const auto result_is_ok = ::math::wide_decimal::example002c_pi_quintic();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

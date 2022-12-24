@@ -17,7 +17,7 @@ namespace local_zeta
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec51_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
   #else
-  using dec51_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
+  using dec51_t = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(51)), std::uint32_t, void>;
   #endif
 
   template<typename FloatType>
@@ -100,7 +100,7 @@ namespace local_zeta
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example003_zeta() -> bool
 #else
-auto math::wide_decimal::example003_zeta() -> bool
+auto ::math::wide_decimal::example003_zeta() -> bool
 #endif
 {
   std::deque<std::uint_fast16_t> primes(1U, UINT32_C(2));
@@ -140,7 +140,7 @@ auto math::wide_decimal::example003_zeta() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example003_zeta();
+  const auto result_is_ok = ::math::wide_decimal::example003_zeta();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

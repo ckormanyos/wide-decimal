@@ -69,7 +69,7 @@ In particular,
 
 void do_something()
 {
-  using dec101_t = math::wide_decimal::decwide_t<INT32_C(101), std::uint32_t, void>;
+  using dec101_t = ::math::wide_decimal::decwide_t<INT32_C(101), std::uint32_t, void>;
 
   dec101_t d = dec101_t(1) / 3;
 
@@ -275,7 +275,7 @@ auto main() -> int
 {
   using local_limb_type = std::uint16_t;
 
-  using dec101_t = math::wide_decimal::decwide_t<INT32_C(101), local_limb_type, void>;
+  using dec101_t = ::math::wide_decimal::decwide_t<INT32_C(101), local_limb_type, void>;
 
   const dec101_t s = sqrt(dec101_t(123456U) / 100);
 
@@ -326,20 +326,20 @@ auto main() -> int
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(1000001);
 
   constexpr std::int32_t local_elem_number =
-    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
 
   constexpr std::int32_t local_elem_digits10 =
-    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
+    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>;
 
   using local_wide_decimal_type =
-    math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double>;
+    ::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type, double>;
 
   const auto start = std::clock();
 
   const local_wide_decimal_type my_pi =
-    math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>(nullptr);
+    ::math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type, double>(nullptr);
 
   const auto stop = std::clock();
 
@@ -348,8 +348,8 @@ auto main() -> int
             << std::endl;
 
   const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
-                                     my_pi.crepresentation().cbegin() + math::constants::const_pi_control_head_32.size(),
-                                     math::constants::const_pi_control_head_32.begin());
+                                     my_pi.crepresentation().cbegin() + ::math::constants::const_pi_control_head_32.size(),
+                                     ::math::constants::const_pi_control_head_32.begin());
 
   using const_iterator_type = typename local_wide_decimal_type::array_type::const_iterator;
 
@@ -360,13 +360,13 @@ auto main() -> int
       + static_cast<std::uint32_t>
         (
             static_cast<std::uint32_t>(1UL + ((wide_decimal_digits10 - 1UL) / local_elem_digits10))
-          - static_cast<std::uint32_t>(math::constants::const_pi_control_tail_32_1000001.size())
+          - static_cast<std::uint32_t>(::math::constants::const_pi_control_tail_32_1000001.size())
         )
     );
 
   const auto tail_is_ok = std::equal(fi,
-                                     fi + math::constants::const_pi_control_tail_32_1000001.size(),
-                                          math::constants::const_pi_control_tail_32_1000001.begin());
+                                     fi + ::math::constants::const_pi_control_tail_32_1000001.size(),
+                                          ::math::constants::const_pi_control_tail_32_1000001.begin());
 
   const auto result_is_ok = (head_is_ok && tail_is_ok);
 
