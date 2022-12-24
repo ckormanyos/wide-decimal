@@ -29,9 +29,9 @@ auto test_decwide_t_examples_part1__() -> bool // NOLINT(readability-identifier-
 #endif
 {
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  using namespace WIDE_DECIMAL_NAMESPACE::math::wide_decimal;
+  using namespace WIDE_DECIMAL_NAMESPACE::math::wide_decimal; // NOLINT(google-build-using-namespace)
   #else
-  using namespace math::wide_decimal;
+  using namespace math::wide_decimal;                         // NOLINT(google-build-using-namespace)
   #endif
 
   bool result_is_ok = true;
@@ -68,9 +68,9 @@ auto test_decwide_t_examples_part2__() -> bool // NOLINT(readability-identifier-
 #endif
 {
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  using namespace WIDE_DECIMAL_NAMESPACE::math::wide_decimal;
+  using namespace WIDE_DECIMAL_NAMESPACE::math::wide_decimal; // NOLINT(google-build-using-namespace)
   #else
-  using namespace math::wide_decimal;
+  using namespace math::wide_decimal;                         // NOLINT(google-build-using-namespace)
   #endif
 
   bool result_is_ok = true;
