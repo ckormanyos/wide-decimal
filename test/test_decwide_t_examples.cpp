@@ -31,7 +31,7 @@ auto test_decwide_t_examples_part1__() -> bool // NOLINT(readability-identifier-
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using namespace WIDE_DECIMAL_NAMESPACE::math::wide_decimal;
   #else
-  using namespace ::math::wide_decimal;
+  using namespace math::wide_decimal;
   #endif
 
   bool result_is_ok = true;
@@ -70,7 +70,7 @@ auto test_decwide_t_examples_part2__() -> bool // NOLINT(readability-identifier-
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using namespace WIDE_DECIMAL_NAMESPACE::math::wide_decimal;
   #else
-  using namespace ::math::wide_decimal;
+  using namespace math::wide_decimal;
   #endif
 
   bool result_is_ok = true;
