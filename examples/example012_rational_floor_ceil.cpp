@@ -112,14 +112,18 @@ namespace example012_rational
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example012_rational_floor_ceil() -> bool
 #else
-auto math::wide_decimal::example012_rational_floor_ceil() -> bool
+auto ::math::wide_decimal::example012_rational_floor_ceil() -> bool
 #endif
 {
   bool result_is_ok = true;
 
   // Test floor/ceil for 10 decimal digits.
   {
-    using decimal_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(10)), std::uint32_t, void>;
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    using decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(10)), std::uint32_t, void>;
+    #else
+    using decimal_type = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(10)), std::uint32_t, void>;
+    #endif
 
     result_is_ok &= example012_rational::test_rational_floor<decimal_type>();
     result_is_ok &= example012_rational::test_rational_ceil <decimal_type>();
@@ -127,7 +131,11 @@ auto math::wide_decimal::example012_rational_floor_ceil() -> bool
 
   // Test floor/ceil for 12 decimal digits.
   {
-    using decimal_type = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(12)), std::uint32_t, void>;
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    using decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(12)), std::uint32_t, void>;
+    #else
+    using decimal_type = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(12)), std::uint32_t, void>;
+    #endif
 
     result_is_ok &= example012_rational::test_rational_floor<decimal_type>();
     result_is_ok &= example012_rational::test_rational_ceil <decimal_type>();
@@ -144,7 +152,7 @@ auto math::wide_decimal::example012_rational_floor_ceil() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example012_rational_floor_ceil();
+  const auto result_is_ok = ::math::wide_decimal::example012_rational_floor_ceil();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

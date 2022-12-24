@@ -51,10 +51,14 @@ namespace local_polylog
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example005_polylog_series() -> bool
 #else
-auto math::wide_decimal::example005_polylog_series() -> bool
+auto ::math::wide_decimal::example005_polylog_series() -> bool
 #endif
 {
-  using dec101_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(101))>;
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec101_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(101))>;
+  #else
+  using dec101_t = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(101))>;
+  #endif
 
   using std::fabs;
 
@@ -82,7 +86,7 @@ auto math::wide_decimal::example005_polylog_series() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example005_polylog_series();
+  const auto result_is_ok = ::math::wide_decimal::example005_polylog_series();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

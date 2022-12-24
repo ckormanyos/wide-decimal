@@ -17,7 +17,7 @@ namespace example007_catalan
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
   #else
-  using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  using dec1001_t = ::math::wide_decimal::decwide_t<wide_decimal_digits10>;
   #endif
 
   template<typename FloatingPointType>
@@ -32,7 +32,7 @@ namespace example007_catalan
     #if defined(WIDE_DECIMAL_NAMESPACE)
     return WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<wide_decimal_digits10>();
     #else
-    return math::wide_decimal::pi<wide_decimal_digits10>();
+    return ::math::wide_decimal::pi<wide_decimal_digits10>();
     #endif
   }
 
@@ -85,7 +85,7 @@ namespace example007_catalan
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example007_catalan_series() -> bool
 #else
-auto math::wide_decimal::example007_catalan_series() -> bool
+auto ::math::wide_decimal::example007_catalan_series() -> bool
 #endif
 {
   using example007_catalan::dec1001_t;
@@ -123,7 +123,7 @@ auto math::wide_decimal::example007_catalan_series() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example007_catalan_series();
+  const auto result_is_ok = ::math::wide_decimal::example007_catalan_series();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

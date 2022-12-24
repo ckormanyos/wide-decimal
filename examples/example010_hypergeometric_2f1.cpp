@@ -155,10 +155,14 @@ namespace example010_hypergeometric
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example010_hypergeometric_2f1() -> bool
 #else
-auto math::wide_decimal::example010_hypergeometric_2f1() -> bool
+auto ::math::wide_decimal::example010_hypergeometric_2f1() -> bool
 #endif
 {
-  using dec1001_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001))>;
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001))>;
+  #else
+  using dec1001_t = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001))>;
+  #endif
 
   const dec1001_t a( dec1001_t(2U) / 3U);
   const dec1001_t b( dec1001_t(4U) / 3U);
@@ -201,7 +205,7 @@ auto math::wide_decimal::example010_hypergeometric_2f1() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example010_hypergeometric_2f1();
+  const auto result_is_ok = ::math::wide_decimal::example010_hypergeometric_2f1();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

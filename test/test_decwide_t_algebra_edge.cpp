@@ -267,7 +267,7 @@ auto test_various_zero_operations() -> bool
     #if defined(WIDE_DECIMAL_NAMESPACE)
     using static_array_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::fixed_static_array<local_value_type, local_wide_decimal_type::decwide_t_elem_number>;
     #else
-    using static_array_type = math::wide_decimal::detail::fixed_static_array<local_value_type, local_wide_decimal_type::decwide_t_elem_number>;
+    using static_array_type = ::math::wide_decimal::detail::fixed_static_array<local_value_type, local_wide_decimal_type::decwide_t_elem_number>;
     #endif
 
     static_array_type

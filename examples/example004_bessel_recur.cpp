@@ -223,13 +223,17 @@ namespace example004_bessel
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example004_bessel_recur() -> bool
 #else
-auto math::wide_decimal::example004_bessel_recur() -> bool
+auto ::math::wide_decimal::example004_bessel_recur() -> bool
 #endif
 {
   // Calculate 1,001 decimal digits of the value of a cylindrical Bessel function.
   // N[BesselJ[9, 123456789/10000000], 1001]
 
-  using dec1001_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001)), std::uint32_t>;
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001)), std::uint32_t>;
+  #else
+  using dec1001_t = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001)), std::uint32_t>;
+  #endif
 
   // Downward recursion and simultaneous summation of
   // the normalization factor.
@@ -268,7 +272,7 @@ auto math::wide_decimal::example004_bessel_recur() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example004_bessel_recur();
+  const auto result_is_ok = ::math::wide_decimal::example004_bessel_recur();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

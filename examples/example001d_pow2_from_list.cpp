@@ -13,14 +13,18 @@
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example001d_pow2_from_list() -> bool
 #else
-auto math::wide_decimal::example001d_pow2_from_list() -> bool
+auto ::math::wide_decimal::example001d_pow2_from_list() -> bool
 #endif
 {
   using local_limb_type = std::uint32_t;
 
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(100);
 
-  using wide_decimal_type = math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, void>;
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, void>;
+  #else
+  using wide_decimal_type = ::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, void>;
+  #endif
 
   // Column[Table[N[2^n, 100], {n, -128, 127, 1}]]
   // ... and copy as plain text.
@@ -323,7 +327,7 @@ auto math::wide_decimal::example001d_pow2_from_list() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example001d_pow2_from_list();
+  const auto result_is_ok = ::math::wide_decimal::example001d_pow2_from_list();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

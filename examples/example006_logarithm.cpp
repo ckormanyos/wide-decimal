@@ -13,13 +13,17 @@
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example006_logarithm() -> bool
 #else
-auto math::wide_decimal::example006_logarithm() -> bool
+auto ::math::wide_decimal::example006_logarithm() -> bool
 #endif
 {
   // Compute 1,000 values of Log[(123456789/1000000) * (3^n)],
   // the result of which is Log[(123456789/1000000)] + (n Log[3])
 
-  using dec1001_t = math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001))>;
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001))>;
+  #else
+  using dec1001_t = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(1001))>;
+  #endif
 
   const dec1001_t control_base
   {
@@ -76,7 +80,7 @@ auto math::wide_decimal::example006_logarithm() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example006_logarithm();
+  const auto result_is_ok = ::math::wide_decimal::example006_logarithm();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

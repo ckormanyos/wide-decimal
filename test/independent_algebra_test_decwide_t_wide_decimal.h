@@ -26,7 +26,11 @@
   class independent_algebra_test_decwide_t_decwide_t : public independent_algebra_test_decwide_t_base // NOLINT(cppcoreguidelines-special-member-functions,hicpp-special-member-functions)
   {
   public:
-    using float_type = math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    using float_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    #else
+    using float_type = ::math::wide_decimal::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+    #endif
 
     float_type my_decwide_t; // NOLINT(misc-non-private-member-variables-in-classes)
 

@@ -66,14 +66,14 @@ namespace example009_boost
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec1001_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
   #else
-  using dec1001_t = math::wide_decimal::decwide_t<wide_decimal_digits10>;
+  using dec1001_t = ::math::wide_decimal::decwide_t<wide_decimal_digits10>;
   #endif
 } // namespace example009_boost
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009_boost_math_standalone() -> bool
 #else
-auto math::wide_decimal::example009_boost_math_standalone() -> bool
+auto ::math::wide_decimal::example009_boost_math_standalone() -> bool
 #endif
 {
   using example009_boost::dec1001_t;
@@ -98,7 +98,11 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
   // Compare wide-decimal's cube root function with that of Boost.Math.
   // Also exercise several different interpretations of the constant pi.
 
-  const dec1001_t c       = cbrt(x / math::wide_decimal::pi<example009_boost::wide_decimal_digits10, typename dec1001_t::limb_type, std::allocator<void>, double>());
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  const dec1001_t c = cbrt(x / WIDE_DECIMAL_NAMESPACE::math::wide_decimal::pi<example009_boost::wide_decimal_digits10, typename dec1001_t::limb_type, std::allocator<void>, double>());
+  #else
+  const dec1001_t c = cbrt(x / ::math::wide_decimal::pi<example009_boost::wide_decimal_digits10, typename dec1001_t::limb_type, std::allocator<void>, double>());
+  #endif
 
   const dec1001_t control = boost::math::cbrt(x / boost::math::constants::pi<dec1001_t>());
 
@@ -151,7 +155,7 @@ auto math::wide_decimal::example009_boost_math_standalone() -> bool
 // TBD: Handle exception catching in example009_boost_math_standalone at a later time.
 auto main() -> int // NOLINT(bugprone-exception-escape)
 {
-  const auto result_is_ok = math::wide_decimal::example009_boost_math_standalone();
+  const auto result_is_ok = ::math::wide_decimal::example009_boost_math_standalone();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }

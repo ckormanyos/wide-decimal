@@ -14,23 +14,36 @@
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example001_roots_sqrt() -> bool
 #else
-auto math::wide_decimal::example001_roots_sqrt() -> bool
+auto ::math::wide_decimal::example001_roots_sqrt() -> bool
 #endif
 {
   using local_limb_type = std::uint32_t;
 
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(101);
 
+  #if defined(WIDE_DECIMAL_NAMESPACE)
   constexpr std::int32_t local_elem_number =
-    math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+  #else
+  constexpr std::int32_t local_elem_number =
+    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
+  #endif
 
   using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 32U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-  using dec101_t = math::wide_decimal::decwide_t<wide_decimal_digits10,
+  #if defined(WIDE_DECIMAL_NAMESPACE)
+  using dec101_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10,
+                                                                         local_limb_type,
+                                                                         local_allocator_type,
+                                                                         float,
+                                                                         std::int32_t>;
+  #else
+  using dec101_t = ::math::wide_decimal::decwide_t<wide_decimal_digits10,
                                                  local_limb_type,
                                                  local_allocator_type,
                                                  float,
                                                  std::int32_t>;
+  #endif
 
   const dec101_t s = sqrt(dec101_t(123456U) / 100);
 
@@ -58,7 +71,7 @@ auto math::wide_decimal::example001_roots_sqrt() -> bool
 
 auto main() -> int
 {
-  const auto result_is_ok = math::wide_decimal::example001_roots_sqrt();
+  const auto result_is_ok = ::math::wide_decimal::example001_roots_sqrt();
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
