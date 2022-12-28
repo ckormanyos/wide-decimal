@@ -224,9 +224,9 @@
     using local_limb_type = LimbType;
 
   public:
-    static constexpr std::int32_t elem_digits10     =
+    static constexpr std::int32_t elem_digits10 =
       (std::is_same<local_limb_type, std::uint32_t>::value
-        ? static_cast<std::int32_t>(8)
+        ? static_cast<std::int32_t>(INT8_C(8))
         : (std::is_same<local_limb_type, std::uint16_t>::value ? static_cast<std::int32_t>(INT8_C(4))
                                                                : static_cast<std::int32_t>(INT8_C(2))));
 

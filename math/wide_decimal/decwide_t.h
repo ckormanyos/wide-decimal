@@ -950,7 +950,13 @@
         constexpr auto digit_loops =
           static_cast<int>
           (
-            digit_elem_whole + ((digit_elem_mod != 0) ? 1 : 0)
+              digit_elem_whole
+            + static_cast<int>
+              (
+                (digit_elem_mod != static_cast<int>(INT8_C(0)))
+                  ? static_cast<int>(INT8_C(1))
+                  : static_cast<int>(INT8_C(0))
+              )
           );
 
         using local_size_type = typename representation_type::size_type;
@@ -2436,13 +2442,13 @@
 
       // Check if *this decwide_t is zero (or is essentially zero).
       if(   iszero()
-         || (xx.cmp(long_double_min<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) < 0))
+         || (xx.cmp(long_double_min<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) < static_cast<int_fast8_t>(INT8_C(0))))
       {
         return static_cast<long double>(0.0F);
       }
 
       // Check if *this decwide_t over/under-flows the min/max of long double.
-      if(xx.cmp(long_double_max<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) > 0)
+      if(xx.cmp(long_double_max<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) > static_cast<int_fast8_t>(INT8_C(0)))
       {
         return ((!my_neg) ?  std::numeric_limits<long double>::infinity()
                           : -std::numeric_limits<long double>::infinity());
@@ -3438,7 +3444,7 @@
               // of highest significance, and we must shift the data, create a new limb
               // with the carry value of 1 and adjust the exponent accordingly.
               std::copy_backward(my_data.cbegin(),
-                                 my_data.cend() - 1,
+                                 my_data.cend() - static_cast<std::ptrdiff_t>(INT8_C(1)),
                                  my_data.end());
 
               my_data[static_cast<local_size_type>(UINT8_C(0))] = carry_out;
@@ -4696,7 +4702,7 @@
       static_cast<std::uint32_t>
       (
           static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10 / 2)
-        + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10  + 1),
+        + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10  + static_cast<std::int32_t>(INT8_C(1))),
                      static_cast<std::uint32_t>(UINT8_C(9)))
       );
 
@@ -4928,7 +4934,7 @@
       static_cast<std::uint32_t>
       (
           static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10 / 2)
-        + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
+        + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + static_cast<std::int32_t>(INT8_C(1))),
                      static_cast<std::uint32_t>(UINT8_C(9)))
       );
 
@@ -5639,15 +5645,15 @@
   {
     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> ldexp_result(v);
 
-    if((e > 0) && (e < 64)) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    if((e > static_cast<int>(INT8_C(0))) && (e < static_cast<int>(INT8_C(64)))) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     {
       ldexp_result *= static_cast<std::uint64_t>(1ULL << static_cast<unsigned>(e));
     }
-    else if((e > -64) && (e < 0)) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    else if((e > static_cast<int>(INT8_C(-64))) && (e < static_cast<int>(INT8_C(0)))) // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     {
       ldexp_result /= static_cast<std::uint64_t>(1ULL << static_cast<unsigned>(-e));
     }
-    else if(e != 0)
+    else if(e != static_cast<int>(INT8_C(0)))
     {
       ldexp_result *= pow(two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), e);
     }
@@ -5829,7 +5835,7 @@
         static_cast<std::uint32_t>
         (
             static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10 / 2)
-          + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
+          + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + static_cast<std::int32_t>(INT8_C(1))),
                        static_cast<std::uint32_t>(UINT8_C(9)))
         );
 
@@ -5837,7 +5843,7 @@
         static_cast<std::uint32_t>
         (
             static_cast<std::uint32_t>(precision_of_x / 2)
-          + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
+          + (std::max)(static_cast<std::uint32_t>(floating_point_type::decwide_t_elem_digits10 + static_cast<std::int32_t>(INT8_C(1))),
                        static_cast<std::uint32_t>(UINT8_C(9)))
         );
 
@@ -6095,7 +6101,7 @@
           const auto min_elem_digits10_plus_one =
             (std::min)
             (
-              static_cast<std::int32_t>(floating_point_type::decwide_t_elem_digits10 + 1),
+              static_cast<std::int32_t>(floating_point_type::decwide_t_elem_digits10 + static_cast<std::int32_t>(INT8_C(1))),
               static_cast<std::int32_t>(INT8_C(9))
             );
 
