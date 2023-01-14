@@ -62,12 +62,6 @@
     <Filter Include=".github\toolchains">
       <UniqueIdentifier>{14a4c145-a484-4c81-a33d-8b4246647a39}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\boost\multiprecision">
-      <UniqueIdentifier>{2a35e613-6cdb-49e2-b4fb-3a4522dcb770}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\boost\multiprecision\detail">
-      <UniqueIdentifier>{b9dd9544-f8a4-4034-8cb3-10c06fc8e156}</UniqueIdentifier>
-    </Filter>
     <Filter Include=".gcov">
       <UniqueIdentifier>{884f4771-7672-43c0-b2f7-bca154c8c748}</UniqueIdentifier>
     </Filter>
@@ -278,9 +272,6 @@
     </ClInclude>
     <ClInclude Include="examples\example_decwide_t.h">
       <Filter>Source Files\examples</Filter>
-    </ClInclude>
-    <ClInclude Include="boost\multiprecision\detail\check_cpp11_config.hpp">
-      <Filter>Source Files\boost\multiprecision\detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

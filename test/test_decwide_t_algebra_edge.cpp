@@ -1,11 +1,12 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022.                        //
+//  Copyright Christopher Kormanyos 2022 - 2023.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
 #include <algorithm>
+#include <chrono>
 #include <cstdint>
 #include <random>
 #include <sstream>
@@ -42,6 +43,25 @@ auto local_zero    () -> const local_wide_decimal_type&;
 auto local_one     () -> const local_wide_decimal_type&;
 auto local_near_one() -> const local_wide_decimal_type&;
 auto local_not_one () -> const local_wide_decimal_type&;
+
+template<typename IntegralTimePointType,
+          typename ClockType = std::chrono::high_resolution_clock>
+auto time_point() -> IntegralTimePointType
+{
+  using local_integral_time_point_type = IntegralTimePointType;
+  using local_clock_type               = ClockType;
+
+  const auto current_now =
+    static_cast<std::uintmax_t>
+    (
+      std::chrono::duration_cast<std::chrono::nanoseconds>
+      (
+        local_clock_type::now().time_since_epoch()
+      ).count()
+    );
+
+  return static_cast<local_integral_time_point_type>(current_now);
+}
 
 template<typename FloatingPointTypeWithStringConstruction>
 auto generate_wide_decimal_value(bool is_positive     = false,
@@ -110,13 +130,91 @@ auto generate_wide_decimal_value(bool is_positive     = false,
   return local_floating_point_type(str_x.c_str());
 }
 
+auto test_mul_by_one_or_one_minus() -> bool
+{
+  auto result_is_ok = true;
+
+  const auto one_minus = local_wide_decimal_type(local_one()).negate();
+
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
+           ++i)
+  {
+    const auto left = generate_wide_decimal_value<local_wide_decimal_type>();
+
+    const auto result_plus  = static_cast<local_wide_decimal_type>(left * local_one());
+    const auto result_minus = static_cast<local_wide_decimal_type>(left * one_minus);
+
+    const auto mul_with_plus_minus_one_is_ok = ((result_plus == left) && (-result_minus == left));
+
+    result_is_ok = (mul_with_plus_minus_one_is_ok && result_is_ok);
+  }
+
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
+           ++i)
+  {
+    const auto right = generate_wide_decimal_value<local_wide_decimal_type>();
+
+    const auto result_plus  = static_cast<local_wide_decimal_type>(local_one() * right);
+    const auto result_minus = static_cast<local_wide_decimal_type>(one_minus   * right);
+
+    const auto mul_plus_minus_one_with_other_is_ok = ((result_plus == right) && (-result_minus == right));
+
+    result_is_ok = (mul_plus_minus_one_with_other_is_ok && result_is_ok);
+  }
+
+  result_is_ok =
+  (
+       (   ((static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))) * static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))) == static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))) * static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1)))) == static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))) * static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))) == static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))) * static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1)))) == static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))))
+    && result_is_ok
+  );
+
+  return result_is_ok;
+}
+
+auto test_div_by_one_or_one_minus() -> bool
+{
+  auto result_is_ok = true;
+
+  const auto one_minus = local_wide_decimal_type(local_one()).negate();
+
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
+           ++i)
+  {
+    const auto left = generate_wide_decimal_value<local_wide_decimal_type>();
+
+    const auto result_plus  = static_cast<local_wide_decimal_type>(left / local_one());
+    const auto result_minus = static_cast<local_wide_decimal_type>(left / one_minus);
+
+    const auto div_with_plus_minus_one_is_ok = ((result_plus == left) && (-result_minus == left));
+
+    result_is_ok = (div_with_plus_minus_one_is_ok && result_is_ok);
+  }
+
+  result_is_ok =
+  (
+       (   ((static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))) / static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))) == static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))) / static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1)))) == static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))) / static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))) == static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))) / static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1)))) == static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))))
+    && result_is_ok
+  );
+
+  return result_is_ok;
+}
+
 auto test_div_by_other_sign_same() -> bool
 {
   auto result_is_ok = true;
 
-  eng_sgn.seed(static_cast<typename eng_sgn_type::result_type>(std::random_device{ }()));
-  eng_dig.seed(static_cast<typename eng_dig_type::result_type>(std::random_device{ }()));
-  eng_exp.seed(static_cast<typename eng_exp_type::result_type>(std::random_device{ }()));
+  eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
+  eng_dig.seed(time_point<typename eng_dig_type::result_type>());
+  eng_exp.seed(time_point<typename eng_exp_type::result_type>());
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(1024));
@@ -550,14 +648,36 @@ auto test_various_min_max_operations() -> bool
     result_is_ok = (result_min_max_is_ok && result_is_ok);
   }
 
+  {
+    const auto local_near_max = (std::numeric_limits<local_wide_decimal_type>::max)() / 7U;
+
+    const auto value_having_expected_overflow = local_near_max * 1000U;
+
+    const bool result_overflow_is_ok =
+      (value_having_expected_overflow == (std::numeric_limits<local_wide_decimal_type>::max)());
+
+    result_is_ok = (result_overflow_is_ok && result_is_ok);
+  }
+
+  {
+    const auto local_near_max = (std::numeric_limits<local_wide_decimal_type>::max)() / 7U;
+
+    const auto value_having_expected_overflow = local_near_max * local_wide_decimal_type(static_cast<unsigned>(UINT16_C(1000)));
+
+    const bool result_overflow_is_ok =
+      (value_having_expected_overflow == (std::numeric_limits<local_wide_decimal_type>::max)());
+
+    result_is_ok = (result_overflow_is_ok && result_is_ok);
+  }
+
   return result_is_ok;
 }
 
 auto test_frexp_in_all_ranges() -> bool
 {
-  eng_sgn.seed(static_cast<typename eng_sgn_type::result_type>(std::random_device{ }()));
-  eng_dig.seed(static_cast<typename eng_dig_type::result_type>(std::random_device{ }()));
-  eng_exp.seed(static_cast<typename eng_exp_type::result_type>(std::random_device{ }()));
+  eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
+  eng_dig.seed(time_point<typename eng_dig_type::result_type>());
+  eng_exp.seed(time_point<typename eng_exp_type::result_type>());
 
   auto result_is_ok = true;
 
@@ -743,9 +863,9 @@ auto test_frexp_in_all_ranges() -> bool
 
 auto test_string_ops_and_round_trips() -> bool
 {
-  eng_sgn.seed(static_cast<typename eng_sgn_type::result_type>(std::random_device{ }()));
-  eng_dig.seed(static_cast<typename eng_dig_type::result_type>(std::random_device{ }()));
-  eng_exp.seed(static_cast<typename eng_exp_type::result_type>(std::random_device{ }()));
+  eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
+  eng_dig.seed(time_point<typename eng_dig_type::result_type>());
+  eng_exp.seed(time_point<typename eng_exp_type::result_type>());
 
   auto result_is_ok = true;
 
@@ -1297,6 +1417,8 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   auto result_is_ok = true;
 
   result_is_ok = (test_decwide_t_algebra_edge::test_div_by_other_sign_same               () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_mul_by_one_or_one_minus              () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_div_by_one_or_one_minus              () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_zero_operations              () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_one_operations               () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_min_max_operations           () && result_is_ok);
