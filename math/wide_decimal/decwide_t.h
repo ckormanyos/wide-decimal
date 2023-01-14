@@ -1348,7 +1348,6 @@
       }
       else if(isone_sign_neutral(v))
       {
-        ;
       }
       else
       {
@@ -1473,6 +1472,20 @@
       {
         // Multiplication by zero.
         return operator=(zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>());
+      }
+
+      // Estimate the exponent of the result.
+      using local_unsigned_wrap_type = detail::unsigned_wrap<unsigned_exponent_type, exponent_type>;
+
+      local_unsigned_wrap_type u_exp(  my_exp);
+      local_unsigned_wrap_type v_exp(static_cast<exponent_type>(detail::order_of_builtin_integer(n)));
+
+      const local_unsigned_wrap_type result_exp = (u_exp + v_exp);
+
+      if((!result_exp.get_is_neg()) && (result_exp.get_value_unsigned() >= decwide_t_max_exp10))
+      {
+        // Check for (and handle overflow).
+        return operator=((!b_neg) ? my_value_max() : -my_value_max());
       }
 
       if(n >= static_cast<unsigned long long>(decwide_t_elem_mask)) // NOLINT(google-runtime-int)
@@ -2283,28 +2296,13 @@
       // than 1 and the base-10 exponent parts of this decwide_t.
       // For instance 45.67e8 will be extracted as 0.4567 * e10.
 
-      exponent = my_exp;
       mantissa = static_cast<internal_float_type>(0.0F);
 
-      auto p10 = static_cast<limb_type>(UINT8_C(1));
+      auto p10 = limb_type { };
 
-      {
-        auto d0 = my_data[static_cast<std::uint_fast32_t>(UINT8_C(0))];
+      const auto expval = detail::order_of_builtin_integer(my_data[static_cast<std::uint_fast32_t>(UINT8_C(0))], &p10);
 
-        for(;;)
-        {
-          d0 = static_cast<limb_type>(d0 / static_cast<limb_type>(UINT8_C(10)));
-
-          p10 = static_cast<limb_type>(p10 * static_cast<limb_type>(UINT8_C(10)));
-
-          ++exponent;
-
-          if(d0 == static_cast<limb_type>(UINT8_C(0)))
-          {
-            break;
-          }
-        }
-      }
+      exponent = static_cast<exponent_type>(static_cast<exponent_type>(expval) + my_exp);
 
       auto scale =
         static_cast<internal_float_type>
@@ -5592,6 +5590,7 @@
       static constexpr auto traps             = false;
       static constexpr auto tinyness_before   = false;
 
+      // LCOV_EXCL_START
       static constexpr auto (min)  () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_min(); }
       static constexpr auto (max)  () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_max(); }
       static constexpr auto lowest () -> local_wide_decimal_type { return local_wide_decimal_type(); }
@@ -5623,7 +5622,6 @@
         );
       }
 
-      // LCOV_EXCL_START
       static constexpr auto round_error  () -> local_wide_decimal_type { return nonstd::wide_decimal_namespace::half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       static constexpr auto infinity     () -> local_wide_decimal_type { return nonstd::wide_decimal_namespace::zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); }
       static constexpr auto quiet_NaN    () -> local_wide_decimal_type { return nonstd::wide_decimal_namespace::zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); } // NOLINT(readability-identifier-naming)

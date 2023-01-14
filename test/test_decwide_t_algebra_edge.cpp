@@ -648,6 +648,28 @@ auto test_various_min_max_operations() -> bool
     result_is_ok = (result_min_max_is_ok && result_is_ok);
   }
 
+  {
+    const auto local_near_max = (std::numeric_limits<local_wide_decimal_type>::max)() / 7U;
+
+    const auto value_having_expected_overflow = local_near_max * 1000U;
+
+    const bool result_overflow_is_ok =
+      (value_having_expected_overflow == (std::numeric_limits<local_wide_decimal_type>::max)());
+
+    result_is_ok = (result_overflow_is_ok && result_is_ok);
+  }
+
+  {
+    const auto local_near_max = (std::numeric_limits<local_wide_decimal_type>::max)() / 7U;
+
+    const auto value_having_expected_overflow = local_near_max * local_wide_decimal_type(static_cast<unsigned>(UINT16_C(1000)));
+
+    const bool result_overflow_is_ok =
+      (value_having_expected_overflow == (std::numeric_limits<local_wide_decimal_type>::max)());
+
+    result_is_ok = (result_overflow_is_ok && result_is_ok);
+  }
+
   return result_is_ok;
 }
 

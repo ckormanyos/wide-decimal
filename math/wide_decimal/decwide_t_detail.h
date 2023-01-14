@@ -190,7 +190,7 @@
   }
   // LCOV_EXCL_STOP
 
-  static inline auto pow10_maker_as_runtime_value(std::uint32_t n) noexcept -> std::uint32_t
+  inline auto pow10_maker_as_runtime_value(std::uint32_t n) noexcept -> std::uint32_t
   {
     using local_array_type = std::array<std::uint32_t, static_cast<std::size_t>(UINT8_C(10))>; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
@@ -215,6 +215,39 @@
                ? local_p10_table[static_cast<local_size_type>(n)]
                : local_p10_table.back()); // LCOV_EXCL_LINE
     }
+  }
+
+  template<typename IntegralType,
+           typename ExponentiatedType = int>
+  inline auto order_of_builtin_integer(const IntegralType n, ExponentiatedType* p10_ptr = nullptr) -> unsigned
+  {
+    auto exp10_val = static_cast<unsigned>(UINT8_C(0));
+
+    if(p10_ptr != nullptr)
+    {
+      *p10_ptr = static_cast<ExponentiatedType>(INT8_C(1));
+    }
+
+    auto d0 = n;
+
+    for(;;)
+    {
+      d0 = static_cast<IntegralType>(d0 / static_cast<IntegralType>(INT8_C(10)));
+
+      if(p10_ptr != nullptr)
+      {
+        *p10_ptr = static_cast<ExponentiatedType>(*p10_ptr * static_cast<ExponentiatedType>(INT8_C(10)));
+      }
+
+      ++exp10_val;
+
+      if(d0 == static_cast<IntegralType>(INT8_C(0)))
+      {
+        break;
+      }
+    }
+
+    return exp10_val;
   }
 
   template<typename LimbType>
