@@ -146,10 +146,10 @@ auto test_mul_by_one_or_one_minus() -> bool
 
   result_is_ok =
   (
-       (   ((local_one() * local_one()) == local_one())
-        && ((local_one() * one_minus)   == one_minus)
-        && ((one_minus   * local_one()) == one_minus)
-        && ((one_minus   * one_minus)   == local_one()))
+       (   ((static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))) * static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))) == static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))) * static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1)))) == static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))) * static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))) == static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))) * static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1)))) == static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))))
     && result_is_ok
   );
 
@@ -178,10 +178,10 @@ auto test_div_by_one_or_one_minus() -> bool
 
   result_is_ok =
   (
-       (   ((local_one() / +local_one()) == local_one()) // NOLINT(misc-redundant-expression)
-        && ((local_one() /  one_minus)   == one_minus)
-        && ((one_minus   /  local_one()) == one_minus)
-        && ((one_minus   / -local_one()) == local_one()))
+       (   ((static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))) / static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))) == static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1))) / static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1)))) == static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))) / static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))) == static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))))
+        && ((static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1))) / static_cast<local_wide_decimal_type>(static_cast<  signed>( INT8_C(-1)))) == static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT8_C(+1)))))
     && result_is_ok
   );
 
