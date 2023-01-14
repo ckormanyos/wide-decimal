@@ -2220,18 +2220,16 @@
     {
       auto value_is_int = bool { };
 
-      if(my_fpclass != fpclass_type::decwide_t_finite)
+      if(   (my_fpclass != fpclass_type::decwide_t_finite)
+         || (my_exp < static_cast<exponent_type>(INT8_C(0))))
       {
+        // Here, we have *this non-finite or |*this| < 1,
+        // so *this can not be int.
         value_is_int = false;
       }
       else if(iszero() || isone_sign_neutral(*this))
       {
         value_is_int = true;
-      }
-      else if(my_exp < static_cast<exponent_type>(INT8_C(0)))
-      {
-        // Here, we have |*this| < 1, so *this can not be int.
-        value_is_int = false;
       }
       else
       {
@@ -2328,7 +2326,7 @@
           % static_cast<std::int32_t>(decwide_t_elem_digits10)
         );
 
-      constexpr auto digit_loops =
+      constexpr auto digit_loops = // NOLINT(altera-id-dependent-backward-branch)
         static_cast<std::int32_t>
         (
             digit_loops_elem_digits10_div
@@ -2342,8 +2340,14 @@
 
       using local_size_type = typename representation_type::size_type;
 
+      const auto digit_loops_max =
+        static_cast<local_size_type>
+        (
+          (std::min)(my_data.size(), static_cast<local_size_type>(digit_loops))
+        );
+
       for(auto   limb_index = static_cast<local_size_type>(UINT8_C(0));
-               ((limb_index < my_data.size()) && (limb_index < static_cast<local_size_type>(digit_loops))); // NOLINT(altera-id-dependent-backward-branch)
+                 limb_index < digit_loops_max; // NOLINT(altera-id-dependent-backward-branch)
                ++limb_index)
       {
         mantissa += (static_cast<internal_float_type>(my_data[limb_index]) * scale);
