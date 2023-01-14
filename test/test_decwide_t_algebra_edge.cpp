@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022.                        //
+//  Copyright Christopher Kormanyos 2022 - 2023.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -108,6 +108,86 @@ auto generate_wide_decimal_value(bool is_positive     = false,
   str_x.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(UINT8_C(1)), sign_char_to_insert);
 
   return local_floating_point_type(str_x.c_str());
+}
+
+auto test_mul_by_one_or_one_minus() -> bool
+{
+  auto result_is_ok = true;
+
+  const auto one_plus  = local_one();
+  const auto one_minus = local_wide_decimal_type(one_plus).negate();
+
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
+           ++i)
+  {
+    const auto left = generate_wide_decimal_value<local_wide_decimal_type>();
+
+    const auto result_plus  = static_cast<local_wide_decimal_type>(left * one_plus);
+    const auto result_minus = static_cast<local_wide_decimal_type>(left * one_minus);
+
+    const auto mul_with_plus_minus_one_is_ok = ((result_plus == left) && (-result_minus == left));
+
+    result_is_ok = (mul_with_plus_minus_one_is_ok && result_is_ok);
+  }
+
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
+           ++i)
+  {
+    const auto right = generate_wide_decimal_value<local_wide_decimal_type>();
+
+    const auto result_plus  = static_cast<local_wide_decimal_type>(one_plus  * right);
+    const auto result_minus = static_cast<local_wide_decimal_type>(one_minus * right);
+
+    const auto mul_plus_minus_one_with_other_is_ok = ((result_plus == right) && (-result_minus == right));
+
+    result_is_ok = (mul_plus_minus_one_with_other_is_ok && result_is_ok);
+  }
+
+  result_is_ok =
+  (
+       (   ((one_plus  * one_plus)  == one_plus)
+        && ((one_plus  * one_minus) == one_minus)
+        && ((one_minus * one_plus)  == one_minus)
+        && ((one_minus * one_minus) == one_plus))
+    && result_is_ok
+  );
+
+  return result_is_ok;
+}
+
+auto test_div_by_one_or_one_minus() -> bool
+{
+  auto result_is_ok = true;
+
+  const auto one_plus  = local_one();
+  const auto one_minus = local_wide_decimal_type(one_plus).negate();
+
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(128));
+           ++i)
+  {
+    const auto left = generate_wide_decimal_value<local_wide_decimal_type>();
+
+    const auto result_plus  = static_cast<local_wide_decimal_type>(left / one_plus);
+    const auto result_minus = static_cast<local_wide_decimal_type>(left / one_minus);
+
+    const auto div_with_plus_minus_one_is_ok = ((result_plus == left) && (-result_minus == left));
+
+    result_is_ok = (div_with_plus_minus_one_is_ok && result_is_ok);
+  }
+
+  result_is_ok =
+  (
+       (   ((one_plus  / one_plus)  == one_plus)
+        && ((one_plus  / one_minus) == one_minus)
+        && ((one_minus / one_plus)  == one_minus)
+        && ((one_minus / one_minus) == one_plus))
+    && result_is_ok
+  );
+
+  return result_is_ok;
 }
 
 auto test_div_by_other_sign_same() -> bool
@@ -1297,6 +1377,8 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   auto result_is_ok = true;
 
   result_is_ok = (test_decwide_t_algebra_edge::test_div_by_other_sign_same               () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_mul_by_one_or_one_minus              () && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_div_by_one_or_one_minus              () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_zero_operations              () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_one_operations               () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_min_max_operations           () && result_is_ok);
