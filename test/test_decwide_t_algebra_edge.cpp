@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////
 
 #include <algorithm>
+#include <chrono>
 #include <cstdint>
 #include <random>
 #include <sstream>
@@ -42,6 +43,25 @@ auto local_zero    () -> const local_wide_decimal_type&;
 auto local_one     () -> const local_wide_decimal_type&;
 auto local_near_one() -> const local_wide_decimal_type&;
 auto local_not_one () -> const local_wide_decimal_type&;
+
+template<typename IntegralTimePointType,
+          typename ClockType = std::chrono::high_resolution_clock>
+auto time_point() -> IntegralTimePointType
+{
+  using local_integral_time_point_type = IntegralTimePointType;
+  using local_clock_type               = ClockType;
+
+  const auto current_now =
+    static_cast<std::uintmax_t>
+    (
+      std::chrono::duration_cast<std::chrono::nanoseconds>
+      (
+        local_clock_type::now().time_since_epoch()
+      ).count()
+    );
+
+  return static_cast<local_integral_time_point_type>(current_now);
+}
 
 template<typename FloatingPointTypeWithStringConstruction>
 auto generate_wide_decimal_value(bool is_positive     = false,
@@ -192,9 +212,9 @@ auto test_div_by_other_sign_same() -> bool
 {
   auto result_is_ok = true;
 
-  eng_sgn.seed(static_cast<typename eng_sgn_type::result_type>(std::random_device{ }()));
-  eng_dig.seed(static_cast<typename eng_dig_type::result_type>(std::random_device{ }()));
-  eng_exp.seed(static_cast<typename eng_exp_type::result_type>(std::random_device{ }()));
+  eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
+  eng_dig.seed(time_point<typename eng_dig_type::result_type>());
+  eng_exp.seed(time_point<typename eng_exp_type::result_type>());
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(1024));
@@ -633,9 +653,9 @@ auto test_various_min_max_operations() -> bool
 
 auto test_frexp_in_all_ranges() -> bool
 {
-  eng_sgn.seed(static_cast<typename eng_sgn_type::result_type>(std::random_device{ }()));
-  eng_dig.seed(static_cast<typename eng_dig_type::result_type>(std::random_device{ }()));
-  eng_exp.seed(static_cast<typename eng_exp_type::result_type>(std::random_device{ }()));
+  eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
+  eng_dig.seed(time_point<typename eng_dig_type::result_type>());
+  eng_exp.seed(time_point<typename eng_exp_type::result_type>());
 
   auto result_is_ok = true;
 
@@ -821,9 +841,9 @@ auto test_frexp_in_all_ranges() -> bool
 
 auto test_string_ops_and_round_trips() -> bool
 {
-  eng_sgn.seed(static_cast<typename eng_sgn_type::result_type>(std::random_device{ }()));
-  eng_dig.seed(static_cast<typename eng_dig_type::result_type>(std::random_device{ }()));
-  eng_exp.seed(static_cast<typename eng_exp_type::result_type>(std::random_device{ }()));
+  eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
+  eng_dig.seed(time_point<typename eng_dig_type::result_type>());
+  eng_exp.seed(time_point<typename eng_exp_type::result_type>());
 
   auto result_is_ok = true;
 
