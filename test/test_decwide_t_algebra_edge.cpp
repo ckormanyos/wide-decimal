@@ -114,8 +114,7 @@ auto test_mul_by_one_or_one_minus() -> bool
 {
   auto result_is_ok = true;
 
-  const auto one_plus  = local_one();
-  const auto one_minus = local_wide_decimal_type(one_plus).negate();
+  const auto one_minus = local_wide_decimal_type(local_one()).negate();
 
   for(auto   i = static_cast<unsigned>(UINT8_C(0));
              i < static_cast<unsigned>(UINT8_C(128));
@@ -123,7 +122,7 @@ auto test_mul_by_one_or_one_minus() -> bool
   {
     const auto left = generate_wide_decimal_value<local_wide_decimal_type>();
 
-    const auto result_plus  = static_cast<local_wide_decimal_type>(left * one_plus);
+    const auto result_plus  = static_cast<local_wide_decimal_type>(left * local_one());
     const auto result_minus = static_cast<local_wide_decimal_type>(left * one_minus);
 
     const auto mul_with_plus_minus_one_is_ok = ((result_plus == left) && (-result_minus == left));
@@ -137,8 +136,8 @@ auto test_mul_by_one_or_one_minus() -> bool
   {
     const auto right = generate_wide_decimal_value<local_wide_decimal_type>();
 
-    const auto result_plus  = static_cast<local_wide_decimal_type>(one_plus  * right);
-    const auto result_minus = static_cast<local_wide_decimal_type>(one_minus * right);
+    const auto result_plus  = static_cast<local_wide_decimal_type>(local_one() * right);
+    const auto result_minus = static_cast<local_wide_decimal_type>(one_minus   * right);
 
     const auto mul_plus_minus_one_with_other_is_ok = ((result_plus == right) && (-result_minus == right));
 
@@ -147,10 +146,10 @@ auto test_mul_by_one_or_one_minus() -> bool
 
   result_is_ok =
   (
-       (   ((one_plus  * one_plus)  == one_plus)
-        && ((one_plus  * one_minus) == one_minus)
-        && ((one_minus * one_plus)  == one_minus)
-        && ((one_minus * one_minus) == one_plus))
+       (   ((local_one() * local_one()) == local_one())
+        && ((local_one() * one_minus)   == one_minus)
+        && ((one_minus   * local_one()) == one_minus)
+        && ((one_minus   * one_minus)   == local_one()))
     && result_is_ok
   );
 
@@ -161,8 +160,7 @@ auto test_div_by_one_or_one_minus() -> bool
 {
   auto result_is_ok = true;
 
-  const auto one_plus  = local_one();
-  const auto one_minus = local_wide_decimal_type(one_plus).negate();
+  const auto one_minus = local_wide_decimal_type(local_one()).negate();
 
   for(auto   i = static_cast<unsigned>(UINT8_C(0));
              i < static_cast<unsigned>(UINT8_C(128));
@@ -170,7 +168,7 @@ auto test_div_by_one_or_one_minus() -> bool
   {
     const auto left = generate_wide_decimal_value<local_wide_decimal_type>();
 
-    const auto result_plus  = static_cast<local_wide_decimal_type>(left / one_plus);
+    const auto result_plus  = static_cast<local_wide_decimal_type>(left / local_one());
     const auto result_minus = static_cast<local_wide_decimal_type>(left / one_minus);
 
     const auto div_with_plus_minus_one_is_ok = ((result_plus == left) && (-result_minus == left));
@@ -180,10 +178,10 @@ auto test_div_by_one_or_one_minus() -> bool
 
   result_is_ok =
   (
-       (   ((one_plus  / one_plus)  == one_plus)
-        && ((one_plus  / one_minus) == one_minus)
-        && ((one_minus / one_plus)  == one_minus)
-        && ((one_minus / one_minus) == one_plus))
+       (   ((local_one() / +local_one()) == local_one()) // NOLINT(misc-redundant-expression)
+        && ((local_one() /  one_minus)   == one_minus)
+        && ((one_minus   /  local_one()) == one_minus)
+        && ((one_minus   / -local_one()) == local_one()))
     && result_is_ok
   );
 
