@@ -755,11 +755,12 @@
 
   public:
     // Default constructor.
-    constexpr decwide_t() : my_data     (),
-                            my_exp      (static_cast<exponent_type>(INT8_C(0))),
-                            my_neg      (false),
-                            my_fpclass  (fpclass_type::decwide_t_finite),
-                            my_prec_elem(decwide_t_elem_number) { }
+    constexpr decwide_t() noexcept
+      : my_data     (),
+        my_exp      (static_cast<exponent_type>(INT8_C(0))),
+        my_neg      (false),
+        my_fpclass  (fpclass_type::decwide_t_finite),
+        my_prec_elem(decwide_t_elem_number) { }
 
     // Constructors from built-in unsigned integral types.
     template<typename UnsignedIntegralType,
@@ -887,7 +888,7 @@
       // This constructor is, in fact, intended to maintain
       // the full precision of the internal_float_type.
 
-      const auto delta_zero =
+      constexpr auto delta_zero =
         static_cast<internal_float_type>
         (
           (
@@ -1045,8 +1046,8 @@
 
       using local_unsigned_exponent_wrap_type = detail::unsigned_wrap<unsigned_exponent_type, exponent_type>;
 
-      local_unsigned_exponent_wrap_type u_exp(  my_exp);
-      local_unsigned_exponent_wrap_type v_exp(v.my_exp);
+      const local_unsigned_exponent_wrap_type u_exp(  my_exp);
+      const local_unsigned_exponent_wrap_type v_exp(v.my_exp);
 
       const local_unsigned_exponent_wrap_type ofs_exp = (u_exp - v_exp);
 
@@ -1354,8 +1355,8 @@
         // Set the exponent of the result.
         using local_unsigned_wrap_type = detail::unsigned_wrap<unsigned_exponent_type, exponent_type>;
 
-        local_unsigned_wrap_type u_exp(  my_exp);
-        local_unsigned_wrap_type v_exp(v.my_exp);
+        const local_unsigned_wrap_type u_exp(  my_exp);
+        const local_unsigned_wrap_type v_exp(v.my_exp);
 
         const local_unsigned_wrap_type result_exp = (u_exp + v_exp);
 
@@ -1477,8 +1478,8 @@
       // Estimate the exponent of the result.
       using local_unsigned_wrap_type = detail::unsigned_wrap<unsigned_exponent_type, exponent_type>;
 
-      local_unsigned_wrap_type u_exp(  my_exp);
-      local_unsigned_wrap_type v_exp(static_cast<exponent_type>(detail::order_of_builtin_integer(n)));
+      const local_unsigned_wrap_type u_exp(  my_exp);
+      const local_unsigned_wrap_type v_exp(static_cast<exponent_type>(detail::order_of_builtin_integer(n)));
 
       const local_unsigned_wrap_type result_exp = (u_exp + v_exp);
 
@@ -3775,7 +3776,7 @@
       }
 
       // Truncate decimal part if it is too long.
-      const auto max_dec =
+      constexpr auto max_dec =
         static_cast<std::ptrdiff_t>
         (
             static_cast<std::ptrdiff_t>(decwide_t_elem_number - static_cast<std::int32_t>(INT8_C(1)))
@@ -4139,8 +4140,14 @@
         const auto zero_insert_length =
           static_cast<std::size_t>
           (
-              static_cast<exponent_type>(-the_exp)
-            - static_cast<exponent_type>(INT8_C(1)) // LCOV_EXCL_LINE
+            detail::negate
+            (
+              static_cast<exponent_type>
+              (
+                  static_cast<exponent_type>(the_exp)
+                + static_cast<exponent_type>(INT8_C(1))
+              )
+            )
           );
 
         const auto n_pad =
