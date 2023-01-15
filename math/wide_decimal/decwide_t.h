@@ -4135,18 +4135,15 @@
 
       if(the_exp < static_cast<exponent_type>(INT8_C(0)))
       {
-        // The number is less than one in magnitude. Insert the decimal
-        // point using "0." as well as the needed number of leading zeros.
+        // The number is less than one in magnitude.
+
         const auto zero_insert_length =
-          static_cast<std::size_t>
+          detail::negate
           (
-            detail::negate
+            static_cast<exponent_type>
             (
-              static_cast<exponent_type>
-              (
-                  static_cast<exponent_type>(the_exp)
-                + static_cast<exponent_type>(INT8_C(1))
-              )
+                static_cast<exponent_type>(the_exp)
+              + static_cast<exponent_type>(INT8_C(1))
             )
           );
 
@@ -4154,12 +4151,15 @@
           static_cast<exponent_type>
           (
               static_cast<exponent_type>(os_precision)
-            - static_cast<exponent_type>(str.length() + zero_insert_length)
+            - static_cast<exponent_type>(static_cast<exponent_type>(str.length()) + zero_insert_length)
           );
 
-        str.insert(static_cast<std::size_t>(UINT8_C(0)), zero_insert_length,                   '0');
-        str.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(UINT8_C(1)), '.');
-        str.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(UINT8_C(1)), '0');
+        // Insert the decimal point using "0." as well as the needed number
+        // of leading zeros.
+
+        str.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(zero_insert_length), '0');
+        str.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(UINT8_C(1)),         '.');
+        str.insert(static_cast<std::size_t>(UINT8_C(0)), static_cast<std::size_t>(UINT8_C(1)),         '0');
 
         // Zero-extend the string to the given precision if necessary.
         if(n_pad > static_cast<exponent_type>(INT8_C(0)))
