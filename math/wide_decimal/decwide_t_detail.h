@@ -72,7 +72,7 @@
   {
   private:
     static constexpr auto bit_count   () -> std::size_t { return BitCount; }
-    static constexpr auto bit_count_lo() -> std::size_t { return static_cast<std::size_t>(std::numeric_limits<unsinged char>::digits); }
+    static constexpr auto bit_count_lo() -> std::size_t { return static_cast<std::size_t>(std::numeric_limits<unsigned char>::digits); }
     static constexpr auto bit_count_hi() -> std::size_t { return static_cast<std::size_t>(std::numeric_limits<std::uintmax_t>::digits); }
 
     static_assert
