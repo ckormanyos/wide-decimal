@@ -218,36 +218,43 @@
   }
 
   template<typename IntegralType,
-           typename ExponentiatedType = int>
-  inline auto order_of_builtin_integer(const IntegralType n, ExponentiatedType* p10_ptr = nullptr) -> unsigned
+           typename ExponentType = int>
+  inline auto order_of_builtin_integer(const IntegralType n, ExponentType* p10_ptr = nullptr) -> unsigned
   {
-    auto exp10_val = static_cast<unsigned>(UINT8_C(0));
+    // This subroutine returns the order of an input integral type.
+    // The order is counted as 1 for 0...9, 2 for 10...99, 3 for 100...999, etc.
+    // This may differ from the order expected, for example, from the ilogb()
+    // function. So this must be taken into account at the calling point
+    // of this subroutine if needed.
 
-    if(p10_ptr != nullptr)
-    {
-      *p10_ptr = static_cast<ExponentiatedType>(INT8_C(1));
-    }
+    using local_unsigned_integral_type = typename std::make_unsigned<IntegralType>::type;
+    using local_unsigned_exponent_type = typename std::make_unsigned<ExponentType>::type;
 
-    auto d0 = n;
+    auto expval = static_cast<unsigned>(UINT8_C(0));
+    auto p10    = static_cast<local_unsigned_exponent_type>(UINT8_C(1));
+
+    auto un = static_cast<local_unsigned_integral_type>(n);
 
     for(;;)
     {
-      d0 = static_cast<IntegralType>(d0 / static_cast<IntegralType>(INT8_C(10)));
+      un = static_cast<local_unsigned_integral_type>(un / static_cast<local_unsigned_integral_type>(UINT8_C(10U)));
 
-      if(p10_ptr != nullptr)
-      {
-        *p10_ptr = static_cast<ExponentiatedType>(*p10_ptr * static_cast<ExponentiatedType>(INT8_C(10)));
-      }
+      p10 = static_cast<local_unsigned_exponent_type>(p10 * static_cast<local_unsigned_exponent_type>(UINT8_C(10)));
 
-      ++exp10_val;
+      ++expval;
 
-      if(d0 == static_cast<IntegralType>(INT8_C(0)))
+      if(un == static_cast<local_unsigned_exponent_type>(UINT8_C(0)))
       {
         break;
       }
     }
 
-    return exp10_val;
+    if(p10_ptr != nullptr)
+    {
+      *p10_ptr = static_cast<ExponentType>(p10);
+    }
+
+    return expval;
   }
 
   template<typename LimbType>
