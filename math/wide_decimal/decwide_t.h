@@ -3296,9 +3296,7 @@
           ++digits_limb_0;
         }
 
-        constexpr auto local_max_digits10 = decwide_t_max_digits10;
-
-        const auto digits_limb_1_to_n = static_cast<std::int32_t>(local_max_digits10 - digits_limb_0);
+        const auto digits_limb_1_to_n = static_cast<std::int32_t>(decwide_t_max_digits10 - digits_limb_0);
 
         const auto digits_limb_1_to_n_elem_digits10_div =
           static_cast<std::int32_t>
@@ -4397,18 +4395,14 @@
     {
       using local_size_type = typename representation_type::size_type;
 
-      auto xx = x.my_data[static_cast<local_size_type>(UINT8_C(0))];
+      const auto exp10_val =
+        static_cast<exponent_type>
+        (
+            static_cast<exponent_type>(detail::order_of_builtin_integer(x.my_data[static_cast<local_size_type>(UINT8_C(0))]))
+          - static_cast<exponent_type>(INT8_C(1))
+        );
 
-      auto p10 = static_cast<exponent_type>(-1);
-
-      while(static_cast<limb_type>(static_cast<limb_type>(xx + static_cast<std::uint8_t>(UINT8_C(9))) / static_cast<std::uint8_t>(UINT8_C(10))) > static_cast<std::uint8_t>(UINT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
-      {
-        xx = static_cast<limb_type>(xx / static_cast<std::uint8_t>(UINT8_C(10)));
-
-        ++p10;
-      }
-
-      return static_cast<exponent_type>(x.my_exp + p10);
+      return static_cast<exponent_type>(x.my_exp + exp10_val);
     }
 
     template<const std::int32_t OtherMyDigits10, typename OtherLimbType, typename OtherAllocatorType, typename OtherInternalFloatType, typename OtherExponentType, typename OtherFftFloatType>
