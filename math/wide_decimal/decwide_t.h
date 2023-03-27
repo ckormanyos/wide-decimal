@@ -1349,10 +1349,12 @@
 
       if(isone_sign_neutral(*this))
       {
+        // Simply take the left-hand side since *this is either positive or negative one.
         static_cast<void>(operator=(v));
       }
       else if(isone_sign_neutral(v))
       {
+        // Do nothing since this is multiplication of *this by either positive or negative one.
       }
       else
       {
