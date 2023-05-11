@@ -30,7 +30,7 @@ This C++ template header-only library implements drop-in big decimal float types
 such as `dec51_t`, `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
 that can be used essentially like regular built-in floating-point types.
 Wide-decimal supports decimal float types having digit counts ranging
-roughly from about ${\sim} {\phantom{.}} 10 {\phantom{.}} {\ldots} {\phantom{.}} 10,000,000$
+roughly from about ${\sim} 10 {\ldots} 10,000,000$
 
 Wide-decimal implements both common algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`,
@@ -123,7 +123,7 @@ The examples include the following.
   - ![`example001a_roots_seventh.cpp`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
   - ![`example001b_roots_almost_integer.cpp`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operations to compute $5,001$ decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
   - ![`example001c_roots_sqrt_limb08.cpp`](./examples/example001c_roots_sqrt_limb08.cpp) computes a square root with a wide decimal representation having 8-bit limbs.
-  - ![`example001d_pow2_from_list.cpp`](./examples/example001d_pow2_from_list.cpp) verifies a list of values $2^n$ with $-128 {\phantom{.}} {\le} {\phantom{.}} n {\phantom{.}} {\le} {\phantom{.}} 127$.
+  - ![`example001d_pow2_from_list.cpp`](./examples/example001d_pow2_from_list.cpp) verifies a list of values $2^n$ with $-128 {\le} n {\le} 127$.
   - ![`example002_pi.cpp`](./examples/example002_pi.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a Gauss AGM iteration.
   - ![`example002a_pi_small_limb.cpp`](./examples/example002a_pi_small_limb.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a 16-bit internal limb type.
   - ![`example002b_pi_100k.cpp`](./examples/example002b_pi_100k.cpp) calculates $100,001$ decimal digits of $\pi$.
@@ -137,7 +137,7 @@ The examples include the following.
   - ![`example008_bernoulli_tgamma.cpp`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates $1,001$ decimal digits of $\Gamma(n/2)$ for small integer $n$.
   - ![`example009_boost_math_standalone.cpp`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
   - ![`example009a_boost_math_standalone.cpp`](./examples/example009a_boost_math_standalone.cpp) also checks standalone `decwide_t` with significantly more of `Boost.Math` by testing a $1,001$ digit generalized Legendre function value (using `boost::math::tgamma` and more to do so).
-  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ${\lesssim} {\phantom{.}} 100$ decimal digits.
+  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ${\lesssim} 100$ decimal digits.
   - ![`example010_hypergeometric_2f1.cpp`](./examples/example010_hypergeometric_2f1.cpp) calculates a $1,001$ decimal digit hypergeometric function value using an iterative rational approximation scheme.
   - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another $1,001$ decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
