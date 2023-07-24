@@ -88,15 +88,15 @@ auto local::run() -> bool
 
   using local_function_type = local::function_type;
 
-  const auto result_test_examples_part1_is_ok = local::pfn_runner(local_function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok   : ");
-  const auto result_test_examples_part2_is_ok = local::pfn_runner(local_function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok   : ");
-  const auto result_test_algebra_edge___is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok   : ");
-  const auto result_test_algebra_add____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok   : ");
-  const auto result_test_algebra_sub____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok   : ");
-  const auto result_test_algebra_mul____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_mul_____), "result_test_algebra_mul____is_ok   : ");
-  const auto result_test_algebra_div____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_div_____), "result_test_algebra_div____is_ok   : ");
-  const auto result_test_algebra_sqrt___is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_sqrt____), "result_test_algebra_sqrt___is_ok   : ");
-  const auto result_test_algebra_log____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_log_____), "result_test_algebra_log____is_ok   : ");
+  const auto result_test_examples_part1_is_ok = local::pfn_runner(local_function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_examples_part2_is_ok = local::pfn_runner(local_function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_edge___is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_add____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_sub____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_mul____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_mul_____), "result_test_algebra_mul____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_div____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_div_____), "result_test_algebra_div____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_sqrt___is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_sqrt____), "result_test_algebra_sqrt___is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_log____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_log_____), "result_test_algebra_log____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
   const auto result_is_ok =
   (
