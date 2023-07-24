@@ -5,6 +5,11 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
+
 #include <algorithm>
 #include <array>
 #include <cstdint>
@@ -143,3 +148,7 @@ auto main() -> int
 }
 
 #endif // WIDE_DECIMAL_STANDALONE_EXAMPLE013A_EMBEDDABLE_AGM
+
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+#pragma GCC diagnostic pop
+#endif
