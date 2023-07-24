@@ -1119,9 +1119,11 @@
                     my_data.cend() - static_cast<std::ptrdiff_t>(-ofs),
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(-ofs));
 
+          // LCOV_EXCL_START
           std::fill(my_n_data_for_add_sub.begin(),
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(-ofs),
-                    static_cast<limb_type>(UINT8_C(0))); // LCOV_EXCL_LINE
+                    static_cast<limb_type>(UINT8_C(0)));
+          // LCOV_EXCL_STOP
 
           using const_limb_pointer_type = typename std::add_const<limb_type*>::type;
 

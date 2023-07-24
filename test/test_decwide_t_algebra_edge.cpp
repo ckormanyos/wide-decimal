@@ -1439,9 +1439,9 @@ auto test_odds_and_ends() -> bool
 {
   auto result_is_ok = true;
 
-  {
-    const auto tol = std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
+  const auto tol = std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
 
+  {
     #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
     constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(2048));
     #else
@@ -1489,6 +1489,18 @@ auto test_odds_and_ends() -> bool
       ((mantissa == static_cast<local_internal_float_type>(static_cast<float>(-0.3125L))) && (expon == static_cast<int>(INT8_C(-1))));
 
     result_is_ok = (result_extract_parts_is_ok && result_is_ok);
+  }
+
+  {
+    const local_wide_decimal_type pi_val = pi_right;
+
+    using std::pow;
+
+    auto pi_pow_zero = pow(pi_val, static_cast<int>(INT8_C(0)));
+
+    const auto result_pi_pow_zero_is_ok = (pi_pow_zero == static_cast<int>(INT8_C(1)));
+
+    result_is_ok = (result_pi_pow_zero_is_ok && result_is_ok);
   }
 
   {
