@@ -769,11 +769,7 @@ auto test_frexp_in_all_ranges() -> bool
     }
   }
 
-  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
   constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(2048));
-  #else
-  constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(512));
-  #endif
 
   for(auto i = static_cast<unsigned>(UINT8_C(0)); i < i_max_test; ++i)
   {

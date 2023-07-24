@@ -11,10 +11,10 @@
 #endif
 
 #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#if(__GNUC__ >= 12)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
-#endif
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
 #endif
 
 #include <array>
@@ -436,9 +436,8 @@ extern "C"
 #endif
 
 #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#if(__GNUC__ >= 12)
 #pragma GCC diagnostic pop
-#endif
+#pragma GCC diagnostic pop
 #endif
 
 #if (defined(__GNUC__) && !defined(__clang__) && defined(__arm__))
