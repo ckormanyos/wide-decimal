@@ -40,7 +40,9 @@ namespace local
 {
   auto run() -> bool;
 
-  auto pfn_runner(const std::function<bool(void)>& pfn_test, const char* p_msg) -> bool
+  using function_type = std::function<bool(void)>;
+
+  auto pfn_runner(const function_type& pfn_test, const char* p_msg) -> bool
   {
     using local_clock_type = std::chrono::high_resolution_clock;
 
@@ -84,27 +86,29 @@ auto local::run() -> bool
   using WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_log_____;
   #endif
 
-  const auto result_test_decwide_t_examples_part1_is_ok = local::pfn_runner(std::function(test_decwide_t_examples_part1__), "result_test_decwide_t_examples_part1_is_ok: ");
-  const auto result_test_decwide_t_examples_part2_is_ok = local::pfn_runner(std::function(test_decwide_t_examples_part2__), "result_test_decwide_t_examples_part2_is_ok: ");
-  const auto result_test_decwide_t_algebra_edge___is_ok = local::pfn_runner(std::function(test_decwide_t_algebra_edge____), "result_test_decwide_t_algebra_edge___is_ok: ");
-  const auto result_test_decwide_t_algebra_add____is_ok = local::pfn_runner(std::function(test_decwide_t_algebra_add_____), "result_test_decwide_t_algebra_add____is_ok: ");
-  const auto result_test_decwide_t_algebra_sub____is_ok = local::pfn_runner(std::function(test_decwide_t_algebra_sub_____), "result_test_decwide_t_algebra_sub____is_ok: ");
-  const auto result_test_decwide_t_algebra_mul____is_ok = local::pfn_runner(std::function(test_decwide_t_algebra_mul_____), "result_test_decwide_t_algebra_mul____is_ok: ");
-  const auto result_test_decwide_t_algebra_div____is_ok = local::pfn_runner(std::function(test_decwide_t_algebra_div_____), "result_test_decwide_t_algebra_div____is_ok: ");
-  const auto result_test_decwide_t_algebra_sqrt___is_ok = local::pfn_runner(std::function(test_decwide_t_algebra_sqrt____), "result_test_decwide_t_algebra_sqrt___is_ok: ");
-  const auto result_test_decwide_t_algebra_log____is_ok = local::pfn_runner(std::function(test_decwide_t_algebra_log_____), "result_test_decwide_t_algebra_log____is_ok: ");
+  using local_function_type = local::function_type;
+
+  const auto result_test_examples_part1_is_ok = local::pfn_runner(local_function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok   : ");
+  const auto result_test_examples_part2_is_ok = local::pfn_runner(local_function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok   : ");
+  const auto result_test_algebra_edge___is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok   : ");
+  const auto result_test_algebra_add____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok   : ");
+  const auto result_test_algebra_sub____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok   : ");
+  const auto result_test_algebra_mul____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_mul_____), "result_test_algebra_mul____is_ok   : ");
+  const auto result_test_algebra_div____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_div_____), "result_test_algebra_div____is_ok   : ");
+  const auto result_test_algebra_sqrt___is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_sqrt____), "result_test_algebra_sqrt___is_ok   : ");
+  const auto result_test_algebra_log____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_log_____), "result_test_algebra_log____is_ok   : ");
 
   const auto result_is_ok =
   (
-       result_test_decwide_t_examples_part1_is_ok
-    && result_test_decwide_t_examples_part2_is_ok
-    && result_test_decwide_t_algebra_edge___is_ok
-    && result_test_decwide_t_algebra_add____is_ok
-    && result_test_decwide_t_algebra_sub____is_ok
-    && result_test_decwide_t_algebra_mul____is_ok
-    && result_test_decwide_t_algebra_div____is_ok
-    && result_test_decwide_t_algebra_sqrt___is_ok
-    && result_test_decwide_t_algebra_log____is_ok
+       result_test_examples_part1_is_ok
+    && result_test_examples_part2_is_ok
+    && result_test_algebra_edge___is_ok
+    && result_test_algebra_add____is_ok
+    && result_test_algebra_sub____is_ok
+    && result_test_algebra_mul____is_ok
+    && result_test_algebra_div____is_ok
+    && result_test_algebra_sqrt___is_ok
+    && result_test_algebra_log____is_ok
   );
 
   return result_is_ok;
