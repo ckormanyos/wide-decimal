@@ -1490,7 +1490,7 @@ auto test_odds_and_ends() -> bool
     special_neg_value.extract_parts(mantissa, expon);
 
     const auto result_extract_parts_is_ok =
-      ((mantissa == static_cast<local_internal_float_type>(-0.3125F)) && (expon == -1));
+      ((mantissa == static_cast<local_internal_float_type>(static_cast<float>(-0.3125L))) && (expon == static_cast<int>(INT8_C(-1))));
 
     result_is_ok = (result_extract_parts_is_ok && result_is_ok);
   }
@@ -1500,13 +1500,13 @@ auto test_odds_and_ends() -> bool
 
     auto sub_pi = --near_pi;
 
-    volatile auto result_sub_near_pi_is_ok = ((sub_pi < 3.0F) && (sub_pi > 2.0F));
+    volatile auto result_sub_near_pi_is_ok = ((sub_pi < static_cast<float>(UINT8_C(3))) && (sub_pi > static_cast<float>(UINT8_C(2))));
 
     result_is_ok = (result_sub_near_pi_is_ok && result_is_ok);
 
     sub_pi = --near_pi;
 
-    result_sub_near_pi_is_ok = ((sub_pi < 2.0F) && (sub_pi > 1.0F));
+    result_sub_near_pi_is_ok = ((sub_pi <static_cast<float>(UINT8_C(2))) && (sub_pi > static_cast<float>(UINT8_C(1))));
 
     result_is_ok = (result_sub_near_pi_is_ok && result_is_ok);
   }
@@ -1544,7 +1544,7 @@ auto test_odds_and_ends() -> bool
   }
 
   {
-    int nf;
+    auto nf = int { };
     const auto fr = frexp(local_zero(), &nf);
 
     const auto result_frexp_of_zero_is_ok = ((fr == static_cast<int>(INT8_C(0))) && (nf == static_cast<int>(INT8_C(0))));
