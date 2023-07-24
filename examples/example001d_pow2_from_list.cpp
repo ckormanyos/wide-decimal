@@ -293,9 +293,9 @@ auto ::math::wide_decimal::example001d_pow2_from_list() -> bool
 
   bool result_is_ok = true;
 
-  wide_decimal_type local_half(wide_decimal_type(1U) / 2U);
-  wide_decimal_type local_one (1U);
-  wide_decimal_type local_two (2U);
+  wide_decimal_type local_half(wide_decimal_type(static_cast<unsigned>(UINT8_C(1))) / static_cast<unsigned>(UINT8_C(2)));
+  wide_decimal_type local_one (static_cast<unsigned>(UINT8_C(1)));
+  wide_decimal_type local_two (static_cast<unsigned>(UINT8_C(2)));
 
   for(auto i = static_cast<std::ptrdiff_t>(INT8_C(0)); i < static_cast<std::ptrdiff_t>(local_pow2_data.size()); ++i)
   {
@@ -307,7 +307,7 @@ auto ::math::wide_decimal::example001d_pow2_from_list() -> bool
     }
     else if(i == static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / static_cast<std::size_t>(UINT8_C(2))))
     {
-      x2 = std::move(local_one);
+      x2 = local_one;
     }
     else
     {
