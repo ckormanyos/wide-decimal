@@ -57,10 +57,11 @@ namespace example012_rational
     #else
     constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(310));
     #endif
+    constexpr auto hi_index_max = static_cast<std::int32_t>(INT32_C(100010));
 
-    for(std::int32_t lo_index = static_cast<std::int32_t>(INT32_C(101)); lo_index < lo_index_max; lo_index += static_cast<std::int32_t>(INT32_C(7)))
+    for(auto lo_index = static_cast<std::int32_t>(INT32_C(101)); lo_index < lo_index_max; lo_index += static_cast<std::int32_t>(INT32_C(7)))
     {
-      for(std::int32_t hi_index = static_cast<std::int32_t>(INT32_C(10001)); hi_index < static_cast<std::int32_t>(INT32_C(100010)); hi_index += INT32_C(17))
+      for(auto hi_index = static_cast<std::int32_t>(INT32_C(10001)); hi_index < hi_index_max; hi_index += static_cast<std::int32_t>(INT32_C(17)))
       {
         const auto lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
         const auto hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
@@ -102,10 +103,11 @@ namespace example012_rational
     #else
     constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(310));
     #endif
+    constexpr auto hi_index_max = static_cast<std::int32_t>(INT32_C(100010));
 
-    for(std::int32_t lo_index = static_cast<std::int32_t>(INT32_C(101)); lo_index < lo_index_max; lo_index += static_cast<std::int32_t>(INT32_C(7)))
+    for(auto lo_index = static_cast<std::int32_t>(INT32_C(101)); lo_index < lo_index_max; lo_index += static_cast<std::int32_t>(INT32_C(7)))
     {
-      for(std::int32_t hi_index = static_cast<std::int32_t>(INT32_C(10001)); hi_index < static_cast<std::int32_t>(INT32_C(100010)); hi_index += INT32_C(17))
+      for(auto hi_index = static_cast<std::int32_t>(INT32_C(10001)); hi_index < hi_index_max; hi_index += static_cast<std::int32_t>(INT32_C(17)))
       {
         const auto lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
         const auto hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
