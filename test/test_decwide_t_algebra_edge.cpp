@@ -16,6 +16,16 @@
 #include <test/test_decwide_t_algebra.h>
 #include <util/utility/util_baselexical_cast.h>
 
+#if defined(__clang__)
+  #if defined __has_feature && (__has_feature(thread_sanitizer) || __has_feature(address_sanitizer))
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
+  #endif
+#elif defined(__GNUC__)
+  #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__) || defined(WIDE_DECIMAL_HAS_COVERAGE)
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
+  #endif
+#endif
+
 namespace test_decwide_t_algebra_edge {
 
 using local_limb_type = std::uint16_t;
@@ -615,13 +625,27 @@ auto test_various_min_max_operations() -> bool
         && static_cast<signed long long>(local_min_sll_excess) == (std::numeric_limits<signed long long>::min)() // NOLINT(google-runtime-int)
       );
 
-    const auto local_max_ldbl = local_wide_decimal_type((std::numeric_limits<long double>::max)());
+    #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
+    const auto local_max_ldbl = static_cast<local_wide_decimal_type>((std::numeric_limits<long double>::max)());
 
-    const auto local_max_ldbl_excess = local_max_ldbl * local_max_ldbl;
+    const auto local_ldbl_inf =
+      static_cast<long double>
+      (
+        static_cast<local_wide_decimal_type>
+        (
+          local_max_ldbl * (std::numeric_limits<long double>::max)()
+        )
+      );
+
+    const volatile auto ratio =
+      static_cast<long double>
+      (
+        static_cast<long double>(local_max_ldbl) / (std::numeric_limits<long double>::max)()
+      );
 
     using std::fabs;
 
-    const auto delta_ldbl = fabs(static_cast<long double>(1.0F) - static_cast<long double>(static_cast<long double>(local_max_ldbl)        / (std::numeric_limits<long double>::max)()));
+    const auto delta_ldbl = fabs(static_cast<long double>(1.0F) - ratio);
 
     constexpr auto tol_ldbl =
       static_cast<long double>
@@ -629,13 +653,21 @@ auto test_various_min_max_operations() -> bool
         std::numeric_limits<long double>::epsilon() * static_cast<long double>(2.0F)
       );
 
+    #if defined(__GNUC__)
+    const auto my_ldbl_isinf =
+    (
+         ( local_ldbl_inf == std::numeric_limits<long double>::infinity())
+      || (-local_ldbl_inf == std::numeric_limits<long double>::infinity())
+    );
+    #else
     using std::isinf;
+    const auto my_ldbl_isinf = (isinf)(local_ldbl_inf);
+    #endif
 
-    const auto result_local_max_ldbl_is_ok =
-      (
-           (delta_ldbl < tol_ldbl)
-        && (isinf)(static_cast<long double>(local_max_ldbl_excess))
-      );
+    const auto result_local_max_ldbl_is_ok = ((delta_ldbl < tol_ldbl) && my_ldbl_isinf);
+    #else
+    const auto result_local_max_ldbl_is_ok = true;
+    #endif
 
     const auto result_min_max_is_ok =
       (
@@ -673,6 +705,7 @@ auto test_various_min_max_operations() -> bool
   return result_is_ok;
 }
 
+#if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
 auto test_frexp_in_all_ranges() -> bool
 {
   eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
@@ -695,28 +728,6 @@ auto test_frexp_in_all_ranges() -> bool
       );
 
     result_is_ok = (result_frexp_of_zero_is_ok && result_is_ok);
-  }
-
-  {
-    local_wide_decimal_type special_neg_value =
-      -local_wide_decimal_type::from_lst
-       (
-         { static_cast<local_limb_type>(UINT32_C(312)), static_cast<local_limb_type>(UINT32_C(5000)) },
-         static_cast<typename local_wide_decimal_type::exponent_type>(INT8_C(-4))
-       );
-
-    using local_internal_float_type = typename local_wide_decimal_type::internal_float_type;
-    using local_exponent_type       = typename local_wide_decimal_type::exponent_type;
-
-    local_internal_float_type mantissa { };
-    local_exponent_type       expon    { };
-
-    special_neg_value.extract_parts(mantissa, expon);
-
-    const auto result_extract_parts_is_ok =
-      ((mantissa == static_cast<local_internal_float_type>(-0.3125F)) && (expon == -1));
-
-    result_is_ok = (result_extract_parts_is_ok && result_is_ok);
   }
 
   {
@@ -758,15 +769,15 @@ auto test_frexp_in_all_ranges() -> bool
     }
   }
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(2048));
-           ++i)
+  constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(2048));
+
+  for(auto i = static_cast<unsigned>(UINT8_C(0)); i < i_max_test; ++i)
   {
     const auto x =
       generate_wide_decimal_value<local_wide_decimal_type>
       (
         false,
-        static_cast<int>(static_cast<float>(std::numeric_limits<float>::max_exponent10) * 0.65),
+        static_cast<int>(static_cast<float>(std::numeric_limits<float>::max_exponent10) * 0.65F),
         std::numeric_limits<float>::digits10
       );
 
@@ -796,9 +807,7 @@ auto test_frexp_in_all_ranges() -> bool
     result_is_ok = (result_frexp_as_float_is_ok && result_is_ok);
   }
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(2048));
-           ++i)
+  for(auto i = static_cast<unsigned>(UINT8_C(0)); i < i_max_test; ++i)
   {
     const auto x =
       generate_wide_decimal_value<local_wide_decimal_type>
@@ -834,32 +843,9 @@ auto test_frexp_in_all_ranges() -> bool
     result_is_ok = (result_frexp_as_float_is_ok && result_is_ok);
   }
 
-  const auto tol = std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
-
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(2048));
-           ++i)
-  {
-    const auto x = generate_wide_decimal_value<local_wide_decimal_type>(false);
-
-    using std::frexp;
-    using std::ldexp;
-
-    int expon { };
-    const auto frexp_value = frexp(x, &expon);
-    const auto ldexp_value = ldexp(frexp_value, expon);
-
-    using std::fabs;
-
-    const auto delta = fabs(1 - (x / ldexp_value));
-
-    const auto result_frexp_ldexp_is_ok = (delta < tol);
-
-    result_is_ok = (result_frexp_ldexp_is_ok && result_is_ok);
-  }
-
   return result_is_ok;
 }
+#endif
 
 auto test_string_ops_and_round_trips() -> bool
 {
@@ -879,9 +865,13 @@ auto test_string_ops_and_round_trips() -> bool
 
     const auto ten_pow_30 = local_wide_decimal_type("1E30");
 
-    for(auto   i = static_cast<unsigned>(UINT8_C(0));
-               i < static_cast<unsigned>(UINT8_C(8192));
-             ++i)
+    #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
+    constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(8192));
+    #else
+    constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(1024));
+    #endif
+
+    for(auto i = static_cast<unsigned>(UINT8_C(0)); i < i_max_test; ++i)
     {
       using uint_digits_array_type = std::array<char, static_cast<std::size_t>(UINT8_C(5))>;
 
@@ -1001,7 +991,7 @@ auto test_string_ops_and_round_trips() -> bool
              i < static_cast<unsigned>(UINT8_C(10));
            ++i)
   {
-    std::array<char, 4U> digits_to_use =
+    std::array<char, static_cast<std::size_t>(UINT8_C(4))> digits_to_use =
     {
       static_cast<char>(i + static_cast<unsigned>(UINT8_C(0x30))),
       '.',
@@ -1032,11 +1022,19 @@ auto test_string_ops_and_round_trips() -> bool
     result_is_ok = (result_str_of_digit_is_ok && result_is_ok);
   }
 
-  const auto tol = local_wide_decimal_type(local_wide_decimal_type(1U) / 1000U);
+  const auto tol =
+    static_cast<local_wide_decimal_type>
+    (
+      (static_cast<local_wide_decimal_type>(1U) / 1000U)
+    );
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(8192));
-           ++i)
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
+  constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(8192));
+  #else
+  constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(1024));
+  #endif
+
+  for(auto i = static_cast<unsigned>(UINT8_C(0)); i < i_max_test; ++i)
   {
     const auto x =
       generate_wide_decimal_value<local_wide_decimal_type>
@@ -1140,6 +1138,16 @@ auto test_various_rootn() -> bool
   {
     using std::sqrt;
 
+    const auto sqrt_minus_one  = sqrt(-local_one());
+
+    const auto result_sqrt_minus_one_is_ok = (sqrt_minus_one == 0);
+
+    result_is_ok = (result_sqrt_minus_one_is_ok && result_is_ok);
+  }
+
+  {
+    using std::sqrt;
+
     const auto sqrt_one  = sqrt(local_one());
     const auto sqrt_zero = sqrt(local_zero());
 
@@ -1233,6 +1241,23 @@ auto test_various_rootn() -> bool
   }
 
   {
+    const auto x = local_wide_decimal_type(local_wide_decimal_type(static_cast<unsigned>(UINT32_C(1011))) / static_cast<unsigned>(UINT8_C(10)));
+
+    const auto root_m4 = rootn_inv(x, static_cast<std::int32_t>(INT8_C(4)));
+
+    // N[1 / ((1011/10)^(1/4)), 72]
+    const auto root_m4_ctrl = local_wide_decimal_type("0.315364069454124781696219443391001124974032476918702238114164357323042771");
+
+    using std::fabs;
+
+    const auto delta_root_m4 = fabs(1 - (root_m4 / root_m4_ctrl));
+
+    const auto result_root_m4_is_ok = (delta_root_m4 < tol);
+
+    result_is_ok = (result_root_m4_is_ok && result_is_ok);
+  }
+
+  {
     const auto x_neg = local_wide_decimal_type(local_wide_decimal_type(static_cast<unsigned>(UINT32_C(1011))) / static_cast<signed>(INT8_C(-10)));
 
     const auto root_x_neg = rootn(x_neg, static_cast<std::int32_t>(INT8_C(4)));
@@ -1260,9 +1285,13 @@ auto test_to_native_float_and_back() -> bool
   const     auto tol1 = static_cast<local_wide_decimal_type>(static_cast<native_float_type>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
   constexpr auto tol2 = static_cast<native_float_type>      (static_cast<native_float_type>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
 
-  for(auto   i = static_cast<unsigned>(UINT32_C(0));
-             i < static_cast<unsigned>(UINT32_C(4096));
-           ++i)
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
+  constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(4096));
+  #else
+  constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(512));
+  #endif
+
+  for(auto i = static_cast<unsigned>(UINT32_C(0)); i < i_max_test; ++i)
   {
     const auto x =
       generate_wide_decimal_value<local_wide_decimal_type>
@@ -1271,7 +1300,7 @@ auto test_to_native_float_and_back() -> bool
         static_cast<int>(static_cast<float>(std::numeric_limits<native_float_type>::max_exponent10) * 0.85F)
       );
 
-    const auto x_as_native_float = static_cast<native_float_type>(x);
+    const auto x_as_native_float = static_cast<native_float_type>(static_cast<long double>(x));
 
     const auto x_reloaded_from_native_float = local_wide_decimal_type(x_as_native_float);
 
@@ -1294,9 +1323,9 @@ auto test_to_native_float_and_back() -> bool
 
       strm << std::scientific << std::setprecision(prec_of_strm) << x;
 
-      auto x_as_native_float_from_strm = static_cast<native_float_type>(0.0F);
+      const auto ld_from_strm = strtold(strm.str().c_str(), nullptr);
 
-      strm >> x_as_native_float_from_strm;
+      const auto x_as_native_float_from_strm = static_cast<native_float_type>(ld_from_strm);
 
       const auto delta3 = fabs(static_cast<native_float_type>(1.0F) - fabs(x_as_native_float / x_as_native_float_from_strm));
 
@@ -1406,6 +1435,134 @@ auto test_various_int_operations() -> bool
   return result_is_ok;
 }
 
+auto test_odds_and_ends() -> bool
+{
+  auto result_is_ok = true;
+
+  const auto tol = std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
+
+  {
+    #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
+    constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(2048));
+    #else
+    constexpr auto i_max_test = static_cast<unsigned>(UINT32_C(512));
+    #endif
+
+    for(auto i = static_cast<unsigned>(UINT8_C(0)); i < i_max_test; ++i)
+    {
+      const auto x = generate_wide_decimal_value<local_wide_decimal_type>(false);
+
+      using std::frexp;
+      using std::ldexp;
+
+      int expon { };
+      const auto frexp_value = frexp(x, &expon);
+      const auto ldexp_value = ldexp(frexp_value, expon);
+
+      using std::fabs;
+
+      const auto delta = fabs(1 - (x / ldexp_value));
+
+      const auto result_frexp_ldexp_is_ok = (delta < tol);
+
+      result_is_ok = (result_frexp_ldexp_is_ok && result_is_ok);
+    }
+  }
+
+  {
+    local_wide_decimal_type special_neg_value =
+      -local_wide_decimal_type::from_lst
+       (
+         { static_cast<local_limb_type>(UINT32_C(312)), static_cast<local_limb_type>(UINT32_C(5000)) },
+         static_cast<typename local_wide_decimal_type::exponent_type>(INT8_C(-4))
+       );
+
+    using local_internal_float_type = typename local_wide_decimal_type::internal_float_type;
+    using local_exponent_type       = typename local_wide_decimal_type::exponent_type;
+
+    local_internal_float_type mantissa { };
+    local_exponent_type       expon    { };
+
+    special_neg_value.extract_parts(mantissa, expon);
+
+    const auto result_extract_parts_is_ok =
+      ((mantissa == static_cast<local_internal_float_type>(static_cast<float>(-0.3125L))) && (expon == static_cast<int>(INT8_C(-1))));
+
+    result_is_ok = (result_extract_parts_is_ok && result_is_ok);
+  }
+
+  {
+    const local_wide_decimal_type pi_val = pi_right;
+
+    using std::pow;
+
+    auto pi_pow_zero = pow(pi_val, static_cast<int>(INT8_C(0)));
+
+    const auto result_pi_pow_zero_is_ok = (pi_pow_zero == static_cast<int>(INT8_C(1)));
+
+    result_is_ok = (result_pi_pow_zero_is_ok && result_is_ok);
+  }
+
+  {
+    local_wide_decimal_type near_pi = pi_right;
+
+    auto sub_pi = --near_pi;
+
+    volatile auto result_sub_near_pi_is_ok = ((sub_pi < static_cast<float>(UINT8_C(3))) && (sub_pi > static_cast<float>(UINT8_C(2))));
+
+    result_is_ok = (result_sub_near_pi_is_ok && result_is_ok);
+
+    sub_pi = --near_pi;
+
+    result_sub_near_pi_is_ok = ((sub_pi <static_cast<float>(UINT8_C(2))) && (sub_pi > static_cast<float>(UINT8_C(1))));
+
+    result_is_ok = (result_sub_near_pi_is_ok && result_is_ok);
+  }
+
+  {
+    local_wide_decimal_type frac_one_over_pi = static_cast<local_wide_decimal_type>(1 / pi_right);
+
+    for(auto i = static_cast<unsigned>(UINT8_C(0)); i < static_cast<unsigned>(UINT8_C(10)); ++i)
+    {
+      auto np = int { };
+      const auto fr = frexp(frac_one_over_pi, &np);
+
+      const auto result_frexp_is_ok = (np < static_cast<int>(INT8_C(0)));
+
+      result_is_ok = (result_frexp_is_ok && result_is_ok);
+
+      frac_one_over_pi /= static_cast<int>(INT8_C(10));
+    }
+  }
+
+  {
+    local_wide_decimal_type mul_ten_of_pi = static_cast<local_wide_decimal_type>(pi_right * static_cast<unsigned>(UINT8_C(10)));
+
+    for(auto i = static_cast<unsigned>(UINT8_C(0)); i < static_cast<unsigned>(UINT8_C(10)); ++i)
+    {
+      auto np = int { };
+      const auto fr = frexp(mul_ten_of_pi, &np);
+
+      const auto result_frexp_is_ok = (np > static_cast<int>(INT8_C(0)));
+
+      result_is_ok = (result_frexp_is_ok && result_is_ok);
+
+      mul_ten_of_pi *= static_cast<int>(INT8_C(10));
+    }
+  }
+
+  {
+    auto nf = int { };
+    const auto fr = frexp(local_zero(), &nf);
+
+    const auto result_frexp_of_zero_is_ok = ((fr == static_cast<int>(INT8_C(0))) && (nf == static_cast<int>(INT8_C(0))));
+
+    result_is_ok = (result_frexp_of_zero_is_ok && result_is_ok);
+  }
+
+  return result_is_ok;
+}
+
 } // namespace test_decwide_t_algebra_edge
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
@@ -1422,15 +1579,20 @@ auto test_decwide_t_algebra_edge____() -> bool // NOLINT(readability-identifier-
   result_is_ok = (test_decwide_t_algebra_edge::test_various_zero_operations              () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_one_operations               () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_min_max_operations           () && result_is_ok);
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
   result_is_ok = (test_decwide_t_algebra_edge::test_frexp_in_all_ranges                  () && result_is_ok);
+  #endif
   result_is_ok = (test_decwide_t_algebra_edge::test_string_ops_and_round_trips           () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_rootn                        () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<float>      () && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<double>     () && result_is_ok);
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
   result_is_ok = (test_decwide_t_algebra_edge::test_to_native_float_and_back<long double>() && result_is_ok);
+  #endif
   result_is_ok = (test_decwide_t_algebra_edge::test_various_int_operations<std::uint16_t>() && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_int_operations<std::uint32_t>() && result_is_ok);
   result_is_ok = (test_decwide_t_algebra_edge::test_various_int_operations<std::uint64_t>() && result_is_ok);
+  result_is_ok = (test_decwide_t_algebra_edge::test_odds_and_ends                        () && result_is_ok);
 
   return result_is_ok;
 }

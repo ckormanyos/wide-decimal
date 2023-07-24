@@ -1,9 +1,14 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2022.                 //
+//  Copyright Christopher Kormanyos 2020 - 2023.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
+
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
 
 #include <boost/version.hpp>
 
@@ -55,11 +60,11 @@
 
 #if defined(__clang__)
   #if defined __has_feature && (__has_feature(thread_sanitizer) || __has_feature(address_sanitizer))
-  #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
   #endif
 #elif defined(__GNUC__)
   #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__) || defined(WIDE_DECIMAL_HAS_COVERAGE)
-  #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
   #endif
 #endif
 
@@ -69,7 +74,7 @@ namespace test_decwide_t
 
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(10001);
 
-  #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
   constexpr std::uint32_t independent_algebra_test_decwide_t_count         = UINT32_C(128);
   constexpr std::uint32_t independent_algebra_test_decwide_t_count_for_log = UINT32_C(32);
   constexpr std::uint32_t independent_algebra_test_decwide_t_round         = UINT32_C(4);
@@ -295,5 +300,9 @@ auto test_decwide_t_algebra_log_____() -> bool // NOLINT(readability-identifier-
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#endif
+
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
 #pragma GCC diagnostic pop
 #endif

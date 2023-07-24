@@ -32,7 +32,7 @@ endif
 
 CXXFLAGS     = -march=native                                                   \
                -mtune=native                                                   \
-               -O2                                                             \
+               -O1                                                             \
                -Wall                                                           \
                -Wextra                                                         \
                -Wconversion                                                    \
@@ -76,4 +76,11 @@ LCOV_BRANCH := --rc lcov_branch_coverage=1
 endif
 
 LCOV_REMOVES = '/usr/*'                                                       \
-               '*boost/*'
+               '*boost/*'                                                     \
+               '*mcal_lcd*'                                                   \
+               '*002_pi*'                                                     \
+               '*002a_pi*'                                                    \
+               '*002c_pi*'                                                    \
+               '*006_logarithm*'                                              \
+               '*007_catalan_series*'                                         \
+               '*008_bernoulli_tgamma*'
