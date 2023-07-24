@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2022.                 //
+//  Copyright Christopher Kormanyos 2020 - 2023.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -14,6 +14,16 @@
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
 #include <util/utility/util_baselexical_cast.h>
+
+#if defined(__clang__)
+  #if defined __has_feature && (__has_feature(thread_sanitizer) || __has_feature(address_sanitizer))
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
+  #endif
+#elif defined(__GNUC__)
+  #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__) || defined(WIDE_DECIMAL_HAS_COVERAGE)
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
+  #endif
+#endif
 
 namespace example012_rational
 {
@@ -42,9 +52,15 @@ namespace example012_rational
 
     bool result_is_ok = true;
 
-    for(std::int32_t lo_index = INT32_C(101); lo_index < INT32_C(1010); lo_index += INT32_C(7))
+    #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
+    constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(1010));
+    #else
+    constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(310));
+    #endif
+
+    for(std::int32_t lo_index = static_cast<std::int32_t>(INT32_C(101)); lo_index < lo_index_max; lo_index += static_cast<std::int32_t>(INT32_C(7)))
     {
-      for(std::int32_t hi_index = INT32_C(10001); hi_index < INT32_C(100010); hi_index += INT32_C(17))
+      for(std::int32_t hi_index = static_cast<std::int32_t>(INT32_C(10001)); hi_index < static_cast<std::int32_t>(INT32_C(100010)); hi_index += INT32_C(17))
       {
         const auto lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
         const auto hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
@@ -81,9 +97,15 @@ namespace example012_rational
 
     bool result_is_ok = true;
 
-    for(std::int32_t lo_index = INT32_C(101); lo_index < INT32_C(1010); lo_index += INT32_C(7))
+    #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
+    constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(1010));
+    #else
+    constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(310));
+    #endif
+
+    for(std::int32_t lo_index = static_cast<std::int32_t>(INT32_C(101)); lo_index < lo_index_max; lo_index += static_cast<std::int32_t>(INT32_C(7)))
     {
-      for(std::int32_t hi_index = INT32_C(10001); hi_index < INT32_C(100010); hi_index += INT32_C(17))
+      for(std::int32_t hi_index = static_cast<std::int32_t>(INT32_C(10001)); hi_index < static_cast<std::int32_t>(INT32_C(100010)); hi_index += INT32_C(17))
       {
         const auto lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
         const auto hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
@@ -125,8 +147,8 @@ auto ::math::wide_decimal::example012_rational_floor_ceil() -> bool
     using decimal_type = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(10)), std::uint32_t, void>;
     #endif
 
-    result_is_ok &= example012_rational::test_rational_floor<decimal_type>();
-    result_is_ok &= example012_rational::test_rational_ceil <decimal_type>();
+    result_is_ok = (example012_rational::test_rational_floor<decimal_type>() && result_is_ok);
+    result_is_ok = (example012_rational::test_rational_ceil <decimal_type>() && result_is_ok);
   }
 
   // Test floor/ceil for 12 decimal digits.
@@ -137,8 +159,8 @@ auto ::math::wide_decimal::example012_rational_floor_ceil() -> bool
     using decimal_type = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(12)), std::uint32_t, void>;
     #endif
 
-    result_is_ok &= example012_rational::test_rational_floor<decimal_type>();
-    result_is_ok &= example012_rational::test_rational_ceil <decimal_type>();
+    result_is_ok = (example012_rational::test_rational_floor<decimal_type>() && result_is_ok);
+    result_is_ok = (example012_rational::test_rational_ceil <decimal_type>() && result_is_ok);
   }
 
   return result_is_ok;

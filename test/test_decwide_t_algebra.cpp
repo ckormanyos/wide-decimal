@@ -55,11 +55,11 @@
 
 #if defined(__clang__)
   #if defined __has_feature && (__has_feature(thread_sanitizer) || __has_feature(address_sanitizer))
-  #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
   #endif
 #elif defined(__GNUC__)
   #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__) || defined(WIDE_DECIMAL_HAS_COVERAGE)
-  #define DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH
+  #define DECWIDE_T_REDUCE_TEST_DEPTH
   #endif
 #endif
 
@@ -69,7 +69,7 @@ namespace test_decwide_t
 
   constexpr std::uint32_t wide_decimal_digits10 = UINT32_C(10001);
 
-  #if !defined(DECWIDE_T_TEST_OPTION_REDUCE_TEST_DEPTH)
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
   constexpr std::uint32_t independent_algebra_test_decwide_t_count         = UINT32_C(128);
   constexpr std::uint32_t independent_algebra_test_decwide_t_count_for_log = UINT32_C(32);
   constexpr std::uint32_t independent_algebra_test_decwide_t_round         = UINT32_C(4);

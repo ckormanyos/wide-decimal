@@ -144,20 +144,55 @@ The examples include the following.
   - ![`example012_rational_floor_ceil.cpp`](./examples/example012_rational_floor_ceil.cpp) verifies the proper representation of a wide selection of small-valued, pure integral rational quotients.
   - ![`example013_embeddable_sqrt.cpp`](./examples/example013_embeddable_sqrt.cpp) and ![`example013a_embeddable_agm.cpp`](./examples/example013a_embeddable_agm.cpp) exercise calculations that also run on tiny bare-metal embedded systems, featuring a $101$ digit square root calculation and a $53$ digit AGM iteration for $\pi$.
 
-## Testing and CI
+## Testing, CI and Quality Checks
 
-Testing is a big issue and a growing test suite is in continued progress
-providing for tested, efficient functionality on the PC and workstation.
-The GitHub code is delivered with an affiliated MSVC project that uses easy-to-understand
-subroutines called from `main()` that exercise various test cases.
+### Testing
 
-Continuous integration runs on push using GitHub Actions.
+Testing is definitely a big issue. A growing, supported
+test suite improves confidence in the library.
+It provides for tested, efficient functionality on the PC and workstation.
+The GitHub code is, as mentioned above, delivered with an affiliated MSVC
+project or a variety of other build/make options that use easy-to-understand
+subroutines called from `main()`. These exercise the various
+examples and the full suite of test cases.
+
+If an issue is reported, reproduced and verified, an attempt
+is made to correct it without breaking any other
+code. Upon successful correction, specific test cases
+exercising the reported issue are usually added as part
+of the issue resolution process.
+
+### CI and Quality checks
+
+CI runs on both push-to-branch as well as pull request using GitHub Actions.
 Various compilers, operating systems, and C++ standards
-ranging from C++11, 14, 17, 20, 23 are included in CI.
-An assortment of syntax checkers including enhanced GCC warnings,
-`clang-tidy` and various third party tools run in and
-also in association with CI and pull requests.
-Badges can be found above.
+ranging from C++14, 17, 20, 23 are included in CI.
+
+In CI, we use both elevated GCC/clang compiler warnings
+as well as MSVC level 4 warnings active on the correspondoing platforms.
+For additional in-depth syntax checking, clang-tidy is used both in CI
+as well as in offline checks to improve static code quality.
+
+Both GCC's run-time
+[sanitizers](https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html)
+as well as [_valgrind_](https://valgrind.org) (see also [1] and [2] in the References below)
+are used in CI in order to help assure dynamic quality.
+
+Additional quality checks are performed on pull-request
+and merge to master using modern third party open-source services.
+These include
+[CodeQL](https://github.com/ckormanyos/wide-decimal/actions?query=workflow%3ACodeQL),
+[Synopsis Coverity](https://scan.coverity.com/projects/ckormanyos-wide-decimal),
+and [CodeSonar](https://sonarcloud.io/summary/new_code?id=ckormanyos_wide-decimal).
+At the moment, the Coverity check is run with manual report submission.
+Automation of this is, however, planned.
+
+Code coverage uses GCC/gcov/lcov and has a
+quality-gate with comparison/baseline-check provided by
+[Codecov](https://app.codecov.io/gh/ckormanyos/wide-decimal).
+
+Quality badges are displayed at the top of this repository's
+readme page.
 
 ### Build status
 [![Build Status](https://github.com/ckormanyos/wide-decimal/actions/workflows/wide_decimal.yml/badge.svg)](https://github.com/ckormanyos/wide-decimal/actions)
@@ -462,3 +497,18 @@ from the same rounding limitations as the
 [`cpp_dec_float`](https://www.boost.org/doc/libs/1_79_0/libs/multiprecision/doc/html/boost_multiprecision/tut/floats/cpp_dec_float.html)
 class known from
 [`Boost.Multiprecision`](https://www.boost.org/doc/libs/1_79_0/libs/multiprecision/doc/html/index.html).
+
+## References
+
+A original publications on [_valgrind_](https://valgrind.org)
+and its relation to memory errors can be found in [1] and [2].
+
+[1] Nicholas Nethercote and Julian Seward,
+_Valgrind:_ _A_ _Framework_ _for_ _Heavyweight_ _Dynamic_ _Binary_ _Instrumentation_,
+Proceedings of ACM SIGPLAN 2007 Conference on Programming Language Design and Implementation (PLDI 2007),
+San Diego, California, USA, June 2007.
+
+[2] Nicholas Nethercote and Julian Seward,
+_How_ _to_ _Shadow_ _Every_ _Byte_ _of_ _Memory_ _Used_ _by_ _a_ _Program_.
+Proceedings of the Third International ACM SIGPLAN/SIGOPS Conference on Virtual Execution Environments (VEE 2007),
+San Diego, California, USA, June 2007.

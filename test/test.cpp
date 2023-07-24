@@ -46,17 +46,22 @@ namespace local
 auto local::run() -> bool
 {
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  using namespace WIDE_DECIMAL_NAMESPACE;
-  #else
+  using WIDE_DECIMAL_NAMESPACE::test_decwide_t_examples_part1__;
+  using WIDE_DECIMAL_NAMESPACE::test_decwide_t_examples_part2__;
+  using WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_edge____;
+  using WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_add_____;
+  using WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_sub_____;
+  using WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_mul_____;
+  using WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_div_____;
+  using WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_sqrt____;
+  using WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_log_____;
   #endif
 
   using local_clock_type = std::chrono::high_resolution_clock;
   using time_point_type  = typename local_clock_type::time_point;
 
-  auto start = time_point_type();
-  auto stop  = time_point_type();
-
-  bool result_is_ok { };
+  auto start = time_point_type { };
+  auto stop  = time_point_type { };
 
   start = local_clock_type::now(); const auto result_test_decwide_t_examples_part1_is_ok = (test_decwide_t_examples_part1__()); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_examples_part1_is_ok: " << std::boolalpha << result_test_decwide_t_examples_part1_is_ok << ", time: " << static_cast<float>(static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / static_cast<float>(1000.0F)) << "s" << std::endl; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   start = local_clock_type::now(); const auto result_test_decwide_t_examples_part2_is_ok = (test_decwide_t_examples_part2__()); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_examples_part2_is_ok: " << std::boolalpha << result_test_decwide_t_examples_part2_is_ok << ", time: " << static_cast<float>(static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / static_cast<float>(1000.0F)) << "s" << std::endl; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
@@ -68,15 +73,18 @@ auto local::run() -> bool
   start = local_clock_type::now(); const auto result_test_decwide_t_algebra_sqrt___is_ok = (test_decwide_t_algebra_sqrt____()); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_algebra_sqrt___is_ok: " << std::boolalpha << result_test_decwide_t_algebra_sqrt___is_ok << ", time: " << static_cast<float>(static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / static_cast<float>(1000.0F)) << "s" << std::endl; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   start = local_clock_type::now(); const auto result_test_decwide_t_algebra_log____is_ok = (test_decwide_t_algebra_log_____()); stop = local_clock_type::now(); std::cout << "result_test_decwide_t_algebra_log____is_ok: " << std::boolalpha << result_test_decwide_t_algebra_log____is_ok << ", time: " << static_cast<float>(static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()) / static_cast<float>(1000.0F)) << "s" << std::endl; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
-  result_is_ok = (   result_test_decwide_t_examples_part1_is_ok
-                  && result_test_decwide_t_examples_part2_is_ok
-                  && result_test_decwide_t_algebra_edge___is_ok
-                  && result_test_decwide_t_algebra_add____is_ok
-                  && result_test_decwide_t_algebra_sub____is_ok
-                  && result_test_decwide_t_algebra_mul____is_ok
-                  && result_test_decwide_t_algebra_div____is_ok
-                  && result_test_decwide_t_algebra_sqrt___is_ok
-                  && result_test_decwide_t_algebra_log____is_ok);
+  const auto result_is_ok =
+  (
+       result_test_decwide_t_examples_part1_is_ok
+    && result_test_decwide_t_examples_part2_is_ok
+    && result_test_decwide_t_algebra_edge___is_ok
+    && result_test_decwide_t_algebra_add____is_ok
+    && result_test_decwide_t_algebra_sub____is_ok
+    && result_test_decwide_t_algebra_mul____is_ok
+    && result_test_decwide_t_algebra_div____is_ok
+    && result_test_decwide_t_algebra_sqrt___is_ok
+    && result_test_decwide_t_algebra_log____is_ok
+  );
 
   return result_is_ok;
 }
@@ -118,5 +126,9 @@ auto main() -> int
     std::cout.flags(flg);
   }
 
-  return (result_is_ok ? 0 : -1);
+  const auto result_of_main = (result_is_ok ? 0 : -1);
+
+  std::cout << "result_of_main: " << result_of_main << std::endl;
+
+  return result_of_main;
 }

@@ -124,20 +124,11 @@
     }
 
     // Destructor.
-    virtual ~dynamic_array()
+    virtual ~dynamic_array() // LCOV_EXCL_LINE
     {
-      pointer p = elems; // NOLINT(altera-id-dependent-backward-branch)
-
       using local_allocator_traits_type = std::allocator_traits<allocator_type>;
 
       allocator_type my_a;
-
-      while(p != elems + elem_count) // NOLINT(altera-id-dependent-backward-branch)
-      {
-        local_allocator_traits_type::destroy(my_a, p);
-
-        ++p;
-      }
 
       // Destroy the elements and deallocate the range.
       local_allocator_traits_type::deallocate(my_a, elems, elem_count);

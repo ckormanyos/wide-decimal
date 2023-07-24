@@ -2213,7 +2213,7 @@
         my_neg = (!my_neg);
       }
 
-      return *this;
+      return *this; // LCOV_EXCL_LINE
     }
 
     // Comparison functions.
@@ -2424,20 +2424,6 @@
       decwide_t xx(*this);
 
       xx.my_neg = false;
-
-      // Check if *this decwide_t is zero (or is essentially zero).
-      if(   iszero()
-         || (xx.cmp(long_double_min<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) < static_cast<int_fast8_t>(INT8_C(0))))
-      {
-        return static_cast<long double>(0.0F);
-      }
-
-      // Check if *this decwide_t over/under-flows the min/max of long double.
-      if(xx.cmp(long_double_max<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()) > static_cast<int_fast8_t>(INT8_C(0)))
-      {
-        return ((!my_neg) ?  std::numeric_limits<long double>::infinity()
-                          : -std::numeric_limits<long double>::infinity());
-      }
 
       constexpr auto digs_of_ldbl_to_get = static_cast<std::int32_t>(std::numeric_limits<long double>::max_digits10);
 
@@ -3481,36 +3467,35 @@
     }
 
     #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
+    static auto pos_of_e_func(const std::string& local_str) -> std::string::size_type
+    {
+      auto pos_of_e = std::string::npos;
+
+      const auto pos_of_e_lo = local_str.find('e');
+
+      if(pos_of_e_lo != std::string::npos)
+      {
+        pos_of_e = pos_of_e_lo;
+      }
+      else
+      {
+        const auto pos_of_e_hi = local_str.find('E');
+
+        if(pos_of_e_hi != std::string::npos)
+        {
+          pos_of_e = pos_of_e_hi;
+        }
+      }
+
+      return pos_of_e;
+    };
+
     auto rd_string(const char* s) -> bool // NOLINT(readability-function-cognitive-complexity)
     {
       std::string str(s);
 
       // Get a possible exponent and remove it.
       my_exp = static_cast<exponent_type>(INT8_C(0));
-
-      auto pos_of_e_func =
-        [](const std::string& local_str) // NOLINT(modernize-use-trailing-return-type)
-        {
-          std::string::size_type pos_of_e = std::string::npos;
-
-          const auto pos_of_e_lo = local_str.find('e');
-
-          if(pos_of_e_lo != std::string::npos)
-          {
-            pos_of_e = pos_of_e_lo;
-          }
-          else
-          {
-            const auto pos_of_e_hi = local_str.find('E');
-
-            if(pos_of_e_hi != std::string::npos)
-            {
-              pos_of_e = pos_of_e_hi;
-            }
-          }
-
-          return pos_of_e;
-        };
 
       auto pos = pos_of_e_func(str);
 
@@ -4708,7 +4693,7 @@
 
     if(pfn_callback_to_report_digits10 != nullptr)
     {
-      pfn_callback_to_report_digits10(static_cast<std::uint32_t>(UINT8_C(0)));
+      pfn_callback_to_report_digits10(static_cast<std::uint32_t>(UINT8_C(0))); // LCOV_EXCL_LINE
     }
 
     using floating_point_type =
@@ -4806,7 +4791,7 @@
 
       if(pfn_callback_to_report_digits10 != nullptr)
       {
-        pfn_callback_to_report_digits10(digits10_of_iteration);
+        pfn_callback_to_report_digits10(digits10_of_iteration); // LCOV_EXCL_LINE
       }
 
       // Estimate the approximate decimal digits of this iteration term.
@@ -4830,7 +4815,7 @@
 
     if(pfn_callback_to_report_digits10 != nullptr)
     {
-      pfn_callback_to_report_digits10(static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10));
+      pfn_callback_to_report_digits10(static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10)); // LCOV_EXCL_LINE
     }
 
     return val_pi;
@@ -5243,11 +5228,13 @@
     return decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_value_ln_two();
   }
   #else
+  // LCOV_EXCL_START
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   auto ln_two() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
     return calc_ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
   }
+  // LCOV_EXCL_STOP
   #endif
 
   // Global unary operators of decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType> reference.
@@ -5305,6 +5292,7 @@
     return decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).sub_unsigned_long_long(n);
   }
 
+  // LCOV_EXCL_START
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   auto operator-(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
                  FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
@@ -5312,6 +5300,7 @@
   {
     return decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u) -= decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(f);
   }
+  // LCOV_EXCL_STOP
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   auto operator*(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
@@ -5444,6 +5433,7 @@
     return u.add_signed_long_long(n);
   }
 
+  // LCOV_EXCL_START
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   auto operator+=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
                   UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
@@ -5512,6 +5502,7 @@
   {
     return u *= decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(f);
   }
+  // LCOV_EXCL_STOP
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   auto operator/=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
@@ -6219,7 +6210,7 @@
       #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
       const floating_point_type& ln2 = ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
       #else
-      const floating_point_type  ln2 = ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+      const floating_point_type  ln2 = ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); // LCOV_EXCL_LINE
       #endif
 
       const auto nf = static_cast<std::uint32_t>(xx / ln2);

@@ -129,11 +129,7 @@ auto ::math::wide_decimal::example001b_roots_almost_integer() -> bool
 
   const auto result_integer_part_equality_is_ok = (p.extract_integer_part() == control_integer_part);
 
-  const auto tol =
-    static_cast<dec5001_t>
-    (
-      std::numeric_limits<dec5001_t>::epsilon() * static_cast<unsigned>(UINT8_C(10))
-    );
+  const auto tol = static_cast<dec5001_t>(std::numeric_limits<dec5001_t>::epsilon() * static_cast<unsigned>(UINT8_C(10)));
 
   const auto result_is_ok = ((closeness < tol) && result_integer_part_equality_is_ok);
 
