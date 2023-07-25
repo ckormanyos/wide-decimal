@@ -31,18 +31,18 @@ This C++ template header-only library implements drop-in big decimal float types
 such as `dec51_t`, `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
 that can be used essentially like regular built-in floating-point types.
 Wide-decimal supports decimal float types having digit counts ranging
-roughly from about ${\sim}~10 {\ldots} 10^{6}$
+roughly from about ${\sim}~10 {\ldots} 10^{7}$.
 
-Wide-decimal implements both common algebraic operations as well as
-a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`,
-and also includes full support for `std::numeric_limits`.
+Wide-decimal implements both elementary algebraic operations as well as
+a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`.
+It also includes full support for `std::numeric_limits`.
 
-Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 17, 20, 23 and beyond.
+Wide-decimal is written in header-only C++14, and compatible through C++14, 17, 20, 23 and beyond.
 
 ## Implementation goals
 
   - Instances of the `decwide_t` type should behave as closely as possible to the behavior of built-in floating-point types.
-  - Relatively wide range up to ${\sim}~10^{6}$ decimal digits.
+  - Relatively wide precision range from about ${\sim}~10 {\ldots} 10^{7}$ decimal digits.
   - Moderately good efficiency over the entire wide precision range.
   - Clean header-only C++14 design.
   - Seamless portability to any modern C++14, 17, 20, 23 compiler and beyond.
@@ -50,7 +50,7 @@ Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 
 
 ## Quick start
 
-Easy application follows via a traditional C-style typedef or C++11 alias.
+Easy application follows via a traditional C-style typedef or C++14 alias.
 The defined type can be used very much like a built-in floating-point type.
 
 The following sample, for instance, defines and uses a decimal type
@@ -80,7 +80,7 @@ void do_something()
 }
 ```
 
-The local data type `dec101_t` is defined with a C++11 alias.
+The local data type `dec101_t` is defined with a C++14 alias.
 The first template parameter `INT32_C(101)` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
@@ -139,7 +139,7 @@ The examples include the following.
   - ![`example008_bernoulli_tgamma.cpp`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates $1,001$ decimal digits of $\Gamma(n/2)$ for small integer $n$.
   - ![`example009_boost_math_standalone.cpp`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
   - ![`example009a_boost_math_standalone.cpp`](./examples/example009a_boost_math_standalone.cpp) also checks standalone `decwide_t` with significantly more of `Boost.Math` by testing a $1,001$ digit generalized Legendre function value (using `boost::math::tgamma` and more to do so).
-  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ${\lesssim} 100$ decimal digits.
+  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ${\lesssim}~100$ decimal digits.
   - ![`example010_hypergeometric_2f1.cpp`](./examples/example010_hypergeometric_2f1.cpp) calculates a $1,001$ decimal digit hypergeometric function value using an iterative rational approximation scheme.
   - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another $1,001$ decimal digit hypergeometric function in a similar fashion.
   - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
