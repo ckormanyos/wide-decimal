@@ -24,13 +24,14 @@ Wide-decimal
         <img src="https://img.shields.io/github/languages/code-size/ckormanyos/wide-decimal" alt="GitHub code size in bytes" /></a>
 </p>
 
-Wide-decimal implements a generic C++ template for extended precision decimal float types.
+Wide-decimal implements a generic C++ template for extended width
+decimal float types.
 
 This C++ template header-only library implements drop-in big decimal float types,
 such as `dec51_t`, `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
 that can be used essentially like regular built-in floating-point types.
 Wide-decimal supports decimal float types having digit counts ranging
-roughly from about ${\sim} 10 {\ldots} 10,000,000$
+roughly from about ${\sim}~10~{\ldots}~10^{6}$
 
 Wide-decimal implements both common algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`,
@@ -40,11 +41,12 @@ Wide-decimal is written in header-only C++11, and compatible through C++11, 14, 
 
 ## Implementation goals
 
-  - Wide precision range up to one million decimal digits
-  - Moderately good efficiency over the entire wide precision range
-  - Clean header-only C++11 design
-  - Seamless portability to any modern C++11, 14, 17, 20, 23 compiler
-  - Scalability with small memory footprint and efficiency suitable for _bare-metal_ embedded systems
+  - Instances of the `decwide_t` type should behave as closely as possible to the behavior of built-in floating-point types.
+  - Relatively wide range up to ${\sim}~10^{6}$ decimal digits.
+  - Moderately good efficiency over the entire wide precision range.
+  - Clean header-only C++14 design.
+  - Seamless portability to any modern C++14, 17, 20, 23 compiler and beyond.
+  - Scalability with small memory footprint and efficiency suitable for both PC/workstation systems as well as _bare-metal_ embedded systems.
 
 ## Quick start
 

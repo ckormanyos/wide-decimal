@@ -5,6 +5,13 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
+
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
@@ -1601,3 +1608,8 @@ auto test_decwide_t_algebra_edge::local_zero    () -> const local_wide_decimal_t
 auto test_decwide_t_algebra_edge::local_one     () -> const local_wide_decimal_type& { static const local_wide_decimal_type my_one (1U); return my_one; }
 auto test_decwide_t_algebra_edge::local_near_one() -> const local_wide_decimal_type& { static const local_wide_decimal_type my_near_one("0.999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"); return my_near_one; }
 auto test_decwide_t_algebra_edge::local_not_one () -> const local_wide_decimal_type& { static const local_wide_decimal_type my_not_one ("0.899999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"); return my_not_one; }
+
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#endif
