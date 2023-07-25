@@ -31,7 +31,7 @@ This C++ template header-only library implements drop-in big decimal float types
 such as `dec51_t`, `dec101_t`, `dec1001_t`, `dec10001_t`, `dec1000001_t`, etc.,
 that can be used essentially like regular built-in floating-point types.
 Wide-decimal supports decimal float types having digit counts ranging
-roughly from about ${\sim}~10~{\ldots}~10^{6}$
+roughly from about ${\sim}~10 {\ldots} 10^{6}$
 
 Wide-decimal implements both common algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`,
