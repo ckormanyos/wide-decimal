@@ -617,7 +617,7 @@ jobs:
           dir %cd%\wide_decimal.exe
           %cd%\wide_decimal.exe
   gcc-arm-none-eabi:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
@@ -625,7 +625,7 @@ jobs:
       fail-fast: false
       matrix:
         example: [ example013_embeddable_sqrt, example013a_embeddable_agm ]
-        standard: [ c++11, c++14, c++17, c++2a ]
+        standard: [ c++14, c++17, c++2a ]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -652,7 +652,7 @@ jobs:
           ls -la bin/${{ matrix.example }}.elf bin/${{ matrix.example }}.map bin/${{ matrix.example }}.hex
         working-directory: ./
   gcc-avr:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
@@ -660,7 +660,7 @@ jobs:
       fail-fast: false
       matrix:
         example: [ example013_embeddable_sqrt, example013a_embeddable_agm ]
-        standard: [ c++11, c++14 ]
+        standard: [ c++14 ]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -761,7 +761,7 @@ jobs:
           ls -la ./${{ matrix.suite }}.exe
           ./${{ matrix.suite }}.exe
   gcc-12-clang-14-mixed:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
@@ -769,7 +769,7 @@ jobs:
       fail-fast: false
       matrix:
         standard: [ c++20 ]
-        compiler: [ g++-12, clang++-14 ]
+        compiler: [ g++, clang++ ]
         suite: [ test_mixed_wide_decimal_wide_integer_b2n ]
     steps:
       - uses: actions/checkout@v3
@@ -778,8 +778,6 @@ jobs:
       - name: clone-wide_integer
         run: |
           git clone -b master --depth 1 https://github.com/ckormanyos/wide-integer.git ../wide-integer-root
-      - name: update-tools
-        run: sudo apt install g++-12 clang-14
       - name: gcc-12-clang-14-mixed
         run: |
           echo "compile ./${{ matrix.suite }}.exe"
