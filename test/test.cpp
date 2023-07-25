@@ -40,8 +40,6 @@ namespace local
 {
   auto run() -> bool;
 
-  using function_type = std::function<bool(void)>;
-
   template<typename RunnerFunctionType>
   auto pfn_runner(const RunnerFunctionType& pfn_test, const char* p_msg) -> bool
   {
@@ -51,14 +49,12 @@ namespace local
 
     const auto result_test_is_ok = pfn_test();
 
-    const auto stop = local_clock_type::now();
-
     const auto elapsed =
       static_cast<float>
       (
           static_cast<float>
           (
-            std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(local_clock_type::now() - start).count()
           )
         / static_cast<float>(UINT16_C(1000))
       );
@@ -87,17 +83,17 @@ auto local::run() -> bool
   using WIDE_DECIMAL_NAMESPACE::test_decwide_t_algebra_log_____;
   #endif
 
-  using local_function_type = local::function_type;
+  using function_type = std::function<bool(void)>;
 
-  const auto result_test_examples_part1_is_ok = local::pfn_runner(local_function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_examples_part2_is_ok = local::pfn_runner(local_function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_edge___is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_add____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_sub____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_mul____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_mul_____), "result_test_algebra_mul____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_div____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_div_____), "result_test_algebra_div____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_sqrt___is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_sqrt____), "result_test_algebra_sqrt___is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_log____is_ok = local::pfn_runner(local_function_type(test_decwide_t_algebra_log_____), "result_test_algebra_log____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_examples_part1_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_examples_part2_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_edge___is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_add____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_sub____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_mul____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_mul_____), "result_test_algebra_mul____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_div____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_div_____), "result_test_algebra_div____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_sqrt___is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_sqrt____), "result_test_algebra_sqrt___is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_log____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_log_____), "result_test_algebra_log____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
   const auto result_is_ok =
   (
@@ -123,38 +119,32 @@ auto main() -> int
 
   const auto result_is_ok = local::run();
 
-  const auto stop = local_clock_type::now();
+  const auto test_duration_sec =
+    static_cast<float>
+    (
+      static_cast<float>
+      (
+        std::chrono::duration_cast<std::chrono::milliseconds>(local_clock_type::now() - start).count()
+      )
+      / static_cast<float>(UINT16_C(1000))
+    );
 
   const auto flg = std::cout.flags();
 
-  {
-    constexpr auto one_thousand_milliseconds = static_cast<float>(UINT16_C(1000));
-
-    const auto test_duration_sec =
-      static_cast<float>
-      (
-        static_cast<float>
-        (
-          std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
-        )
-        / one_thousand_milliseconds
-      );
-
-    std::cout << "result_is_ok:                             : "
-              << std::boolalpha
-              << result_is_ok
-              << ", time: "
-              << test_duration_sec
-              << "s"
-              << std::endl
-              ;
-  }
-
-  const auto result_of_main = (result_is_ok ? 0 : -1);
-
-  std::cout << "result_of_main: " << result_of_main << std::endl;
+  std::cout << "result_is_ok:                             : "
+            << std::boolalpha
+            << result_is_ok
+            << ", time: "
+            << test_duration_sec
+            << "s"
+            << std::endl
+            ;
 
   std::cout.flags(flg);
+
+  const auto result_of_main = (result_is_ok ? static_cast<int>(INT8_C(0)) : static_cast<int>(INT8_C(-1)));
+
+  std::cout << "result_of_main: " << result_of_main << std::endl;
 
   return result_of_main;
 }

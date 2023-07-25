@@ -771,7 +771,7 @@
              typename std::enable_if<(    std::is_integral<UnsignedIntegralType>::value
                                       &&  std::is_unsigned<UnsignedIntegralType>::value
                                       && (std::numeric_limits<UnsignedIntegralType>::digits <= std::numeric_limits<limb_type>::digits))>::type const* = nullptr>
-    decwide_t(const UnsignedIntegralType u) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
+    constexpr decwide_t(const UnsignedIntegralType u) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
       : my_data     (decwide_t_elem_number),
         my_exp      (static_cast<exponent_type>(INT8_C(0))),
         my_neg      (false),

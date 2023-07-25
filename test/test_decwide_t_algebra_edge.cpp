@@ -1269,7 +1269,7 @@ auto test_various_rootn() -> bool
 
     const auto root_x_neg = rootn(x_neg, static_cast<std::int32_t>(INT8_C(4)));
 
-    const auto result_root_x_neg_is_ok = (x_neg < 0) && (root_x_neg == 0);
+    const auto result_root_x_neg_is_ok = (x_neg < static_cast<int>(INT8_C(0))) && (root_x_neg == static_cast<int>(INT8_C(0)));
 
     result_is_ok = (result_root_x_neg_is_ok && result_is_ok);
   }
@@ -1287,7 +1287,7 @@ auto test_to_native_float_and_back() -> bool
 
   auto result_is_ok = true;
 
-  constexpr auto tol_factor = static_cast<native_float_type>(2.0F);
+  constexpr auto tol_factor = static_cast<native_float_type>(2.0L);
 
   const     auto tol1 = static_cast<local_wide_decimal_type>(static_cast<native_float_type>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
   constexpr auto tol2 = static_cast<native_float_type>      (static_cast<native_float_type>(std::numeric_limits<native_float_type>::epsilon()) * tol_factor);
@@ -1304,7 +1304,7 @@ auto test_to_native_float_and_back() -> bool
       generate_wide_decimal_value<local_wide_decimal_type>
       (
         false,
-        static_cast<int>(static_cast<float>(std::numeric_limits<native_float_type>::max_exponent10) * 0.85F)
+        static_cast<int>(static_cast<float>(std::numeric_limits<native_float_type>::max_exponent10) * static_cast<float>(0.85L))
       );
 
     const auto x_as_native_float = static_cast<native_float_type>(static_cast<long double>(x));
@@ -1368,7 +1368,7 @@ auto test_various_int_operations() -> bool
     );
 
   static_assert(   (std::numeric_limits<local_unsigned_type>::digits >= static_cast<int>(INT8_C(16)))
-                && (unsigned_integral_digits10_to_use >= 3),
+                && (unsigned_integral_digits10_to_use >= static_cast<int>(INT8_C(3))),
                 "Error: Template integral type parameter is not wide enough");
 
   bool result_is_ok = true;
@@ -1446,7 +1446,7 @@ auto test_odds_and_ends() -> bool
 {
   auto result_is_ok = true;
 
-  const auto tol = std::numeric_limits<local_wide_decimal_type>::epsilon() * 1000U;
+  const auto tol = std::numeric_limits<local_wide_decimal_type>::epsilon() * static_cast<unsigned>(UINT16_C(1000));
 
   {
     #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
@@ -1565,6 +1565,28 @@ auto test_odds_and_ends() -> bool
     const auto result_frexp_of_zero_is_ok = ((fr == static_cast<int>(INT8_C(0))) && (nf == static_cast<int>(INT8_C(0))));
 
     result_is_ok = (result_frexp_of_zero_is_ok && result_is_ok);
+  }
+
+  for(auto i = static_cast<unsigned>(UINT8_C(0)); i < static_cast<unsigned>(UINT16_C(128)); ++i)
+  {
+    const auto n_exp2 = static_cast<int>(static_cast<int>(i) - static_cast<int>(INT8_C(64)));
+
+    using std::ldexp;
+
+    const auto flt = ldexp(static_cast<float>(3.14L), n_exp2);
+    const auto dec = ldexp(static_cast<local_wide_decimal_type>(static_cast<local_wide_decimal_type>(static_cast<unsigned>(UINT16_C(314))) / static_cast<unsigned>(UINT8_C(100))), n_exp2);
+
+    const auto flt_as_dec = local_wide_decimal_type { flt };
+
+    const auto ratio = dec / flt_as_dec;
+
+    using std::fabs;
+
+    const auto delta = fabs(1 - ratio);
+
+    const auto result_flt_is_ok = (delta < local_wide_decimal_type { static_cast<float>(0.1L) } );
+
+    result_is_ok = (result_flt_is_ok && result_is_ok);
   }
 
   return result_is_ok;
