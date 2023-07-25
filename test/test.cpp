@@ -42,7 +42,8 @@ namespace local
 
   using function_type = std::function<bool(void)>;
 
-  auto pfn_runner(const function_type& pfn_test, const char* p_msg) -> bool
+  template<typename RunnerFunctionType>
+  auto pfn_runner(const RunnerFunctionType& pfn_test, const char* p_msg) -> bool
   {
     using local_clock_type = std::chrono::high_resolution_clock;
 
