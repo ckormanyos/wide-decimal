@@ -85,15 +85,15 @@ auto local::run() -> bool
 
   using function_type = std::function<bool(void)>;
 
-  const auto result_test_examples_part1_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_examples_part2_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_edge___is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_add____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_sub____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_mul____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_mul_____), "result_test_algebra_mul____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_div____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_div_____), "result_test_algebra_div____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_sqrt___is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_sqrt____), "result_test_algebra_sqrt___is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
-  const auto result_test_algebra_log____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_log_____), "result_test_algebra_log____is_ok   : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_examples_part1_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_examples_part2_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_edge___is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_add____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_sub____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_mul____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_mul_____), "result_test_algebra_mul____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_div____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_div_____), "result_test_algebra_div____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_sqrt___is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_sqrt____), "result_test_algebra_sqrt___is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_algebra_log____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_log_____), "result_test_algebra_log____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
   const auto result_is_ok =
   (
@@ -131,7 +131,7 @@ auto main() -> int
 
   const auto flg = std::cout.flags();
 
-  std::cout << "result_is_ok:                             : "
+  std::cout << "result_is_ok:                       : "
             << std::boolalpha
             << result_is_ok
             << ", time: "

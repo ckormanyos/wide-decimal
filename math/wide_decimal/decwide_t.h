@@ -3645,7 +3645,11 @@
             );
 
           // Bring one single digit into the mantissa and adjust exponent accordingly.
-          str.erase(str.cbegin(), it_non_zero);
+          str.erase
+          (
+            static_cast<std::string::size_type>(UINT8_C(0U)),
+            static_cast<std::string::size_type>(std::distance(str.cbegin(), it_non_zero))
+          );
 
           str.insert(static_cast<std::size_t>(UINT8_C(1)), static_cast<std::size_t>(UINT8_C(1)), '.');
 
