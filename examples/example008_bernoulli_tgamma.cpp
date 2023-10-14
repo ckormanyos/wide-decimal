@@ -372,7 +372,7 @@ auto ::math::wide_decimal::example008_bernoulli_tgamma() -> bool
       / static_cast<float>(1000.0F)
     );
 
-  std::cout << "Time example008_bernoulli_tgamma(): "
+  std::cout << "Time example008_bernoulli_tgamma()  : "
             << elapsed
             << std::endl;
   #endif

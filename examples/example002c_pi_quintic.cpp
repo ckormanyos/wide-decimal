@@ -175,7 +175,7 @@ auto ::math::wide_decimal::example002c_pi_quintic() -> bool
 
   const auto stop = std::clock();
 
-  std::cout << "Time example002c_pi_quintic(): "
+  std::cout << "Time example002c_pi_quintic()       : "
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 
