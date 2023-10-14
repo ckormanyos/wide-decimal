@@ -31,10 +31,10 @@
     using pointer       = value_type*;
     using const_pointer = const value_type*;
 
-    template<typename U>
+    template<typename RebindType>
     struct rebind
     {
-      using other = n_slot_array_allocator<U, SlotWidth, SlotCount>;
+      using other = n_slot_array_allocator<RebindType, SlotWidth, SlotCount>;
     };
   };
 
@@ -120,7 +120,7 @@
       *p = x;
     }
 
-    auto destroy(pointer p) -> void { static_cast<void>(p); } // LCOV_EXCL_LINE
+    auto destroy(pointer p) const -> void { static_cast<void>(p); } // LCOV_EXCL_LINE
 
     auto deallocate(pointer p_slot, size_type sz) -> void
     {
