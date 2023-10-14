@@ -65,7 +65,7 @@ auto ::math::wide_decimal::example006_logarithm() -> bool
 
   const auto stop = std::clock();
 
-  std::cout << "Time example006_logarithm(): "
+  std::cout << "Time example006_logarithm()         : "
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 

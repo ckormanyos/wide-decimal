@@ -96,7 +96,7 @@ auto ::math::wide_decimal::example002a_pi_small_limb() -> bool
 
   const auto stop = std::clock();
 
-  std::cout << "Time example002a_pi_small_limb(): "
+  std::cout << "Time example002a_pi_small_limb()    : "
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 

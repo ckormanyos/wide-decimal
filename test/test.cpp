@@ -131,7 +131,7 @@ auto main() -> int
 
   const auto flg = std::cout.flags();
 
-  std::cout << "result_is_ok:                       : "
+  std::cout << "result_is_ok                        : "
             << std::boolalpha
             << result_is_ok
             << ", time: "
@@ -144,7 +144,7 @@ auto main() -> int
 
   const auto result_of_main = (result_is_ok ? static_cast<int>(INT8_C(0)) : static_cast<int>(INT8_C(-1)));
 
-  std::cout << "result_of_main: " << result_of_main << std::endl;
+  std::cout << "result_of_main                      : " << result_of_main << std::endl;
 
   return result_of_main;
 }

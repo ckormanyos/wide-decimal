@@ -75,7 +75,7 @@ auto ::math::wide_decimal::example002b_pi_100k() -> bool
 
   const auto stop = std::clock();
 
-  std::cout << "Time example002b_pi_100k(): "
+  std::cout << "Time example002b_pi_100k()          : "
             << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
             << std::endl;
 
