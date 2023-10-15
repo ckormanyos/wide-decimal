@@ -5738,24 +5738,24 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   auto ldexp(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v, int e) -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
-    using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-
-    local_wide_decimal_type ldexp_result(v);
-
-    if((e > static_cast<int>(INT8_C(0))) && (e < static_cast<int>(INT8_C(64))))
+    if(e == static_cast<int>(INT8_C(0)))
     {
-      ldexp_result *= static_cast<std::uint64_t>(1ULL << static_cast<unsigned>(e));
+      return v;
     }
-    else if((e > static_cast<int>(INT8_C(-64))) && (e < static_cast<int>(INT8_C(0))))
+    else
     {
-      ldexp_result /= static_cast<std::uint64_t>(1ULL << static_cast<unsigned>(-e));
-    }
-    else if(e != static_cast<int>(INT8_C(0)))
-    {
-      ldexp_result *= pow(two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), e);
-    }
+      using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
-    return ldexp_result;
+      local_wide_decimal_type result(v);
+
+      return
+        (e <= static_cast<int>(INT8_C(-64)))
+          ? result /= pow(two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), -e)
+          : (e >= static_cast<int>(INT8_C(64)))
+            ? result *= pow(two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), e)
+            : (e < static_cast<int>(INT8_C(0))) ? result /= static_cast<std::uint64_t>(1ULL << static_cast<unsigned>(-e))
+                                                : result *= static_cast<std::uint64_t>(1ULL << static_cast<unsigned>(e));
+    }
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
