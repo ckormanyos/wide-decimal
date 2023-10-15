@@ -3149,7 +3149,7 @@
       {
         // Use Karatsuba multiplication.
 
-        // Sloanes's A029750: Numbers of the form 2^k times 1, 3, 5 or 7.
+        // Use Sloane's A029750: The so-called 7-smooth numbers having the form 2^k times 1, 3, 5 or 7.
         const auto kara_elems_for_multiply =
           detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 

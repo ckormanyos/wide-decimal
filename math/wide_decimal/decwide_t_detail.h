@@ -155,7 +155,7 @@
     {
       using local_array_type = std::array<std::uint32_t, 65U>; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-      // Sloane's A029750 List of numbers of the form 2^k times 1, 3, 5 or 7.
+      // Use Sloane's A029750: The so-called 7-smooth numbers having the form 2^k times 1, 3, 5 or 7.
       // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 91}], x]
       constexpr local_array_type a029750_data =
       {{
@@ -188,7 +188,7 @@
   {
     static constexpr auto a000079_as_constexpr(const std::uint32_t value) noexcept -> std::uint32_t // NOLINT(readability-function-cognitive-complexity)
     {
-      // Sloane's A000079 List of numbers of powers of 2.
+      // Use Sloane's A000079: List of numbers of powers of 2.
       // Table[2^n, {n, 0, 31, 1}]
       return ((value <= static_cast<std::uint32_t>(UINT32_C(        8))) ? static_cast<std::uint32_t>(UINT32_C(        8)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(       16))) ?  static_cast<std::uint32_t>(UINT32_C(       16)) : ((value <= static_cast<std::uint32_t>(UINT32_C(       32))) ? static_cast<std::uint32_t>(UINT32_C(       32)) : ((value <= static_cast<std::uint32_t>(UINT32_C(        64))) ? static_cast<std::uint32_t>(UINT32_C(        64)) :
              ((value <= static_cast<std::uint32_t>(UINT32_C(      128))) ? static_cast<std::uint32_t>(UINT32_C(      128)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(      256))) ?  static_cast<std::uint32_t>(UINT32_C(      256)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      512))) ? static_cast<std::uint32_t>(UINT32_C(      512)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      1024))) ? static_cast<std::uint32_t>(UINT32_C(      1024)) :
