@@ -5742,7 +5742,7 @@
     {
       return v;
     }
-    else
+    else // NOLINT(llvm-else-after-return,readability-else-after-return)
     {
       using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
