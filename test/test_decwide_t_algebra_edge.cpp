@@ -13,8 +13,8 @@
 #endif
 
 #include <algorithm>
-#include <chrono>
 #include <cstdint>
+#include <ctime>
 #include <random>
 #include <sstream>
 #include <string>
@@ -22,6 +22,7 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <test/test_decwide_t_algebra.h>
 #include <util/utility/util_baselexical_cast.h>
+#include <util/utility/util_pseudorandom_time_point_seed.h>
 
 #if defined(__clang__)
   #if defined __has_feature && (__has_feature(thread_sanitizer) || __has_feature(address_sanitizer))
@@ -60,25 +61,6 @@ auto local_zero    () -> const local_wide_decimal_type&;
 auto local_one     () -> const local_wide_decimal_type&;
 auto local_near_one() -> const local_wide_decimal_type&;
 auto local_not_one () -> const local_wide_decimal_type&;
-
-template<typename IntegralTimePointType,
-          typename ClockType = std::chrono::high_resolution_clock>
-auto time_point() -> IntegralTimePointType
-{
-  using local_integral_time_point_type = IntegralTimePointType;
-  using local_clock_type               = ClockType;
-
-  const auto current_now =
-    static_cast<std::uintmax_t>
-    (
-      std::chrono::duration_cast<std::chrono::nanoseconds>
-      (
-        local_clock_type::now().time_since_epoch()
-      ).count()
-    );
-
-  return static_cast<local_integral_time_point_type>(current_now);
-}
 
 template<typename FloatingPointTypeWithStringConstruction>
 auto generate_wide_decimal_value(bool is_positive     = false,
@@ -229,9 +211,9 @@ auto test_div_by_other_sign_same() -> bool
 {
   auto result_is_ok = true;
 
-  eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
-  eng_dig.seed(time_point<typename eng_dig_type::result_type>());
-  eng_exp.seed(time_point<typename eng_exp_type::result_type>());
+  eng_sgn.seed(util::util_pseudorandom_time_point_seed::value<typename eng_sgn_type::result_type>());
+  eng_dig.seed(util::util_pseudorandom_time_point_seed::value<typename eng_dig_type::result_type>());
+  eng_exp.seed(util::util_pseudorandom_time_point_seed::value<typename eng_exp_type::result_type>());
 
   for(auto   i = static_cast<unsigned>(UINT32_C(0));
              i < static_cast<unsigned>(UINT32_C(1024));
@@ -715,9 +697,9 @@ auto test_various_min_max_operations() -> bool
 #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
 auto test_frexp_in_all_ranges() -> bool
 {
-  eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
-  eng_dig.seed(time_point<typename eng_dig_type::result_type>());
-  eng_exp.seed(time_point<typename eng_exp_type::result_type>());
+  eng_sgn.seed(util::util_pseudorandom_time_point_seed::value<typename eng_sgn_type::result_type>());
+  eng_dig.seed(util::util_pseudorandom_time_point_seed::value<typename eng_dig_type::result_type>());
+  eng_exp.seed(util::util_pseudorandom_time_point_seed::value<typename eng_exp_type::result_type>());
 
   auto result_is_ok = true;
 
@@ -856,9 +838,9 @@ auto test_frexp_in_all_ranges() -> bool
 
 auto test_string_ops_and_round_trips() -> bool
 {
-  eng_sgn.seed(time_point<typename eng_sgn_type::result_type>());
-  eng_dig.seed(time_point<typename eng_dig_type::result_type>());
-  eng_exp.seed(time_point<typename eng_exp_type::result_type>());
+  eng_sgn.seed(util::util_pseudorandom_time_point_seed::value<typename eng_sgn_type::result_type>());
+  eng_dig.seed(util::util_pseudorandom_time_point_seed::value<typename eng_dig_type::result_type>());
+  eng_exp.seed(util::util_pseudorandom_time_point_seed::value<typename eng_exp_type::result_type>());
 
   auto result_is_ok = true;
 

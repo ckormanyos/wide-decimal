@@ -30,7 +30,7 @@
 #define WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION
 
 #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-#include <chrono>
+#include <ctime>
 #endif
 
 #include <examples/example_decwide_t.h>
@@ -353,24 +353,17 @@ auto ::math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #endif
 {
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  using local_clock_type = std::chrono::high_resolution_clock;
-
-  const auto start = local_clock_type::now();
+  const auto begin = std::clock();
   #endif
 
   const auto result_is_ok = example008_bernoulli::example008_bernoulli_tgamma_run();
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  const auto stop = local_clock_type::now();
+  const auto end = std::clock();
   #endif
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  const auto elapsed =
-    static_cast<float>
-    (
-        static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())
-      / static_cast<float>(1000.0F)
-    );
+  const auto elapsed = static_cast<float>(static_cast<float>(end - begin) / CLOCKS_PER_SEC);
 
   std::cout << "Time example008_bernoulli_tgamma()  : "
             << elapsed

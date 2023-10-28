@@ -1,4 +1,10 @@
-#include <chrono>
+///////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2022 - 2023.                 //
+//  Distributed under the Boost Software License,                //
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
+//  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
+///////////////////////////////////////////////////////////////////
+
 #include <cmath>
 #include <cstdint>
 #include <ctime>
@@ -252,22 +258,17 @@ namespace test_high_precision_exp
 
 int main()
 {
-  const auto start = std::chrono::high_resolution_clock::now();
+  const auto begin = std::clock();
 
   const bool result_is_ok = test_high_precision_exp::do_test();
 
-  const auto stop = std::chrono::high_resolution_clock::now();
+  const auto end = std::clock();
+
+  const auto elapsed = static_cast<float>(static_cast<float>(end - begin) / CLOCKS_PER_SEC);
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 
-  const auto duration =
-    static_cast<float>
-    (
-        static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())
-      / 1000.0F
-    );
-
-  std::cout << "High-precision calculations took: " << std::fixed << std::setprecision(1) << duration << "s" << std::endl;
+  std::cout << "High-precision calculations took: " << std::fixed << std::setprecision(1) << elapsed << "s" << std::endl;
 
   return (result_is_ok ? 0 : -1);
 }

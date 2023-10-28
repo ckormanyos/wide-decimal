@@ -273,6 +273,9 @@
     <ClInclude Include="examples\example_decwide_t.h">
       <Filter>Source Files\examples</Filter>
     </ClInclude>
+    <ClInclude Include="util\utility\util_pseudorandom_time_point_seed.h">
+      <Filter>Source Files\util\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\wide_decimal.yml">
