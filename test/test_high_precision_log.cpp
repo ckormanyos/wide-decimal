@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022.                        //
+//  Copyright Christopher Kormanyos 2022- 2023.                  //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -7,8 +7,8 @@
 
 #include <array>
 #include <atomic>
-#include <chrono>
 #include <cmath>
+#include <ctime>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -134,23 +134,17 @@ auto main() -> int
   using local_hp_float_left_type  = test_high_precision_log::local_wide_decimal_high_precision_number_type;
   using local_hp_float_right_type = test_high_precision_log::local_boost_high_precision_number_type;
 
-  const auto start = std::chrono::high_resolution_clock::now();
+  const auto begin = std::clock();
 
-  const auto result_is_ok =
-    local::do_calcs_log<local_hp_float_left_type, local_hp_float_right_type>();
+  const auto result_is_ok = local::do_calcs_log<local_hp_float_left_type, local_hp_float_right_type>();
 
-  const auto stop = std::chrono::high_resolution_clock::now();
+  const auto end = std::clock();
+
+  const auto elapsed = static_cast<float>(static_cast<float>(end - begin) / CLOCKS_PER_SEC);
 
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 
-  const auto duration =
-    static_cast<float>
-    (
-        static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count())
-      / 1000.0F
-    );
-
-  std::cout << "High-precision calculations took: " << std::fixed << std::setprecision(1) << duration << "s" << std::endl;
+  std::cout << "High-precision calculations took: " << std::fixed << std::setprecision(1) << elapsed << "s" << std::endl;
 
   return (result_is_ok ? 0 : -1);
 }

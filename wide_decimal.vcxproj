@@ -252,6 +252,7 @@
     <ClInclude Include="util\utility\util_baselexical_cast.h" />
     <ClInclude Include="util\utility\util_dynamic_array.h" />
     <ClInclude Include="util\utility\util_noncopyable.h" />
+    <ClInclude Include="util\utility\util_pseudorandom_time_point_seed.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-tidy" />
