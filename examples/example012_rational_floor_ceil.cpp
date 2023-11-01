@@ -65,11 +65,11 @@ namespace example012_rational
     bool result_is_ok = true;
 
     for(auto lo_index = lo_index_min;
-             lo_index < lo_index_max;
+             lo_index < lo_index_max; // NOLINT(altera-id-dependent-backward-branch)
              lo_index = static_cast<std::int32_t>(lo_index + static_cast<std::int32_t>(INT32_C(7))))
     {
       for(auto hi_index = hi_index_min;
-               hi_index < hi_index_max;
+               hi_index < hi_index_max; // NOLINT(altera-id-dependent-backward-branch)
                hi_index = static_cast<std::int32_t>(hi_index + static_cast<std::int32_t>(INT32_C(17))))
       {
         const auto lo_is_neg = static_cast<unsigned>(static_cast<unsigned>(dist_sign() % 2U) == static_cast<unsigned>(UINT8_C(0)));
@@ -108,11 +108,11 @@ namespace example012_rational
     bool result_is_ok = true;
 
     for(auto lo_index = lo_index_min;
-             lo_index < lo_index_max;
+             lo_index < lo_index_max; // NOLINT(altera-id-dependent-backward-branch)
              lo_index = static_cast<std::int32_t>(lo_index + static_cast<std::int32_t>(INT32_C(7))))
     {
       for(auto hi_index = hi_index_min;
-               hi_index < hi_index_max;
+               hi_index < hi_index_max; // NOLINT(altera-id-dependent-backward-branch)
                hi_index = static_cast<std::int32_t>(hi_index + static_cast<std::int32_t>(INT32_C(17))))
       {
         const auto lo_is_neg = static_cast<unsigned>(static_cast<unsigned>(dist_sign() % 2U) == static_cast<unsigned>(UINT8_C(0)));
