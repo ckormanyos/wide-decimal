@@ -119,7 +119,7 @@ how to use wide-decimal.
 
 The examples include the following.
 
-  - ![`example000_multiply_nines.cpp`](./examples/example000_multiply_nines.cpp) performa a check of shoolbook multiplication using a small digit range and small 8-bit limb.
+  - ![`example000_multiply_nines.cpp`](./examples/example000_multiply_nines.cpp) verifies schoolbook multiplication using 8-bit limbs in a small digit range.
   - ![`example000a_multiply_pi_squared.cpp`](./examples/example000a_multiply_pi_squared.cpp) performs a hard-coded multiplication check resulting in $\pi^2$.
   - ![`example001_roots_sqrt.cpp`](./examples/example001_roots_sqrt.cpp) computes a square root.
   - ![`example001a_roots_seventh.cpp`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
