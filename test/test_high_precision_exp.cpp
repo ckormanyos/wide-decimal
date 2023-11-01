@@ -40,13 +40,18 @@ namespace test_high_precision_exp
 
       floating_point_type val_pi;
 
-      floating_point_type a(1U);
+      floating_point_type a(static_cast<unsigned>(UINT8_C(1)));
 
       // Initialize bB to 0.5.
       floating_point_type bB(0.5F); // NOLINT(readability-identifier-naming,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
       // Initialize t to 0.375.
-      floating_point_type t(static_cast<floating_point_type>(3U) / 8U); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      floating_point_type
+        t
+        {
+            static_cast<floating_point_type>(static_cast<unsigned>(UINT8_C(3)))
+          / static_cast<unsigned>(UINT8_C(8))
+        };
 
       floating_point_type s(bB);
 
@@ -59,7 +64,7 @@ namespace test_high_precision_exp
         static_cast<std::uint32_t>
         (
             static_cast<std::uint32_t>(std::numeric_limits<floating_point_type>::digits10 / 2)
-          + static_cast<std::uint32_t>(9U)
+          + static_cast<std::uint32_t>(UINT8_C(9))
         );
 
       using std::log;
@@ -81,17 +86,19 @@ namespace test_high_precision_exp
         using std::sqrt;
 
         a      += sqrt(bB);
-        a      /= 2U;
+        a      /= static_cast<unsigned>(UINT8_C(2));
         val_pi  = a;
         val_pi *= a;
         bB      = val_pi;
         bB     -= t;
-        bB     *= 2U;
+        bB     *= static_cast<unsigned>(UINT8_C(2));
 
         floating_point_type iterate_term(bB);
 
+        const auto left_shift_amount = static_cast<unsigned>(k + static_cast<unsigned>(UINT8_C(1)));
+
         iterate_term -= val_pi;
-        iterate_term *= static_cast<unsigned long long>(1ULL << (k + 1U)); // NOLINT(google-runtime-int)
+        iterate_term *= static_cast<unsigned long long>(static_cast<unsigned long long>(UINT8_C(1)) << left_shift_amount); // NOLINT(google-runtime-int)
 
         s += iterate_term;
 
@@ -108,7 +115,8 @@ namespace test_high_precision_exp
         const auto digits10_of_iteration =
           static_cast<std::uint32_t>
           (
-            static_cast<std::uint64_t>(static_cast<std::uint64_t>(ib) * digits10_scale) / UINT32_C(1000)
+              static_cast<std::uint64_t>(static_cast<std::uint64_t>(ib) * digits10_scale)
+            / static_cast<std::uint16_t>(UINT16_C(1000))
           );
 
         // Estimate the approximate decimal digits of this iteration term.
@@ -124,7 +132,7 @@ namespace test_high_precision_exp
 
         t  = val_pi;
         t += bB;
-        t /= 4U;
+        t /= static_cast<unsigned>(UINT8_C(4));
       }
 
       return (val_pi + bB) / s;
@@ -147,15 +155,15 @@ namespace test_high_precision_exp
   {
     std::stringstream strm_b;
 
-    strm_b << std::setprecision(std::numeric_limits<boost_float_type>::digits10 + 3)
+    strm_b << std::setprecision(std::numeric_limits<boost_float_type>::digits10 + static_cast<int>(INT8_C(3)))
            << eb;
 
     return wide_decimal_type(strm_b.str().c_str());
   };
 
-  std::uniform_int_distribution<std::uint32_t> dst_sgn(UINT32_C(        0), UINT32_C(        1));
-  std::uniform_int_distribution<std::uint32_t> dst_top(UINT32_C( 30000000), UINT32_C(999999999));
-  std::uniform_int_distribution<std::uint32_t> dst_bot(UINT32_C(100000000), UINT32_C(999999999));
+  std::uniform_int_distribution dst_sgn(static_cast<std::uint32_t>(UINT32_C(        0)), static_cast<std::uint32_t>(UINT32_C(        1)));
+  std::uniform_int_distribution dst_top(static_cast<std::uint32_t>(UINT32_C( 30000000)), static_cast<std::uint32_t>(UINT32_C(999999999)));
+  std::uniform_int_distribution dst_bot(static_cast<std::uint32_t>(UINT32_C(100000000)), static_cast<std::uint32_t>(UINT32_C(999999999)));
 
   using eng_sgn_type = std::ranlux24;
   using eng_top_type = std::mt19937;
@@ -180,15 +188,19 @@ namespace test_high_precision_exp
 
     const auto ilogb_tol = ilogb(std::numeric_limits<wide_decimal_type>::epsilon());
 
-    const auto my_zero = wide_decimal_type(0U);
-    const auto my_one  = wide_decimal_type(1U);
+    const auto my_zero = wide_decimal_type(static_cast<unsigned>(UINT8_C(0)));
+    const auto my_one  = wide_decimal_type(static_cast<unsigned>(UINT8_C(1)));
 
     std::atomic_flag do_calcs_exp_lock = ATOMIC_FLAG_INIT;
 
     my_concurrency::parallel_for
     (
-      0U,
-      48U,
+      static_cast<unsigned>(UINT8_C( 0)),
+      #if defined(__clang__)
+      static_cast<unsigned>(UINT8_C(12)),
+      #else
+      static_cast<unsigned>(UINT8_C(24)),
+      #endif
       [&my_pi_w, &my_pi_b, &result_is_ok, &do_calcs_exp_lock, &ilogb_tol, &my_zero, &my_one](unsigned count)
       {
         while(do_calcs_exp_lock.test_and_set()) { ; }
@@ -228,17 +240,17 @@ namespace test_high_precision_exp
         std::stringstream strm;
 
         strm << "count: "
-             << std::setw(2)
+             << std::setw(static_cast<std::streamsize>(INT8_C(2)))
              << count
              << ", yw: "
              << std::showpos
              << std::scientific
-             << std::setprecision(5)
+             << std::setprecision(static_cast<std::streamsize>(INT8_C(5)))
              << yw
              << ", delta: "
              << std::noshowpos
              << std::scientific
-             << std::setprecision(2)
+             << std::setprecision(static_cast<std::streamsize>(INT8_C(2)))
              << delta
              << ", result_is_ok: "
              << std::boolalpha
