@@ -12,8 +12,8 @@
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
-#include <util/utility/util_pseudorandom_time_point_seed.h>
 #include <util/utility/util_baselexical_cast.h>
+#include <util/utility/util_pseudorandom_time_point_seed.h>
 
 #if defined(__clang__)
   #if defined __has_feature && (__has_feature(thread_sanitizer) || __has_feature(address_sanitizer))
