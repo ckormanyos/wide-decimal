@@ -284,7 +284,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [ c++14, c++20 ]
+        standard: [ c++20 ]
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v3
