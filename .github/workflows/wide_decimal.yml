@@ -51,7 +51,7 @@ jobs:
       - name: test
         working-directory: build
         run: ctest --verbose --output-on-failure
-  gnumake-clang-tidy-12-native:
+  gnumake-clang-tidy-native:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -77,7 +77,7 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.sh
           ./b2 headers
-      - name: gnumake-clang-tidy-12-native
+      - name: gnumake-clang-tidy-native
         run: |
           grep BOOST_VERSION ../boost-root/boost/version.hpp
           cd .tidy/make
@@ -451,7 +451,7 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.bat
           ./b2 headers
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           toolset: 14.2
@@ -479,7 +479,7 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.bat
           ./b2 headers
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           toolset: 14.3
@@ -507,7 +507,7 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.bat
           ./b2 headers
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           toolset: 14.3
