@@ -101,7 +101,7 @@ namespace example011_trig
                                 * x2 + coef_sin_bot_1)
                                 * x2 + coef_sin_bot_0);
 
-    return (x * top) / (bot * 153U); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    return (x * top) / (bot * static_cast<unsigned>(UINT8_C(153)));
   }
 
   auto cos_pade(const dec51_t& x) -> dec51_t
@@ -169,18 +169,18 @@ namespace example011_trig
                                 * x2 + coef_cos_bot_1)
                                 * x2 + coef_cos_bot_0);
 
-    return 1U + (((x2 * 4080U) * top) / bot); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    return static_cast<unsigned>(UINT8_C(1)) + (((x2 * static_cast<unsigned>(UINT16_C(4080))) * top) / bot);
   }
 
   auto sin(const dec51_t& x) -> dec51_t // NOLINT(misc-no-recursion)
   {
-    dec51_t s;
+    dec51_t s { static_cast<unsigned>(UINT8_C(0)) };
 
-    if(x < 0)
+    if(x < static_cast<int>(INT8_C(0)))
     {
       s = -sin(-x);
     }
-    else if(x > 0)
+    else if(x > static_cast<int>(INT8_C(0)))
     {
       // Perform argument reduction and subsequent scaling of the result.
 
@@ -193,46 +193,51 @@ namespace example011_trig
       // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
       // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-      const auto my_pi_half = pi<dec51_t>() / 2;
+      static const auto my_pi_half = pi<dec51_t>() / static_cast<unsigned>(UINT8_C(2));
 
-      const auto k = static_cast<std::uint32_t>     (x / my_pi_half);
-      const auto n = static_cast<std::uint_fast32_t>(k % 4U);
+      const auto k = static_cast<unsigned>(x / my_pi_half);
+      const auto n = static_cast<unsigned>(k % static_cast<unsigned>(UINT8_C(4)));
 
       dec51_t r = x - (my_pi_half * k);
 
-      const auto is_neg =  (n > 1U);
-      const auto is_cos = ((n == 1U) || (n == 3U));
+      auto n_angle_identity = static_cast<unsigned>(UINT8_C(0));
 
-      auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
-
-      static const dec51_t two_tenths = dec51_t(2U) / 10U;
+      static const auto two_tenths = dec51_t(static_cast<unsigned>(UINT8_C(2))) / static_cast<unsigned>(UINT8_C(10));
 
       // Reduce the argument with factors of three until it is less than 2/10.
       while(r > two_tenths) // NOLINT(altera-id-dependent-backward-branch)
       {
-        r /= 3U;
+        r /= static_cast<unsigned>(UINT8_C(3));
 
         ++n_angle_identity;
       }
 
-      s = (is_cos ? cos_pade(r) : sin_pade(r));
+      switch(n)
+      {
+        case static_cast<unsigned>(UINT8_C(1)):
+        case static_cast<unsigned>(UINT8_C(3)):
+          s = cos_pade(r);
+          break;
+        case static_cast<unsigned>(UINT8_C(0)):
+        case static_cast<unsigned>(UINT8_C(2)):
+        default:
+          s = sin_pade(r);
+          break;
+      }
 
       // Rescale the result with the triple angle identity for sine.
-      for(auto t = static_cast<std::uint_fast32_t>(0U); t < n_angle_identity; ++t)
+      for(auto t = static_cast<unsigned>(UINT8_C(0)); t < n_angle_identity; ++t)
       {
-        s = (s * 3U) - (((s * s) * s) * 4U);
+        static_cast<void>(t);
+
+        s = (s * static_cast<unsigned>(UINT8_C(3))) - (((s * s) * s) * static_cast<unsigned>(UINT8_C(4)));
       }
 
-      s = fabs(s);
+      if(s.isneg()) { s.negate(); }
 
-      if(is_neg)
-      {
-        s = -s;
-      }
-    }
-    else
-    {
-      s = 0;
+      const auto b_neg = (n > static_cast<unsigned>(UINT8_C(1)));
+
+      if(b_neg) { s.negate(); }
     }
 
     return s;
@@ -240,13 +245,13 @@ namespace example011_trig
 
   auto cos(const dec51_t& x) -> dec51_t // NOLINT(misc-no-recursion)
   {
-    dec51_t c;
+    dec51_t c { static_cast<unsigned>(UINT8_C(1)) };
 
-    if(x < 0)
+    if(x < static_cast<int>(INT8_C(0)))
     {
       c = cos(-x);
     }
-    else if(x > 0)
+    else if(x > static_cast<int>(INT8_C(0)))
     {
       // Perform argument reduction and subsequent scaling of the result.
 
@@ -259,46 +264,52 @@ namespace example011_trig
       // | 2 | -sin(r) | -cos(r) |  sin(r)/cos(r) |
       // | 3 | -cos(r) |  sin(r) | -cos(r)/sin(r) |
 
-      const auto my_pi_half = pi<dec51_t>() / 2;
+      static const auto my_pi_half = pi<dec51_t>() / static_cast<unsigned>(UINT8_C(2));
 
-      const auto k = static_cast<std::uint32_t>     (x / my_pi_half);
-      const auto n = static_cast<std::uint_fast32_t>(k % 4U);
+      const auto k = static_cast<unsigned>(x / my_pi_half);
+      const auto n = static_cast<unsigned>(k % static_cast<unsigned>(UINT8_C(4)));
 
       dec51_t r = x - (my_pi_half * k);
 
-      const auto is_neg = ((n == 1U) || (n == 2U));
-      const auto is_sin = ((n == 1U) || (n == 3U));
+      auto n_angle_identity = static_cast<unsigned>(UINT8_C(0));
 
-      auto n_angle_identity = static_cast<std::uint_fast32_t>(0U);
-
-      static const dec51_t two_tenths = dec51_t(2U) / 10U;
+      static const auto two_tenths = dec51_t(static_cast<unsigned>(UINT8_C(2))) / static_cast<unsigned>(UINT8_C(10));
 
       // Reduce the argument with factors of three until it is less than 2/10.
       while(r > two_tenths) // NOLINT(altera-id-dependent-backward-branch)
       {
-        r /= 3U;
+        r /= static_cast<unsigned>(UINT8_C(3));
 
         ++n_angle_identity;
       }
 
-      c = (is_sin ? sin_pade(r) : cos_pade(r));
+      switch(n)
+      {
+        case static_cast<unsigned>(UINT8_C(1)):
+        case static_cast<unsigned>(UINT8_C(3)):
+          c = sin_pade(r);
+          break;
+        case static_cast<unsigned>(UINT8_C(0)):
+        case static_cast<unsigned>(UINT8_C(2)):
+        default:
+          c = cos_pade(r);
+          break;
+      }
+
 
       // Rescale the result with the triple angle identity for cosine.
-      for(auto t = static_cast<std::uint_fast32_t>(0U); t < n_angle_identity; ++t)
+      for(auto t = static_cast<unsigned>(UINT8_C(0)); t < n_angle_identity; ++t)
       {
-        c = (((c * c) * c) * 4U) - (c * 3U);
+        static_cast<void>(t);
+
+        c = (((c * c) * c) * static_cast<unsigned>(UINT8_C(4))) - (c * static_cast<unsigned>(UINT8_C(3)));
       }
 
-      c = fabs(c);
+      if(c.isneg()) { c.negate(); }
 
-      if(is_neg)
-      {
-        c = -c;
-      }
-    }
-    else
-    {
-      c = dec51_t(1U);
+      const auto b_neg = ((n == static_cast<unsigned>(UINT8_C(1))) || (n == static_cast<unsigned>(UINT8_C(2))));
+
+      if(b_neg) { c.negate(); }
     }
 
     return c;
@@ -313,17 +324,17 @@ namespace example011_trig
   {
     auto n2 = static_cast<std::uint_fast32_t>(INT8_C(1));
 
-    real_value_type step = ((b - a) / 2U);
+    real_value_type step = ((b - a) / static_cast<unsigned>(UINT8_C(2)));
 
     real_value_type result = (real_function(a) + real_function(b)) * step;
 
-    const auto k_max = static_cast<std::uint_fast8_t>(32U);
+    const auto k_max = static_cast<std::uint_fast8_t>(UINT8_C(32));
 
-    for(auto k = static_cast<std::uint_fast8_t>(0U); k < k_max; ++k)
+    for(auto k = static_cast<std::uint_fast8_t>(UINT8_C(0)); k < k_max; ++k)
     {
-      real_value_type sum(0);
+      real_value_type sum(static_cast<unsigned>(UINT8_C(0)));
 
-      for(auto j = static_cast<std::uint_fast32_t>(0U); j < n2; ++j)
+      for(auto j = static_cast<std::uint_fast32_t>(UINT8_C(0)); j < n2; ++j)
       {
         const auto two_j_plus_one =
           static_cast<std::uint_fast32_t>
@@ -336,22 +347,22 @@ namespace example011_trig
 
       const real_value_type tmp = result;
 
-      result = (result / 2U) + (step * sum);
+      result = (result / static_cast<unsigned>(UINT8_C(2))) + (step * sum);
 
       using std::fabs;
 
       const real_value_type ratio = fabs(tmp / result);
 
-      const real_value_type delta = fabs(ratio - 1U);
+      const real_value_type delta = fabs(ratio - static_cast<unsigned>(UINT8_C(1)));
 
-      if((k > UINT8_C(1)) && (delta < tol))
+      if((k > static_cast<std::uint_fast8_t>(UINT8_C(1))) && (delta < tol))
       {
         break;
       }
 
-      n2 *= 2U;
+      n2 *= static_cast<unsigned>(UINT8_C(2));
 
-      step /= 2U;
+      step /= static_cast<unsigned>(UINT8_C(2));
     }
 
     return result;
@@ -361,26 +372,31 @@ namespace example011_trig
   auto cyl_bessel_j(      std::uint_fast8_t n,
                     const float_type&       x) -> float_type
   {
-    const float_type epsilon = std::numeric_limits<float_type>::epsilon();
-
-    using std::cos;
-    using std::sin;
     using std::sqrt;
 
-    using example011_trig::cos;
-    using example011_trig::sin;
+    static const auto tol = sqrt(std::numeric_limits<float_type>::epsilon());
 
-    const float_type tol = sqrt(epsilon);
+    static const auto my_pi = pi<float_type>();
 
-    const float_type integration_result = integral(float_type(0),
-                                                   pi<float_type>(),
-                                                   tol,
-                                                   [&x, &n](const float_type& t) -> float_type
-                                                   {
-                                                     return cos(x * sin(t) - (t * n));
-                                                   });
+    const float_type integration_result =
+      integral
+      (
+        float_type(static_cast<unsigned>(UINT8_C(0))),
+        my_pi,
+        tol,
+        [&x, &n](const float_type& t) -> float_type
+        {
+          using std::cos;
+          using std::sin;
 
-    return integration_result / pi<float_type>();
+          using example011_trig::cos;
+          using example011_trig::sin;
+
+          return cos(x * sin(t) - (t * n));
+        }
+      );
+
+    return integration_result / my_pi;
   }
 } // namespace example011_trig
 
@@ -392,9 +408,9 @@ auto ::math::wide_decimal::example011_trig_trapezoid_integral() -> bool
 {
   using example011_trig::dec51_t;
 
-  const dec51_t j2 = example011_trig::cyl_bessel_j(2U, dec51_t(123U) / 100U);
-  const dec51_t j3 = example011_trig::cyl_bessel_j(3U, dec51_t(456U) / 100U);
-  const dec51_t j4 = example011_trig::cyl_bessel_j(4U, dec51_t(789U) / 100U);
+  const auto j2 = example011_trig::cyl_bessel_j(static_cast<unsigned>(UINT8_C(2)), dec51_t(static_cast<unsigned>(UINT16_C(123))) / static_cast<unsigned>(UINT8_C(100)));
+  const auto j3 = example011_trig::cyl_bessel_j(static_cast<unsigned>(UINT8_C(3)), dec51_t(static_cast<unsigned>(UINT16_C(456))) / static_cast<unsigned>(UINT8_C(100)));
+  const auto j4 = example011_trig::cyl_bessel_j(static_cast<unsigned>(UINT8_C(4)), dec51_t(static_cast<unsigned>(UINT16_C(789))) / static_cast<unsigned>(UINT8_C(100)));
 
   using std::fabs;
 
@@ -409,20 +425,24 @@ auto ::math::wide_decimal::example011_trig_trapezoid_integral() -> bool
 
   using std::fabs;
 
-  const dec51_t closeness2   = fabs(1 - (j2 / control2));
-  const dec51_t closeness3   = fabs(1 - (j3 / control3));
-  const dec51_t closeness4   = fabs(1 - (j4 / control4));
+  const dec51_t closeness2 = fabs(static_cast<int>(INT8_C(1)) - (j2 / control2));
+  const dec51_t closeness3 = fabs(static_cast<int>(INT8_C(1)) - (j3 / control3));
+  const dec51_t closeness4 = fabs(static_cast<int>(INT8_C(1)) - (j4 / control4));
 
   // Ensure that the local sin() function is covered for negative argument.
   using example011_trig::sin;
-  const dec51_t closeness_sn = fabs(1 - (sin(dec51_t(-123) / 100U) / control_sn));
+  const dec51_t closeness_sn = fabs(1 - (sin(dec51_t(static_cast<int>(INT16_C(-123))) / static_cast<unsigned>(UINT8_C(100))) / control_sn));
 
   const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10));
 
-  const auto result_is_ok = (   (closeness2   < tol)
-                             && (closeness3   < tol)
-                             && (closeness4   < tol)
-                             && (closeness_sn < tol));
+  const auto
+    result_is_ok =
+    (
+         (closeness2   < tol)
+      && (closeness3   < tol)
+      && (closeness4   < tol)
+      && (closeness_sn < tol)
+    );
 
   return result_is_ok;
 }
