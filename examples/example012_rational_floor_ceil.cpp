@@ -7,12 +7,12 @@
 
 #include <algorithm>
 #include <cstdint>
-#include <ctime>
 #include <iostream>
 #include <random>
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+#include <util/utility/util_pseudorandom_time_point_seed.h>
 #include <util/utility/util_baselexical_cast.h>
 
 #if defined(__clang__)
@@ -29,7 +29,7 @@ namespace example012_rational
 {
   auto dist_sign() -> unsigned
   {
-    static std::minstd_rand0 my_eng(static_cast<std::minstd_rand0::result_type>(std::clock()));
+    static std::minstd_rand0 my_eng(util::util_pseudorandom_time_point_seed::value<std::minstd_rand0::result_type>());
 
     static std::uniform_int_distribution<unsigned> my_dist_sign
     (
@@ -39,6 +39,18 @@ namespace example012_rational
 
     return my_dist_sign(my_eng);
   }
+
+  constexpr auto lo_index_min = static_cast<std::int32_t>(INT32_C(101));
+  #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
+  constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(1010));
+  #else
+  constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(210));
+  #endif
+  constexpr auto hi_index_min = static_cast<std::int32_t>(INT32_C(10001));
+  constexpr auto hi_index_max = static_cast<std::int32_t>(INT32_C(40010));
+
+  static_assert(hi_index_min < hi_index_max, "Error hi_index_min must be less than hi_index_max");
+  static_assert(lo_index_min < lo_index_max, "Error lo_index_min must be less than lo_index_max");
 
   template<typename DecimalType>
   auto test_rational_floor() -> bool
@@ -52,19 +64,16 @@ namespace example012_rational
 
     bool result_is_ok = true;
 
-    #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
-    constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(1010));
-    #else
-    constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(310));
-    #endif
-    constexpr auto hi_index_max = static_cast<std::int32_t>(INT32_C(100010));
-
-    for(auto lo_index = static_cast<std::int32_t>(INT32_C(101)); lo_index < lo_index_max; lo_index += static_cast<std::int32_t>(INT32_C(7)))
+    for(auto lo_index = lo_index_min;
+             lo_index < lo_index_max;
+             lo_index = static_cast<std::int32_t>(lo_index + static_cast<std::int32_t>(INT32_C(7))))
     {
-      for(auto hi_index = static_cast<std::int32_t>(INT32_C(10001)); hi_index < hi_index_max; hi_index += static_cast<std::int32_t>(INT32_C(17)))
+      for(auto hi_index = hi_index_min;
+               hi_index < hi_index_max;
+               hi_index = static_cast<std::int32_t>(hi_index + static_cast<std::int32_t>(INT32_C(17))))
       {
-        const auto lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
-        const auto hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
+        const auto lo_is_neg = static_cast<unsigned>(static_cast<unsigned>(dist_sign() % 2U) == static_cast<unsigned>(UINT8_C(0)));
+        const auto hi_is_neg = static_cast<unsigned>(static_cast<unsigned>(dist_sign() % 2U) == static_cast<unsigned>(UINT8_C(0)));
 
         const auto lo = static_cast<std::int32_t>((!lo_is_neg) ? lo_index : -lo_index);
         const auto hi = static_cast<std::int32_t>((!hi_is_neg) ? hi_index : -hi_index);
@@ -98,19 +107,16 @@ namespace example012_rational
 
     bool result_is_ok = true;
 
-    #if !defined(DECWIDE_T_REDUCE_TEST_DEPTH)
-    constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(1010));
-    #else
-    constexpr auto lo_index_max = static_cast<std::int32_t>(INT32_C(310));
-    #endif
-    constexpr auto hi_index_max = static_cast<std::int32_t>(INT32_C(100010));
-
-    for(auto lo_index = static_cast<std::int32_t>(INT32_C(101)); lo_index < lo_index_max; lo_index += static_cast<std::int32_t>(INT32_C(7)))
+    for(auto lo_index = lo_index_min;
+             lo_index < lo_index_max;
+             lo_index = static_cast<std::int32_t>(lo_index + static_cast<std::int32_t>(INT32_C(7))))
     {
-      for(auto hi_index = static_cast<std::int32_t>(INT32_C(10001)); hi_index < hi_index_max; hi_index += static_cast<std::int32_t>(INT32_C(17)))
+      for(auto hi_index = hi_index_min;
+               hi_index < hi_index_max;
+               hi_index = static_cast<std::int32_t>(hi_index + static_cast<std::int32_t>(INT32_C(17))))
       {
-        const auto lo_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
-        const auto hi_is_neg = (static_cast<unsigned>(dist_sign() % 2U) == 0U);
+        const auto lo_is_neg = static_cast<unsigned>(static_cast<unsigned>(dist_sign() % 2U) == static_cast<unsigned>(UINT8_C(0)));
+        const auto hi_is_neg = static_cast<unsigned>(static_cast<unsigned>(dist_sign() % 2U) == static_cast<unsigned>(UINT8_C(0)));
 
         const auto lo = static_cast<std::int32_t>((!lo_is_neg) ? lo_index : -lo_index);
         const auto hi = static_cast<std::int32_t>((!hi_is_neg) ? hi_index : -hi_index);

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2021 - 2022.                 //
+//  Copyright Christopher Kormanyos 2021 - 2023.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -174,13 +174,27 @@ namespace example011_trig
 
   auto sin(const dec51_t& x) -> dec51_t // NOLINT(misc-no-recursion)
   {
-    dec51_t s { static_cast<unsigned>(UINT8_C(0)) };
+    dec51_t s { };
 
-    if(x < static_cast<int>(INT8_C(0)))
+    using local_limb_type = typename dec51_t::limb_type;
+
+    const auto n_cmp =
+      static_cast<int>
+      (
+        x.cmp
+        (
+          dec51_t::from_lst
+          (
+            { static_cast<local_limb_type>(UINT8_C(0)) }
+          )
+        )
+      );
+
+    if(n_cmp < static_cast<int>(INT8_C(0)))
     {
-      s = -sin(-x);
+      s = sin(dec51_t(x).negate()).negate();
     }
-    else if(x > static_cast<int>(INT8_C(0)))
+    else if(n_cmp > static_cast<int>(INT8_C(0)))
     {
       // Perform argument reduction and subsequent scaling of the result.
 
@@ -198,13 +212,13 @@ namespace example011_trig
       const auto k = static_cast<unsigned>(x / my_pi_half);
       const auto n = static_cast<unsigned>(k % static_cast<unsigned>(UINT8_C(4)));
 
-      dec51_t r = x - (my_pi_half * k);
-
-      auto n_angle_identity = static_cast<unsigned>(UINT8_C(0));
+      auto r = x - (my_pi_half * k);
 
       static const auto two_tenths = dec51_t(static_cast<unsigned>(UINT8_C(2))) / static_cast<unsigned>(UINT8_C(10));
 
       // Reduce the argument with factors of three until it is less than 2/10.
+      auto n_angle_identity = static_cast<unsigned>(UINT8_C(0));
+
       while(r > two_tenths) // NOLINT(altera-id-dependent-backward-branch)
       {
         r /= static_cast<unsigned>(UINT8_C(3));
@@ -230,7 +244,7 @@ namespace example011_trig
       {
         static_cast<void>(t);
 
-        s = (s * static_cast<unsigned>(UINT8_C(3))) - (((s * s) * s) * static_cast<unsigned>(UINT8_C(4)));
+        s *= (static_cast<unsigned>(UINT8_C(3)) - ((s * s) * static_cast<unsigned>(UINT8_C(4))));
       }
 
       if(s.isneg()) { s.negate(); }
@@ -239,19 +253,41 @@ namespace example011_trig
 
       if(b_neg) { s.negate(); }
     }
+    else
+    {
+      s =
+        dec51_t::from_lst
+        (
+          { static_cast<local_limb_type>(UINT8_C(0)) }
+        );
+    }
 
     return s;
   }
 
   auto cos(const dec51_t& x) -> dec51_t // NOLINT(misc-no-recursion)
   {
-    dec51_t c { static_cast<unsigned>(UINT8_C(1)) };
+    dec51_t c { };
 
-    if(x < static_cast<int>(INT8_C(0)))
+    using local_limb_type = typename dec51_t::limb_type;
+
+    const auto n_cmp =
+      static_cast<int>
+      (
+        x.cmp
+        (
+          dec51_t::from_lst
+          (
+            { static_cast<local_limb_type>(UINT8_C(0)) }
+          )
+        )
+      );
+
+    if(n_cmp < static_cast<int>(INT8_C(0)))
     {
-      c = cos(-x);
+      c = cos(dec51_t(x).negate());
     }
-    else if(x > static_cast<int>(INT8_C(0)))
+    else if(n_cmp > static_cast<int>(INT8_C(0)))
     {
       // Perform argument reduction and subsequent scaling of the result.
 
@@ -269,13 +305,13 @@ namespace example011_trig
       const auto k = static_cast<unsigned>(x / my_pi_half);
       const auto n = static_cast<unsigned>(k % static_cast<unsigned>(UINT8_C(4)));
 
-      dec51_t r = x - (my_pi_half * k);
-
-      auto n_angle_identity = static_cast<unsigned>(UINT8_C(0));
+      auto r = x - (my_pi_half * k);
 
       static const auto two_tenths = dec51_t(static_cast<unsigned>(UINT8_C(2))) / static_cast<unsigned>(UINT8_C(10));
 
       // Reduce the argument with factors of three until it is less than 2/10.
+      auto n_angle_identity = static_cast<unsigned>(UINT8_C(0));
+
       while(r > two_tenths) // NOLINT(altera-id-dependent-backward-branch)
       {
         r /= static_cast<unsigned>(UINT8_C(3));
@@ -302,7 +338,7 @@ namespace example011_trig
       {
         static_cast<void>(t);
 
-        c = (((c * c) * c) * static_cast<unsigned>(UINT8_C(4))) - (c * static_cast<unsigned>(UINT8_C(3)));
+        c *= (((c * c) * static_cast<unsigned>(UINT8_C(4))) - static_cast<unsigned>(UINT8_C(3)));
       }
 
       if(c.isneg()) { c.negate(); }
@@ -310,6 +346,14 @@ namespace example011_trig
       const auto b_neg = ((n == static_cast<unsigned>(UINT8_C(1))) || (n == static_cast<unsigned>(UINT8_C(2))));
 
       if(b_neg) { c.negate(); }
+    }
+    else
+    {
+      c =
+        dec51_t::from_lst
+        (
+          { static_cast<local_limb_type>(UINT8_C(1)) }
+        );
     }
 
     return c;
