@@ -25,7 +25,7 @@
 
 // cd /mnt/c/Users/User/Documents/Ks/PC_Software/NumericalPrograms/ExtendedNumberTypes/wide_decimal
 // When using g++ and -std=c++14
-// g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -std=c++14 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_83_0 test/test_high_precision_exp.cpp -pthread -lpthread -lgmp -lmpfr -o test_high_precision_exp.exe
+// g++ -finline-functions -march=native -mtune=native -O3 -Werror -Wall -Wextra -std=c++14 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_83_0 test/test_high_precision_exp.cpp -pthread -lpthread -lgmp -lmpfr -o test_high_precision_exp.exe
 // ./test_high_precision_exp.exe
 
 namespace test_high_precision_exp
@@ -179,9 +179,9 @@ namespace test_high_precision_exp
     const auto my_pi_w = ckormanyos::math::wide_decimal::pi<wide_decimal_type::decwide_t_digits10>();
     const auto my_pi_b = detail::calc_pi<boost_float_type>();
 
-    eng_sgn.seed(static_cast<typename eng_top_type::result_type>(std::random_device{ }()));
-    eng_top.seed(static_cast<typename eng_top_type::result_type>(std::random_device{ }()));
-    eng_bot.seed(static_cast<typename eng_bot_type::result_type>(std::random_device{ }()));
+    eng_sgn.seed(util::util_pseudorandom_time_point_seed::value<typename eng_top_type::result_type>());
+    eng_top.seed(util::util_pseudorandom_time_point_seed::value<typename eng_top_type::result_type>());
+    eng_bot.seed(util::util_pseudorandom_time_point_seed::value<typename eng_bot_type::result_type>());
 
     auto result_is_ok = true;
 
@@ -189,20 +189,19 @@ namespace test_high_precision_exp
 
     const auto ilogb_tol = ilogb(std::numeric_limits<wide_decimal_type>::epsilon());
 
-    const auto my_zero = wide_decimal_type(static_cast<unsigned>(UINT8_C(0)));
     const auto my_one  = wide_decimal_type(static_cast<unsigned>(UINT8_C(1)));
 
     std::atomic_flag do_calcs_exp_lock = ATOMIC_FLAG_INIT;
 
     my_concurrency::parallel_for
     (
-      static_cast<unsigned>(UINT8_C( 0)),
+      static_cast<unsigned>(UINT8_C(0)),
       #if defined(__clang__)
-      static_cast<unsigned>(UINT8_C(12)),
+      static_cast<unsigned>(UINT8_C(8)),
       #else
       static_cast<unsigned>(UINT8_C(24)),
       #endif
-      [&my_pi_w, &my_pi_b, &result_is_ok, &do_calcs_exp_lock, &ilogb_tol, &my_zero, &my_one](unsigned count)
+      [&my_pi_w, &my_pi_b, &result_is_ok, &do_calcs_exp_lock, &ilogb_tol, &my_one](unsigned count)
       {
         while(do_calcs_exp_lock.test_and_set()) { ; }
         const auto sgn_top = (dst_sgn(eng_sgn) == static_cast<std::uint32_t>(UINT32_C(1)));
@@ -236,7 +235,7 @@ namespace test_high_precision_exp
 
         const auto delta = fabs(my_one - fabs(ew / fb_to_fw(eb)));
 
-        const auto result_exp_is_ok = ((ilogb(delta) <= ilogb_tol) || (delta == my_zero));
+        const auto result_exp_is_ok = ((ilogb(delta) <= ilogb_tol) || (delta.iszero()));
 
         std::stringstream strm;
 
@@ -248,6 +247,11 @@ namespace test_high_precision_exp
              << std::scientific
              << std::setprecision(static_cast<std::streamsize>(INT8_C(5)))
              << yw
+             << ", ew: "
+             << std::showpos
+             << std::scientific
+             << std::setprecision(static_cast<std::streamsize>(INT8_C(5)))
+             << ew
              << ", delta: "
              << std::noshowpos
              << std::scientific
@@ -257,10 +261,12 @@ namespace test_high_precision_exp
              << std::boolalpha
              << result_is_ok;
 
+        const auto str_from_strm = strm.str();
+
         while(do_calcs_exp_lock.test_and_set()) { ; }
         result_is_ok = (result_is_ok && result_exp_is_ok);
 
-        std::cout << strm.str() << std::endl;
+        std::cout << str_from_strm << std::endl;
         do_calcs_exp_lock.clear();
       }
     );

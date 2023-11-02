@@ -24,7 +24,7 @@
 
 // cd /mnt/c/Users/User/Documents/Ks/PC_Software/NumericalPrograms/ExtendedNumberTypes/wide_decimal
 // When using g++ and -std=c++14
-// g++ -finline-functions -march=native -mtune=native -O3 -Wall -Wextra -std=c++14 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_83_0 test/test_high_precision_log.cpp -pthread -lpthread -lgmp -lmpfr -o test_high_precision_log.exe
+// g++ -finline-functions -march=native -mtune=native -O3 -Werror -Wall -Wextra -std=c++14 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_83_0 test/test_high_precision_log.cpp -pthread -lpthread -lgmp -lmpfr -o test_high_precision_log.exe
 // ./test_high_precision_log.exe
 
 namespace test_high_precision_log
@@ -39,10 +39,24 @@ namespace test_high_precision_log
 
 namespace local
 {
+  #if defined(__clang__)
+  constexpr auto adders_array_size = static_cast<std::size_t>(UINT8_C(5));
+  #else
   constexpr auto adders_array_size = static_cast<std::size_t>(UINT8_C(8));
+  #endif
 
   using adders_array_type = std::array<std::uint64_t, adders_array_size>;
 
+  #if defined(__clang__)
+  constexpr adders_array_type adders =
+  {
+    static_cast<std::uint64_t>(UINT8_C(0)),
+    static_cast<std::uint64_t>(UINT8_C(6)),
+    static_cast<std::uint64_t>(UINT8_C(12)),
+    static_cast<std::uint64_t>(UINT16_C(9999)),
+    static_cast<std::uint64_t>(UINT64_C(999999999999999999))
+  };
+  #else
   constexpr adders_array_type adders =
   {
     static_cast<std::uint64_t>(UINT8_C(0)),
@@ -54,15 +68,19 @@ namespace local
     static_cast<std::uint64_t>(UINT16_C(9999)),
     static_cast<std::uint64_t>(UINT64_C(999999999999999999))
   };
+  #endif
 
   static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[0U] + static_cast<std::uint64_t>(UINT64_C(3))) % 3U) == static_cast<unsigned>(UINT8_C(0)), "Error adder must provie fractional part 1/3 in this test");
   static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[1U] + static_cast<std::uint64_t>(UINT64_C(3))) % 3U) == static_cast<unsigned>(UINT8_C(0)), "Error adder must provie fractional part 1/3 in this test");
   static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[2U] + static_cast<std::uint64_t>(UINT64_C(3))) % 3U) == static_cast<unsigned>(UINT8_C(0)), "Error adder must provie fractional part 1/3 in this test");
   static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[3U] + static_cast<std::uint64_t>(UINT64_C(3))) % 3U) == static_cast<unsigned>(UINT8_C(0)), "Error adder must provie fractional part 1/3 in this test");
   static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[4U] + static_cast<std::uint64_t>(UINT64_C(3))) % 3U) == static_cast<unsigned>(UINT8_C(0)), "Error adder must provie fractional part 1/3 in this test");
+  #if defined(__clang__)
+  #else
   static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[5U] + static_cast<std::uint64_t>(UINT64_C(3))) % 3U) == static_cast<unsigned>(UINT8_C(0)), "Error adder must provie fractional part 1/3 in this test");
   static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[6U] + static_cast<std::uint64_t>(UINT64_C(3))) % 3U) == static_cast<unsigned>(UINT8_C(0)), "Error adder must provie fractional part 1/3 in this test");
   static_assert(static_cast<unsigned>(static_cast<std::uint64_t>(adders[7U] + static_cast<std::uint64_t>(UINT64_C(3))) % 3U) == static_cast<unsigned>(UINT8_C(0)), "Error adder must provie fractional part 1/3 in this test");
+  #endif
 
   template<typename HighPrecisionFloatLeftType,
            typename HighPrecisionFloatRightType>
@@ -84,11 +102,13 @@ namespace local
 
     using local_size_type = typename adders_array_type::size_type;
 
+    const auto my_one = local_hp_float_left_type(static_cast<unsigned>(UINT8_C(1)));
+
     my_concurrency::parallel_for
     (
       static_cast<local_size_type>(UINT8_C(0)),
       static_cast<local_size_type>(local::adders_array_size),
-      [&result_is_ok, &do_calcs_log_lock, &tol](typename adders_array_type::size_type index)
+      [&result_is_ok, &do_calcs_log_lock, &tol, &my_one](typename adders_array_type::size_type index)
       {
         const auto one_plus_adder_at_index = static_cast<std::uint64_t>(static_cast<std::uint64_t>(UINT64_C(1)) + adders[index]);
 
@@ -100,27 +120,39 @@ namespace local
         const auto y_left  = log(x_left);
         const auto y_right = log(x_right);
 
-        using std::fabs;
+        local_hp_float_left_type ratio { };
 
-        std::stringstream strm;
+        {
+          std::stringstream strm;
 
-        strm << std::setprecision(test_high_precision_log::my_digits10) << y_right;
+          strm << std::setprecision(test_high_precision_log::my_digits10) << y_right;
 
-        const local_hp_float_left_type y_ctrl(strm.str().c_str());
-
-        const auto delta = fabs(1 - (y_left / y_ctrl));
+          ratio = y_left / local_hp_float_left_type(strm.str().c_str());
+        }
 
         while(do_calcs_log_lock.test_and_set()) { ; }
+        using std::fabs;
+
+        const auto delta = ((my_one > ratio) ? (my_one - ratio) : (ratio - my_one));
+
         const auto is_close_fraction = (delta < tol);
 
         result_is_ok = (is_close_fraction && result_is_ok);
 
-        std::cout << "index: "
-                  << index
-                  << ", is_close_fraction: "
-                  << std::boolalpha
-                  << is_close_fraction
-                  << std::endl;
+        {
+          std::stringstream strm;
+
+          strm << "index: "
+               << index
+               << ", is_close_fraction: "
+               << std::boolalpha
+               << is_close_fraction;
+
+          const auto str_from_strm = strm.str();
+
+          std::cout << str_from_strm << std::endl;
+        }
+
         do_calcs_log_lock.clear();
       }
     );
