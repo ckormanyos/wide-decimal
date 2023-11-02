@@ -162,9 +162,9 @@ namespace test_high_precision_exp
     return wide_decimal_type(strm_b.str().c_str());
   };
 
-  std::uniform_int_distribution dst_sgn(static_cast<std::uint32_t>(UINT32_C(        0)), static_cast<std::uint32_t>(UINT32_C(        1)));
-  std::uniform_int_distribution dst_top(static_cast<std::uint32_t>(UINT32_C( 30000000)), static_cast<std::uint32_t>(UINT32_C(999999999)));
-  std::uniform_int_distribution dst_bot(static_cast<std::uint32_t>(UINT32_C(100000000)), static_cast<std::uint32_t>(UINT32_C(999999999)));
+  std::uniform_int_distribution<std::uint32_t> dst_sgn(UINT32_C(        0), UINT32_C(        1));
+  std::uniform_int_distribution<std::uint32_t> dst_top(UINT32_C( 30000000), UINT32_C(999999999));
+  std::uniform_int_distribution<std::uint32_t> dst_bot(UINT32_C(100000000), UINT32_C(999999999));
 
   using eng_sgn_type = std::ranlux24;
   using eng_top_type = std::mt19937;
