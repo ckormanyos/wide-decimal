@@ -112,14 +112,14 @@ internal representation.
 
 ## Examples
 
-Various interesting and algorithmically challenging
-[examples](./examples) have been implemented.
+Various interesting [examples](./examples), some of which are
+quite algorithmically challenging, have been implemented.
 It is hoped that the examples provide inspiration and guidance on
 how to use wide-decimal.
 
 The examples include the following.
 
-  - ![`example000_multiply_nines.cpp`](./examples/example000_multiply_nines.cpp) verifies schoolbook multiplication using 8-bit limbs in a small digit range.
+  - ![`example000_multiply_nines.cpp`](./examples/example000_multiply_nines.cpp) verifies schoolbook multiplication using a `decwide-t` type having 8-bit limbs in a small digit range.
   - ![`example000a_multiply_pi_squared.cpp`](./examples/example000a_multiply_pi_squared.cpp) performs a hard-coded multiplication check resulting in $\pi^2$.
   - ![`example001_roots_sqrt.cpp`](./examples/example001_roots_sqrt.cpp) computes a square root.
   - ![`example001a_roots_seventh.cpp`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
@@ -486,7 +486,7 @@ Alternative libraries for big float types include,
 among others, most notably
 [GMP](https://gmplib.org/)
 and
-[`Boost.Multiprecision`](https://www.boost.org/doc/libs/1_79_0/libs/multiprecision/doc/html/index.html).
+[`Boost.Multiprecision`](https://www.boost.org/doc/libs/1_83_0/libs/multiprecision/doc/html/index.html).
 
 At the moment, wide-decimal has a rather large number of
 so-called _guard_ _digits_. In addition, wide-decimal
@@ -496,9 +496,9 @@ result is that exact calculations such as those potentially
 needed in some areas requiring pure, exact decimal calculations
 may not work well with this library. In this sense, wide-decimal suffers
 from the same rounding limitations as the
-[`cpp_dec_float`](https://www.boost.org/doc/libs/1_79_0/libs/multiprecision/doc/html/boost_multiprecision/tut/floats/cpp_dec_float.html)
+[`cpp_dec_float`](https://www.boost.org/doc/libs/1_83_0/libs/multiprecision/doc/html/boost_multiprecision/tut/floats/cpp_dec_float.html)
 class known from
-[`Boost.Multiprecision`](https://www.boost.org/doc/libs/1_79_0/libs/multiprecision/doc/html/index.html).
+[`Boost.Multiprecision`](https://www.boost.org/doc/libs/1_83_0/libs/multiprecision/doc/html/index.html).
 
 ## References
 
