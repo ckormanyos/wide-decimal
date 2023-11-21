@@ -6121,88 +6121,87 @@
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
+    const auto b_neg = x.isneg();
+
     local_wide_decimal_type exp_result;
 
-    if(x.isneg())
+    if(b_neg || (x > 0))
     {
-      exp_result = exp(local_wide_decimal_type(x).negate()).calculate_inv();
-    }
-    else if(!x.iszero())
-    {
-      if(x < one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
+      const local_wide_decimal_type xx = ((!b_neg) ? x : -x);
+
+      // Get (compute beforehad) ln2 as a constant or constant reference value.
+      #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
+      const local_wide_decimal_type& ln2 = ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+      #else
+      const local_wide_decimal_type  ln2 = ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(); // LCOV_EXCL_LINE
+      #endif
+
+      const auto nf = static_cast<std::uint32_t>(xx / ln2);
+
+      local_wide_decimal_type xh(xx - static_cast<local_wide_decimal_type>(nf * ln2));
+
+      const auto precision_of_x = local_wide_decimal_type::get_precision(x);
+
+      // Setup the iteration.
+
+      // Use the original value of x for iteration below.
+      local_wide_decimal_type original_x(xh);
+
+      local_wide_decimal_type iterate_term;
+
+      using std::exp;
+
+      // Estimate the exponent using built-in <cmath>-functions.
+      const auto x_as_built_in_float = static_cast<InternalFloatType>(original_x);
+      const auto exp_estimate        = exp(x_as_built_in_float);
+
+      exp_result = exp_estimate;
+
+      for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
+               digits  < precision_of_x; // NOLINT(altera-id-dependent-backward-branch)
+               digits *= static_cast<std::int32_t>(INT8_C(2)))
       {
-        if(x < half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
-        {
-          exp_result =
-            exp
-            (
-                x
-              + (ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>() * static_cast<unsigned>(UINT8_C(2)))
-            )
-            / static_cast<unsigned>(UINT8_C(4));
-        }
-        else
-        {
-          exp_result =
-            exp
-            (
-                x
-              + ln_two<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>()
-            )
-            / static_cast<unsigned>(UINT8_C(2));
-        }
+        // Adjust precision of the terms.
+        const auto min_elem_digits10_plus_one =
+          (std::min)
+          (
+            static_cast<std::int32_t>(local_wide_decimal_type::decwide_t_elem_digits10 + static_cast<std::int32_t>(INT8_C(1))),
+            static_cast<std::int32_t>(INT8_C(9))
+          );
+
+        const auto new_prec_as_digits10 =
+          static_cast<std::int32_t>
+          (
+              static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
+            + min_elem_digits10_plus_one
+          );
+
+        exp_result.precision(new_prec_as_digits10);
+
+        iterate_term.precision(new_prec_as_digits10);
+
+        original_x.precision(new_prec_as_digits10);
+
+        iterate_term  = log(exp_result);
+        iterate_term.negate();
+        iterate_term += original_x;
+
+        iterate_term += one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
+        exp_result   *= iterate_term;
       }
-      else
+
+      exp_result.precision(precision_of_x);
+
+      if(nf != static_cast<std::uint32_t>(UINT8_C(0)))
       {
-        const auto precision_of_x = local_wide_decimal_type::get_precision(x);
+        using std::ldexp;
 
-        // Setup the iteration.
+        exp_result = ldexp(exp_result, static_cast<int>(nf));
+      }
 
-        // Use the original value of x for iteration below.
-        local_wide_decimal_type original_x(x);
-
-        local_wide_decimal_type iterate_term;
-
-        using std::exp;
-
-        // Estimate the exponent using built-in <cmath>-functions.
-        const auto x_as_built_in_float = static_cast<InternalFloatType>(original_x);
-        const auto exp_estimate        = exp(x_as_built_in_float);
-
-        exp_result = exp_estimate;
-
-        for(auto digits  = static_cast<std::int32_t>(std::numeric_limits<InternalFloatType>::digits10 - 1);
-                 digits  < precision_of_x; // NOLINT(altera-id-dependent-backward-branch)
-                 digits *= static_cast<std::int32_t>(INT8_C(2)))
-        {
-          // Adjust precision of the terms.
-          const auto min_elem_digits10_plus_one =
-            (std::min)
-            (
-              static_cast<std::int32_t>(local_wide_decimal_type::decwide_t_elem_digits10 + static_cast<std::int32_t>(INT8_C(1))),
-              static_cast<std::int32_t>(INT8_C(9))
-            );
-
-          const auto new_prec_as_digits10 =
-            static_cast<std::int32_t>
-            (
-                static_cast<std::int32_t>(digits * static_cast<std::int8_t>(INT8_C(2)))
-              + min_elem_digits10_plus_one
-            );
-
-            exp_result.precision(new_prec_as_digits10);
-          iterate_term.precision(new_prec_as_digits10);
-            original_x.precision(new_prec_as_digits10);
-
-          iterate_term  = log(exp_result);
-          iterate_term.negate();
-          iterate_term += original_x;
-
-          iterate_term += one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
-          exp_result   *= iterate_term;
-        }
-
-        exp_result.precision(precision_of_x);
+      if(b_neg)
+      {
+        static_cast<void>(exp_result.calculate_inv());
       }
     }
     else

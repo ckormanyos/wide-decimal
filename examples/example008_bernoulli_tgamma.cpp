@@ -217,7 +217,7 @@ namespace example008_bernoulli
 
     using std::log;
 
-    if(xx > 8U) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    if(xx > static_cast<unsigned>(UINT8_C(8)))
     {
       // In the following code sequence, we extract the approximate logarithm
       // of the argument x and use the leading term of Stirling's approximation,
@@ -228,9 +228,13 @@ namespace example008_bernoulli
       // Limit fx to the range 8 <= fx <= 10^16, where 8 is chosen to
       // ensure that (log(fx) - 1.0F) remains positive and 10^16 is
       // selected arbitrarily, yet ensured to be rather large.
-      auto fx_max = (std::max)(static_cast<floating_point_type>(8U), xx); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+      const auto fx_max = (std::max)(static_cast<floating_point_type>(static_cast<unsigned>(UINT8_C(8))), xx);
 
-      auto fx = (std::min)(fx_max, static_cast<floating_point_type>(UINT64_C(10000000000000000)));
+      const auto fx_lim = (std::min)(fx_max, static_cast<floating_point_type>(UINT64_C(10000000000000000)));
+
+      auto fx = static_cast<float>(fx_lim);
+
+      using std::log;
 
       tol *= static_cast<float>(fx * (log(fx) - 1.0F));
     }
