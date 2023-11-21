@@ -28,7 +28,8 @@
     {
       using strftime_uint8_array_type = std::array<std::uint8_t, static_cast<std::size_t>(UINT8_C(64))>;
 
-      strftime_uint8_array_type buf_u8 { }; buf_u8.fill(static_cast<std::uint8_t>(UINT8_C(0)));
+      strftime_uint8_array_type buf_u8 { };
+      buf_u8.fill(static_cast<std::uint8_t>(UINT8_C(0)));
 
       std::size_t str_tm_len { };
 
@@ -39,6 +40,7 @@
         using strftime_char_array_type = std::array<char, std::tuple_size<strftime_uint8_array_type>::value>;
 
         strftime_char_array_type buf { };
+        buf.fill('\0');
 
         #if defined(_MSC_VER)
         #pragma warning(push)
@@ -50,17 +52,22 @@
         #pragma warning( pop )
         #endif
 
-        std::stringstream strm;
+        {
+          std::stringstream strm;
 
-        // Append the clock()-time in arbitrary units.
-        strm << buf.data();
-        strm << '+' << std::setfill('0') << std::setw(static_cast<std::streamsize>(INT8_C(9))) << std::clock();
+          // Append the clock()-time in arbitrary units.
+          strm << buf.data()
+               << '+'
+               << std::setfill('0')
+               << std::setw(static_cast<std::streamsize>(INT8_C(9)))
+               << std::clock();
 
-        const auto str_tm = strm.str();
+          const auto str_tm = strm.str();
 
-        str_tm_len = str_tm.length();
+          str_tm_len = str_tm.length();
 
-        std::copy(str_tm.cbegin(), str_tm.cend(), buf_u8.begin());
+          std::copy(str_tm.cbegin(), str_tm.cend(), buf_u8.begin());
+        }
       }
 
       using local_integral_type = IntegralType;
