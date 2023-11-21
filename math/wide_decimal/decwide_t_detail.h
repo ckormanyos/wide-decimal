@@ -211,7 +211,7 @@
       static_cast<std::uint32_t>(UINT32_C(2097152))
     };
 
-    std::uint32_t* it = lower_bound_unsafe(std::begin(a029750_data), std::end(a029750_data), value);
+    const std::uint32_t* it = lower_bound_unsafe(std::begin(a029750_data), std::end(a029750_data), value);
 
     const auto result =
       static_cast<std::uint32_t>
@@ -273,7 +273,7 @@
       static_cast<std::uint32_t>(UINT32_C(1000000000))
     };
 
-    const auto result = 
+    const std::uint32_t result = 
       (
         (n < static_cast<std::uint32_t>(sizeof(local_p10_table) / sizeof(local_p10_table[static_cast<std::size_t>(UINT8_C(0))])))
           ? local_p10_table[static_cast<std::size_t>(n)]                        // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
