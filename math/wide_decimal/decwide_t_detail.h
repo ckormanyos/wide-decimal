@@ -190,7 +190,7 @@
   {
     // Use Sloane's A029750: The so-called 7-smooth numbers having the form 2^k times 1, 3, 5 or 7.
     // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 91}], x]
-    constexpr std::uint32_t a029750_data[static_cast<std::size_t>(UINT8_C(65))] =
+    constexpr std::uint32_t a029750_data[static_cast<std::size_t>(UINT8_C(65))] = // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
     {
       static_cast<std::uint32_t>(UINT32_C(     32)), static_cast<std::uint32_t>(UINT32_C(     40)), static_cast<std::uint32_t>(UINT32_C(     48)), static_cast<std::uint32_t>(UINT32_C(     56)),
       static_cast<std::uint32_t>(UINT32_C(     64)), static_cast<std::uint32_t>(UINT32_C(     80)), static_cast<std::uint32_t>(UINT32_C(     96)), static_cast<std::uint32_t>(UINT32_C(    112)),
@@ -211,14 +211,14 @@
       static_cast<std::uint32_t>(UINT32_C(2097152))
     };
 
-    auto it = lower_bound_unsafe(std::begin(a029750_data), std::end(a029750_data), value);
+    std::uint32_t* it = lower_bound_unsafe(std::begin(a029750_data), std::end(a029750_data), value);
 
     const auto result =
       static_cast<std::uint32_t>
       (
         (it != std::end(a029750_data))
           ? *it
-          : *(std::end(a029750_data) - static_cast<std::size_t>(UINT8_C(1)))
+          : *(std::end(a029750_data) - static_cast<std::size_t>(UINT8_C(1))) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       );
 
     return result;
@@ -259,7 +259,7 @@
 
   constexpr auto pow10_maker_as_runtime_value(std::uint32_t n) noexcept -> std::uint32_t
   {
-    constexpr std::uint32_t local_p10_table[static_cast<std::size_t>(UINT8_C(10))] =
+    constexpr std::uint32_t local_p10_table[static_cast<std::size_t>(UINT8_C(10))] = // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
     {
       static_cast<std::uint32_t>(UINT32_C(1)),
       static_cast<std::uint32_t>(UINT32_C(10)),
@@ -276,8 +276,8 @@
     const auto result = 
       (
         (n < static_cast<std::uint32_t>(sizeof(local_p10_table) / sizeof(local_p10_table[static_cast<std::size_t>(UINT8_C(0))])))
-          ? local_p10_table[static_cast<std::size_t>(n)]
-          : *(std::end(local_p10_table) - static_cast<std::size_t>(UINT8_C(1)))
+          ? local_p10_table[static_cast<std::size_t>(n)]                        // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
+          : *(std::end(local_p10_table) - static_cast<std::size_t>(UINT8_C(1))) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       );
 
     return result;
