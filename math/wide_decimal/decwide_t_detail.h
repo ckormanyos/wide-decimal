@@ -80,7 +80,7 @@
 
     local_iterator_type itr { };
 
-    while (count > static_cast<local_difference_type>(INT8_C(0)))
+    while (count > static_cast<local_difference_type>(INT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
     {
       itr = first;
 
