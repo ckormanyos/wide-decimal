@@ -66,6 +66,42 @@
   namespace math { namespace wide_decimal { namespace detail { // NOLINT(modernize-concat-nested-namespaces)
   #endif
 
+  template<class ForwardIt, class T>
+  constexpr auto lower_bound_unsafe(ForwardIt first, ForwardIt last, const T& value) -> ForwardIt
+  {
+    using local_iterator_type = ForwardIt;
+
+    using local_difference_type = typename std::iterator_traits<ForwardIt>::difference_type;
+
+    local_difference_type step { };
+
+    auto count = static_cast<local_difference_type>(last - first);
+
+    local_iterator_type itr { };
+
+    while (count > static_cast<local_difference_type>(INT8_C(0)))
+    {
+      itr = first;
+
+      step = static_cast<local_difference_type>(count / static_cast<local_difference_type>(INT8_C(2)));
+
+      itr += step;
+ 
+      if (*itr < value)
+      {
+        first = ++itr;
+
+        count -= static_cast<local_difference_type>(step + static_cast<local_difference_type>(INT8_C(1)));
+      }
+      else
+      {
+        count = step;
+      }
+    }
+
+    return first;
+  }
+
   template<const std::size_t BitCount,
            typename EnableType = void>
   struct uint_type_helper
@@ -122,85 +158,79 @@
       );
   }
 
-  struct a029750
+  #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
+  #else
+  // LCOV_EXCL_START
+  constexpr auto a029750_as_constexpr(std::uint32_t value) noexcept -> std::uint32_t // NOLINT(readability-function-cognitive-complexity)
   {
-    #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
-    #else
-    // LCOV_EXCL_START
-    static constexpr auto a029750_as_constexpr(std::uint32_t value) noexcept -> std::uint32_t // NOLINT(readability-function-cognitive-complexity)
-    {
-      // Sloane's A029750 List of numbers of the form 2^k times 1, 3, 5 or 7.
-      // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 91}], x]
-      return ((value <= static_cast<std::uint32_t>(UINT32_C(     32))) ? static_cast<std::uint32_t>(UINT32_C(     32)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(      40))) ?  static_cast<std::uint32_t>(UINT32_C(      40)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      48))) ? static_cast<std::uint32_t>(UINT32_C(      48)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      56))) ? static_cast<std::uint32_t>(UINT32_C(      56)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(     64))) ? static_cast<std::uint32_t>(UINT32_C(     64)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(      80))) ?  static_cast<std::uint32_t>(UINT32_C(      80)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      96))) ? static_cast<std::uint32_t>(UINT32_C(      96)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     112))) ? static_cast<std::uint32_t>(UINT32_C(     112)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(    128))) ? static_cast<std::uint32_t>(UINT32_C(    128)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(     160))) ?  static_cast<std::uint32_t>(UINT32_C(     160)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     192))) ? static_cast<std::uint32_t>(UINT32_C(     192)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     224))) ? static_cast<std::uint32_t>(UINT32_C(     224)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(    256))) ? static_cast<std::uint32_t>(UINT32_C(    256)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(     320))) ?  static_cast<std::uint32_t>(UINT32_C(     320)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     384))) ? static_cast<std::uint32_t>(UINT32_C(     384)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     448))) ? static_cast<std::uint32_t>(UINT32_C(     448)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(    512))) ? static_cast<std::uint32_t>(UINT32_C(    512)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(     640))) ?  static_cast<std::uint32_t>(UINT32_C(     640)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     768))) ? static_cast<std::uint32_t>(UINT32_C(     768)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     896))) ? static_cast<std::uint32_t>(UINT32_C(     896)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(   1024))) ? static_cast<std::uint32_t>(UINT32_C(   1024)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(    1280))) ?  static_cast<std::uint32_t>(UINT32_C(    1280)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    1536))) ? static_cast<std::uint32_t>(UINT32_C(    1536)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    1792))) ? static_cast<std::uint32_t>(UINT32_C(    1792)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(   2048))) ? static_cast<std::uint32_t>(UINT32_C(   2048)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(    2560))) ?  static_cast<std::uint32_t>(UINT32_C(    2560)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    3072))) ? static_cast<std::uint32_t>(UINT32_C(    3072)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    3584))) ? static_cast<std::uint32_t>(UINT32_C(    3584)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(   4096))) ? static_cast<std::uint32_t>(UINT32_C(   4096)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(    5120))) ?  static_cast<std::uint32_t>(UINT32_C(    5120)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    6144))) ? static_cast<std::uint32_t>(UINT32_C(    6144)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    7168))) ? static_cast<std::uint32_t>(UINT32_C(    7168)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(   8192))) ? static_cast<std::uint32_t>(UINT32_C(   8192)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(   10240))) ?  static_cast<std::uint32_t>(UINT32_C(   10240)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   12288))) ? static_cast<std::uint32_t>(UINT32_C(   12288)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   14336))) ? static_cast<std::uint32_t>(UINT32_C(   14336)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(  16384))) ? static_cast<std::uint32_t>(UINT32_C(  16384)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(   20480))) ?  static_cast<std::uint32_t>(UINT32_C(   20480)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   24576))) ? static_cast<std::uint32_t>(UINT32_C(   24576)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   28672))) ? static_cast<std::uint32_t>(UINT32_C(   28672)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(  32768))) ? static_cast<std::uint32_t>(UINT32_C(  32768)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(   40960))) ?  static_cast<std::uint32_t>(UINT32_C(   40960)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   49152))) ? static_cast<std::uint32_t>(UINT32_C(   49152)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   57344))) ? static_cast<std::uint32_t>(UINT32_C(   57344)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(  65536))) ? static_cast<std::uint32_t>(UINT32_C(  65536)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(   81920))) ?  static_cast<std::uint32_t>(UINT32_C(   81920)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   98304))) ? static_cast<std::uint32_t>(UINT32_C(   98304)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  114688))) ? static_cast<std::uint32_t>(UINT32_C(  114688)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C( 131072))) ? static_cast<std::uint32_t>(UINT32_C( 131072)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(  163840))) ?  static_cast<std::uint32_t>(UINT32_C(  163840)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  196608))) ? static_cast<std::uint32_t>(UINT32_C(  196608)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  229376))) ? static_cast<std::uint32_t>(UINT32_C(  229376)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C( 262144))) ? static_cast<std::uint32_t>(UINT32_C( 262144)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(  327680))) ?  static_cast<std::uint32_t>(UINT32_C(  327680)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  393216))) ? static_cast<std::uint32_t>(UINT32_C(  393216)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  458752))) ? static_cast<std::uint32_t>(UINT32_C(  458752)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C( 524288))) ? static_cast<std::uint32_t>(UINT32_C( 524288)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(  655360))) ?  static_cast<std::uint32_t>(UINT32_C(  655360)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  786432))) ? static_cast<std::uint32_t>(UINT32_C(  786432)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  917504))) ? static_cast<std::uint32_t>(UINT32_C(  917504)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(1048576))) ? static_cast<std::uint32_t>(UINT32_C(1048576)) : ((value <=  static_cast<std::uint32_t>(UINT32_C( 1310720))) ?  static_cast<std::uint32_t>(UINT32_C( 1310720)) : ((value <= static_cast<std::uint32_t>(UINT32_C( 1572864))) ? static_cast<std::uint32_t>(UINT32_C( 1572864)) : ((value <= static_cast<std::uint32_t>(UINT32_C( 1835008))) ? static_cast<std::uint32_t>(UINT32_C( 1835008)) : static_cast<std::uint32_t>(UINT32_C(2097152))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
-    }
-    // LCOV_EXCL_STOP
-    #endif
+    // Sloane's A029750 List of numbers of the form 2^k times 1, 3, 5 or 7.
+    // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 91}], x]
+    return ((value <= static_cast<std::uint32_t>(UINT32_C(     32))) ? static_cast<std::uint32_t>(UINT32_C(     32)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(      40))) ?  static_cast<std::uint32_t>(UINT32_C(      40)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      48))) ? static_cast<std::uint32_t>(UINT32_C(      48)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      56))) ? static_cast<std::uint32_t>(UINT32_C(      56)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(     64))) ? static_cast<std::uint32_t>(UINT32_C(     64)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(      80))) ?  static_cast<std::uint32_t>(UINT32_C(      80)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      96))) ? static_cast<std::uint32_t>(UINT32_C(      96)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     112))) ? static_cast<std::uint32_t>(UINT32_C(     112)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(    128))) ? static_cast<std::uint32_t>(UINT32_C(    128)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(     160))) ?  static_cast<std::uint32_t>(UINT32_C(     160)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     192))) ? static_cast<std::uint32_t>(UINT32_C(     192)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     224))) ? static_cast<std::uint32_t>(UINT32_C(     224)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(    256))) ? static_cast<std::uint32_t>(UINT32_C(    256)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(     320))) ?  static_cast<std::uint32_t>(UINT32_C(     320)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     384))) ? static_cast<std::uint32_t>(UINT32_C(     384)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     448))) ? static_cast<std::uint32_t>(UINT32_C(     448)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(    512))) ? static_cast<std::uint32_t>(UINT32_C(    512)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(     640))) ?  static_cast<std::uint32_t>(UINT32_C(     640)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     768))) ? static_cast<std::uint32_t>(UINT32_C(     768)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     896))) ? static_cast<std::uint32_t>(UINT32_C(     896)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(   1024))) ? static_cast<std::uint32_t>(UINT32_C(   1024)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(    1280))) ?  static_cast<std::uint32_t>(UINT32_C(    1280)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    1536))) ? static_cast<std::uint32_t>(UINT32_C(    1536)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    1792))) ? static_cast<std::uint32_t>(UINT32_C(    1792)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(   2048))) ? static_cast<std::uint32_t>(UINT32_C(   2048)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(    2560))) ?  static_cast<std::uint32_t>(UINT32_C(    2560)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    3072))) ? static_cast<std::uint32_t>(UINT32_C(    3072)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    3584))) ? static_cast<std::uint32_t>(UINT32_C(    3584)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(   4096))) ? static_cast<std::uint32_t>(UINT32_C(   4096)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(    5120))) ?  static_cast<std::uint32_t>(UINT32_C(    5120)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    6144))) ? static_cast<std::uint32_t>(UINT32_C(    6144)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    7168))) ? static_cast<std::uint32_t>(UINT32_C(    7168)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(   8192))) ? static_cast<std::uint32_t>(UINT32_C(   8192)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(   10240))) ?  static_cast<std::uint32_t>(UINT32_C(   10240)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   12288))) ? static_cast<std::uint32_t>(UINT32_C(   12288)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   14336))) ? static_cast<std::uint32_t>(UINT32_C(   14336)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(  16384))) ? static_cast<std::uint32_t>(UINT32_C(  16384)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(   20480))) ?  static_cast<std::uint32_t>(UINT32_C(   20480)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   24576))) ? static_cast<std::uint32_t>(UINT32_C(   24576)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   28672))) ? static_cast<std::uint32_t>(UINT32_C(   28672)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(  32768))) ? static_cast<std::uint32_t>(UINT32_C(  32768)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(   40960))) ?  static_cast<std::uint32_t>(UINT32_C(   40960)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   49152))) ? static_cast<std::uint32_t>(UINT32_C(   49152)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   57344))) ? static_cast<std::uint32_t>(UINT32_C(   57344)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(  65536))) ? static_cast<std::uint32_t>(UINT32_C(  65536)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(   81920))) ?  static_cast<std::uint32_t>(UINT32_C(   81920)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   98304))) ? static_cast<std::uint32_t>(UINT32_C(   98304)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  114688))) ? static_cast<std::uint32_t>(UINT32_C(  114688)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C( 131072))) ? static_cast<std::uint32_t>(UINT32_C( 131072)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(  163840))) ?  static_cast<std::uint32_t>(UINT32_C(  163840)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  196608))) ? static_cast<std::uint32_t>(UINT32_C(  196608)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  229376))) ? static_cast<std::uint32_t>(UINT32_C(  229376)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C( 262144))) ? static_cast<std::uint32_t>(UINT32_C( 262144)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(  327680))) ?  static_cast<std::uint32_t>(UINT32_C(  327680)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  393216))) ? static_cast<std::uint32_t>(UINT32_C(  393216)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  458752))) ? static_cast<std::uint32_t>(UINT32_C(  458752)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C( 524288))) ? static_cast<std::uint32_t>(UINT32_C( 524288)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(  655360))) ?  static_cast<std::uint32_t>(UINT32_C(  655360)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  786432))) ? static_cast<std::uint32_t>(UINT32_C(  786432)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  917504))) ? static_cast<std::uint32_t>(UINT32_C(  917504)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(1048576))) ? static_cast<std::uint32_t>(UINT32_C(1048576)) : ((value <=  static_cast<std::uint32_t>(UINT32_C( 1310720))) ?  static_cast<std::uint32_t>(UINT32_C( 1310720)) : ((value <= static_cast<std::uint32_t>(UINT32_C( 1572864))) ? static_cast<std::uint32_t>(UINT32_C( 1572864)) : ((value <= static_cast<std::uint32_t>(UINT32_C( 1835008))) ? static_cast<std::uint32_t>(UINT32_C( 1835008)) : static_cast<std::uint32_t>(UINT32_C(2097152))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+  }
+  // LCOV_EXCL_STOP
+  #endif
 
-    static auto a029750_as_runtime_value(std::uint32_t value) noexcept -> std::uint32_t
-    {
-      using local_array_type = std::array<std::uint32_t, 65U>; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-      // Use Sloane's A029750: The so-called 7-smooth numbers having the form 2^k times 1, 3, 5 or 7.
-      // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 91}], x]
-      constexpr local_array_type a029750_data =
-      {{
-        static_cast<std::uint32_t>(UINT32_C(      32)), static_cast<std::uint32_t>(UINT32_C(      40)), static_cast<std::uint32_t>(UINT32_C(      48)), static_cast<std::uint32_t>(UINT32_C(      56)),
-        static_cast<std::uint32_t>(UINT32_C(      64)), static_cast<std::uint32_t>(UINT32_C(      80)), static_cast<std::uint32_t>(UINT32_C(      96)), static_cast<std::uint32_t>(UINT32_C(     112)),
-        static_cast<std::uint32_t>(UINT32_C(     128)), static_cast<std::uint32_t>(UINT32_C(     160)), static_cast<std::uint32_t>(UINT32_C(     192)), static_cast<std::uint32_t>(UINT32_C(     224)),
-        static_cast<std::uint32_t>(UINT32_C(     256)), static_cast<std::uint32_t>(UINT32_C(     320)), static_cast<std::uint32_t>(UINT32_C(     384)), static_cast<std::uint32_t>(UINT32_C(     448)),
-        static_cast<std::uint32_t>(UINT32_C(     512)), static_cast<std::uint32_t>(UINT32_C(     640)), static_cast<std::uint32_t>(UINT32_C(     768)), static_cast<std::uint32_t>(UINT32_C(     896)),
-        static_cast<std::uint32_t>(UINT32_C(    1024)), static_cast<std::uint32_t>(UINT32_C(    1280)), static_cast<std::uint32_t>(UINT32_C(    1536)), static_cast<std::uint32_t>(UINT32_C(    1792)),
-        static_cast<std::uint32_t>(UINT32_C(    2048)), static_cast<std::uint32_t>(UINT32_C(    2560)), static_cast<std::uint32_t>(UINT32_C(    3072)), static_cast<std::uint32_t>(UINT32_C(    3584)),
-        static_cast<std::uint32_t>(UINT32_C(    4096)), static_cast<std::uint32_t>(UINT32_C(    5120)), static_cast<std::uint32_t>(UINT32_C(    6144)), static_cast<std::uint32_t>(UINT32_C(    7168)),
-        static_cast<std::uint32_t>(UINT32_C(    8192)), static_cast<std::uint32_t>(UINT32_C(   10240)), static_cast<std::uint32_t>(UINT32_C(   12288)), static_cast<std::uint32_t>(UINT32_C(   14336)),
-        static_cast<std::uint32_t>(UINT32_C(   16384)), static_cast<std::uint32_t>(UINT32_C(   20480)), static_cast<std::uint32_t>(UINT32_C(   24576)), static_cast<std::uint32_t>(UINT32_C(   28672)),
-        static_cast<std::uint32_t>(UINT32_C(   32768)), static_cast<std::uint32_t>(UINT32_C(   40960)), static_cast<std::uint32_t>(UINT32_C(   49152)), static_cast<std::uint32_t>(UINT32_C(   57344)),
-        static_cast<std::uint32_t>(UINT32_C(   65536)), static_cast<std::uint32_t>(UINT32_C(   81920)), static_cast<std::uint32_t>(UINT32_C(   98304)), static_cast<std::uint32_t>(UINT32_C(  114688)),
-        static_cast<std::uint32_t>(UINT32_C(  131072)), static_cast<std::uint32_t>(UINT32_C(  163840)), static_cast<std::uint32_t>(UINT32_C(  196608)), static_cast<std::uint32_t>(UINT32_C(  229376)),
-        static_cast<std::uint32_t>(UINT32_C(  262144)), static_cast<std::uint32_t>(UINT32_C(  327680)), static_cast<std::uint32_t>(UINT32_C(  393216)), static_cast<std::uint32_t>(UINT32_C(  458752)),
-        static_cast<std::uint32_t>(UINT32_C(  524288)), static_cast<std::uint32_t>(UINT32_C(  655360)), static_cast<std::uint32_t>(UINT32_C(  786432)), static_cast<std::uint32_t>(UINT32_C(  917504)),
-        static_cast<std::uint32_t>(UINT32_C( 1048576)), static_cast<std::uint32_t>(UINT32_C( 1310720)), static_cast<std::uint32_t>(UINT32_C( 1572864)), static_cast<std::uint32_t>(UINT32_C( 1835008)),
-        static_cast<std::uint32_t>(UINT32_C( 2097152))
-      }};
-
-      const auto it = std::lower_bound(a029750_data.cbegin(), a029750_data.cend(), value); // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-
-      return ((it != a029750_data.cend()) ? *it : a029750_data.back());
-    }
-  };
-
-  struct a000079
+  constexpr auto a029750_as_runtime_value(std::uint32_t value) noexcept -> std::uint32_t
   {
-    static constexpr auto a000079_as_constexpr(const std::uint32_t value) noexcept -> std::uint32_t // NOLINT(readability-function-cognitive-complexity)
-    {
-      // Use Sloane's A000079: List of numbers of powers of 2.
-      // Table[2^n, {n, 0, 31, 1}]
-      return ((value <= static_cast<std::uint32_t>(UINT32_C(        8))) ? static_cast<std::uint32_t>(UINT32_C(        8)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(       16))) ?  static_cast<std::uint32_t>(UINT32_C(       16)) : ((value <= static_cast<std::uint32_t>(UINT32_C(       32))) ? static_cast<std::uint32_t>(UINT32_C(       32)) : ((value <= static_cast<std::uint32_t>(UINT32_C(        64))) ? static_cast<std::uint32_t>(UINT32_C(        64)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(      128))) ? static_cast<std::uint32_t>(UINT32_C(      128)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(      256))) ?  static_cast<std::uint32_t>(UINT32_C(      256)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      512))) ? static_cast<std::uint32_t>(UINT32_C(      512)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      1024))) ? static_cast<std::uint32_t>(UINT32_C(      1024)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(     2048))) ? static_cast<std::uint32_t>(UINT32_C(     2048)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(     4096))) ?  static_cast<std::uint32_t>(UINT32_C(     4096)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     8192))) ? static_cast<std::uint32_t>(UINT32_C(     8192)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     16384))) ? static_cast<std::uint32_t>(UINT32_C(     16384)) :
-             // LCOV_EXCL_START
-             ((value <= static_cast<std::uint32_t>(UINT32_C(    32768))) ? static_cast<std::uint32_t>(UINT32_C(    32768)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(    65536))) ?  static_cast<std::uint32_t>(UINT32_C(    65536)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   131072))) ? static_cast<std::uint32_t>(UINT32_C(   131072)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    262144))) ? static_cast<std::uint32_t>(UINT32_C(    262144)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(   524288))) ? static_cast<std::uint32_t>(UINT32_C(   524288)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(  1048576))) ?  static_cast<std::uint32_t>(UINT32_C(  1048576)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  2097152))) ? static_cast<std::uint32_t>(UINT32_C(  2097152)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   4194304))) ? static_cast<std::uint32_t>(UINT32_C(   4194304)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(  8388608))) ? static_cast<std::uint32_t>(UINT32_C(  8388608)) : ((value <=  static_cast<std::uint32_t>(UINT32_C( 16777216))) ?  static_cast<std::uint32_t>(UINT32_C( 16777216)) : ((value <= static_cast<std::uint32_t>(UINT32_C( 33554432))) ? static_cast<std::uint32_t>(UINT32_C( 33554432)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  67108864))) ? static_cast<std::uint32_t>(UINT32_C(  67108864)) :
-             ((value <= static_cast<std::uint32_t>(UINT32_C(134217728))) ? static_cast<std::uint32_t>(UINT32_C(134217728)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(268435456))) ?  static_cast<std::uint32_t>(UINT32_C(268435456)) : ((value <= static_cast<std::uint32_t>(UINT32_C(536870912))) ? static_cast<std::uint32_t>(UINT32_C(536870912)) : ((value <= static_cast<std::uint32_t>(UINT32_C(1073741824))) ? static_cast<std::uint32_t>(UINT32_C(1073741824)) : static_cast<std::uint32_t>(UINT32_C(2147483648))))))))))))))))))))))))))))));
-             // LCOV_EXCL_STOP
-    }
-  };
+    using local_array_type = std::array<std::uint32_t, 65U>; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+    // Use Sloane's A029750: The so-called 7-smooth numbers having the form 2^k times 1, 3, 5 or 7.
+    // CoefficientList[Series[-(x + 1)^2 (x^2 + 1)^2/(2 x^4 - 1), {x, 0, 91}], x]
+    constexpr local_array_type a029750_data =
+    {{
+      static_cast<std::uint32_t>(UINT32_C(      32)), static_cast<std::uint32_t>(UINT32_C(      40)), static_cast<std::uint32_t>(UINT32_C(      48)), static_cast<std::uint32_t>(UINT32_C(      56)),
+      static_cast<std::uint32_t>(UINT32_C(      64)), static_cast<std::uint32_t>(UINT32_C(      80)), static_cast<std::uint32_t>(UINT32_C(      96)), static_cast<std::uint32_t>(UINT32_C(     112)),
+      static_cast<std::uint32_t>(UINT32_C(     128)), static_cast<std::uint32_t>(UINT32_C(     160)), static_cast<std::uint32_t>(UINT32_C(     192)), static_cast<std::uint32_t>(UINT32_C(     224)),
+      static_cast<std::uint32_t>(UINT32_C(     256)), static_cast<std::uint32_t>(UINT32_C(     320)), static_cast<std::uint32_t>(UINT32_C(     384)), static_cast<std::uint32_t>(UINT32_C(     448)),
+      static_cast<std::uint32_t>(UINT32_C(     512)), static_cast<std::uint32_t>(UINT32_C(     640)), static_cast<std::uint32_t>(UINT32_C(     768)), static_cast<std::uint32_t>(UINT32_C(     896)),
+      static_cast<std::uint32_t>(UINT32_C(    1024)), static_cast<std::uint32_t>(UINT32_C(    1280)), static_cast<std::uint32_t>(UINT32_C(    1536)), static_cast<std::uint32_t>(UINT32_C(    1792)),
+      static_cast<std::uint32_t>(UINT32_C(    2048)), static_cast<std::uint32_t>(UINT32_C(    2560)), static_cast<std::uint32_t>(UINT32_C(    3072)), static_cast<std::uint32_t>(UINT32_C(    3584)),
+      static_cast<std::uint32_t>(UINT32_C(    4096)), static_cast<std::uint32_t>(UINT32_C(    5120)), static_cast<std::uint32_t>(UINT32_C(    6144)), static_cast<std::uint32_t>(UINT32_C(    7168)),
+      static_cast<std::uint32_t>(UINT32_C(    8192)), static_cast<std::uint32_t>(UINT32_C(   10240)), static_cast<std::uint32_t>(UINT32_C(   12288)), static_cast<std::uint32_t>(UINT32_C(   14336)),
+      static_cast<std::uint32_t>(UINT32_C(   16384)), static_cast<std::uint32_t>(UINT32_C(   20480)), static_cast<std::uint32_t>(UINT32_C(   24576)), static_cast<std::uint32_t>(UINT32_C(   28672)),
+      static_cast<std::uint32_t>(UINT32_C(   32768)), static_cast<std::uint32_t>(UINT32_C(   40960)), static_cast<std::uint32_t>(UINT32_C(   49152)), static_cast<std::uint32_t>(UINT32_C(   57344)),
+      static_cast<std::uint32_t>(UINT32_C(   65536)), static_cast<std::uint32_t>(UINT32_C(   81920)), static_cast<std::uint32_t>(UINT32_C(   98304)), static_cast<std::uint32_t>(UINT32_C(  114688)),
+      static_cast<std::uint32_t>(UINT32_C(  131072)), static_cast<std::uint32_t>(UINT32_C(  163840)), static_cast<std::uint32_t>(UINT32_C(  196608)), static_cast<std::uint32_t>(UINT32_C(  229376)),
+      static_cast<std::uint32_t>(UINT32_C(  262144)), static_cast<std::uint32_t>(UINT32_C(  327680)), static_cast<std::uint32_t>(UINT32_C(  393216)), static_cast<std::uint32_t>(UINT32_C(  458752)),
+      static_cast<std::uint32_t>(UINT32_C(  524288)), static_cast<std::uint32_t>(UINT32_C(  655360)), static_cast<std::uint32_t>(UINT32_C(  786432)), static_cast<std::uint32_t>(UINT32_C(  917504)),
+      static_cast<std::uint32_t>(UINT32_C( 1048576)), static_cast<std::uint32_t>(UINT32_C( 1310720)), static_cast<std::uint32_t>(UINT32_C( 1572864)), static_cast<std::uint32_t>(UINT32_C( 1835008)),
+      static_cast<std::uint32_t>(UINT32_C( 2097152))
+    }};
+
+    const auto it = lower_bound_unsafe(a029750_data.cbegin(), a029750_data.cend(), value); // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+
+    return ((it != a029750_data.cend()) ? *it : a029750_data.back());
+  }
+
+  constexpr auto a000079_as_constexpr(const std::uint32_t value) noexcept -> std::uint32_t // NOLINT(readability-function-cognitive-complexity)
+  {
+    // Use Sloane's A000079: List of numbers of powers of 2.
+    // Table[2^n, {n, 0, 31, 1}]
+    return ((value <= static_cast<std::uint32_t>(UINT32_C(        8))) ? static_cast<std::uint32_t>(UINT32_C(        8)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(       16))) ?  static_cast<std::uint32_t>(UINT32_C(       16)) : ((value <= static_cast<std::uint32_t>(UINT32_C(       32))) ? static_cast<std::uint32_t>(UINT32_C(       32)) : ((value <= static_cast<std::uint32_t>(UINT32_C(        64))) ? static_cast<std::uint32_t>(UINT32_C(        64)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(      128))) ? static_cast<std::uint32_t>(UINT32_C(      128)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(      256))) ?  static_cast<std::uint32_t>(UINT32_C(      256)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      512))) ? static_cast<std::uint32_t>(UINT32_C(      512)) : ((value <= static_cast<std::uint32_t>(UINT32_C(      1024))) ? static_cast<std::uint32_t>(UINT32_C(      1024)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(     2048))) ? static_cast<std::uint32_t>(UINT32_C(     2048)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(     4096))) ?  static_cast<std::uint32_t>(UINT32_C(     4096)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     8192))) ? static_cast<std::uint32_t>(UINT32_C(     8192)) : ((value <= static_cast<std::uint32_t>(UINT32_C(     16384))) ? static_cast<std::uint32_t>(UINT32_C(     16384)) :
+            // LCOV_EXCL_START
+            ((value <= static_cast<std::uint32_t>(UINT32_C(    32768))) ? static_cast<std::uint32_t>(UINT32_C(    32768)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(    65536))) ?  static_cast<std::uint32_t>(UINT32_C(    65536)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   131072))) ? static_cast<std::uint32_t>(UINT32_C(   131072)) : ((value <= static_cast<std::uint32_t>(UINT32_C(    262144))) ? static_cast<std::uint32_t>(UINT32_C(    262144)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(   524288))) ? static_cast<std::uint32_t>(UINT32_C(   524288)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(  1048576))) ?  static_cast<std::uint32_t>(UINT32_C(  1048576)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  2097152))) ? static_cast<std::uint32_t>(UINT32_C(  2097152)) : ((value <= static_cast<std::uint32_t>(UINT32_C(   4194304))) ? static_cast<std::uint32_t>(UINT32_C(   4194304)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(  8388608))) ? static_cast<std::uint32_t>(UINT32_C(  8388608)) : ((value <=  static_cast<std::uint32_t>(UINT32_C( 16777216))) ?  static_cast<std::uint32_t>(UINT32_C( 16777216)) : ((value <= static_cast<std::uint32_t>(UINT32_C( 33554432))) ? static_cast<std::uint32_t>(UINT32_C( 33554432)) : ((value <= static_cast<std::uint32_t>(UINT32_C(  67108864))) ? static_cast<std::uint32_t>(UINT32_C(  67108864)) :
+            ((value <= static_cast<std::uint32_t>(UINT32_C(134217728))) ? static_cast<std::uint32_t>(UINT32_C(134217728)) : ((value <=  static_cast<std::uint32_t>(UINT32_C(268435456))) ?  static_cast<std::uint32_t>(UINT32_C(268435456)) : ((value <= static_cast<std::uint32_t>(UINT32_C(536870912))) ? static_cast<std::uint32_t>(UINT32_C(536870912)) : ((value <= static_cast<std::uint32_t>(UINT32_C(1073741824))) ? static_cast<std::uint32_t>(UINT32_C(1073741824)) : static_cast<std::uint32_t>(UINT32_C(2147483648))))))))))))))))))))))))))))));
+            // LCOV_EXCL_STOP
+  }
 
   // LCOV_EXCL_START
   constexpr auto pow10_maker(std::uint32_t n) noexcept -> std::uint32_t // NOLINT(misc-no-recursion)
@@ -220,7 +250,7 @@
   }
   // LCOV_EXCL_STOP
 
-  inline auto pow10_maker_as_runtime_value(std::uint32_t n) noexcept -> std::uint32_t
+  constexpr auto pow10_maker_as_runtime_value(std::uint32_t n) noexcept -> std::uint32_t
   {
     using local_array_type = std::array<std::uint32_t, static_cast<std::size_t>(UINT8_C(10))>; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
