@@ -76,11 +76,11 @@
 
     local_difference_type step { };
 
-    auto count = static_cast<local_difference_type>(last - first);
+    auto count = static_cast<local_difference_type>(last - first); // NOLINT(altera-id-dependent-backward-branch)
 
     local_iterator_type itr { };
 
-    while (count > static_cast<local_difference_type>(INT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
+    while(count > static_cast<local_difference_type>(INT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
     {
       itr = first;
 
