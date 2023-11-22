@@ -2742,9 +2742,9 @@
     #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
     #else
     static std::array<limb_type,      static_cast<std::size_t>((decwide_t_elems_for_kara - 1) * 2)>                                                                                               my_school_mul_pool;  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-    static std::array<limb_type,      static_cast<std::size_t>(detail::a029750::a029750_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elems_for_fft - 1)) * 8UL))> my_kara_mul_pool;    // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    static std::array<fft_float_type, static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elem_number)) * 4UL))>       my_af_fft_mul_pool;  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-    static std::array<fft_float_type, static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elem_number)) * 4UL))>       my_bf_fft_mul_pool;  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static std::array<limb_type,      static_cast<std::size_t>(detail::a029750_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elems_for_fft - 1)) * 8UL))> my_kara_mul_pool;    // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    static std::array<fft_float_type, static_cast<std::size_t>(detail::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elem_number)) * 4UL))>       my_af_fft_mul_pool;  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static std::array<fft_float_type, static_cast<std::size_t>(detail::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t_elem_number)) * 4UL))>       my_bf_fft_mul_pool;  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     static representation_type my_n_data_for_add_sub; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     #endif
 
@@ -3023,7 +3023,7 @@
 
         // Sloanes's A029750: Numbers of the form 2^k times 1, 3, 5 or 7.
         const auto kara_elems_for_multiply =
-          detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
+          detail::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
         using kara_mul_pool_type = util::dynamic_array<limb_type>;
@@ -3151,7 +3151,7 @@
 
         // Use Sloane's A029750: The so-called 7-smooth numbers having the form 2^k times 1, 3, 5 or 7.
         const auto kara_elems_for_multiply =
-          detail::a029750::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
+          detail::a029750_as_runtime_value(static_cast<std::uint32_t>(prec_elems_for_multiply));
 
         #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
         using kara_mul_pool_type = util::dynamic_array<limb_type>;
@@ -3230,7 +3230,7 @@
         const auto n_fft =
           static_cast<std::uint32_t>
           (
-              detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(prec_elems_for_multiply))
+              detail::a000079_as_constexpr(static_cast<std::uint32_t>(prec_elems_for_multiply))
             * static_cast<std::uint32_t>(UINT8_C(4))
           );
 
@@ -4498,9 +4498,9 @@
   #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
   #else
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> std::array<typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type, static_cast<std::size_t>((decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elems_for_kara - 1) * 2)>                                                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_school_mul_pool; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> std::array<typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type, static_cast<std::size_t>(detail::a029750::a029750_as_constexpr     (static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elems_for_fft - 1)) * 8UL))> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool;   // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> std::array<typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type, static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number)) * 4UL))>       decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_fft_mul_pool; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> std::array<typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type, static_cast<std::size_t>(detail::a000079::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number)) * 4UL))>       decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_bf_fft_mul_pool; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> std::array<typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::limb_type, static_cast<std::size_t>(detail::a029750_as_constexpr     (static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elems_for_fft - 1)) * 8UL))> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_kara_mul_pool;   // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> std::array<typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type, static_cast<std::size_t>(detail::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number)) * 4UL))>       decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_af_fft_mul_pool; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> std::array<typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::fft_float_type, static_cast<std::size_t>(detail::a000079_as_constexpr(static_cast<std::uint32_t>(static_cast<std::uint32_t>(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number)) * 4UL))>       decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_bf_fft_mul_pool; // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> typename decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::representation_type decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::my_n_data_for_add_sub;                                                                                                                                                                                                                                                                        // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix,cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
   #endif
 
