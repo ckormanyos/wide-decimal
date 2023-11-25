@@ -10,6 +10,7 @@
 
   #include <cstddef>
   #include <cstdint>
+  #include <iterator>
   #include <utility>
 
   namespace util {
@@ -163,12 +164,18 @@
     swap_unsafe(*a, *b);
   }
 
-  template<typename BidirIt>
-  constexpr auto reverse_unsafe(BidirIt first, BidirIt last) -> void
+  template<typename BiDirectionalIterator>
+  constexpr auto reverse_unsafe(BiDirectionalIterator first, BiDirectionalIterator last) -> void
   {
-    for ( ; first != last && first != --last; ++first)
+    using local_difference_type = typename std::iterator_traits<BiDirectionalIterator>::difference_type;
+
+    while((first != last) && first != (last - static_cast<local_difference_type>(INT8_C(1))))
     {
+      --last;
+
       iter_swap_unsafe(first, last);
+
+       ++first;
     }
   }
 
