@@ -195,7 +195,7 @@
         count * static_cast<std::int_fast32_t>(INT8_C(2))
       );
 
-    std::fill(r, r + fill_dst, static_cast<local_limb_type>(UINT8_C(0)));
+    util::fill_unsafe(r, r + fill_dst, static_cast<local_limb_type>(UINT8_C(0)));
 
     const auto count_minus_one =
       static_cast<std::int_fast32_t>
@@ -548,7 +548,7 @@
       // Step 1
       eval_multiply_kara_n_by_n_to_2n(r0, a1, b1, nh, t);
       eval_multiply_kara_n_by_n_to_2n(r2, a0, b0, nh, t);
-      std::copy(r0, r0 + static_cast<std::size_t>(static_cast<std::size_t>(n) * static_cast<std::size_t>(UINT8_C(2))), t0);
+      util::copy_unsafe(r0, r0 + static_cast<std::size_t>(static_cast<std::size_t>(n) * static_cast<std::size_t>(UINT8_C(2))), t0);
 
       // Step 2
       local_limb_type carry;
@@ -703,8 +703,8 @@
         static_cast<std::size_t>(prec_elems_for_multiply) * static_cast<std::size_t>(UINT8_C(2))
       );
 
-    std::fill(af + fill_distance, af + n_fft, static_cast<local_fft_float_type>(0));
-    std::fill(bf + fill_distance, bf + n_fft, static_cast<local_fft_float_type>(0));
+    util::fill_unsafe(af + fill_distance, af + n_fft, static_cast<local_fft_float_type>(0));
+    util::fill_unsafe(bf + fill_distance, bf + n_fft, static_cast<local_fft_float_type>(0));
 
     // Perform forward FFTs on the data arrays a and b.
     detail::fft::rfft_lanczos_rfft<local_fft_float_type, true>(n_fft, af);

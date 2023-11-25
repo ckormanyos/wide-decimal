@@ -66,7 +66,7 @@
 
           str_tm_len = str_tm.length();
 
-          std::copy(str_tm.cbegin(), str_tm.cend(), buf_u8.begin());
+          util::copy_unsafe(str_tm.cbegin(), str_tm.cend(), buf_u8.begin());
         }
       }
 
