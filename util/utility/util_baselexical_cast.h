@@ -12,6 +12,8 @@
   #include <cstdint>
   #include <iterator>
 
+  #include <util/utility/util_constexpr_algorithm_unsafe.h>
+
   namespace util {
 
   template<typename OutputIterator,
@@ -130,7 +132,7 @@
         }
       }
 
-      std::reverse(out_first, out + static_cast<std::size_t>(UINT8_C(1)));
+      util::reverse_unsafe(out_first, out + static_cast<std::size_t>(UINT8_C(1)));
     }
 
     return out + static_cast<std::size_t>(UINT8_C(1));

@@ -2843,7 +2843,7 @@
           );
       }
 
-      std::reverse(tmp.begin(), tmp.begin() + i);
+      util::reverse_unsafe(tmp.begin(), tmp.begin() + i);
 
       constexpr auto copy_limit =
         static_cast<std::ptrdiff_t>

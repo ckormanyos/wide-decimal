@@ -117,9 +117,9 @@
   template<typename T>
   constexpr auto swap_unsafe(T&& left, T&& right) -> void
   {
-    auto tmp = std::move(left);
+    auto tmp = std::move(static_cast<T&&>(left));
 
-    left  = std::move(right);
+    left  = std::move(static_cast<T&&>(right));
     right = std::move(static_cast<T&&>(tmp));
   }
 
@@ -155,6 +155,24 @@
   constexpr auto all_of_unsafe(InputIt first, InputIt last, UnaryPredicate p) -> bool
   {
     return (find_if_not_unsafe(first, last, p) == last);
+  }
+
+  template<class ForwardIt1, class ForwardIt2>
+  constexpr auto iter_swap_unsafe(ForwardIt1 a, ForwardIt2 b) -> void
+  {
+    swap_unsafe(*a, *b);
+  }
+
+  template<typename BidirIt>
+  constexpr auto reverse_unsafe(BidirIt first, BidirIt last) -> void
+  {
+    if(first != last)
+    {
+      for (--last; first < last; ++first, --last)
+      {
+        iter_swap_unsafe(first, last);
+      }
+    }
   }
 
   } // namespace util
