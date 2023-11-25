@@ -158,18 +158,26 @@
     return (find_if_not_unsafe(first, last, p) == last);
   }
 
-  template<class ForwardIt1, class ForwardIt2>
-  constexpr auto iter_swap_unsafe(ForwardIt1 a, ForwardIt2 b) -> void
+  template<typename IteratorType>
+  constexpr auto iter_swap_unsafe(IteratorType a, IteratorType b) -> void
   {
-    swap_unsafe(*a, *b);
+    // Non-standard behavior:
+    // The (dereferenced) left/right value-types are the same.
+
+    using local_value_type = typename std::iterator_traits<IteratorType>::value_type;
+
+    swap_unsafe(static_cast<local_value_type&&>(*a), static_cast<local_value_type&&>(*b));
   }
 
-  template<typename BiDirectionalIterator>
-  constexpr auto reverse_unsafe(BiDirectionalIterator first, BiDirectionalIterator last) -> void
+  template<typename RandomAccessIterator>
+  constexpr auto reverse_unsafe(RandomAccessIterator first, RandomAccessIterator last) -> void
   {
-    using local_difference_type = typename std::iterator_traits<BiDirectionalIterator>::difference_type;
+    // Non-standard behavior:
+    // Ensure that the iterator provided is actually a random-access iterator.
+    // This could be done via std::enable_if. It is at the moment, however,
+    // not checked at compile-time.
 
-    while((first != last) && first != (last - static_cast<local_difference_type>(INT8_C(1))))
+    while(!(first >= last))
     {
       --last;
 
