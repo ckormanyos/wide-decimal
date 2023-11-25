@@ -69,7 +69,7 @@
     return ((right < left) ? right : left);
   }
 
-  template<class ForwardIt, typename T>
+  template<typename ForwardIt, typename T>
   constexpr auto lower_bound_unsafe(ForwardIt first, ForwardIt last, const T& value) -> ForwardIt
   {
     using local_iterator_type = ForwardIt;
@@ -121,6 +121,20 @@
 
     left  = std::move(right);
     right = std::move(static_cast<T&&>(tmp));
+  }
+
+  template<typename InputIt, typename UnaryPredicate>
+  constexpr auto find_if_unsafe(InputIt first, InputIt last, UnaryPredicate p) -> InputIt
+  {
+    for( ; first != last; ++first)
+    {
+      if (p(*first))
+      {
+        return first;
+      }
+    }
+
+    return last;
   }
 
   template<typename InputIt, typename UnaryPredicate>

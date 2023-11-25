@@ -1270,12 +1270,12 @@
 
         // Is it necessary to justify the data?
         const auto first_nonzero_elem = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-          std::find_if(my_data.cbegin(),
-                       my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
-                       [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
-                       {
-                         return (d != static_cast<limb_type>(UINT8_C(0)));
-                       });
+          util::find_if_unsafe(my_data.cbegin(),
+                               my_data.cbegin() + static_cast<std::ptrdiff_t>(prec_elems_for_add_sub),
+                               [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
+                               {
+                                 return (d != static_cast<limb_type>(UINT8_C(0)));
+                               });
 
         if(first_nonzero_elem != my_data.cbegin())
         {
@@ -2277,12 +2277,12 @@
         else
         {
           const auto it_non_zero = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-            std::find_if(my_data.cbegin() + static_cast<std::ptrdiff_t>(offset_decimal_part),
-                         my_data.cend(),
-                         [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
-                         {
-                           return (d != static_cast<limb_type>(UINT8_C(0)));
-                         });
+            util::find_if_unsafe(my_data.cbegin() + static_cast<std::ptrdiff_t>(offset_decimal_part),
+                                 my_data.cend(),
+                                 [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
+                                 {
+                                   return (d != static_cast<limb_type>(UINT8_C(0)));
+                                 });
 
           value_is_int = (it_non_zero == my_data.cend());
         }
@@ -2764,12 +2764,12 @@
          && (x.my_exp == static_cast<exponent_type>(INT8_C(0))))
       {
         const auto it_non_zero = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-          std::find_if(x.my_data.cbegin() + static_cast<std::ptrdiff_t>(INT8_C(1)),
-                       x.my_data.cend(),
-                       [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
-                       {
-                         return (d != static_cast<limb_type>(UINT8_C(0)));
-                       });
+          util::find_if_unsafe(x.my_data.cbegin() + static_cast<std::ptrdiff_t>(INT8_C(1)),
+                               x.my_data.cend(),
+                               [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
+                               {
+                                 return (d != static_cast<limb_type>(UINT8_C(0)));
+                               });
 
         value_is_one = (it_non_zero == x.my_data.cend());
       }
@@ -2777,12 +2777,12 @@
               && (x.my_exp == static_cast<exponent_type>(-decwide_t_elem_digits10)))
       {
         const auto it_non_nine = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-          std::find_if(x.my_data.cbegin() + static_cast<std::ptrdiff_t>(INT8_C(1)),
-                       x.my_data.cend(),
-                       [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
-                       {
-                         return (d != static_cast<limb_type>(decwide_t_elem_mask_min1));
-                       });
+          util::find_if_unsafe(x.my_data.cbegin() + static_cast<std::ptrdiff_t>(INT8_C(1)),
+                               x.my_data.cend(),
+                               [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
+                               {
+                                 return (d != static_cast<limb_type>(decwide_t_elem_mask_min1));
+                               });
 
         value_is_one = (it_non_nine == x.my_data.cend());
       }
@@ -3536,12 +3536,12 @@
 
       // Remove leading zeros for all input types.
       const auto fwd_it_leading_zero =
-        std::find_if(str.begin(),
-                     str.end(),
-                     [](const char& c) // NOLINT(modernize-use-trailing-return-type)
-                     {
-                       return (c != '0');
-                     });
+        util::find_if_unsafe(str.begin(),
+                             str.end(),
+                             [](const char& c) // NOLINT(modernize-use-trailing-return-type)
+                             {
+                               return (c != '0');
+                             });
 
       if(fwd_it_leading_zero != str.begin())
       {
@@ -3573,12 +3573,12 @@
       {
         // Remove all trailing insignificant zeros.
         const auto rit_non_zero =
-          std::find_if(str.crbegin(),
-                       str.crend(),
-                       [](const char& c) // NOLINT(modernize-use-trailing-return-type)
-                       {
-                         return (c != '0');
-                       });
+          util::find_if_unsafe(str.crbegin(),
+                               str.crend(),
+                               [](const char& c) // NOLINT(modernize-use-trailing-return-type)
+                               {
+                                 return (c != '0');
+                               });
 
         if(rit_non_zero != str.crbegin())
         {
@@ -3627,12 +3627,12 @@
         if(str.at(static_cast<std::size_t>(UINT8_C(0))) == '.')
         {
           const auto it_non_zero =
-            std::find_if(str.cbegin() + static_cast<std::ptrdiff_t>(INT8_C(1)),
-                         str.cend(),
-                         [](const char& c) // NOLINT(modernize-use-trailing-return-type)
-                         {
-                           return (c != '0');
-                         });
+            util::find_if_unsafe(str.cbegin() + static_cast<std::ptrdiff_t>(INT8_C(1)),
+                                 str.cend(),
+                                 [](const char& c) // NOLINT(modernize-use-trailing-return-type)
+                                 {
+                                   return (c != '0');
+                                 });
 
           const auto delta_exp =
             static_cast<std::uint_fast32_t>
@@ -4053,12 +4053,12 @@
       if(trim_trailing_zeros)
       {
         const std::string::const_reverse_iterator rit_non_zero =
-          std::find_if(str.crbegin(),
-                       str.crend(),
-                       [](const char& c) // NOLINT(modernize-use-trailing-return-type)
-                       {
-                         return (c != '0');
-                       });
+          util::find_if_unsafe(str.crbegin(),
+                               str.crend(),
+                               [](const char& c) // NOLINT(modernize-use-trailing-return-type)
+                               {
+                                 return (c != '0');
+                               });
 
         if(rit_non_zero != str.crbegin())
         {
@@ -4213,12 +4213,12 @@
       if(trim_trailing_zeros)
       {
         const auto rit_non_zero =
-          std::find_if(str.crbegin(),
-                       str.crend(),
-                       [](const char& c) // NOLINT(modernize-use-trailing-return-type)
-                       {
-                         return (c != '0');
-                       });
+          util::find_if_unsafe(str.crbegin(),
+                               str.crend(),
+                               [](const char& c) // NOLINT(modernize-use-trailing-return-type)
+                               {
+                                 return (c != '0');
+                               });
 
         if(rit_non_zero != str.crbegin())
         {
@@ -4272,12 +4272,12 @@
         {
           // This is a non-zero decimal less than 1 that needs zero extension.
           const auto it_non_zero =
-            std::find_if(str.cbegin() + static_cast<std::ptrdiff_t>(INT8_C(2)),
-                         str.cend(),
-                         [](const char& c) // NOLINT(modernize-use-trailing-return-type)
-                         {
-                           return (c != '0');
-                         });
+            util::find_if_unsafe(str.cbegin() + static_cast<std::ptrdiff_t>(INT8_C(2)),
+                                 str.cend(),
+                                 [](const char& c) // NOLINT(modernize-use-trailing-return-type)
+                                 {
+                                   return (c != '0');
+                                 });
 
           const auto len_non_zero_part =
             static_cast<std::uint_fast32_t>
