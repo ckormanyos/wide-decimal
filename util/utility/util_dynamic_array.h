@@ -151,8 +151,8 @@
     // Move assignment operator.
     auto operator=(dynamic_array&& other) noexcept -> dynamic_array&
     {
-      std::swap(elem_count, other.elem_count);
-      std::swap(elems,      other.elems);
+      util::swap_unsafe(elem_count, other.elem_count);
+      util::swap_unsafe(elems,      other.elems);
 
       return *this;
     }
@@ -203,17 +203,17 @@
     {
       if(this != &other)
       {
-        std::swap(elems,      other.elems);
-        std::swap(elem_count, other.elem_count);
+        util::swap_unsafe(elems,      other.elems);
+        util::swap_unsafe(elem_count, other.elem_count);
       }
     }
 
     auto swap(dynamic_array&& other) noexcept -> void
     {
-      auto tmp = std::move(*this);
+      const auto tmp = std::move(static_cast<dynamic_array&&>(*this));
 
       *this = std::move(other);
-      other = std::move(tmp);
+      other = std::move(static_cast<dynamic_array&&>(tmp));
     }
 
   private:

@@ -197,8 +197,7 @@
     <ClCompile Include="examples\example012_rational_floor_ceil.cpp" />
     <ClCompile Include="examples\example013a_embeddable_agm.cpp" />
     <ClCompile Include="examples\example013_embeddable_sqrt.cpp" />
-    <ClCompile Include="test\coverity.c" />
-    <ClCompile Include="test\target\micros\stm32f429\make\single\crt.cpp">
+    <ClCompile Include="target\micros\stm32f429\make\single\crt.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>

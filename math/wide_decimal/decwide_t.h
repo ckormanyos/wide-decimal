@@ -1313,12 +1313,12 @@
         }
 
         // Check for underflow.
-        if(std::all_of(my_data.cbegin(),
-                       my_data.cend(),
-                       [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
-                       {
-                         return (d == static_cast<limb_type>(UINT8_C(0)));
-                       }))
+        if(util::all_of_unsafe(my_data.cbegin(),
+                               my_data.cend(),
+                               [](const limb_type& d) // NOLINT(modernize-use-trailing-return-type)
+                               {
+                                 return (d == static_cast<limb_type>(UINT8_C(0)));
+                               }))
         {
           static_cast<void>
           (
@@ -1859,10 +1859,10 @@
     {
       my_data.swap(static_cast<representation_type&&>(other.my_data));
 
-      std::swap(my_exp,       other.my_exp);
-      std::swap(my_neg,       other.my_neg);
-      std::swap(my_fpclass,   other.my_fpclass);
-      std::swap(my_prec_elem, other.my_prec_elem);
+      util::swap_unsafe(my_exp,       other.my_exp);
+      util::swap_unsafe(my_neg,       other.my_neg);
+      util::swap_unsafe(my_fpclass,   other.my_fpclass);
+      util::swap_unsafe(my_prec_elem, other.my_prec_elem);
     }
 
     // Elementary primitives.

@@ -8,7 +8,6 @@
 #ifndef UTIL_BASELEXICAL_CAST_2020_06_28_H // NOLINT(llvm-header-guard)
   #define UTIL_BASELEXICAL_CAST_2020_06_28_H
 
-  #include <algorithm>
   #include <cstddef>
   #include <cstdint>
   #include <iterator>

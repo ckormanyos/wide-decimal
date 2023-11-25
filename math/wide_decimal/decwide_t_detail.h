@@ -14,7 +14,6 @@
 #ifndef DECWIDE_T_DETAIL_2020_10_26_H // NOLINT(llvm-header-guard)
   #define DECWIDE_T_DETAIL_2020_10_26_H
 
-  #include <algorithm>
   #include <array>
   #include <cstdint>
   #include <initializer_list>

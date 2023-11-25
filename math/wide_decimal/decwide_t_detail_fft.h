@@ -248,8 +248,8 @@
     {
       if(j > i)
       {
-        std::swap(data[j - 1U], data[i - 1U]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        std::swap(data[j],      data[i]);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        util::swap_unsafe(data[j - 1U], data[i - 1U]); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        util::swap_unsafe(data[j],      data[i]);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
       }
 
       auto m = num_points;

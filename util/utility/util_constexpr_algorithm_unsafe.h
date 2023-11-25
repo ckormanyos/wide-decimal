@@ -10,6 +10,7 @@
 
   #include <cstddef>
   #include <cstdint>
+  #include <utility>
 
   namespace util {
 
@@ -68,7 +69,7 @@
     return ((right < left) ? right : left);
   }
 
-  template<class ForwardIt, class T>
+  template<class ForwardIt, typename T>
   constexpr auto lower_bound_unsafe(ForwardIt first, ForwardIt last, const T& value) -> ForwardIt
   {
     using local_iterator_type = ForwardIt;
@@ -102,6 +103,44 @@
     }
 
     return first;
+  }
+
+  template<typename T>
+  constexpr auto swap_unsafe(T& left, T& right) -> void
+  {
+    auto tmp = std::move(static_cast<T&&>(left));
+
+    left  = std::move(static_cast<T&&>(right));
+    right = std::move(static_cast<T&&>(tmp));
+  }
+
+  template<typename T>
+  constexpr auto swap_unsafe(T&& left, T&& right) -> void
+  {
+    auto tmp = std::move(left);
+
+    left  = std::move(right);
+    right = std::move(static_cast<T&&>(tmp));
+  }
+
+  template<typename InputIt, typename UnaryPredicate>
+  constexpr auto find_if_not_unsafe(InputIt first, InputIt last, UnaryPredicate q) -> InputIt
+  {
+    for( ; first != last; ++first)
+    {
+      if (!q(*first))
+      {
+        return first;
+      }
+    }
+
+    return last;
+  }
+
+  template<typename InputIt, typename UnaryPredicate>
+  constexpr auto all_of_unsafe(InputIt first, InputIt last, UnaryPredicate p) -> bool
+  {
+    return (find_if_not_unsafe(first, last, p) == last);
   }
 
   } // namespace util
