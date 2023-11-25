@@ -166,12 +166,9 @@
   template<typename BidirIt>
   constexpr auto reverse_unsafe(BidirIt first, BidirIt last) -> void
   {
-    if(first != last)
+    for ( ; first != last && first != --last; ++first)
     {
-      for (--last; first < last; ++first, --last)
-      {
-        iter_swap_unsafe(first, last);
-      }
+      iter_swap_unsafe(first, last);
     }
   }
 
