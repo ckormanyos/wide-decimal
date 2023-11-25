@@ -21,8 +21,8 @@
   #include <iterator>
   #include <memory>
 
-  #include <util/utility/util_dynamic_array.h>
   #include <util/utility/util_constexpr_algorithm_unsafe.h>
+  #include <util/utility/util_dynamic_array.h>
 
   #include <math/wide_decimal/decwide_t_detail_namespace.h>
 
