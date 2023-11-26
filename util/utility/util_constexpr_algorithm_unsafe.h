@@ -169,21 +169,14 @@
     swap_unsafe(static_cast<local_value_type&&>(*a), static_cast<local_value_type&&>(*b));
   }
 
-  template<typename RandomAccessIterator>
-  constexpr auto reverse_unsafe(RandomAccessIterator first, RandomAccessIterator last) -> void
+  template<typename BiDirectionalIterator>
+  constexpr auto reverse_unsafe(BiDirectionalIterator first, BiDirectionalIterator last) -> void
   {
-    // Non-standard behavior:
-    // Ensure that the iterator provided is actually a random-access iterator.
-    // This could be done via std::enable_if. It is at the moment, however,
-    // not checked at compile-time.
+    // Ensure that the type of the iterator provided is actually bidirectional.
 
-    while(!(first >= last))
+    for( ; ((first != last) && (first != --last)); ++first)
     {
-      --last;
-
       iter_swap_unsafe(first, last);
-
-       ++first;
     }
   }
 

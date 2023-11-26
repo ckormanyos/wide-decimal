@@ -1666,11 +1666,14 @@
     {
       const auto b_neg = (n < static_cast<signed long long>(INT8_C(0))); // NOLINT(google-runtime-int)
 
-      div_unsigned_long_long
-      (
-        (!b_neg) ?                static_cast<unsigned long long>(n)  // NOLINT(google-runtime-int)
-                 : detail::negate(static_cast<unsigned long long>(n)) // NOLINT(google-runtime-int)
-      );
+      const auto n_long_long =
+        static_cast<unsigned long long> // NOLINT(google-runtime-int)
+        (
+          (!b_neg) ?                static_cast<unsigned long long>(n)  // NOLINT(google-runtime-int)
+                   : detail::negate(static_cast<unsigned long long>(n)) // NOLINT(google-runtime-int)
+        );
+
+      div_unsigned_long_long(n_long_long);
 
       return ((!b_neg) ? *this : negate());
     }
@@ -2794,71 +2797,72 @@
     {
       my_exp = static_cast<exponent_type>(INT8_C(0));
 
-      auto i = static_cast<std::uint_fast32_t>(UINT8_C(0));
+      util::fill_unsafe(my_data.begin(), my_data.end(), static_cast<limb_type>(UINT8_C(0)));
 
-      auto uu = u;
+      auto index_n = static_cast<std::uint_fast32_t>(UINT8_C(0));
 
-      constexpr auto local_tmp_array_size =
-        static_cast<std::size_t>
-        (
-            static_cast<std::size_t>
-            (
-                std::numeric_limits<unsigned long long>::digits10 // NOLINT(google-runtime-int)
-              / static_cast<int>(decwide_t_elem_digits10)
-            )
-          + static_cast<std::size_t>(UINT8_C(3))
-        );
-
-      using local_tmp_array_type = std::array<limb_type, local_tmp_array_size>;
-
-      local_tmp_array_type tmp;
-
-      tmp.fill(static_cast<limb_type>(UINT8_C(0)));
-
-      while
-      (
-           (uu != static_cast<unsigned long long>(UINT8_C(0))) // NOLINT(google-runtime-int,altera-id-dependent-backward-branch)
-        && (i  <  static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value))
-      )
+      if(u > static_cast<unsigned long long>(UINT8_C(0))) // NOLINT(google-runtime-int)
       {
-        tmp[static_cast<std::size_t>(i)] =
-          static_cast<limb_type>(uu % static_cast<unsigned long long>(decwide_t_elem_mask)); // NOLINT(google-runtime-int)
+        auto uu = u;
 
-        uu = static_cast<unsigned long long>(uu / static_cast<unsigned long long>(decwide_t_elem_mask)); // NOLINT(google-runtime-int)
-
-        ++i;
-      }
-
-      if(i > static_cast<std::uint_fast32_t>(UINT8_C(1)))
-      {
-        my_exp =
-          static_cast<exponent_type>
+        constexpr auto local_tmp_array_size =
+          static_cast<std::size_t>
           (
-              my_exp
-            + static_cast<exponent_type>
+              static_cast<std::size_t>
               (
-                  static_cast<exponent_type>(i - static_cast<std::uint_fast32_t>(UINT8_C(1)))
-                * static_cast<exponent_type>(decwide_t_elem_digits10)
+                  std::numeric_limits<unsigned long long>::digits10 // NOLINT(google-runtime-int)
+                / static_cast<int>(decwide_t_elem_digits10)
               )
+            + static_cast<std::size_t>(UINT8_C(3))
           );
-      }
 
-      util::reverse_unsafe(tmp.begin(), tmp.begin() + i);
+        using local_tmp_array_type = std::array<limb_type, local_tmp_array_size>;
 
-      constexpr auto copy_limit =
-        static_cast<std::ptrdiff_t>
+        local_tmp_array_type tmp;
+
+        tmp.fill(static_cast<limb_type>(UINT8_C(0)));
+
+        while
         (
-          util::min_unsafe(static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value),
-                           static_cast<std::uint_fast32_t>(decwide_t_elem_number))
-        );
+             (uu      != static_cast<unsigned long long>(UINT8_C(0))) // NOLINT(google-runtime-int,altera-id-dependent-backward-branch)
+          && (index_n <  static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value))
+        )
+        {
+          tmp[static_cast<std::size_t>(index_n)] =
+            static_cast<limb_type>(uu % static_cast<unsigned long long>(decwide_t_elem_mask)); // NOLINT(google-runtime-int)
 
-      util::copy_unsafe(tmp.cbegin(),
-                        tmp.cbegin() + static_cast<std::ptrdiff_t>(util::min_unsafe(static_cast<std::ptrdiff_t>(i), copy_limit)),
-                        my_data.begin());
+          uu = static_cast<unsigned long long>(uu / static_cast<unsigned long long>(decwide_t_elem_mask)); // NOLINT(google-runtime-int)
 
-      util::fill_unsafe(my_data.begin() + static_cast<std::ptrdiff_t>(util::min_unsafe(static_cast<std::ptrdiff_t>(i), copy_limit)),
-                        my_data.end(),
-                        static_cast<limb_type>(UINT8_C(0)));
+          ++index_n;
+        }
+
+        if(index_n > static_cast<std::uint_fast32_t>(UINT8_C(1)))
+        {
+          my_exp =
+            static_cast<exponent_type>
+            (
+                my_exp
+              + static_cast<exponent_type>
+                (
+                    static_cast<exponent_type>(index_n - static_cast<std::uint_fast32_t>(UINT8_C(1)))
+                  * static_cast<exponent_type>(decwide_t_elem_digits10)
+                )
+            );
+
+          util::reverse_unsafe(tmp.begin(), tmp.begin() + index_n);
+        }
+
+        constexpr auto copy_limit =
+          static_cast<std::ptrdiff_t>
+          (
+            util::min_unsafe(static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value),
+                             static_cast<std::uint_fast32_t>(decwide_t_elem_number))
+          );
+
+        const auto copy_amount = static_cast<std::ptrdiff_t>(util::min_unsafe(static_cast<std::ptrdiff_t>(index_n), copy_limit));
+
+        util::copy_unsafe(tmp.cbegin(), tmp.cbegin() + copy_amount, my_data.begin());
+      }
     }
 
     template<typename FloatingPointType>
