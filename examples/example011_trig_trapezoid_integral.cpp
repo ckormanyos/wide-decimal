@@ -436,7 +436,7 @@ namespace example011_trig
           using example011_trig::cos;
           using example011_trig::sin;
 
-          return cos(x * sin(t) - (t * n));
+          return example011_trig::cos(x * example011_trig::sin(t) - (t * n));
         }
       );
 
@@ -475,7 +475,10 @@ auto ::math::wide_decimal::example011_trig_trapezoid_integral() -> bool
 
   // Ensure that the local sin() function is covered for negative argument.
   using example011_trig::sin;
-  const dec51_t closeness_sn = fabs(1 - (sin(dec51_t(static_cast<int>(INT16_C(-123))) / static_cast<unsigned>(UINT8_C(100))) / control_sn));
+
+  const dec51_t sin_arg = dec51_t(static_cast<int>(INT16_C(-123))) / static_cast<unsigned>(UINT8_C(100));
+
+  const dec51_t closeness_sn = fabs(1 - (sin(sin_arg) / control_sn));
 
   const dec51_t tol = std::numeric_limits<dec51_t>::epsilon() * static_cast<std::uint32_t>(UINT8_C(10));
 

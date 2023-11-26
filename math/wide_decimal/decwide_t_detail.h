@@ -60,7 +60,7 @@
   #endif
 
   #if defined(_MSVC_LANG)
-    #if (_MSVC_LANG >= 201703L)
+    #if (_MSVC_LANG >= 202002L)
     #define WIDE_DECIMAL_CONSTEXPR constexpr
     #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 1
     #else
@@ -68,7 +68,7 @@
     #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 0
     #endif
   #else
-    #if (__cplusplus >= 201703L)
+    #if (__cplusplus >= 202002L)
     #define WIDE_DECIMAL_CONSTEXPR constexpr
     #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 1
     #else

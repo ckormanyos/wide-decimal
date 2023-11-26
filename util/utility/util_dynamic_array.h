@@ -17,6 +17,24 @@
 
   #include <util/utility/util_constexpr_algorithm_unsafe.h>
 
+  #if defined(_MSVC_LANG)
+    #if (_MSVC_LANG >= 202002L)
+    #define DYNAMIC_ARRAY_CONSTEXPR constexpr
+    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 1
+    #else
+    #define DYNAMIC_ARRAY_CONSTEXPR
+    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 0
+    #endif
+  #else
+    #if (__cplusplus >= 202002L)
+    #define DYNAMIC_ARRAY_CONSTEXPR constexpr
+    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 1
+    #else
+    #define DYNAMIC_ARRAY_CONSTEXPR
+    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 0
+    #endif
+  #endif
+
   namespace util {
 
   template<typename ValueType,
@@ -125,7 +143,8 @@
     }
 
     // Destructor.
-    constexpr virtual ~dynamic_array() // LCOV_EXCL_LINE
+    DYNAMIC_ARRAY_CONSTEXPR
+    virtual ~dynamic_array() // LCOV_EXCL_LINE
     {
       using local_allocator_traits_type = std::allocator_traits<allocator_type>;
 

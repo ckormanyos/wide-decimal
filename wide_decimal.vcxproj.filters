@@ -285,6 +285,7 @@
     <ClInclude Include="util\utility\util_constexpr_algorithm_unsafe.h">
       <Filter>Source Files\util\utility</Filter>
     </ClInclude>
+    <ClInclude Include="util\utility\util_constexpr_cmath_unsafe.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\wide_decimal.yml">

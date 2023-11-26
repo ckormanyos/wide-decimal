@@ -2898,6 +2898,8 @@
       typename std::enable_if_t<((OtherDigits10 == ParamDigitsBaseTen) && !(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara)), int>* p_nullptr = static_cast<int*>(nullptr)
     ) -> void
     {
+      static_cast<void>(p_nullptr);
+
       // Use school multiplication.
       #if !defined(WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION)
       using school_mul_pool_type = util::dynamic_array<limb_type>;
@@ -2955,6 +2957,8 @@
       typename std::enable_if_t<((OtherDigits10 == ParamDigitsBaseTen) && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara) && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number < decwide_t_elems_for_fft)), int>* p_nullptr = static_cast<int*>(nullptr)
     ) -> void
     {
+      static_cast<void>(p_nullptr);
+
       if(prec_elems_for_multiply < decwide_t_elems_for_kara)
       {
         // Use school multiplication.
@@ -3079,6 +3083,8 @@
       typename std::enable_if_t<((OtherDigits10 == ParamDigitsBaseTen) && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_fft)), int>* p_nullptr = static_cast<int*>(nullptr)
     ) -> void
     {
+      static_cast<void>(p_nullptr);
+
       if(prec_elems_for_multiply < decwide_t_elems_for_kara)
       {
         // Use school multiplication.

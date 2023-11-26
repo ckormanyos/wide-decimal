@@ -90,9 +90,9 @@ auto local::run() -> bool
 
   const auto result_is_ok =
   (
-       /*result_test_examples_part1_is_ok
+       result_test_examples_part1_is_ok
     && result_test_examples_part2_is_ok
-    &&*/ result_test_algebra_edge___is_ok
+    && result_test_algebra_edge___is_ok
     && result_test_algebra_add____is_ok
     && result_test_algebra_sub____is_ok
     && result_test_algebra_mul____is_ok
