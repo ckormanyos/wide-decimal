@@ -14,13 +14,13 @@
 #ifndef DECWIDE_T_DETAIL_2020_10_26_H // NOLINT(llvm-header-guard)
   #define DECWIDE_T_DETAIL_2020_10_26_H
 
-  #include <algorithm>
   #include <array>
   #include <cstdint>
   #include <initializer_list>
   #include <iterator>
   #include <memory>
 
+  #include <util/utility/util_constexpr_algorithm_unsafe.h>
   #include <util/utility/util_dynamic_array.h>
 
   #include <math/wide_decimal/decwide_t_detail_namespace.h>
@@ -66,42 +66,6 @@
   #else
   namespace math { namespace wide_decimal { namespace detail { // NOLINT(modernize-concat-nested-namespaces)
   #endif
-
-  template<class ForwardIt, class T>
-  constexpr auto lower_bound_unsafe(ForwardIt first, ForwardIt last, const T& value) -> ForwardIt
-  {
-    using local_iterator_type = ForwardIt;
-
-    using local_difference_type = typename std::iterator_traits<ForwardIt>::difference_type;
-
-    local_difference_type step { };
-
-    auto count = static_cast<local_difference_type>(last - first); // NOLINT(altera-id-dependent-backward-branch)
-
-    local_iterator_type itr { };
-
-    while(count > static_cast<local_difference_type>(INT8_C(0))) // NOLINT(altera-id-dependent-backward-branch)
-    {
-      itr = first;
-
-      step = static_cast<local_difference_type>(count / static_cast<local_difference_type>(INT8_C(2)));
-
-      itr += step;
- 
-      if (*itr < value)
-      {
-        first = ++itr;
-
-        count -= static_cast<local_difference_type>(step + static_cast<local_difference_type>(INT8_C(1)));
-      }
-      else
-      {
-        count = step;
-      }
-    }
-
-    return first;
-  }
 
   template<const std::size_t BitCount,
            typename EnableType = void>
@@ -211,7 +175,7 @@
       static_cast<std::uint32_t>(UINT32_C(2097152))
     };
 
-    const std::uint32_t* it = lower_bound_unsafe(std::begin(a029750_data), std::end(a029750_data), value);
+    const std::uint32_t* it = util::lower_bound_unsafe(std::begin(a029750_data), std::end(a029750_data), value);
 
     const auto result =
       static_cast<std::uint32_t>
@@ -400,9 +364,9 @@
                                  const typename base_class_type::allocator_type& a = typename base_class_type::allocator_type()) noexcept
       : base_class_type(MySize, typename base_class_type::value_type(), a)
     {
-      std::fill(base_class_type::begin(),
-                base_class_type::begin() + (std::min)(MySize, static_cast<typename base_class_type::size_type>(s)),
-                v);
+      util::fill_unsafe(base_class_type::begin(),
+                        base_class_type::begin() + util::min_unsafe(MySize, static_cast<typename base_class_type::size_type>(s)),
+                        v);
     }
 
     constexpr fixed_dynamic_array(const fixed_dynamic_array& other)
@@ -411,9 +375,9 @@
     fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
     {
-      std::copy(lst.begin(),
-                lst.begin() + (std::min)(static_cast<typename base_class_type::size_type>(lst.size()), MySize),
-                base_class_type::begin());
+      util::copy_unsafe(lst.begin(),
+                        lst.begin() + util::min_unsafe(static_cast<typename base_class_type::size_type>(lst.size()), MySize),
+                        base_class_type::begin());
     }
 
     constexpr fixed_dynamic_array(fixed_dynamic_array&& other) noexcept
@@ -459,8 +423,8 @@
     {
       if(s < static_size())
       {
-        std::fill(base_class_type::begin(),     base_class_type::begin() + s, v);
-        std::fill(base_class_type::begin() + s, base_class_type::end(),       value_type());
+        util::fill_unsafe(base_class_type::begin(),     base_class_type::begin() + s, v);
+        util::fill_unsafe(base_class_type::begin() + s, base_class_type::end(),       value_type());
       }
       else
       {
@@ -474,24 +438,24 @@
     fixed_static_array(std::initializer_list<typename base_class_type::value_type> lst)
     {
       const auto size_to_copy =
-        (std::min)(static_cast<size_type>(lst.size()),
-                   static_cast<size_type>(MySize));
+        util::min_unsafe(static_cast<size_type>(lst.size()),
+                         static_cast<size_type>(MySize));
 
       if(size_to_copy < static_cast<size_type>(base_class_type::size()))
       {
-        std::copy(lst.begin(),
-                  lst.begin() + size_to_copy,
-                  base_class_type::begin());
+        util::copy_unsafe(lst.begin(),
+                          lst.begin() + size_to_copy,
+                          base_class_type::begin());
 
-        std::fill(base_class_type::begin() + size_to_copy,
-                  base_class_type::end(),
-                  static_cast<typename base_class_type::value_type>(UINT8_C(0)));
+        util::fill_unsafe(base_class_type::begin() + size_to_copy,
+                          base_class_type::end(),
+                          static_cast<typename base_class_type::value_type>(UINT8_C(0)));
       }
       else
       {
-        std::copy(lst.begin(),
-                  lst.begin() + size_to_copy,
-                  base_class_type::begin());
+        util::copy_unsafe(lst.begin(),
+                          lst.begin() + size_to_copy,
+                          base_class_type::begin());
       }
     }
 

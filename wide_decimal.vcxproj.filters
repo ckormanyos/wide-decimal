@@ -74,6 +74,9 @@
     <Filter Include="Source Files\target">
       <UniqueIdentifier>{fe70179d-bb5f-43de-b828-223a1fffa6ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\target\build">
+      <UniqueIdentifier>{40533d34-a2db-4a58-b619-f4509d002e7d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\target\micros">
       <UniqueIdentifier>{6dd8c4df-555d-4da4-932d-96ad8b6bb1c0}</UniqueIdentifier>
     </Filter>
@@ -276,6 +279,9 @@
     <ClInclude Include="util\utility\util_pseudorandom_time_point_seed.h">
       <Filter>Source Files\util\utility</Filter>
     </ClInclude>
+    <ClInclude Include="util\utility\util_constexpr_algorithm_unsafe.h">
+      <Filter>Source Files\util\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\wide_decimal.yml">
@@ -301,13 +307,13 @@
       <Filter>.github\workflows</Filter>
     </None>
     <None Include="sonar-project.properties" />
+    <None Include=".gcov\make\make_gcov_03_flags.gmk">
+      <Filter>.gcov\make</Filter>
+    </None>
     <None Include=".gcov\make\make_gcov_01_generic.gmk">
       <Filter>.gcov\make</Filter>
     </None>
     <None Include=".gcov\make\make_gcov_02_files.gmk">
-      <Filter>.gcov\make</Filter>
-    </None>
-    <None Include=".gcov\make\make_gcov_03_flags.gmk">
       <Filter>.gcov\make</Filter>
     </None>
     <None Include=".props\Directory.Build.props">

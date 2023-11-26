@@ -197,13 +197,13 @@
     <ClCompile Include="examples\example012_rational_floor_ceil.cpp" />
     <ClCompile Include="examples\example013a_embeddable_agm.cpp" />
     <ClCompile Include="examples\example013_embeddable_sqrt.cpp" />
-    <ClCompile Include="test\coverity.c" />
-    <ClCompile Include="test\target\micros\stm32f429\make\single\crt.cpp">
+    <ClCompile Include="target\micros\stm32f429\make\single\crt.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="test\coverity.c" />
     <ClCompile Include="test\test.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra.cpp" />
     <ClCompile Include="test\test_decwide_t_algebra_edge.cpp" />
@@ -253,6 +253,7 @@
     <ClInclude Include="test\test_decwide_t_examples.h" />
     <ClInclude Include="util\memory\util_n_slot_array_allocator.h" />
     <ClInclude Include="util\utility\util_baselexical_cast.h" />
+    <ClInclude Include="util\utility\util_constexpr_algorithm_unsafe.h" />
     <ClInclude Include="util\utility\util_dynamic_array.h" />
     <ClInclude Include="util\utility\util_noncopyable.h" />
     <ClInclude Include="util\utility\util_pseudorandom_time_point_seed.h" />
@@ -264,8 +265,8 @@
     <None Include=".gcov\make\make_gcov_03_flags.gmk" />
     <None Include=".github\toolchains\gcc.cmake" />
     <None Include=".github\workflows\CodeQL.yml" />
-    <None Include=".github\workflows\wide_decimal.yml" />
     <None Include=".github\workflows\wide_decimal_codecov.yml" />
+    <None Include=".github\workflows\wide_decimal.yml" />
     <None Include=".github\workflows\wide_decimal_sonar.yml" />
     <None Include=".props\Directory.Build.props" />
     <None Include=".tidy\make\make_tidy_01_generic.gmk" />
@@ -274,13 +275,13 @@
     <None Include="codecov.yml" />
     <None Include="README.md" />
     <None Include="sonar-project.properties" />
-    <None Include="test\target\build\test_app_benchmarks_emulator.py">
+    <None Include="target\build\test_examples_emulator.py">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">true</ExcludedFromBuild>
     </None>
-    <None Include="test\target\micros\stm32f429\make\stm32f429.ld">
+    <None Include="target\micros\stm32f429\make\stm32f429.ld">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">true</ExcludedFromBuild>

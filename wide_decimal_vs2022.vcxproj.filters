@@ -63,31 +63,34 @@
       <UniqueIdentifier>{14a4c145-a484-4c81-a33d-8b4246647a39}</UniqueIdentifier>
     </Filter>
     <Filter Include=".gcov">
-      <UniqueIdentifier>{c5334470-1c92-41ca-8c4d-e3a16c6e35cb}</UniqueIdentifier>
+      <UniqueIdentifier>{884f4771-7672-43c0-b2f7-bca154c8c748}</UniqueIdentifier>
     </Filter>
     <Filter Include=".gcov\make">
-      <UniqueIdentifier>{073ae4a3-c703-437f-8dd2-c8e872f29e62}</UniqueIdentifier>
+      <UniqueIdentifier>{4332bff4-397c-4281-a8d7-c4eacc684e0e}</UniqueIdentifier>
     </Filter>
     <Filter Include=".props">
-      <UniqueIdentifier>{5e8867a6-4552-4667-a2c3-87203a8ac998}</UniqueIdentifier>
+      <UniqueIdentifier>{59e7db7d-a414-437c-9f04-692b65f8bcec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\test\target">
-      <UniqueIdentifier>{54a7a6a6-88fa-4c27-91fd-9f9c594161d1}</UniqueIdentifier>
+    <Filter Include="Source Files\target">
+      <UniqueIdentifier>{fe70179d-bb5f-43de-b828-223a1fffa6ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\test\target\build">
+    <Filter Include="Source Files\target\build">
       <UniqueIdentifier>{40533d34-a2db-4a58-b619-f4509d002e7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\test\target\micros">
-      <UniqueIdentifier>{33d53f45-fe9c-440c-846e-8d054a551a15}</UniqueIdentifier>
+    <Filter Include="Source Files\target\micros">
+      <UniqueIdentifier>{6dd8c4df-555d-4da4-932d-96ad8b6bb1c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\test\target\micros\stm32f429">
-      <UniqueIdentifier>{bcacf48a-2c51-45dc-a0aa-526e814757cb}</UniqueIdentifier>
+    <Filter Include="Source Files\target\micros\stm32f429">
+      <UniqueIdentifier>{7d18e187-e8e4-4d3d-8f2d-1d9b65101c35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\test\target\micros\stm32f429\make">
-      <UniqueIdentifier>{88a085af-bfcd-479f-930d-cde53277d226}</UniqueIdentifier>
+    <Filter Include="Source Files\target\micros\stm32f429\make">
+      <UniqueIdentifier>{219d1eac-b2ed-4d33-9f60-13cd6b04d327}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\test\target\micros\stm32f429\make\single">
-      <UniqueIdentifier>{2a2623af-1324-415f-b5b3-028151a951b4}</UniqueIdentifier>
+    <Filter Include="Source Files\target\micros\stm32f429\make\single">
+      <UniqueIdentifier>{e09b2fb7-4d32-431a-80c4-4cd9b1cdc52d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\target\build">
+      <UniqueIdentifier>{053c6fec-f289-46e2-b0d1-9cdf87ac87c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -199,8 +202,8 @@
     <ClCompile Include="test\test_decwide_t_algebra_edge.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
-    <ClCompile Include="test\target\micros\stm32f429\make\single\crt.cpp">
-      <Filter>Source Files\test\target\micros\stm32f429\make\single</Filter>
+    <ClCompile Include="target\micros\stm32f429\make\single\crt.cpp">
+      <Filter>Source Files\target\micros\stm32f429\make\single</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +279,9 @@
     <ClInclude Include="util\utility\util_pseudorandom_time_point_seed.h">
       <Filter>Source Files\util\utility</Filter>
     </ClInclude>
+    <ClInclude Include="util\utility\util_constexpr_algorithm_unsafe.h">
+      <Filter>Source Files\util\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\wide_decimal.yml">
@@ -317,11 +323,11 @@
       <Filter>.github\workflows</Filter>
     </None>
     <None Include="codecov.yml" />
-    <None Include="test\target\build\test_app_benchmarks_emulator.py">
-      <Filter>Source Files\test\target\build</Filter>
+    <None Include="target\build\test_examples_emulator.py">
+      <Filter>Source Files\target\build</Filter>
     </None>
-    <None Include="test\target\micros\stm32f429\make\stm32f429.ld">
-      <Filter>Source Files\test\target\micros\stm32f429\make</Filter>
+    <None Include="target\micros\stm32f429\make\stm32f429.ld">
+      <Filter>Source Files\target\micros\stm32f429\make</Filter>
     </None>
     <None Include=".github\workflows\CodeQL.yml">
       <Filter>.github\workflows</Filter>

@@ -8,13 +8,14 @@
 #ifndef UTIL_DYNAMIC_ARRAY_2012_05_16_H // NOLINT(llvm-header-guard)
   #define UTIL_DYNAMIC_ARRAY_2012_05_16_H
 
-  #include <algorithm>
   #include <cstddef>
   #include <cstdint>
   #include <initializer_list>
   #include <iterator>
   #include <memory>
   #include <utility>
+
+  #include <util/utility/util_constexpr_algorithm_unsafe.h>
 
   namespace util {
 
@@ -80,7 +81,7 @@
         elems = std::allocator_traits<allocator_type>::allocate(my_a, elem_count);
       }
 
-      std::copy(other.elems, other.elems + elem_count, elems);
+      util::copy_unsafe(other.elems, other.elems + elem_count, elems);
     }
 
     template<typename input_iterator>
@@ -97,7 +98,7 @@
         elems = std::allocator_traits<allocator_type>::allocate(my_a, elem_count);
       }
 
-      std::copy(first, last, elems);
+      util::copy_unsafe(first, last, elems);
     }
 
     dynamic_array(std::initializer_list<value_type> lst,
@@ -112,7 +113,7 @@
         elems = std::allocator_traits<allocator_type>::allocate(my_a, elem_count);
       }
 
-      std::copy(lst.begin(), lst.end(), elems);
+      util::copy_unsafe(lst.begin(), lst.end(), elems);
     }
 
     // Move constructor.
@@ -139,9 +140,9 @@
     {
       if(this != &other)
       {
-        std::copy(other.elems,
-                  other.elems + (std::min)(elem_count, other.elem_count),
-                  elems);
+        util::copy_unsafe(other.elems,
+                          other.elems + util::min_unsafe(elem_count, other.elem_count),
+                          elems);
       }
 
       return *this;
@@ -150,8 +151,8 @@
     // Move assignment operator.
     auto operator=(dynamic_array&& other) noexcept -> dynamic_array&
     {
-      std::swap(elem_count, other.elem_count);
-      std::swap(elems,      other.elems);
+      util::swap_unsafe(elem_count, other.elem_count);
+      util::swap_unsafe(elems,      other.elems);
 
       return *this;
     }
@@ -202,17 +203,17 @@
     {
       if(this != &other)
       {
-        std::swap(elems,      other.elems);
-        std::swap(elem_count, other.elem_count);
+        util::swap_unsafe(elems,      other.elems);
+        util::swap_unsafe(elem_count, other.elem_count);
       }
     }
 
     auto swap(dynamic_array&& other) noexcept -> void
     {
-      auto tmp = std::move(*this);
+      const auto tmp = std::move(static_cast<dynamic_array&&>(*this));
 
       *this = std::move(other);
-      other = std::move(tmp);
+      other = std::move(static_cast<dynamic_array&&>(tmp));
     }
 
   private:
@@ -265,7 +266,7 @@
       }
       else
       {
-        const size_type count = (std::min)(lhs.size(), rhs.size());
+        const size_type count = util::min_unsafe(lhs.size(), rhs.size());
 
         b_result= std::lexicographical_compare(lhs.cbegin(),
                                                lhs.cbegin() + count,
