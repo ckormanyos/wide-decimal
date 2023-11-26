@@ -57,6 +57,11 @@ target_compile_options(example001d_pow2_from_list PRIVATE "-DWIDE_DECIMAL_STANDA
 target_include_directories(example001d_pow2_from_list PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(example001d_pow2_from_list SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
 
+target_compile_features(example001e_algebra_and_constexpr PRIVATE cxx_std_14)
+target_compile_options(example001e_algebra_and_constexpr PRIVATE "-DWIDE_DECIMAL_STANDALONE_EXAMPLE001E_ALGEBRA_AND_CONSTEXPR=1")
+target_include_directories(example001e_algebra_and_constexpr PRIVATE ${PROJECT_SOURCE_DIR})
+target_include_directories(example001e_algebra_and_constexpr SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
+
 target_compile_features(example001_roots_sqrt PRIVATE cxx_std_14)
 target_compile_options(example001_roots_sqrt PRIVATE "-DWIDE_DECIMAL_STANDALONE_EXAMPLE001_ROOTS_SQRT=1")
 target_include_directories(example001_roots_sqrt PRIVATE ${PROJECT_SOURCE_DIR})

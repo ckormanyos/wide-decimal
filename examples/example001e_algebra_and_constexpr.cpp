@@ -31,8 +31,12 @@ auto ::math::wide_decimal::example001e_algebra_and_constexpr() -> bool
   WIDE_DECIMAL_CONSTEXPR wide_decimal_type local_quarter_a(wide_decimal_type(static_cast<unsigned>(UINT8_C(25))) / static_cast<unsigned>(UINT8_C(100)));
   WIDE_DECIMAL_CONSTEXPR wide_decimal_type local_quarter_b(0.25F);
 
+  WIDE_DECIMAL_CONSTEXPR auto result_construct_is_ok = (local_quarter_a == local_quarter_b);
+
+  result_is_ok = (result_construct_is_ok && result_is_ok);
+
   #if (defined(WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST) && (WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST != 0))
-  static_assert(local_quarter_a == local_quarter_b, "Error: Constexpr construction of built-in float is incorrect");
+  static_assert(result_construct_is_ok, "Error: Constexpr construction of built-in float is incorrect");
   #endif
 
   return result_is_ok;
