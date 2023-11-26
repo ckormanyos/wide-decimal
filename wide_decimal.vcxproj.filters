@@ -205,6 +205,9 @@
     <ClCompile Include="target\micros\stm32f429\make\single\crt.cpp">
       <Filter>Source Files\target\micros\stm32f429\make\single</Filter>
     </ClCompile>
+    <ClCompile Include="examples\example001e_algebra_and_constexpr.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\independent_algebra_test_decwide_t_boost_cpp.h">

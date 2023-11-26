@@ -59,6 +59,24 @@
     #endif
   #endif
 
+  #if defined(_MSVC_LANG)
+    #if (_MSVC_LANG >= 201703L)
+    #define WIDE_DECIMAL_CONSTEXPR constexpr
+    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 1
+    #else
+    #define WIDE_DECIMAL_CONSTEXPR
+    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 0
+    #endif
+  #else
+    #if (__cplusplus >= 201703L)
+    #define WIDE_DECIMAL_CONSTEXPR constexpr
+    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 1
+    #else
+    #define WIDE_DECIMAL_CONSTEXPR
+    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 0
+    #endif
+  #endif
+
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
   #if(__cplusplus >= 201703L)
@@ -359,9 +377,9 @@
   public:
     static constexpr auto static_size() -> typename base_class_type::size_type { return MySize; }
 
-    explicit fixed_dynamic_array(const typename base_class_type::size_type       s = MySize, // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
-                                 const typename base_class_type::value_type&     v = typename base_class_type::value_type(),
-                                 const typename base_class_type::allocator_type& a = typename base_class_type::allocator_type()) noexcept
+    explicit constexpr fixed_dynamic_array(const typename base_class_type::size_type       s = MySize, // NOLINT(hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
+                                           const typename base_class_type::value_type&     v = typename base_class_type::value_type(),
+                                           const typename base_class_type::allocator_type& a = typename base_class_type::allocator_type()) noexcept
       : base_class_type(MySize, typename base_class_type::value_type(), a)
     {
       util::fill_unsafe(base_class_type::begin(),
@@ -372,7 +390,7 @@
     constexpr fixed_dynamic_array(const fixed_dynamic_array& other)
       : base_class_type(static_cast<const base_class_type&>(other)) { }
 
-    fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
+    constexpr fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
     {
       util::copy_unsafe(lst.begin(),
@@ -383,7 +401,7 @@
     constexpr fixed_dynamic_array(fixed_dynamic_array&& other) noexcept
       : base_class_type(static_cast<base_class_type&&>(other)) { }
 
-    auto operator=(const fixed_dynamic_array& other) -> fixed_dynamic_array& // NOLINT(cert-oop54-cpp)
+    constexpr auto operator=(const fixed_dynamic_array& other) -> fixed_dynamic_array& // NOLINT(cert-oop54-cpp)
     {
       if(this != &other)
       {
@@ -393,14 +411,12 @@
       return *this;
     }
 
-    auto operator=(fixed_dynamic_array&& other) noexcept -> fixed_dynamic_array&
+    constexpr auto operator=(fixed_dynamic_array&& other) noexcept -> fixed_dynamic_array&
     {
       base_class_type::operator=(static_cast<base_class_type&&>(other));
 
       return *this;
     }
-
-    ~fixed_dynamic_array() override = default;
   };
 
   template<typename MyType,
@@ -418,8 +434,8 @@
 
     constexpr fixed_static_array() = default; // LCOV_EXCL_LINE
 
-    explicit fixed_static_array(const size_type   s,
-                                                       const value_type& v = value_type())
+    explicit constexpr fixed_static_array(const size_type   s,
+                                          const value_type& v = value_type())
     {
       if(s < static_size())
       {
@@ -432,10 +448,10 @@
       }
     }
 
-    fixed_static_array(const fixed_static_array&) = default;
-    fixed_static_array(fixed_static_array&&) noexcept = default;
+    constexpr fixed_static_array(const fixed_static_array&) = default;
+    constexpr fixed_static_array(fixed_static_array&&) noexcept = default;
 
-    fixed_static_array(std::initializer_list<typename base_class_type::value_type> lst)
+    constexpr fixed_static_array(std::initializer_list<typename base_class_type::value_type> lst)
     {
       const auto size_to_copy =
         util::min_unsafe(static_cast<size_type>(lst.size()),
@@ -461,11 +477,11 @@
 
     ~fixed_static_array() = default; // LCOV_EXCL_LINE
 
-    auto operator=(const fixed_static_array& other_array) -> fixed_static_array& = default;
-    auto operator=(fixed_static_array&& other_array) noexcept -> fixed_static_array& = default;
+    constexpr auto operator=(const fixed_static_array& other_array) -> fixed_static_array& = default;
+    constexpr auto operator=(fixed_static_array&& other_array) noexcept -> fixed_static_array& = default;
 
-    auto operator[](const size_type i)       -> typename base_class_type::reference       { return base_class_type::operator[](static_cast<typename base_class_type::size_type>(i)); }
-    auto operator[](const size_type i) const -> typename base_class_type::const_reference { return base_class_type::operator[](static_cast<typename base_class_type::size_type>(i)); }
+    constexpr auto operator[](const size_type i)       -> typename base_class_type::reference       { return base_class_type::operator[](static_cast<typename base_class_type::size_type>(i)); }
+    constexpr auto operator[](const size_type i) const -> typename base_class_type::const_reference { return base_class_type::operator[](static_cast<typename base_class_type::size_type>(i)); }
   };
 
   enum class os_float_field_type
@@ -497,7 +513,7 @@
 
     ~unsigned_wrap() noexcept = default; // LCOV_EXCL_LINE
 
-    auto operator=(const unsigned_wrap& other) noexcept -> unsigned_wrap&
+    constexpr auto operator=(const unsigned_wrap& other) noexcept -> unsigned_wrap&
     {
       if(this != &other)
       {
@@ -508,7 +524,7 @@
       return *this;
     }
 
-    auto operator=(unsigned_wrap&& other) noexcept -> unsigned_wrap&
+    constexpr auto operator=(unsigned_wrap&& other) noexcept -> unsigned_wrap&
     {
       my_neg   = other.my_neg;
       my_value = other.my_value;
@@ -523,7 +539,7 @@
     bool          my_neg;   // NOLINT(misc-non-private-member-variables-in-classes)
     unsigned_type my_value; // NOLINT(misc-non-private-member-variables-in-classes)
 
-    auto operator+=(const unsigned_wrap& other) noexcept -> unsigned_wrap&
+    constexpr auto operator+=(const unsigned_wrap& other) noexcept -> unsigned_wrap&
     {
       if(my_neg == other.my_neg)
       {
@@ -568,7 +584,7 @@
       return *this;
     }
 
-    auto operator-=(const unsigned_wrap& other) noexcept -> unsigned_wrap&
+    constexpr auto operator-=(const unsigned_wrap& other) noexcept -> unsigned_wrap&
     {
       if(my_value == static_cast<unsigned_type>(UINT8_C(0)))
       {

@@ -176,6 +176,7 @@
     <ClCompile Include="examples\example001b_roots_almost_integer.cpp" />
     <ClCompile Include="examples\example001c_roots_sqrt_limb08.cpp" />
     <ClCompile Include="examples\example001d_pow2_from_list.cpp" />
+    <ClCompile Include="examples\example001e_algebra_and_constexpr.cpp" />
     <ClCompile Include="examples\example001_roots_sqrt.cpp" />
     <ClCompile Include="examples\example002a_pi_small_limb.cpp" />
     <ClCompile Include="examples\example002b_pi_100k.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="util\memory\util_n_slot_array_allocator.h" />
     <ClInclude Include="util\utility\util_baselexical_cast.h" />
     <ClInclude Include="util\utility\util_constexpr_algorithm_unsafe.h" />
+    <ClInclude Include="util\utility\util_constexpr_cmath_unsafe.h" />
     <ClInclude Include="util\utility\util_dynamic_array.h" />
     <ClInclude Include="util\utility\util_noncopyable.h" />
     <ClInclude Include="util\utility\util_pseudorandom_time_point_seed.h" />

@@ -1259,6 +1259,8 @@ auto test_various_rootn() -> bool
   return result_is_ok;
 }
 
+volatile int debug { };
+
 template<typename NativeFloatType>
 auto test_to_native_float_and_back() -> bool
 {
@@ -1291,14 +1293,20 @@ auto test_to_native_float_and_back() -> bool
 
     const auto x_as_native_float = static_cast<native_float_type>(static_cast<long double>(x));
 
-    const auto x_reloaded_from_native_float = local_wide_decimal_type(x_as_native_float);
+    const auto x_as_wide_decimal_reloaded_from_native_float = local_wide_decimal_type(x_as_native_float);
+    const auto x_as_native_float_reloaded_from_wide_decimal = static_cast<native_float_type>(x_as_wide_decimal_reloaded_from_native_float);
 
     using std::fabs;
 
-    const auto delta1 = fabs(local_one() - fabs(x / x_reloaded_from_native_float));
-    const auto delta2 = fabs(static_cast<native_float_type>(1.0F) - fabs(x_as_native_float / static_cast<native_float_type>(x_reloaded_from_native_float)));
+    const auto delta1 = fabs(local_one() - fabs(x / x_as_wide_decimal_reloaded_from_native_float));
+    const auto delta2 = fabs(static_cast<native_float_type>(1.0F) - fabs(x_as_native_float / x_as_native_float_reloaded_from_wide_decimal));
 
     result_is_ok = ((delta1 < tol1) && (delta2 < tol2) && result_is_ok);
+
+    if(!result_is_ok)
+    {
+      ++debug;
+    }
 
     {
       std::stringstream strm;

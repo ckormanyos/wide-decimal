@@ -131,6 +131,7 @@ The examples include the following.
   - ![`example002b_pi_100k.cpp`](./examples/example002b_pi_100k.cpp) calculates $100,001$ decimal digits of $\pi$.
   - ![`example002c_pi_quintic.cpp`](./examples/example002c_pi_quintic.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a Borwein quintic iteration.
   - ![`example002d_pi_limb08.cpp`](./examples/example002d_pi_limb08.cpp) calculates yet again $1,000,001$ decimal digits of $\pi$ using an 8-bit internal limb type and `float` internal floating-point type.
+  - ![`example001e_algebra_and_constexpr.cpp`](./examples/example001e_algebra_and_constexpr.cpp) verifies some basic C++20 `constexpr` algebraic operations.
   - ![`example003_zeta.cpp`](./examples/example003_zeta.cpp) computes a Riemann zeta function value.
   - ![`example004_bessel_recur.cpp`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
   - ![`example005_polylog_series.cpp`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.

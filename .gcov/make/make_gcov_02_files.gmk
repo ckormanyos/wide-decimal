@@ -16,6 +16,7 @@ FILES_PRJ  =   $(PATH_SRC)/test/test                                       \
                $(PATH_SRC)/examples/example001b_roots_almost_integer       \
                $(PATH_SRC)/examples/example001c_roots_sqrt_limb08          \
                $(PATH_SRC)/examples/example001d_pow2_from_list             \
+               $(PATH_SRC)/examples/example001e_algebra_and_constexpr      \
                $(PATH_SRC)/examples/example002_pi                          \
                $(PATH_SRC)/examples/example002a_pi_small_limb              \
                $(PATH_SRC)/examples/example002b_pi_100k                    \
