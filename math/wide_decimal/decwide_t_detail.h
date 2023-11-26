@@ -61,19 +61,19 @@
 
   #if defined(_MSVC_LANG)
     #if (_MSVC_LANG >= 202002L)
-    #define WIDE_DECIMAL_CONSTEXPR constexpr
-    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 1
+    #define WIDE_DECIMAL_CONSTEXPR constexpr                // NOLINT(cppcoreguidelines-macro-usage)
+    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 1  // NOLINT(cppcoreguidelines-macro-usage)
     #else
-    #define WIDE_DECIMAL_CONSTEXPR
-    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 0
+    #define WIDE_DECIMAL_CONSTEXPR                          // NOLINT(cppcoreguidelines-macro-usage)
+    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 0  // NOLINT(cppcoreguidelines-macro-usage)
     #endif
   #else
     #if (__cplusplus >= 202002L)
-    #define WIDE_DECIMAL_CONSTEXPR constexpr
-    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 1
+    #define WIDE_DECIMAL_CONSTEXPR constexpr                // NOLINT(cppcoreguidelines-macro-usage)
+    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 1  // NOLINT(cppcoreguidelines-macro-usage)
     #else
-    #define WIDE_DECIMAL_CONSTEXPR
-    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 0
+    #define WIDE_DECIMAL_CONSTEXPR                          // NOLINT(cppcoreguidelines-macro-usage)
+    #define WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST 0  // NOLINT(cppcoreguidelines-macro-usage)
     #endif
   #endif
 

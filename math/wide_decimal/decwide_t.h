@@ -43,8 +43,8 @@
 
   #include <math/wide_decimal/decwide_t_detail_ops.h>
 
-  #include <util/utility/util_constexpr_cmath_unsafe.h>
   #include <util/utility/util_baselexical_cast.h>
+  #include <util/utility/util_constexpr_cmath_unsafe.h>
 
   #if !defined(WIDE_DECIMAL_NAMESPACE_BEGIN)
   #error WIDE_DECIMAL_NAMESPACE_BEGIN is not defined. Ensure that <decwide_t_detail_namespace.h> is properly included.
@@ -649,13 +649,12 @@
       // mantissa fits in unsigned long long.
 
       explicit WIDE_DECIMAL_CONSTEXPR native_float_parts(FloatingPointType f)
+        : my_sign_part(f < static_cast<FloatingPointType>(0))
       {
         using native_float_type = FloatingPointType;
 
         static_assert(std::numeric_limits<native_float_type>::digits <= std::numeric_limits<unsigned long long>::digits, // NOLINT(google-runtime-int)
                       "Error: The width of the mantissa does not fit in unsigned long long");
-
-        my_sign_part = (f < static_cast<native_float_type>(0));
 
         const native_float_type ff = ((!my_sign_part) ? f : static_cast<native_float_type>(-f));
 
@@ -750,7 +749,7 @@
       int                my_exponent_part { }; // NOLINT(readability-identifier-naming)
       bool               my_sign_part     { }; // NOLINT(readability-identifier-naming)
 
-      constexpr native_float_parts() { }
+      constexpr native_float_parts() = default;
     };
 
     #if !defined(WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS)
@@ -991,6 +990,8 @@
     }
 
   public:
+    WIDE_DECIMAL_CONSTEXPR ~decwide_t() = default;
+
     // Assignment operator.
     WIDE_DECIMAL_CONSTEXPR auto operator=(const decwide_t& other) -> decwide_t& // NOLINT(cert-oop54-cpp)
     {
