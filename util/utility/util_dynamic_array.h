@@ -19,19 +19,19 @@
 
   #if defined(_MSVC_LANG)
     #if (_MSVC_LANG >= 202002L)
-    #define DYNAMIC_ARRAY_CONSTEXPR constexpr
-    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 1
+    #define DYNAMIC_ARRAY_CONSTEXPR constexpr               // NOLINT(cppcoreguidelines-macro-usage)
+    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 1 // NOLINT(cppcoreguidelines-macro-usage)
     #else
-    #define DYNAMIC_ARRAY_CONSTEXPR
-    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 0
+    #define DYNAMIC_ARRAY_CONSTEXPR                         // NOLINT(cppcoreguidelines-macro-usage)
+    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 0 // NOLINT(cppcoreguidelines-macro-usage)
     #endif
   #else
     #if (__cplusplus >= 202002L)
-    #define DYNAMIC_ARRAY_CONSTEXPR constexpr
-    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 1
+    #define DYNAMIC_ARRAY_CONSTEXPR constexpr               // NOLINT(cppcoreguidelines-macro-usage)
+    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 1 // NOLINT(cppcoreguidelines-macro-usage)
     #else
-    #define DYNAMIC_ARRAY_CONSTEXPR
-    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 0
+    #define DYNAMIC_ARRAY_CONSTEXPR                         // NOLINT(cppcoreguidelines-macro-usage)
+    #define DYNAMIC_ARRAY_CONSTEXPR_IS_COMPILE_TIME_CONST 0 // NOLINT(cppcoreguidelines-macro-usage)
     #endif
   #endif
 

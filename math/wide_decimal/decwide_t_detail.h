@@ -27,18 +27,18 @@
 
   #if defined(_MSC_VER)
     #if (_MSC_VER >= 1900) && defined(_HAS_CXX20) && (_HAS_CXX20 != 0)
-      #define WIDE_DECIMAL_NODISCARD [[nodiscard]]           // NOLINT(cppcoreguidelines-macro-usage)
+      #define WIDE_DECIMAL_NODISCARD [[nodiscard]]             // NOLINT(cppcoreguidelines-macro-usage)
     #else
       #define WIDE_DECIMAL_NODISCARD
     #endif
   #else
     #if (defined(__cplusplus) && (__cplusplus >= 201402L))
       #if defined(__AVR__) && (!defined(__GNUC__) || (defined(__GNUC__) && (__GNUC__ > 6)))
-      #define WIDE_DECIMAL_NODISCARD [[nodiscard]]           // NOLINT(cppcoreguidelines-macro-usage)
+      #define WIDE_DECIMAL_NODISCARD [[nodiscard]]             // NOLINT(cppcoreguidelines-macro-usage)
       #elif (defined(__cpp_lib_constexpr_algorithms) && (__cpp_lib_constexpr_algorithms>=201806))
         #if defined(__clang__)
           #if (__clang_major__ > 9)
-          #define WIDE_DECIMAL_NODISCARD [[nodiscard]]           // NOLINT(cppcoreguidelines-macro-usage)
+          #define WIDE_DECIMAL_NODISCARD [[nodiscard]]         // NOLINT(cppcoreguidelines-macro-usage)
           #else
           #define WIDE_DECIMAL_NODISCARD
           #endif
@@ -400,6 +400,9 @@
 
     constexpr fixed_dynamic_array(fixed_dynamic_array&& other) noexcept
       : base_class_type(static_cast<base_class_type&&>(other)) { }
+
+    WIDE_DECIMAL_CONSTEXPR
+    ~fixed_dynamic_array() override = default;
 
     constexpr auto operator=(const fixed_dynamic_array& other) -> fixed_dynamic_array& // NOLINT(cert-oop54-cpp)
     {

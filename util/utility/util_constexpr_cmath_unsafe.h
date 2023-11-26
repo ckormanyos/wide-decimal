@@ -13,7 +13,7 @@
   namespace util {
 
   template <typename FloatingPointType>
-  constexpr FloatingPointType frexp_unsafe(FloatingPointType x, int* expptr)
+  constexpr auto frexp_unsafe(FloatingPointType x, int* expptr) -> FloatingPointType
   {
     using local_floating_point_type = FloatingPointType;
 
