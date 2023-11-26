@@ -2864,7 +2864,9 @@
     template<typename FloatingPointType>
     WIDE_DECIMAL_CONSTEXPR auto from_builtin_float_type(FloatingPointType flt) -> void
     {
-      const native_float_parts ld_parts(flt);
+      using local_floating_point_type = FloatingPointType;
+
+      const native_float_parts<local_floating_point_type> ld_parts(flt);
 
       // Create a decwide_t from the fractional part of the
       // mantissa expressed as an unsigned long long.
@@ -2876,7 +2878,7 @@
         static_cast<int>
         (
             ld_parts.get_exponent()
-          - static_cast<int>(std::numeric_limits<FloatingPointType>::digits - static_cast<int>(INT8_C(1)))
+          - static_cast<int>(std::numeric_limits<local_floating_point_type>::digits - static_cast<int>(INT8_C(1)))
         );
 
       if     (p2 <  static_cast<int>(INT8_C(-2))) { *this *= pow(half<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(), -p2); }
