@@ -175,6 +175,7 @@ add_library(Examples
   example001b_roots_almost_integer.cpp
   example001c_roots_sqrt_limb08.cpp
   example001d_pow2_from_list.cpp
+  example001e_algebra_and_constexpr.cpp
   example001_roots_sqrt.cpp
   example002a_pi_small_limb.cpp
   example002b_pi_100k.cpp

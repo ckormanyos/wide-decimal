@@ -242,7 +242,7 @@ auto pi_left = // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert
 
 auto pi_right = pi_left; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
-auto test_various_zero_operations() -> bool
+auto test_various_zero_operations() -> bool // NOLINT(readability-function-cognitive-complexity)
 {
   auto result_is_ok = true;
 
