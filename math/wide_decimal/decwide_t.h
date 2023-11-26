@@ -791,7 +791,7 @@
              typename std::enable_if<(    std::is_integral<UnsignedIntegralType>::value
                                       &&  std::is_unsigned<UnsignedIntegralType>::value
                                       && (std::numeric_limits<limb_type>::digits < std::numeric_limits<UnsignedIntegralType>::digits))>::type const* = nullptr>
-    constexpr decwide_t(const UnsignedIntegralType u)
+    constexpr decwide_t(const UnsignedIntegralType u) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
     {
       from_unsigned_long_long(u);
     }
@@ -800,7 +800,7 @@
     template<typename SignedIntegralType,
              typename std::enable_if<(   std::is_integral<SignedIntegralType>::value
                                       && std::is_signed  <SignedIntegralType>::value)>::type const* = nullptr>
-    constexpr decwide_t(const SignedIntegralType n) : my_neg(n < static_cast<signed long long>(INT8_C(0))) // NOLINT(google-runtime-int)
+    constexpr decwide_t(const SignedIntegralType n) : my_neg(n < static_cast<signed long long>(INT8_C(0))) // NOLINT(google-runtime-int,google-explicit-constructor,hicpp-explicit-conversions)
     {
       const auto u =
         static_cast<unsigned long long> // NOLINT(google-runtime-int)
@@ -815,7 +815,7 @@
     // Constructors from built-in floating-point types.
     template<typename FloatingPointType,
              typename std::enable_if<std::is_floating_point<FloatingPointType>::value == true>::type const* = nullptr>
-    decwide_t(const FloatingPointType f)
+    decwide_t(const FloatingPointType f) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
     {
       from_builtin_float_type(f);
     }
