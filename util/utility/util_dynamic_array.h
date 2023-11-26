@@ -68,8 +68,7 @@
     explicit constexpr dynamic_array(      size_type       count = static_cast<size_type>(UINT8_C(0)),
                                            const_reference v     = value_type(),
                                      const allocator_type& a     = allocator_type())
-      : elem_count(count),
-        elems     (nullptr)
+      : elem_count(count)
     {
       if(elem_count > static_cast<size_type>(UINT8_C(0)))
       {
@@ -89,8 +88,7 @@
     }
 
     constexpr dynamic_array(const dynamic_array& other)
-      : elem_count(other.size()),
-        elems     (nullptr)
+      : elem_count(other.size())
     {
       allocator_type my_a;
 
@@ -106,9 +104,10 @@
     constexpr dynamic_array(input_iterator first,
                             input_iterator last,
                             const allocator_type& a = allocator_type())
-      : elem_count(static_cast<size_type>(std::distance(first, last))),
-        elems     (nullptr)
+      : elem_count(static_cast<size_type>(last - first))
     {
+      // TBD: Ensure that the type of input_iterator supports subtract for distance.
+
       allocator_type my_a(a);
 
       if(elem_count > static_cast<size_type>(UINT8_C(0)))
@@ -121,8 +120,7 @@
 
     constexpr dynamic_array(std::initializer_list<value_type> lst,
                             const allocator_type& a = allocator_type())
-      : elem_count(lst.size()),
-        elems     (nullptr)
+      : elem_count(lst.size())
     {
       allocator_type my_a(a);
 
@@ -215,7 +213,7 @@
     // Element manipulation members.
     constexpr auto fill(const value_type& v) -> void
     {
-      std::fill_n(begin(), elem_count, v);
+      util::fill_unsafe(begin(), begin() + elem_count, v);
     }
 
     constexpr auto swap(dynamic_array& other) noexcept -> void
@@ -229,15 +227,13 @@
 
     constexpr auto swap(dynamic_array&& other) noexcept -> void
     {
-      const auto tmp = std::move(static_cast<dynamic_array&&>(*this));
-
-      *this = std::move(other);
-      other = std::move(static_cast<dynamic_array&&>(tmp));
+      util::swap_unsafe(elems,      other.elems);
+      util::swap_unsafe(elem_count, other.elem_count);
     }
 
   private:
-    mutable size_type elem_count; // NOLINT(readability-identifier-naming)
-    pointer           elems;      // NOLINT(readability-identifier-naming,altera-id-dependent-backward-branch)
+    size_type elem_count;        // NOLINT(readability-identifier-naming)
+    pointer   elems { nullptr }; // NOLINT(readability-identifier-naming,altera-id-dependent-backward-branch)
   };
 
   template<typename ValueType, typename AllocatorType>
