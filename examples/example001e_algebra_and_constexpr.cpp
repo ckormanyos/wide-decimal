@@ -29,7 +29,7 @@ auto ::math::wide_decimal::example001e_algebra_and_constexpr() -> bool
   bool result_is_ok = true;
 
   WIDE_DECIMAL_CONSTEXPR wide_decimal_type local_quarter_a(wide_decimal_type(static_cast<unsigned>(UINT8_C(25))) / static_cast<unsigned>(UINT8_C(100)));
-  WIDE_DECIMAL_CONSTEXPR wide_decimal_type local_quarter_b(0.25F);
+  WIDE_DECIMAL_CONSTEXPR wide_decimal_type local_quarter_b(static_cast<float>(0.25L)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   WIDE_DECIMAL_CONSTEXPR auto result_construct_is_ok = (local_quarter_a == local_quarter_b);
 
