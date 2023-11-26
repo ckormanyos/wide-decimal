@@ -246,6 +246,32 @@ auto test_various_zero_operations() -> bool
 {
   auto result_is_ok = true;
 
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(16));
+           ++i)
+  {
+    const auto left_zero = generate_wide_decimal_value<local_wide_decimal_type>() * local_zero();
+
+    const auto left_zero_as_float        = static_cast<float>(left_zero);
+    const auto left_zero_as_wide_decimal = static_cast<local_wide_decimal_type>(left_zero_as_float);
+
+    const auto result_zero_is_ok = (left_zero_as_wide_decimal.iszero() && (left_zero.iszero() == left_zero_as_wide_decimal.iszero()));
+
+    result_is_ok = (result_zero_is_ok && result_is_ok);
+
+    int expptr { };
+    const auto result_constexpr_frexp_unsafe = util::frexp_unsafe(left_zero_as_float, &expptr);
+
+    const auto result_constexpr_frexp_unsafe_is_ok =
+    (
+         (!(result_constexpr_frexp_unsafe > static_cast<float>(0.0L)))
+      && (!(result_constexpr_frexp_unsafe < static_cast<float>(0.0L)))
+      && (expptr == 0)
+    );
+
+    result_is_ok = (result_constexpr_frexp_unsafe_is_ok && result_is_ok);
+  }
+
   {
     const auto result_of_sub_same_is_ok =
     (
