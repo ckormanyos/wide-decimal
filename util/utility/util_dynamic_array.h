@@ -227,8 +227,8 @@
 
     constexpr auto swap(dynamic_array&& other) noexcept -> void
     {
-      util::swap_unsafe(elems,      other.elems);
-      util::swap_unsafe(elem_count, other.elem_count);
+      elems      = std::move(other.elems);
+      elem_count = std::move(other.elem_count);
     }
 
   private:

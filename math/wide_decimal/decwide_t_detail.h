@@ -390,7 +390,7 @@
     constexpr fixed_dynamic_array(const fixed_dynamic_array& other)
       : base_class_type(static_cast<const base_class_type&>(other)) { }
 
-    constexpr fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
+    constexpr explicit fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst)
       : base_class_type(MySize)
     {
       util::copy_unsafe(lst.begin(),
@@ -454,7 +454,7 @@
     constexpr fixed_static_array(const fixed_static_array&) = default;
     constexpr fixed_static_array(fixed_static_array&&) noexcept = default;
 
-    constexpr fixed_static_array(std::initializer_list<typename base_class_type::value_type> lst)
+    constexpr explicit fixed_static_array(std::initializer_list<typename base_class_type::value_type> lst)
     {
       const auto size_to_copy =
         util::min_unsafe(static_cast<size_type>(lst.size()),
