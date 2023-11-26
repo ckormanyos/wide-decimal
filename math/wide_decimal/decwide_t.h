@@ -759,12 +759,7 @@
 
   public:
     // Default constructor.
-    constexpr decwide_t() noexcept
-      : my_data     (),
-        my_exp      (static_cast<exponent_type>(INT8_C(0))),
-        my_neg      (false),
-        my_fpclass  (fpclass_type::decwide_t_finite),
-        my_prec_elem(decwide_t_elem_number) { }
+    constexpr decwide_t() noexcept = default;
 
     // Constructors from built-in unsigned integral types.
     template<typename UnsignedIntegralType,
@@ -772,11 +767,6 @@
                                       &&  std::is_unsigned<UnsignedIntegralType>::value
                                       && (std::numeric_limits<UnsignedIntegralType>::digits <= std::numeric_limits<limb_type>::digits))>::type const* = nullptr>
     constexpr decwide_t(const UnsignedIntegralType u) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
-      : my_data     (decwide_t_elem_number),
-        my_exp      (static_cast<exponent_type>(INT8_C(0))),
-        my_neg      (false),
-        my_fpclass  (fpclass_type::decwide_t_finite),
-        my_prec_elem(decwide_t_elem_number)
     {
       const auto u_is_less_than_mask =
         (static_cast<limb_type>(u) < static_cast<limb_type>(decwide_t_elem_mask));
@@ -801,11 +791,7 @@
              typename std::enable_if<(    std::is_integral<UnsignedIntegralType>::value
                                       &&  std::is_unsigned<UnsignedIntegralType>::value
                                       && (std::numeric_limits<limb_type>::digits < std::numeric_limits<UnsignedIntegralType>::digits))>::type const* = nullptr>
-    decwide_t(const UnsignedIntegralType u) : my_data     (), // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
-                                              my_exp      (static_cast<exponent_type>(INT8_C(0))),
-                                              my_neg      (false),
-                                              my_fpclass  (fpclass_type::decwide_t_finite),
-                                              my_prec_elem(decwide_t_elem_number)
+    constexpr decwide_t(const UnsignedIntegralType u)
     {
       from_unsigned_long_long(u);
     }
@@ -814,11 +800,7 @@
     template<typename SignedIntegralType,
              typename std::enable_if<(   std::is_integral<SignedIntegralType>::value
                                       && std::is_signed  <SignedIntegralType>::value)>::type const* = nullptr>
-    decwide_t(const SignedIntegralType n) : my_data     (), // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
-                                            my_exp      (static_cast<exponent_type>(INT8_C(0))),
-                                            my_neg      (n < static_cast<signed long long>(INT8_C(0))), // NOLINT(google-runtime-int)
-                                            my_fpclass  (fpclass_type::decwide_t_finite),
-                                            my_prec_elem(decwide_t_elem_number)
+    constexpr decwide_t(const SignedIntegralType n) : my_neg(n < static_cast<signed long long>(INT8_C(0))) // NOLINT(google-runtime-int)
     {
       const auto u =
         static_cast<unsigned long long> // NOLINT(google-runtime-int)
@@ -833,22 +815,14 @@
     // Constructors from built-in floating-point types.
     template<typename FloatingPointType,
              typename std::enable_if<std::is_floating_point<FloatingPointType>::value == true>::type const* = nullptr>
-    decwide_t(const FloatingPointType f) : my_data     (), // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
-                                           my_exp      (static_cast<exponent_type>(INT8_C(0))),
-                                           my_neg      (false),
-                                           my_fpclass  (fpclass_type::decwide_t_finite),
-                                           my_prec_elem(decwide_t_elem_number)
+    decwide_t(const FloatingPointType f)
     {
       from_builtin_float_type(f);
     }
 
     #if !defined(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
     // Constructors from character representations.
-    explicit decwide_t(const char* s) : my_data     (),
-                                        my_exp      (static_cast<exponent_type>(INT8_C(0))),
-                                        my_neg      (false),
-                                        my_fpclass  (fpclass_type::decwide_t_finite),
-                                        my_prec_elem(decwide_t_elem_number)
+    explicit decwide_t(const char* s)
     {
       static_cast<void>(rd_string(s));
     }
@@ -871,22 +845,12 @@
 
     // Constructor from floating-point class type, even though
     // (at the moment) decwide_t instances can only be finite.
-    explicit constexpr decwide_t(fpclass_type) // NOLINT(hicpp-named-parameter,readability-named-parameter)
-      : my_data     (),
-        my_exp      (static_cast<exponent_type>(INT8_C(0))),
-        my_neg      (false),
-        my_fpclass  (fpclass_type::decwide_t_finite),
-        my_prec_elem(decwide_t_elem_number) { }
+    explicit constexpr decwide_t(fpclass_type) { } // NOLINT(hicpp-named-parameter,readability-named-parameter)
 
   private:
     // Constructor from mantissa and exponent.
     explicit decwide_t(const internal_float_type mantissa,
                        const exponent_type       exponent)
-      : my_data     (),
-        my_exp      (static_cast<exponent_type>(INT8_C(0))),
-        my_neg      (false),
-        my_fpclass  (fpclass_type::decwide_t_finite),
-        my_prec_elem(decwide_t_elem_number)
     {
       // Create a decwide_t from mantissa and exponent.
       // This constructor is, in fact, intended to maintain
@@ -2749,11 +2713,11 @@
     static representation_type my_n_data_for_add_sub; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
     #endif
 
-    representation_type my_data;      // NOLINT(readability-identifier-naming)
-    exponent_type       my_exp;       // NOLINT(readability-identifier-naming)
-    bool                my_neg;       // NOLINT(readability-identifier-naming,modernize-use-default-member-init)
-    fpclass_type        my_fpclass;   // NOLINT(readability-identifier-naming)
-    std::int32_t        my_prec_elem; // NOLINT(readability-identifier-naming)
+    representation_type my_data       { };                               // NOLINT(readability-identifier-naming)
+    exponent_type       my_exp        { };                               // NOLINT(readability-identifier-naming)
+    bool                my_neg        { false };                         // NOLINT(readability-identifier-naming,modernize-use-default-member-init)
+    fpclass_type        my_fpclass    { fpclass_type::decwide_t_finite}; // NOLINT(readability-identifier-naming)
+    std::int32_t        my_prec_elem  { decwide_t_elem_number };         // NOLINT(readability-identifier-naming)
 
     WIDE_DECIMAL_NODISCARD static auto isone_sign_neutral(const decwide_t& x) -> bool
     {
@@ -2793,7 +2757,7 @@
       return value_is_one;
     }
 
-    auto from_unsigned_long_long(unsigned long long u) -> void // NOLINT(google-runtime-int)
+    constexpr auto from_unsigned_long_long(unsigned long long u) -> void // NOLINT(google-runtime-int)
     {
       my_exp = static_cast<exponent_type>(INT8_C(0));
 
@@ -2820,7 +2784,7 @@
 
         local_tmp_array_type tmp;
 
-        tmp.fill(static_cast<limb_type>(UINT8_C(0)));
+        util::fill_unsafe(tmp.begin(), tmp.end(), static_cast<limb_type>(UINT8_C(0)));
 
         while
         (
