@@ -481,6 +481,27 @@ It is included in the
 and also included in continuous integration.
 This test file involves computations and comparisons of Bernoulli numbers.
 
+### C++20 `constexpr` support
+
+When using C++20 `decwide_t` supports compile-time
+`constexpr` construction and evaluation of results
+of binary arithmetic, comparison operators
+and various elementary functions.
+
+```cpp
+WIDE_DECIMAL_CONSTEXPR
+WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST
+```
+
+The preprocessor symbol `WIDE_DECIMAL_CONSTEXPR` acts as either
+a synonym for `constexpr` or expands to nothing depending on
+whether the availability of `constexpr` support has been automatically
+detected or not.
+The preprocessor symbol `WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST`
+has the value of `0` or `1`, where `1` indicates that `decwide_t`
+values qualified with `WIDE_DECIMAL_CONSTEXPR` are actually
+compile-time constant (i.e., `constexpr`).
+
 ### Alternatives and limitations
 
 Alternative libraries for big float types include,

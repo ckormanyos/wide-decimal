@@ -56,6 +56,21 @@
     return dest;
   }
 
+  // Use a local, constexpr, unsafe implementation of the copy-backward-function.
+  template<typename InputIterator,
+           typename DestinationIterator>
+  constexpr auto copy_backward_unsafe(InputIterator first, InputIterator last, DestinationIterator dest) -> DestinationIterator
+  {
+    using local_destination_value_type = typename std::iterator_traits<DestinationIterator>::value_type;
+
+    while(first != last)
+    {
+      *(--dest) = static_cast<local_destination_value_type>(*(--last));
+    }
+
+    return dest;
+  }
+
   // Use a local, constexpr, unsafe implementation of the max-function.
   template<typename ArithmeticType>
   constexpr auto max_unsafe(const ArithmeticType& left, const ArithmeticType& right) -> ArithmeticType
