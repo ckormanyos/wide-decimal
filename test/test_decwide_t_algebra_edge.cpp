@@ -1290,7 +1290,7 @@ auto test_to_native_float_and_back() -> bool
 {
   using native_float_type = NativeFloatType;
 
-  static_assert(std::is_floating_point_v<native_float_type>, "Error: Invalid template floating-point parameter");
+  static_assert(std::is_floating_point<native_float_type>::value, "Error: Invalid template floating-point parameter");
 
   auto result_is_ok = true;
 
