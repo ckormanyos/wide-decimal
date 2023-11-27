@@ -176,7 +176,7 @@
           InputLimbIteratorType   a,
           InputLimbIteratorType   b,
     const std::int_fast32_t       count,
-    typename std::enable_if_t<std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint8_t>::value, int>* p_nullparam = static_cast<int*>(nullptr)
+    std::enable_if_t<std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint8_t>::value, int>* p_nullparam = static_cast<int*>(nullptr)
   )
   {
     static_cast<void>(p_nullparam);
@@ -248,8 +248,8 @@
           InputLimbIteratorType  a,
           InputLimbIteratorType  b,
     const std::int_fast32_t      count,
-    typename std::enable_if_t<(   std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint16_t>::value
-                               || std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint32_t>::value), int>* p_nullparam = static_cast<int*>(nullptr)
+    std::enable_if_t<(   std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint16_t>::value
+                      || std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint32_t>::value), int>* p_nullparam = static_cast<int*>(nullptr)
   )
   {
     static_cast<void>(p_nullparam);

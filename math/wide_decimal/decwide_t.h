@@ -143,9 +143,9 @@
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
-  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
   #else
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
   #endif
 
   template<const std::int32_t ParamDigitsBaseTen,
@@ -155,9 +155,9 @@
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
-  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
   #else
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
   #endif
 
   template<const std::int32_t ParamDigitsBaseTen,
@@ -167,9 +167,9 @@
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
-  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
   #else
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
   #endif
 
   template<const std::int32_t ParamDigitsBaseTen,
@@ -179,9 +179,9 @@
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
-  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10 = nullptr) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
   #else
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t) = nullptr) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
   #endif
 
   template<const std::int32_t ParamDigitsBaseTen,
@@ -190,7 +190,7 @@
            typename InternalFloatType = double,
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
-  auto calc_ln_two() -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_ln_two() -> std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType          = std::uint32_t,
@@ -198,7 +198,7 @@
            typename InternalFloatType = double,
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
-  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_ln_two() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType          = std::uint32_t,
@@ -206,7 +206,7 @@
            typename InternalFloatType = double,
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
-  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_ln_two() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType          = std::uint32_t,
@@ -214,7 +214,7 @@
            typename InternalFloatType = double,
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
-  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_ln_two() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType          = std::uint32_t,
@@ -222,7 +222,7 @@
            typename InternalFloatType = double,
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
-  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_ln_ten_low_precision() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType          = std::uint32_t,
@@ -230,7 +230,7 @@
            typename InternalFloatType = double,
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
-  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_ln_ten_low_precision() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType          = std::uint32_t,
@@ -238,7 +238,7 @@
            typename InternalFloatType = double,
            typename ExponentType      = std::int64_t,
            typename FftFloatType      = double>
-  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  auto calc_ln_ten_low_precision() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto constexpr unsigned_long_long_max() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> auto constexpr signed_long_long_min  () -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
@@ -268,17 +268,17 @@
                                                                                                                                                                                                              std::int32_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto rootn_inv(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
                                                                                                                                                                                                              std::int32_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto log      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type; // NOLINT(misc-no-recursion)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto log      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          typename std::enable_if<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type; // NOLINT(misc-no-recursion)
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto exp      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto exp      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          typename std::enable_if<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto log      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>; // NOLINT(misc-no-recursion)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto log      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          std::enable_if_t<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>; // NOLINT(misc-no-recursion)
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto exp      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto exp      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          std::enable_if_t<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto sinh     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto cosh     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>                        auto tanh     (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> WIDE_DECIMAL_CONSTEXPR auto pow      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& b, // NOLINT(misc-no-recursion)
-                                                                                                                                                                                      std::int64_t p)                                                                                                  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+                                                                                                                                                                                      std::int64_t p)                                                                                                                         ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> WIDE_DECIMAL_CONSTEXPR auto pow      (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x,
-                                                                                                                                                                                      const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a)  ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
+                                                                                                                                                                                      const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& a)                         ->          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
   template<typename char_type, typename traits_type,
@@ -301,216 +301,216 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                  && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                           && (!std::is_unsigned<SignedIntegralType>::value),
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                    && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                             && std::is_unsigned<UnsignedIntegralType>::value,
+                                                             decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                 decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                  && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                           && (!std::is_unsigned<SignedIntegralType>::value),
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                    && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                             && std::is_unsigned<UnsignedIntegralType>::value,
+                                                             decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                 decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                  && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                           && (!std::is_unsigned<SignedIntegralType>::value),
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                    && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                             && std::is_unsigned<UnsignedIntegralType>::value,
+                                                             decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                 decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                                   decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                  && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                      decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                           && (!std::is_unsigned<SignedIntegralType>::value),
+                                                               decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                    && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                             && std::is_unsigned<UnsignedIntegralType>::value,
+                                                             decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                 decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   // Global add/sub/mul/div of all built-in types with const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&.
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(SignedIntegralType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                                                                                                            && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                                                                                                                     && (!std::is_unsigned<SignedIntegralType>::value),
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(UnsignedIntegralType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                                                                                                            && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                                                                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(FloatingPointType f,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-(ArithmeticType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(SignedIntegralType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                                                                                                            && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                                                                                                                     && (!std::is_unsigned<SignedIntegralType>::value),
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(UnsignedIntegralType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                                                                                                            && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                                                                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(FloatingPointType f,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/(ArithmeticType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   // Global self add/sub/mul/div of decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& with all built-in types.
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                   && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                   decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                            && (!std::is_unsigned<SignedIntegralType>::value),
+                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                              && std::is_unsigned<UnsignedIntegralType>::value,
+                                                              decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                   && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                   decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                            && (!std::is_unsigned<SignedIntegralType>::value),
+                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                              && std::is_unsigned<UnsignedIntegralType>::value,
+                                                              decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                   && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                   decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                            && (!std::is_unsigned<SignedIntegralType>::value),
+                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                              && std::is_unsigned<UnsignedIntegralType>::value,
+                                                              decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  SignedIntegralType n) -> typename std::enable_if<   std::is_integral<SignedIntegralType>::value
-                                                                   && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                   decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                            && (!std::is_unsigned<SignedIntegralType>::value),
+                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                              && std::is_unsigned<UnsignedIntegralType>::value,
+                                                              decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type;
+                  FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>;
 
   // Global comparison operators of const decwide_t& with const decwide_t&.
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> WIDE_DECIMAL_CONSTEXPR auto operator< (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> bool;
@@ -521,20 +521,20 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> WIDE_DECIMAL_CONSTEXPR auto operator> (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> bool;
 
   // Global comparison operators of const decwide_t& with all built-in types.
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator< (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator<=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator==(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator!=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator>=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator> (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator< (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator<=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator==(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator!=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator>=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator> (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
 
   // Global comparison operators of all built-in types with const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&.
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator< (ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator<=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator==(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator!=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator>=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator> (ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator< (ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator<=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator==(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator!=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator>=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator> (ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool>;
 
   template<const std::int32_t ParamDigitsBaseTen,
            typename LimbType,
@@ -592,12 +592,12 @@
     // Rebind the decwide_t allocator to the granularity of the LimbType.
     using allocator_conditional_type =
       #if (defined(_MSC_VER) && (_MSC_VER < 1920))
-      typename std::conditional<std::is_same<AllocatorType, void>::value,
+      typename std::conditional_t<std::is_same<AllocatorType, void>::value,
       #else
-      typename std::conditional<is_void_allocator(),
+      typename std::conditional_t<is_void_allocator(),
       #endif
-                                std::allocator<void>,
-                                AllocatorType>::type;
+                                  std::allocator<void>,
+                                  AllocatorType>;
 
   public:
     using allocator_type =
@@ -610,23 +610,23 @@
 
     using representation_type =
       #if (defined(_MSC_VER) && (_MSC_VER < 1920))
-      typename std::conditional<std::is_same<AllocatorType, void>::value,
+      typename std::conditional_t<std::is_same<AllocatorType, void>::value,
       #else
-      typename std::conditional<is_void_allocator(),
+      typename std::conditional_t<is_void_allocator(),
       #endif
-                                detail::fixed_static_array <limb_type, static_cast<std::size_t>(decwide_t_elem_number)>,
-                                detail::fixed_dynamic_array<limb_type, static_cast<std::size_t>(decwide_t_elem_number), allocator_type>>::type;
+                                  detail::fixed_static_array <limb_type, static_cast<std::size_t>(decwide_t_elem_number)>,
+                                  detail::fixed_dynamic_array<limb_type, static_cast<std::size_t>(decwide_t_elem_number), allocator_type>>;
 
     using double_limb_type =
-      typename std::conditional<std::is_same<limb_type, std::uint32_t>::value,
-                                std::uint64_t,
-                                typename std::conditional<std::is_same<limb_type, std::uint16_t>::value,
-                                                          std::uint32_t,
-                                                          std::uint16_t>::type>::type;
+      std::conditional_t<std::is_same<limb_type, std::uint32_t>::value,
+                         std::uint64_t,
+                         std::conditional_t<std::is_same<limb_type, std::uint16_t>::value,
+                                            std::uint32_t,
+                                            std::uint16_t>>;
 
-    using signed_limb_type = typename std::make_signed<limb_type>::type;
+    using signed_limb_type = std::make_signed_t<limb_type>;
 
-    using unsigned_exponent_type = typename std::make_unsigned<exponent_type>::type;
+    using unsigned_exponent_type = std::make_unsigned_t<exponent_type>;
 
     // TBD: Consider supporting more floating-point classes.
     // In particular, support for NaN is already being
@@ -796,9 +796,9 @@
 
     // Constructors from built-in unsigned integral types.
     template<typename UnsignedIntegralType,
-             typename std::enable_if<(    std::is_integral<UnsignedIntegralType>::value
-                                      &&  std::is_unsigned<UnsignedIntegralType>::value
-                                      && (std::numeric_limits<UnsignedIntegralType>::digits <= std::numeric_limits<limb_type>::digits))>::type const* = nullptr>
+             std::enable_if_t<(    std::is_integral<UnsignedIntegralType>::value
+                               &&  std::is_unsigned<UnsignedIntegralType>::value
+                               && (std::numeric_limits<UnsignedIntegralType>::digits <= std::numeric_limits<limb_type>::digits))> const* = nullptr>
     constexpr decwide_t(const UnsignedIntegralType u) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
     {
       const auto u_is_less_than_mask =
@@ -821,9 +821,9 @@
 
     // Constructors from built-in unsigned integral types.
     template<typename UnsignedIntegralType,
-             typename std::enable_if<(    std::is_integral<UnsignedIntegralType>::value
-                                      &&  std::is_unsigned<UnsignedIntegralType>::value
-                                      && (std::numeric_limits<limb_type>::digits < std::numeric_limits<UnsignedIntegralType>::digits))>::type const* = nullptr>
+             std::enable_if_t<(    std::is_integral<UnsignedIntegralType>::value
+                               &&  std::is_unsigned<UnsignedIntegralType>::value
+                               && (std::numeric_limits<limb_type>::digits < std::numeric_limits<UnsignedIntegralType>::digits))> const* = nullptr>
     constexpr decwide_t(const UnsignedIntegralType u) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
     {
       from_unsigned_long_long(u);
@@ -831,8 +831,8 @@
 
     // Constructors from built-in signed integral types.
     template<typename SignedIntegralType,
-             typename std::enable_if<(   std::is_integral<SignedIntegralType>::value
-                                      && std::is_signed  <SignedIntegralType>::value)>::type const* = nullptr>
+             std::enable_if_t<(   std::is_integral<SignedIntegralType>::value
+                               && std::is_signed  <SignedIntegralType>::value)> const* = nullptr>
     constexpr decwide_t(const SignedIntegralType n) : my_neg(n < static_cast<signed long long>(INT8_C(0))) // NOLINT(google-runtime-int,google-explicit-constructor,hicpp-explicit-conversions)
     {
       const auto u =
@@ -847,7 +847,7 @@
 
     // Constructors from built-in floating-point types.
     template<typename FloatingPointType,
-             typename std::enable_if<std::is_floating_point<FloatingPointType>::value == true>::type const* = nullptr>
+             std::enable_if_t<std::is_floating_point<FloatingPointType>::value, int>* = nullptr>
     WIDE_DECIMAL_CONSTEXPR decwide_t(const FloatingPointType f) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
     {
       from_builtin_float_type(f);
@@ -1175,9 +1175,9 @@
               + static_cast<std::ptrdiff_t>(INT8_C(1))
             );
 
-          std::copy_backward(my_data.cbegin(),
-                             my_data.cend() - offset_to_end,
-                             my_data.end());
+          util::copy_backward_unsafe(my_data.cbegin(),
+                                     my_data.cend() - offset_to_end,
+                                     my_data.end());
 
           using local_size_type = typename representation_type::size_type;
 
@@ -1229,9 +1229,9 @@
           {
             // In this case, |u| < |v| and ofs is negative.
             // Shift the data of u down to a lower value.
-            std::copy_backward(my_data.cbegin(),
-                               my_data.cend() - static_cast<std::ptrdiff_t>(-ofs),
-                               my_data.end());
+            util::copy_backward_unsafe(my_data.cbegin(),
+                                       my_data.cend() - static_cast<std::ptrdiff_t>(-ofs),
+                                       my_data.end());
 
             util::fill_unsafe(my_data.begin(),
                               my_data.begin() + static_cast<std::ptrdiff_t>(-ofs),
@@ -1522,9 +1522,9 @@
         my_exp = static_cast<exponent_type>(my_exp + static_cast<exponent_type>(decwide_t_elem_digits10));
 
         // Shift the result of the multiplication one element to the right.
-        std::copy_backward(my_data.cbegin(),
-                           my_data.cbegin() + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(my_prec_elem) - static_cast<std::ptrdiff_t>(INT8_C(1))),
-                           my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
+        util::copy_backward_unsafe(my_data.cbegin(),
+                                   my_data.cbegin() + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(my_prec_elem) - static_cast<std::ptrdiff_t>(INT8_C(1))),
+                                   my_data.begin()  + static_cast<std::ptrdiff_t>(my_prec_elem));
 
         my_data.front() = static_cast<limb_type>(carry);
       }
@@ -1682,7 +1682,7 @@
       //                 0 for *this = v
       //                -1 for *this < v
 
-      auto n_result = std::int_fast8_t { };
+      std::int_fast8_t n_result { };
 
       // Handle all *finite* cases only.
       if(iszero())
@@ -1847,11 +1847,12 @@
     {
       if(this != &other)
       {
-        const decwide_t tmp(*this);
+        my_data.swap(static_cast<representation_type&&>(other.my_data));
 
-        *this = other;
-
-        other = tmp;
+        util::swap_unsafe(my_exp,       other.my_exp);
+        util::swap_unsafe(my_neg,       other.my_neg);
+        util::swap_unsafe(my_fpclass,   other.my_fpclass);
+        util::swap_unsafe(my_prec_elem, other.my_prec_elem);
       }
     }
 
@@ -2448,7 +2449,7 @@
           util::min_unsafe(elems_of_ldbl_to_get_try, decwide_t_elem_number)
         );
 
-      using local_unsigned_exponent_type = typename std::make_unsigned<exponent_type>::type;
+      using local_unsigned_exponent_type = typename std::make_unsigned_t<exponent_type>;
 
       constexpr auto ldbl_max_width_for_exp = static_cast<std::int32_t>(std::numeric_limits<local_unsigned_exponent_type>::digits10);
 
@@ -2668,7 +2669,7 @@
     explicit WIDE_DECIMAL_CONSTEXPR operator float      () const { return static_cast<float> (extract_long_double()); }
 
     template<typename IntegralType,
-             typename = typename std::enable_if<std::is_integral<IntegralType>::value>::type>
+             typename = std::enable_if_t<std::is_integral<IntegralType>::value>>
     explicit constexpr operator IntegralType() const
     {
       return
@@ -2815,7 +2816,7 @@
 
         using local_tmp_array_type = std::array<limb_type, local_tmp_array_size>;
 
-        local_tmp_array_type tmp;
+        local_tmp_array_type tmp { };
 
         util::fill_unsafe(tmp.begin(), tmp.end(), static_cast<limb_type>(UINT8_C(0)));
 
@@ -2898,7 +2899,7 @@
     (
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
       const std::int32_t prec_elems_for_multiply,
-      typename std::enable_if_t<((OtherDigits10 == ParamDigitsBaseTen) && !(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara)), int>* p_nullptr = static_cast<int*>(nullptr)
+      std::enable_if_t<((OtherDigits10 == ParamDigitsBaseTen) && !(decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara)), int>* p_nullptr = static_cast<int*>(nullptr)
     ) -> void
     {
       static_cast<void>(p_nullptr);
@@ -2957,7 +2958,7 @@
     (
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
       const std::int32_t prec_elems_for_multiply,
-      typename std::enable_if_t<((OtherDigits10 == ParamDigitsBaseTen) && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara) && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number < decwide_t_elems_for_fft)), int>* p_nullptr = static_cast<int*>(nullptr)
+      std::enable_if_t<((OtherDigits10 == ParamDigitsBaseTen) && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_kara) && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number < decwide_t_elems_for_fft)), int>* p_nullptr = static_cast<int*>(nullptr)
     ) -> void
     {
       static_cast<void>(p_nullptr);
@@ -3083,7 +3084,7 @@
     (
       const decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v,
       const std::int32_t prec_elems_for_multiply,
-      typename std::enable_if_t<((OtherDigits10 == ParamDigitsBaseTen) && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_fft)), int>* p_nullptr = static_cast<int*>(nullptr)
+      std::enable_if_t<((OtherDigits10 == ParamDigitsBaseTen) && (decwide_t<OtherDigits10, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>::decwide_t_elem_number >= decwide_t_elems_for_fft)), int>* p_nullptr = static_cast<int*>(nullptr)
     ) -> void
     {
       static_cast<void>(p_nullptr);
@@ -3450,9 +3451,9 @@
               // In rare cases, propagation of the carry reaches the zero'th limb
               // of highest significance, and we must shift the data, create a new limb
               // with the carry value of 1 and adjust the exponent accordingly.
-              std::copy_backward(my_data.cbegin(),
-                                 my_data.cend() - static_cast<std::ptrdiff_t>(INT8_C(1)),
-                                 my_data.end());
+              util::copy_backward_unsafe(my_data.cbegin(),
+                                         my_data.cend() - static_cast<std::ptrdiff_t>(INT8_C(1)),
+                                         my_data.end());
 
               my_data[static_cast<local_size_type>(UINT8_C(0))] = carry_out;
 
@@ -4676,9 +4677,9 @@
            typename ExponentType,
            typename FftFloatType>
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
-  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #else
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #endif
   {
     // Compute pi using a quadratically convergent Gauss AGM.
@@ -4829,9 +4830,9 @@
            typename ExponentType,
            typename FftFloatType>
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
-  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #else
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #endif
   {
     // N[Pi, 121]
@@ -4866,9 +4867,9 @@
            typename ExponentType,
            typename FftFloatType>
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
-  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #else
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #endif
   {
     // N[Pi, 121]
@@ -4903,9 +4904,9 @@
            typename ExponentType,
            typename FftFloatType>
   #if !defined(WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION)
-  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_pi(const std::function<void(const std::uint32_t)>& pfn_callback_to_report_digits10) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #else
-  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_pi(void(*pfn_callback_to_report_digits10)(const std::uint32_t)) -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   #endif
   {
     // N[Pi, 121]
@@ -4934,7 +4935,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto calc_ln_two() -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_ln_two() -> std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5040,7 +5041,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_ln_two() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     // N[Log[2], 121]
     // 0.6931471805599453094172321214581765680755001343602552541206800094933936219696947156058633269964186875420014810205706857337
@@ -5067,7 +5068,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_ln_two() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     // N[Log[2], 121]
     // 0.6931471805599453094172321214581765680755001343602552541206800094933936219696947156058633269964186875420014810205706857337
@@ -5094,7 +5095,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto calc_ln_two() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_ln_two() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     // N[Log[2], 121]
     // 0.6931471805599453094172321214581765680755001343602552541206800094933936219696947156058633269964186875420014810205706857337
@@ -5121,7 +5122,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_ln_ten_low_precision() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint8_t>::value), decwide_t<ParamDigitsBaseTen, std::uint8_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     // N[Log[10], 121]
     // 2.302585092994045684017991454684364207601101488628772976033327900967572609677352480235997205089598298341967784042286248633
@@ -5147,7 +5148,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_ln_ten_low_precision() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint16_t>::value), decwide_t<ParamDigitsBaseTen, std::uint16_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     // N[Log[10], 121]
     // 2.302585092994045684017991454684364207601101488628772976033327900967572609677352480235997205089598298341967784042286248633
@@ -5173,7 +5174,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto calc_ln_ten_low_precision() -> typename std::enable_if<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto calc_ln_ten_low_precision() -> std::enable_if_t<((ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))) && std::is_same<LimbType, std::uint32_t>::value), decwide_t<ParamDigitsBaseTen, std::uint32_t, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     // N[Log[10], 121]
     // 2.302585092994045684017991454684364207601101488628772976033327900967572609677352480235997205089598298341967784042286248633
@@ -5252,9 +5253,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                  && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                           && (!std::is_unsigned<SignedIntegralType>::value),
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5264,9 +5265,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                    && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                             && std::is_unsigned<UnsignedIntegralType>::value,
+                                                             decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5276,8 +5277,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                 decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5287,9 +5288,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                  && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                           && (!std::is_unsigned<SignedIntegralType>::value),
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5299,9 +5300,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                    && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                             && std::is_unsigned<UnsignedIntegralType>::value,
+                                                             decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5312,8 +5313,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                 decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5324,9 +5325,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 SignedIntegralType n) -> typename std::enable_if<   std::is_integral<SignedIntegralType>::value
-                                                                  && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                           && (!std::is_unsigned<SignedIntegralType>::value),
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5336,9 +5337,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                    && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                             && std::is_unsigned<UnsignedIntegralType>::value,
+                                                             decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5348,8 +5349,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                 decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5359,9 +5360,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                  && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                           && (!std::is_unsigned<SignedIntegralType>::value),
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5371,9 +5372,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                    && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                             && std::is_unsigned<UnsignedIntegralType>::value,
+                                                             decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5383,8 +5384,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                 FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                 decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                          decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5395,9 +5396,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(SignedIntegralType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<   std::is_integral<SignedIntegralType>::value
-                                                                                                                                                    && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                                                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                                                                                                                     && (!std::is_unsigned<SignedIntegralType>::value),
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5407,9 +5408,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(UnsignedIntegralType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                                                                                                    && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                                                                                                    decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                                                                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5419,8 +5420,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+(FloatingPointType f,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5430,8 +5431,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-(ArithmeticType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5441,9 +5442,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(SignedIntegralType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                                                                                                            && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                                                                                                                     && (!std::is_unsigned<SignedIntegralType>::value),
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5453,9 +5454,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(UnsignedIntegralType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                                                                                                            && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                                                                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5465,8 +5466,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*(FloatingPointType f,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5476,8 +5477,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/(ArithmeticType n,
-                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value,
-                                                                                                                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                 const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value,
+                                                                                                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5488,9 +5489,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                   && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                   decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                            && (!std::is_unsigned<SignedIntegralType>::value),
+                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     return u.add_signed_long_long(n);
   }
@@ -5499,9 +5500,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                              && std::is_unsigned<UnsignedIntegralType>::value,
+                                                              decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     return u.add_unsigned_long_long(n);
   }
@@ -5509,8 +5510,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator+=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5520,9 +5521,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                   && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                   decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                            && (!std::is_unsigned<SignedIntegralType>::value),
+                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     return u.sub_signed_long_long(n);
   }
@@ -5530,9 +5531,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                              && std::is_unsigned<UnsignedIntegralType>::value,
+                                                              decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     return u.sub_unsigned_long_long(n);
   }
@@ -5540,8 +5541,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator-=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5551,9 +5552,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  SignedIntegralType n) -> typename std::enable_if<     std::is_integral<SignedIntegralType>::value
-                                                                   && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                   decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                            && (!std::is_unsigned<SignedIntegralType>::value),
+                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     return u.mul_signed_long_long(n);
   }
@@ -5561,9 +5562,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                              && std::is_unsigned<UnsignedIntegralType>::value,
+                                                              decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     return u.mul_unsigned_long_long(n);
   }
@@ -5571,8 +5572,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator*=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                           decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5583,9 +5584,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename SignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  SignedIntegralType n) -> typename std::enable_if<   std::is_integral<SignedIntegralType>::value
-                                                                   && (!std::is_unsigned<SignedIntegralType>::value),
-                                                                   decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  SignedIntegralType n) -> std::enable_if_t<     std::is_integral<SignedIntegralType>::value
+                                                            && (!std::is_unsigned<SignedIntegralType>::value),
+                                                            decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     return u.div_signed_long_long(n);
   }
@@ -5593,9 +5594,9 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename UnsignedIntegralType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  UnsignedIntegralType n) -> typename std::enable_if<   std::is_integral<UnsignedIntegralType>::value
-                                                                     && std::is_unsigned<UnsignedIntegralType>::value,
-                                                                     decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  UnsignedIntegralType n) -> std::enable_if_t<   std::is_integral<UnsignedIntegralType>::value
+                                                              && std::is_unsigned<UnsignedIntegralType>::value,
+                                                              decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     return u.div_unsigned_long_long(n);
   }
@@ -5603,8 +5604,8 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename FloatingPointType>
   WIDE_DECIMAL_CONSTEXPR
   auto operator/=(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u,
-                  FloatingPointType f) -> typename std::enable_if<std::is_floating_point<FloatingPointType>::value,
-                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+                  FloatingPointType f) -> std::enable_if_t<std::is_floating_point<FloatingPointType>::value,
+                                                                  decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -5620,20 +5621,20 @@
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType> WIDE_DECIMAL_CONSTEXPR auto operator> (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> bool { return (u.cmp(v) >  static_cast<std::int_fast8_t>(INT8_C(0))); }
 
   // Global comparison operators of const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& with all built-in types.
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator< (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) <  static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator<=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) <= static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator==(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) == static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator!=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) != static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator>=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) >= static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator> (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) >  static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator< (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) <  static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator<=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) <= static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator==(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) == static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator!=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) != static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator>=(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) >= static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator> (const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& u, const ArithmeticType& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (u.cmp(decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(v)) >  static_cast<std::int_fast8_t>(INT8_C(0))); }
 
   // Global comparison operators of all built-in types with const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>&.
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator< (ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) <  static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator<=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) <= static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator==(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) == static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator!=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) != static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator>=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) >= static_cast<std::int_fast8_t>(INT8_C(0))); }
-  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator> (ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, bool>::type { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) >  static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator< (ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) <  static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator<=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) <= static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator==(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) == static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator!=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) != static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator>=(ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) >= static_cast<std::int_fast8_t>(INT8_C(0))); }
+  template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType, typename ArithmeticType> WIDE_DECIMAL_CONSTEXPR auto operator> (ArithmeticType u, const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& v) -> std::enable_if_t<std::is_arithmetic<ArithmeticType>::value, bool> { return (decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>(u).cmp(v) >  static_cast<std::int_fast8_t>(INT8_C(0))); }
 
   #if(__cplusplus >= 201703L)
   } // namespace math::wide_decimal
@@ -5881,7 +5882,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto log(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type // NOLINT(misc-no-recursion)
+  auto log(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>> // NOLINT(misc-no-recursion)
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -6033,7 +6034,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto log(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> typename std::enable_if<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type // NOLINT(misc-no-recursion)
+  auto log(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> std::enable_if_t<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT8_C(51))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>> // NOLINT(misc-no-recursion)
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -6147,7 +6148,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto exp(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> typename std::enable_if<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto exp(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> std::enable_if_t<(ParamDigitsBaseTen > static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
@@ -6243,7 +6244,7 @@
   }
 
   template<const std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
-  auto exp(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> typename std::enable_if<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>::type
+  auto exp(const decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>& x) -> std::enable_if_t<(ParamDigitsBaseTen <= static_cast<std::int32_t>(INT32_C(2000))), decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
   {
     using local_wide_decimal_type = decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>;
 
