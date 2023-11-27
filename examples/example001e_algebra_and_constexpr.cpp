@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2022.                 //
+//  Copyright Christopher Kormanyos 2023.                        //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -18,7 +18,7 @@ auto ::math::wide_decimal::example001e_algebra_and_constexpr() -> bool
 {
   using local_limb_type = std::uint32_t;
 
-  constexpr std::int32_t wide_decimal_digits10 = INT32_C(100);
+  constexpr auto wide_decimal_digits10 = static_cast<std::int32_t>(INT32_C(100));
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using wide_decimal_type = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, void>;
@@ -26,7 +26,7 @@ auto ::math::wide_decimal::example001e_algebra_and_constexpr() -> bool
   using wide_decimal_type = ::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, void>;
   #endif
 
-  bool result_is_ok = true;
+  auto result_is_ok = true;
 
   WIDE_DECIMAL_CONSTEXPR wide_decimal_type local_quarter_a(wide_decimal_type(static_cast<unsigned>(UINT8_C(25))) / static_cast<unsigned>(UINT8_C(100)));
   WIDE_DECIMAL_CONSTEXPR wide_decimal_type local_quarter_b(static_cast<float>(0.25L)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

@@ -266,7 +266,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
     (
          (!(result_constexpr_frexp_unsafe > static_cast<float>(0.0L)))
       && (!(result_constexpr_frexp_unsafe < static_cast<float>(0.0L)))
-      && (expptr == 0)
+      && (expptr == static_cast<int>(INT8_C(0)))
     );
 
     result_is_ok = (result_constexpr_frexp_unsafe_is_ok && result_is_ok);
@@ -277,7 +277,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
     (
           (pi_left  > 3.1F)
       &&  (pi_right > 3.1F)
-      && ((pi_left - pi_right) == 0)
+      && ((pi_left - pi_right) == static_cast<int>(INT8_C(0)))
       && ((pi_left - pi_right) == local_zero())
     );
 
@@ -315,7 +315,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
   {
     std::stringstream strm;
 
-    strm << std::setprecision(0) << pi_left;
+    strm << std::setprecision(static_cast<int>(INT8_C(0))) << pi_left;
 
     const auto str_pi_left = strm.str();
 
@@ -329,7 +329,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
   {
     std::stringstream strm;
 
-    strm << std::setprecision(2) << std::fixed << pi_right;
+    strm << std::setprecision(static_cast<int>(INT8_C(2))) << std::fixed << pi_right;
 
     const auto str_pi_right = strm.str();
 
@@ -360,7 +360,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
       small /= static_cast<unsigned>(UINT8_C(7));
 
       if(   (small < (std::numeric_limits<local_wide_decimal_type>::min)())
-         && (small == 0))
+         && (small == static_cast<int>(INT8_C(0))))
       {
         result_underflow_is_ok = true;
 
@@ -420,7 +420,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
 
     const local_wide_decimal_type z(str_zeros.c_str());
 
-    result_is_ok = ((z == local_zero()) && (z == 0) && result_is_ok);
+    result_is_ok = ((z == local_zero()) && (z == static_cast<int>(INT8_C(0))) && result_is_ok);
   }
 
   {
@@ -428,7 +428,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
 
     const auto exp_zero = exp(local_zero());
 
-    const auto result_exp_zero_is_ok = (exp_zero == 1);
+    const auto result_exp_zero_is_ok = (exp_zero == static_cast<int>(INT8_C(1)));
 
     result_is_ok = (result_exp_zero_is_ok && result_is_ok);
   }
@@ -438,7 +438,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
   {
     const auto zero_raised_to_the_zero = pow(local_zero(), local_zero());
 
-    const auto result_zero_raised_to_the_zero_is_ok = (zero_raised_to_the_zero == 1);
+    const auto result_zero_raised_to_the_zero_is_ok = (zero_raised_to_the_zero == static_cast<int>(INT8_C(1)));
 
     result_is_ok = (result_zero_raised_to_the_zero_is_ok && result_is_ok);
   }
@@ -450,7 +450,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
     const auto x          = generate_wide_decimal_value<local_wide_decimal_type>(true);
     const auto x_pow_zero = pow(x, local_zero());
 
-    result_is_ok = ((x_pow_zero == 1) && result_is_ok);
+    result_is_ok = ((x_pow_zero == static_cast<int>(INT8_C(1))) && result_is_ok);
   }
 
   for(auto   i = static_cast<unsigned>(UINT8_C(0));
@@ -461,7 +461,7 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
     const auto x_div_zero     = x / local_zero();
     const auto x_div_zero_ull = x / static_cast<unsigned long long>(local_zero()); // NOLINT(google-runtime-int)
 
-    result_is_ok = ((x_div_zero == 0) && (x_div_zero_ull == 0) && result_is_ok);
+    result_is_ok = ((x_div_zero == static_cast<int>(INT8_C(0))) && (x_div_zero_ull == static_cast<int>(INT8_C(0))) && result_is_ok);
   }
 
   return result_is_ok;
@@ -491,7 +491,7 @@ auto test_various_one_operations() -> bool
 
     const auto log_one = log(local_one());
 
-    const auto result_log_one_is_ok = (log_one == 0);
+    const auto result_log_one_is_ok = (log_one == static_cast<int>(INT8_C(0)));
 
     result_is_ok = (result_log_one_is_ok && result_is_ok);
   }
