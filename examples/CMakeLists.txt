@@ -4,6 +4,7 @@ add_executable(example001a_roots_seventh example001a_roots_seventh.cpp)
 add_executable(example001b_roots_almost_integer example001b_roots_almost_integer.cpp)
 add_executable(example001c_roots_sqrt_limb08 example001c_roots_sqrt_limb08.cpp)
 add_executable(example001d_pow2_from_list example001d_pow2_from_list.cpp)
+add_executable(example001e_algebra_and_constexpr example001e_algebra_and_constexpr.cpp)
 add_executable(example001_roots_sqrt example001_roots_sqrt.cpp)
 add_executable(example002a_pi_small_limb example002a_pi_small_limb.cpp)
 add_executable(example002b_pi_100k example002b_pi_100k.cpp)
@@ -55,6 +56,11 @@ target_compile_features(example001d_pow2_from_list PRIVATE cxx_std_14)
 target_compile_options(example001d_pow2_from_list PRIVATE "-DWIDE_DECIMAL_STANDALONE_EXAMPLE001D_POW2_FROM_LIST=1")
 target_include_directories(example001d_pow2_from_list PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(example001d_pow2_from_list SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
+
+target_compile_features(example001e_algebra_and_constexpr PRIVATE cxx_std_14)
+target_compile_options(example001e_algebra_and_constexpr PRIVATE "-DWIDE_DECIMAL_STANDALONE_EXAMPLE001E_ALGEBRA_AND_CONSTEXPR=1")
+target_include_directories(example001e_algebra_and_constexpr PRIVATE ${PROJECT_SOURCE_DIR})
+target_include_directories(example001e_algebra_and_constexpr SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
 
 target_compile_features(example001_roots_sqrt PRIVATE cxx_std_14)
 target_compile_options(example001_roots_sqrt PRIVATE "-DWIDE_DECIMAL_STANDALONE_EXAMPLE001_ROOTS_SQRT=1")
@@ -169,6 +175,7 @@ add_library(Examples
   example001b_roots_almost_integer.cpp
   example001c_roots_sqrt_limb08.cpp
   example001d_pow2_from_list.cpp
+  example001e_algebra_and_constexpr.cpp
   example001_roots_sqrt.cpp
   example002a_pi_small_limb.cpp
   example002b_pi_100k.cpp

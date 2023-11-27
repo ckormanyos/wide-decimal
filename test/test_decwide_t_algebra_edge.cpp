@@ -242,16 +242,42 @@ auto pi_left = // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert
 
 auto pi_right = pi_left; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,cert-err58-cpp)
 
-auto test_various_zero_operations() -> bool
+auto test_various_zero_operations() -> bool // NOLINT(readability-function-cognitive-complexity)
 {
   auto result_is_ok = true;
+
+  for(auto   i = static_cast<unsigned>(UINT8_C(0));
+             i < static_cast<unsigned>(UINT8_C(16));
+           ++i)
+  {
+    const auto left_zero = generate_wide_decimal_value<local_wide_decimal_type>() * local_zero();
+
+    const auto left_zero_as_float        = static_cast<float>(left_zero);
+    const auto left_zero_as_wide_decimal = static_cast<local_wide_decimal_type>(left_zero_as_float);
+
+    const auto result_zero_is_ok = (left_zero_as_wide_decimal.iszero() && (left_zero.iszero() == left_zero_as_wide_decimal.iszero()));
+
+    result_is_ok = (result_zero_is_ok && result_is_ok);
+
+    int expptr { };
+    const auto result_constexpr_frexp_unsafe = util::frexp_unsafe(left_zero_as_float, &expptr);
+
+    const auto result_constexpr_frexp_unsafe_is_ok =
+    (
+         (!(result_constexpr_frexp_unsafe > static_cast<float>(0.0L)))
+      && (!(result_constexpr_frexp_unsafe < static_cast<float>(0.0L)))
+      && (expptr == static_cast<int>(INT8_C(0)))
+    );
+
+    result_is_ok = (result_constexpr_frexp_unsafe_is_ok && result_is_ok);
+  }
 
   {
     const auto result_of_sub_same_is_ok =
     (
           (pi_left  > 3.1F)
       &&  (pi_right > 3.1F)
-      && ((pi_left - pi_right) == 0)
+      && ((pi_left - pi_right) == static_cast<int>(INT8_C(0)))
       && ((pi_left - pi_right) == local_zero())
     );
 
@@ -289,7 +315,7 @@ auto test_various_zero_operations() -> bool
   {
     std::stringstream strm;
 
-    strm << std::setprecision(0) << pi_left;
+    strm << std::setprecision(static_cast<int>(INT8_C(0))) << pi_left;
 
     const auto str_pi_left = strm.str();
 
@@ -303,7 +329,7 @@ auto test_various_zero_operations() -> bool
   {
     std::stringstream strm;
 
-    strm << std::setprecision(2) << std::fixed << pi_right;
+    strm << std::setprecision(static_cast<int>(INT8_C(2))) << std::fixed << pi_right;
 
     const auto str_pi_right = strm.str();
 
@@ -334,7 +360,7 @@ auto test_various_zero_operations() -> bool
       small /= static_cast<unsigned>(UINT8_C(7));
 
       if(   (small < (std::numeric_limits<local_wide_decimal_type>::min)())
-         && (small == 0))
+         && (small == static_cast<int>(INT8_C(0))))
       {
         result_underflow_is_ok = true;
 
@@ -394,7 +420,7 @@ auto test_various_zero_operations() -> bool
 
     const local_wide_decimal_type z(str_zeros.c_str());
 
-    result_is_ok = ((z == local_zero()) && (z == 0) && result_is_ok);
+    result_is_ok = ((z == local_zero()) && (z == static_cast<int>(INT8_C(0))) && result_is_ok);
   }
 
   {
@@ -402,7 +428,7 @@ auto test_various_zero_operations() -> bool
 
     const auto exp_zero = exp(local_zero());
 
-    const auto result_exp_zero_is_ok = (exp_zero == 1);
+    const auto result_exp_zero_is_ok = (exp_zero == static_cast<int>(INT8_C(1)));
 
     result_is_ok = (result_exp_zero_is_ok && result_is_ok);
   }
@@ -412,7 +438,7 @@ auto test_various_zero_operations() -> bool
   {
     const auto zero_raised_to_the_zero = pow(local_zero(), local_zero());
 
-    const auto result_zero_raised_to_the_zero_is_ok = (zero_raised_to_the_zero == 1);
+    const auto result_zero_raised_to_the_zero_is_ok = (zero_raised_to_the_zero == static_cast<int>(INT8_C(1)));
 
     result_is_ok = (result_zero_raised_to_the_zero_is_ok && result_is_ok);
   }
@@ -424,7 +450,7 @@ auto test_various_zero_operations() -> bool
     const auto x          = generate_wide_decimal_value<local_wide_decimal_type>(true);
     const auto x_pow_zero = pow(x, local_zero());
 
-    result_is_ok = ((x_pow_zero == 1) && result_is_ok);
+    result_is_ok = ((x_pow_zero == static_cast<int>(INT8_C(1))) && result_is_ok);
   }
 
   for(auto   i = static_cast<unsigned>(UINT8_C(0));
@@ -435,7 +461,7 @@ auto test_various_zero_operations() -> bool
     const auto x_div_zero     = x / local_zero();
     const auto x_div_zero_ull = x / static_cast<unsigned long long>(local_zero()); // NOLINT(google-runtime-int)
 
-    result_is_ok = ((x_div_zero == 0) && (x_div_zero_ull == 0) && result_is_ok);
+    result_is_ok = ((x_div_zero == static_cast<int>(INT8_C(0))) && (x_div_zero_ull == static_cast<int>(INT8_C(0))) && result_is_ok);
   }
 
   return result_is_ok;
@@ -465,7 +491,7 @@ auto test_various_one_operations() -> bool
 
     const auto log_one = log(local_one());
 
-    const auto result_log_one_is_ok = (log_one == 0);
+    const auto result_log_one_is_ok = (log_one == static_cast<int>(INT8_C(0)));
 
     result_is_ok = (result_log_one_is_ok && result_is_ok);
   }
@@ -1291,12 +1317,13 @@ auto test_to_native_float_and_back() -> bool
 
     const auto x_as_native_float = static_cast<native_float_type>(static_cast<long double>(x));
 
-    const auto x_reloaded_from_native_float = local_wide_decimal_type(x_as_native_float);
+    const auto x_as_wide_decimal_reloaded_from_native_float = local_wide_decimal_type(x_as_native_float);
+    const auto x_as_native_float_reloaded_from_wide_decimal = static_cast<native_float_type>(x_as_wide_decimal_reloaded_from_native_float);
 
     using std::fabs;
 
-    const auto delta1 = fabs(local_one() - fabs(x / x_reloaded_from_native_float));
-    const auto delta2 = fabs(static_cast<native_float_type>(1.0F) - fabs(x_as_native_float / static_cast<native_float_type>(x_reloaded_from_native_float)));
+    const auto delta1 = fabs(local_one() - fabs(x / x_as_wide_decimal_reloaded_from_native_float));
+    const auto delta2 = fabs(static_cast<native_float_type>(1.0F) - fabs(x_as_native_float / x_as_native_float_reloaded_from_wide_decimal));
 
     result_is_ok = ((delta1 < tol1) && (delta2 < tol2) && result_is_ok);
 

@@ -34,6 +34,7 @@
 
   template<typename InputIteratorLeftType,
            typename InputIteratorRightType>
+  WIDE_DECIMAL_CONSTEXPR
   auto compare_ranges(      InputIteratorLeftType  pa,
                             InputIteratorRightType pb,
                       const std::uint_fast32_t     count) -> std::int_fast8_t
@@ -68,6 +69,7 @@
 
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType>
+  WIDE_DECIMAL_CONSTEXPR
   auto eval_add_n(      OutputLimbIteratorType r,
                         InputLimbIteratorType  u,
                         InputLimbIteratorType  v,
@@ -107,6 +109,7 @@
 
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType>
+  WIDE_DECIMAL_CONSTEXPR
   auto eval_subtract_n(      OutputLimbIteratorType r,
                              InputLimbIteratorType  u, // NOLINT(bugprone-easily-swappable-parameters)
                              InputLimbIteratorType  v,
@@ -166,13 +169,14 @@
 
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType>
+  WIDE_DECIMAL_CONSTEXPR
   void eval_multiply_n_by_n_to_2n
   (
           OutputLimbIteratorType  r,
           InputLimbIteratorType   a,
           InputLimbIteratorType   b,
     const std::int_fast32_t       count,
-    const typename std::enable_if<std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint8_t>::value>::type* p_nullparam = nullptr
+    typename std::enable_if_t<std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint8_t>::value, int>* p_nullparam = static_cast<int*>(nullptr)
   )
   {
     static_cast<void>(p_nullparam);
@@ -237,14 +241,16 @@
 
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType>
+  WIDE_DECIMAL_CONSTEXPR
   void eval_multiply_n_by_n_to_2n
   (
           OutputLimbIteratorType r,
           InputLimbIteratorType  a,
           InputLimbIteratorType  b,
     const std::int_fast32_t      count,
-    const typename std::enable_if<(   std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint16_t>::value
-                                   || std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint32_t>::value)>::type* p_nullparam = nullptr)
+    typename std::enable_if_t<(   std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint16_t>::value
+                               || std::is_same<typename std::iterator_traits<OutputLimbIteratorType>::value_type, std::uint32_t>::value), int>* p_nullparam = static_cast<int*>(nullptr)
+  )
   {
     static_cast<void>(p_nullparam);
 
@@ -317,6 +323,7 @@
   }
 
   template<typename LimbIteratorType>
+  WIDE_DECIMAL_CONSTEXPR
   auto mul_loop_n(      LimbIteratorType                                            u,
                         typename std::iterator_traits<LimbIteratorType>::value_type n,
                   const std::int32_t                                                p) -> typename std::iterator_traits<LimbIteratorType>::value_type
@@ -354,6 +361,7 @@
   }
 
   template<typename LimbIteratorType>
+  WIDE_DECIMAL_CONSTEXPR
   auto div_loop_n(      LimbIteratorType                                            u,
                         typename std::iterator_traits<LimbIteratorType>::value_type n,
                   const std::int32_t                                                p) -> typename std::iterator_traits<LimbIteratorType>::value_type
@@ -389,6 +397,7 @@
   }
 
   template<typename LimbIteratorType>
+  WIDE_DECIMAL_CONSTEXPR
   auto eval_multiply_kara_propagate_carry(      LimbIteratorType                                            t,
                                           const std::uint_fast32_t                                          n,
                                           const typename std::iterator_traits<LimbIteratorType>::value_type carry) -> void
@@ -433,6 +442,7 @@
   }
 
   template<typename LimbIteratorType>
+  WIDE_DECIMAL_CONSTEXPR
   auto eval_multiply_kara_propagate_borrow(      LimbIteratorType   t,
                                            const std::uint_fast32_t n,
                                            const bool               has_borrow) -> void

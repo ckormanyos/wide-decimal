@@ -90,7 +90,7 @@ auto ::math::wide_decimal::example009_boost_math_standalone() -> bool
   try
   {
   #endif
-  const dec1001_t x = dec1001_t(UINT32_C(123456789)) / 100U;
+  const dec1001_t x = dec1001_t(INT32_C(-123456789)) / 100U;
 
   using std::cbrt;
   using std::fabs;

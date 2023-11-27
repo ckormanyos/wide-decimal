@@ -35,6 +35,7 @@
   auto example001b_roots_almost_integer  () -> bool;
   auto example001c_roots_sqrt_limb08     () -> bool;
   auto example001d_pow2_from_list        () -> bool;
+  auto example001e_algebra_and_constexpr () -> bool;
   auto example002_pi                     () -> bool;
   auto example002a_pi_small_limb         () -> bool;
   auto example002b_pi_100k               () -> bool;
