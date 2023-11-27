@@ -424,7 +424,7 @@
 
   template<typename MyType,
            const std::size_t MySize>
-  class fixed_static_array final : public std::array<MyType, static_cast<std::size_t>(MySize)>
+  class fixed_static_array final : public std::array<MyType, static_cast<std::size_t>(MySize)> // NOLINT(cppcoreguidelines-special-member-functions,hicpp-special-member-functions)
   {
   private:
     using base_class_type = std::array<MyType, static_cast<std::size_t>(MySize)>;
