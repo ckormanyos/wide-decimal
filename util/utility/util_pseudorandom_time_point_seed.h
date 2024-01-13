@@ -18,6 +18,8 @@
   #include <sstream>
   #include <string>
 
+  #include <util/utility/util_constexpr_algorithm_unsafe.h>
+
   namespace util {
 
   struct util_pseudorandom_time_point_seed
