@@ -488,6 +488,12 @@ When using C++20 `decwide_t` supports compile-time
 of binary arithmetic, comparison operators
 and various elementary functions.
 
+Detection of `constexpr`-ness occurs automaticlly in wide-decimal via preprocessor
+decisions.
+
+The following macros are, however, available to query the
+presence of `constexpr`-wide-decimal.
+
 ```cpp
 WIDE_DECIMAL_CONSTEXPR
 WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST
