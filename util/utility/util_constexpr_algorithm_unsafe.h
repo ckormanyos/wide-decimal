@@ -124,19 +124,19 @@
   template<typename T>
   constexpr auto swap_unsafe(T& left, T& right) -> void
   {
-    auto tmp = std::move(static_cast<T&&>(left));
+    auto tmp = static_cast<T&&>(left);
 
-    left  = std::move(static_cast<T&&>(right));
-    right = std::move(static_cast<T&&>(tmp));
+    left  = static_cast<T&&>(right);
+    right = static_cast<T&&>(tmp);
   }
 
   template<typename T>
   constexpr auto swap_unsafe(T&& left, T&& right) -> void
   {
-    auto tmp = std::move(static_cast<T&&>(left));
+    auto tmp = static_cast<T&&>(left);
 
-    left  = std::move(static_cast<T&&>(right));
-    right = std::move(static_cast<T&&>(tmp));
+    left  = static_cast<T&&>(right);
+    right = static_cast<T&&>(tmp);
   }
 
   template<typename InputIt, typename UnaryPredicate>

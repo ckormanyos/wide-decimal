@@ -592,7 +592,7 @@
     // Rebind the decwide_t allocator to the granularity of the LimbType.
     using allocator_conditional_type =
       #if (defined(_MSC_VER) && (_MSC_VER < 1920))
-      typename std::conditional_t<std::is_same<AllocatorType, void>::value,
+      typename std::conditional_t<std::is_same<AllocatorType, void>,
       #else
       typename std::conditional_t<is_void_allocator(),
       #endif
@@ -2940,15 +2940,12 @@
       }
       else
       {
-        const auto copy_limit =
-          static_cast<std::ptrdiff_t>
-          (
-            util::min_unsafe(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                             util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_kara))
-          );
+        constexpr auto kara_limit = util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_kara);
 
-        util::copy_unsafe(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                          result + copy_limit,                             // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        const auto copy_limit = static_cast<std::ptrdiff_t>(util::min_unsafe(prec_elems_for_multiply, kara_limit));
+
+        util::copy_unsafe(result +                             static_cast<std::ptrdiff_t>(INT8_C(1)),               // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                          result + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(INT8_C(1)) + copy_limit), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                           my_data.begin());
       }
     }
@@ -3001,15 +2998,12 @@
         }
         else
         {
-          const auto copy_limit =
-            static_cast<std::ptrdiff_t>
-            (
-              util::min_unsafe(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                               util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_kara))
-            );
+          constexpr auto kara_limit = util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_kara);
 
-          util::copy_unsafe(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                            result + copy_limit,                             // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          const auto copy_limit = static_cast<std::ptrdiff_t>(util::min_unsafe(prec_elems_for_multiply, kara_limit));
+
+          util::copy_unsafe(result +                             static_cast<std::ptrdiff_t>(INT8_C(1)),               // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                            result + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(INT8_C(1)) + copy_limit), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                             my_data.begin());
         }
       }
@@ -3065,15 +3059,12 @@
         }
         else
         {
-          const auto copy_limit =
-            static_cast<std::ptrdiff_t>
-            (
-              util::min_unsafe(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                               util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_fft))
-            );
+          constexpr auto fft_limit = util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_fft);
 
-          util::copy_unsafe(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                            result + copy_limit,                             // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          const auto copy_limit = static_cast<std::ptrdiff_t>(util::min_unsafe(prec_elems_for_multiply, fft_limit));
+
+          util::copy_unsafe(result +                             static_cast<std::ptrdiff_t>(INT8_C(1)),               // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                            result + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(INT8_C(1)) + copy_limit), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                             my_data.begin());
         }
       }
@@ -3128,15 +3119,12 @@
         }
         else
         {
-          const auto copy_limit =
-            static_cast<std::ptrdiff_t>
-            (
-              util::min_unsafe(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                               util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_kara))
-            );
+          constexpr auto kara_limit = util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_kara);
 
-          util::copy_unsafe(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                            result + copy_limit,                             // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          const auto copy_limit = static_cast<std::ptrdiff_t>(util::min_unsafe(prec_elems_for_multiply, kara_limit));
+
+          util::copy_unsafe(result +                             static_cast<std::ptrdiff_t>(INT8_C(1)),               // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                            result + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(INT8_C(1)) + copy_limit), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                             my_data.begin());
         }
       }
@@ -3192,15 +3180,12 @@
         }
         else
         {
-          const auto copy_limit =
-            static_cast<std::ptrdiff_t>
-            (
-              util::min_unsafe(static_cast<std::int32_t>(prec_elems_for_multiply + static_cast<std::int32_t>(INT8_C(1))),
-                               util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_fft))
-            );
+          constexpr auto fft_limit = util::min_unsafe(decwide_t_elem_number, decwide_t_elems_for_fft);
 
-          util::copy_unsafe(result + static_cast<std::ptrdiff_t>(INT8_C(1)), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                            result + copy_limit,                             // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          const auto copy_limit = static_cast<std::ptrdiff_t>(util::min_unsafe(prec_elems_for_multiply, fft_limit));
+
+          util::copy_unsafe(result +                             static_cast<std::ptrdiff_t>(INT8_C(1)),               // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                            result + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(INT8_C(1)) + copy_limit), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                             my_data.begin());
         }
       }
