@@ -1,5 +1,5 @@
 ﻿# ------------------------------------------------------------------------------
-#  Copyright Christopher Kormanyos 2020 - 2023.
+#  Copyright Christopher Kormanyos 2020 - 2024.
 #  Distributed under the Boost Software License,
 #  Version 1.0. (See accompanying file LICENSE_1_0.txt
 #  or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ${{matrix.container}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: create build directory
         run: mkdir $GITHUB_WORKSPACE/build
       - name: install Boost
@@ -62,7 +62,7 @@ jobs:
         standard: [ c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: update-tools
@@ -101,7 +101,7 @@ jobs:
         standard: [ c++14, c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -132,7 +132,7 @@ jobs:
         standard: [ c++14, c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -163,7 +163,7 @@ jobs:
         standard: [ c++14, c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -194,7 +194,7 @@ jobs:
         standard: [ c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -225,7 +225,7 @@ jobs:
         standard: [ c++14, c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -256,7 +256,7 @@ jobs:
         standard: [ c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -287,7 +287,7 @@ jobs:
         standard: [ c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -318,7 +318,7 @@ jobs:
         standard: [ c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -349,7 +349,7 @@ jobs:
         standard: [ c++14, c++20 ]
         compiler: [ g++-10, clang++-10, clang++-11 ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -382,7 +382,7 @@ jobs:
         standard: [ c++14, c++20 ]
         compiler: [ g++-10, clang++-10 ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -415,7 +415,7 @@ jobs:
         standard: [ c++14, c++20 ]
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -438,7 +438,7 @@ jobs:
   msvc-release-x64:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -451,7 +451,7 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.bat
           ./b2 headers
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           toolset: 14.2
@@ -466,7 +466,7 @@ jobs:
   msvc-release-x64-vs2022:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -479,7 +479,7 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.bat
           ./b2 headers
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           toolset: 14.3
@@ -494,7 +494,7 @@ jobs:
   msvc-release-x64-vs2022-asan:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -507,7 +507,7 @@ jobs:
           git submodule update --init libs/multiprecision
           ./bootstrap.bat
           ./b2 headers
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           toolset: 14.3
@@ -528,7 +528,7 @@ jobs:
         compiler: [ g++ ]
         standard: [ c++14, c++2a ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -558,7 +558,7 @@ jobs:
         compiler: [ g++ ]
         standard: [ c++17 ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: Install Cygwin
@@ -596,7 +596,7 @@ jobs:
         example: [ example013_embeddable_sqrt, example013a_embeddable_agm ]
         standard: [ c++14, c++2a ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: update-tools
@@ -633,7 +633,7 @@ jobs:
         example: [ example013_embeddable_sqrt, example013a_embeddable_agm ]
         standard: [ c++14 ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: update-tools
@@ -669,7 +669,7 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: update-tools
@@ -711,7 +711,7 @@ jobs:
         compiler: [ g++, clang++ ]
         suite: [ test_high_precision_exp, test_high_precision_log ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
@@ -745,7 +745,7 @@ jobs:
         compiler: [ g++, clang++ ]
         suite: [ test_mixed_wide_decimal_wide_integer_b2n ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-wide_integer
@@ -769,7 +769,7 @@ jobs:
         standard: [ c++20 ]
         compiler: [ g++ ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: clone-submods-bootstrap-headers-boost-develop
