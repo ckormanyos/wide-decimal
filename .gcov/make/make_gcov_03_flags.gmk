@@ -77,5 +77,5 @@ endif
 
 LCOV_REMOVES = '/usr/*'                                                       \
                '*boost*'                                                      \
-               '*examples*'                                                   \
+               '*example*'                                                    \
                '*mcal_*'
