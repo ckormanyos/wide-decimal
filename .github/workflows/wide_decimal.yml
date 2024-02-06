@@ -602,7 +602,7 @@ jobs:
       - name: update-tools
         run: sudo apt install gcc-arm-none-eabi
       - id: upcase_my_example
-        uses: ASzc/change-string-case-action@v5
+        uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ matrix.example }}
       - name: gcc-arm-none-eabi
@@ -643,7 +643,7 @@ jobs:
           git clone -b master --depth 1 https://github.com/ckormanyos/real-time-cpp.git ../real-time-cpp-root
         working-directory: ./
       - id: upcase_my_example
-        uses: ASzc/change-string-case-action@v5
+        uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ matrix.example }}
       - name: gcc-avr

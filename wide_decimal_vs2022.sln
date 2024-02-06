@@ -8,19 +8,13 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		wide-decimal-debug|x64 = wide-decimal-debug|x64
-		wide-decimal-debug|x86 = wide-decimal-debug|x86
 		wide-decimal-release|x64 = wide-decimal-release|x64
-		wide-decimal-release|x86 = wide-decimal-release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-debug|x64.ActiveCfg = wide-decimal-debug|x64
 		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-debug|x64.Build.0 = wide-decimal-debug|x64
-		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-debug|x86.ActiveCfg = wide-decimal-debug|Win32
-		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-debug|x86.Build.0 = wide-decimal-debug|Win32
 		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-release|x64.ActiveCfg = wide-decimal-release|x64
 		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-release|x64.Build.0 = wide-decimal-release|x64
-		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-release|x86.ActiveCfg = wide-decimal-release|Win32
-		{E8006465-B814-49F0-B17C-5CC35591686D}.wide-decimal-release|x86.Build.0 = wide-decimal-release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

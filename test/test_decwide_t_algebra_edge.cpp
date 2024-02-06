@@ -259,8 +259,10 @@ auto test_various_zero_operations() -> bool // NOLINT(readability-function-cogni
 
     result_is_ok = (result_zero_is_ok && result_is_ok);
 
+    using std::frexp;
+
     int expptr { };
-    const auto result_constexpr_frexp_unsafe = util::frexp_unsafe(left_zero_as_float, &expptr);
+    const auto result_constexpr_frexp_unsafe = frexp(left_zero_as_float, &expptr);
 
     const auto result_constexpr_frexp_unsafe_is_ok =
     (
