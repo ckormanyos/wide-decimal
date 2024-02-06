@@ -76,6 +76,7 @@ LCOV_BRANCH := --rc lcov_branch_coverage=1
 endif
 
 LCOV_REMOVES = '/usr/*'                                                       \
-               '*boost*'                                                      \
-               '*example*'                                                    \
-               '*mcal_*'
+               '*/boost/*'                                                    \
+               '*/examples/*'                                                 \
+               '*/mcal_lcd/*'                                                 \
+               '*/util/*'
