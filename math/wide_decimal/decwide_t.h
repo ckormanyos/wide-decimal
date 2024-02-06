@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 1999 - 2023.                 //
+//  Copyright Christopher Kormanyos 1999 - 2024.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -2941,7 +2941,7 @@
       }
       else
       {
-        constexpr auto kara_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_kara);
+        const auto kara_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_kara);
 
         const auto copy_limit = static_cast<std::ptrdiff_t>((std::min)(prec_elems_for_multiply, kara_limit));
 
@@ -3001,7 +3001,7 @@
         }
         else
         {
-          constexpr auto kara_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_kara);
+          const auto kara_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_kara);
 
           const auto copy_limit = static_cast<std::ptrdiff_t>((std::min)(prec_elems_for_multiply, kara_limit));
 
@@ -3062,7 +3062,7 @@
         }
         else
         {
-          constexpr auto fft_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_fft);
+          const auto fft_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_fft);
 
           const auto copy_limit = static_cast<std::ptrdiff_t>((std::min)(prec_elems_for_multiply, fft_limit));
 
@@ -3123,7 +3123,7 @@
         }
         else
         {
-          constexpr auto kara_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_kara);
+          const auto kara_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_kara);
 
           const auto copy_limit = static_cast<std::ptrdiff_t>((std::min)(prec_elems_for_multiply, kara_limit));
 
@@ -3184,7 +3184,7 @@
         }
         else
         {
-          constexpr auto fft_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_fft);
+          const auto fft_limit = (std::min)(decwide_t_elem_number, decwide_t_elems_for_fft);
 
           const auto copy_limit = static_cast<std::ptrdiff_t>((std::min)(prec_elems_for_multiply, fft_limit));
 
