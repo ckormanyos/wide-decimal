@@ -131,7 +131,7 @@ The examples include the following.
   - ![`example002b_pi_100k.cpp`](./examples/example002b_pi_100k.cpp) calculates $100,001$ decimal digits of $\pi$.
   - ![`example002c_pi_quintic.cpp`](./examples/example002c_pi_quintic.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a Borwein quintic iteration.
   - ![`example002d_pi_limb08.cpp`](./examples/example002d_pi_limb08.cpp) calculates yet again $1,000,001$ decimal digits of $\pi$ using an 8-bit internal limb type and `float` internal floating-point type.
-  - ![`example001e_algebra_and_constexpr.cpp`](./examples/example001e_algebra_and_constexpr.cpp) verifies some basic C++20 `constexpr` algebraic operations.
+  - ![`example001e_algebra_and_constexpr.cpp`](./examples/example001e_algebra_and_constexpr.cpp) (TBD) verifies some basic C++20 `constexpr` algebraic operations.
   - ![`example003_zeta.cpp`](./examples/example003_zeta.cpp) computes a Riemann zeta function value.
   - ![`example004_bessel_recur.cpp`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
   - ![`example005_polylog_series.cpp`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
@@ -481,32 +481,13 @@ It is included in the
 and also included in continuous integration.
 This test file involves computations and comparisons of Bernoulli numbers.
 
-### C++20 `constexpr` support
+### (TBD) C++20 `constexpr` support
 
+(TBD) See also [issue 291](https://github.com/ckormanyos/wide-decimal/issues/291).
 When using C++20 `decwide_t` supports compile-time
 `constexpr` construction and evaluation of results
 of binary arithmetic, comparison operators
 and various elementary functions.
-
-Detection of `constexpr`-ness occurs automaticlly in wide-decimal via preprocessor
-decisions.
-
-The following macros are, however, available to query the
-presence of `constexpr`-wide-decimal.
-
-```cpp
-WIDE_DECIMAL_CONSTEXPR
-WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST
-```
-
-The preprocessor symbol `WIDE_DECIMAL_CONSTEXPR` acts as either
-a synonym for `constexpr` or expands to nothing depending on
-whether the availability of `constexpr` support has been automatically
-detected or not.
-The preprocessor symbol `WIDE_DECIMAL_CONSTEXPR_IS_COMPILE_TIME_CONST`
-has the value of `0` or `1`, where `1` indicates that `decwide_t`
-values qualified with `WIDE_DECIMAL_CONSTEXPR` are actually
-compile-time constant (i.e., `constexpr`).
 
 ### Alternatives and limitations
 
