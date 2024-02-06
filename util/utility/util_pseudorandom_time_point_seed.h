@@ -18,8 +18,6 @@
   #include <sstream>
   #include <string>
 
-  #include <util/utility/util_constexpr_algorithm_unsafe.h>
-
   namespace util {
 
   struct util_pseudorandom_time_point_seed
@@ -68,7 +66,7 @@
 
           str_tm_len = str_tm.length();
 
-          util::copy_unsafe(str_tm.cbegin(), str_tm.cend(), buf_u8.begin());
+          std::copy(str_tm.cbegin(), str_tm.cend(), buf_u8.begin());
         }
       }
 

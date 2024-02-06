@@ -55,9 +55,10 @@ jobs:
           echo "return to wide-decimal root directory"
           cd ../..
       - name: upload-codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: .gcov/make/coverage.info
+          env_vars: ubuntu-latest
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          functionalities: fix
+          verbose: true
