@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2021 - 2023.                 //
+//  Copyright Christopher Kormanyos 2021 - 2024.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -152,28 +152,9 @@
         B = ldexp(B, 1);
         result = A - B;
 
-        #if defined(WIDE_DECIMAL_NAMESPACE)
-        using ::WIDE_DECIMAL_NAMESPACE::math::wide_decimal::signbit;
-        #else
-        using ::math::wide_decimal::signbit;
-        #endif
-        using std::signbit;
-
-        const auto neg = (signbit)(result);
-
-        if(neg)
-        {
-          result = -result;
-        }
-
         if(result <= lim)
         {
           break;
-        }
-
-        if(neg)
-        {
-          result = -result;
         }
 
         result = ldexp(result, static_cast<int>(k - 1U));
