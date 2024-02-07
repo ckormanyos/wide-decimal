@@ -57,8 +57,8 @@ jobs:
       - name: upload-codecov
         uses: codecov/codecov-action@v4
         with:
-          files: .gcov/make/coverage.info
-          env_vars: ubuntu-latest
+          plugin: gcov
+          file: ${{ runner.workspace }}/wide-decimal/.gcov/make/coverage.info
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          verbose: true
+          verbose: false
