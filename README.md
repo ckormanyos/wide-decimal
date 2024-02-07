@@ -119,33 +119,33 @@ how to use wide-decimal.
 
 The examples include the following.
 
-  - ![`example000_multiply_nines.cpp`](./examples/example000_multiply_nines.cpp) verifies schoolbook multiplication using a `decwide-t` type having 8-bit limbs in a small digit range.
-  - ![`example000a_multiply_pi_squared.cpp`](./examples/example000a_multiply_pi_squared.cpp) performs a hard-coded multiplication check resulting in $\pi^2$.
-  - ![`example001_roots_sqrt.cpp`](./examples/example001_roots_sqrt.cpp) computes a square root.
-  - ![`example001a_roots_seventh.cpp`](./examples/example001a_roots_seventh.cpp) computes a seventh root.
-  - ![`example001b_roots_almost_integer.cpp`](./examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operations to compute $5,001$ decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
-  - ![`example001c_roots_sqrt_limb08.cpp`](./examples/example001c_roots_sqrt_limb08.cpp) computes a square root with a wide decimal representation having 8-bit limbs.
-  - ![`example001d_pow2_from_list.cpp`](./examples/example001d_pow2_from_list.cpp) verifies a list of values $2^n$ with $-128 {\le} n {\le} 127$.
-  - ![`example002_pi.cpp`](./examples/example002_pi.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a Gauss AGM iteration.
-  - ![`example002a_pi_small_limb.cpp`](./examples/example002a_pi_small_limb.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a 16-bit internal limb type.
-  - ![`example002b_pi_100k.cpp`](./examples/example002b_pi_100k.cpp) calculates $100,001$ decimal digits of $\pi$.
-  - ![`example002c_pi_quintic.cpp`](./examples/example002c_pi_quintic.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a Borwein quintic iteration.
-  - ![`example002d_pi_limb08.cpp`](./examples/example002d_pi_limb08.cpp) calculates yet again $1,000,001$ decimal digits of $\pi$ using an 8-bit internal limb type and `float` internal floating-point type.
-  - ![`example001e_algebra_and_constexpr.cpp`](./examples/example001e_algebra_and_constexpr.cpp) (TBD) verifies some basic C++20 `constexpr` algebraic operations.
-  - ![`example003_zeta.cpp`](./examples/example003_zeta.cpp) computes a Riemann zeta function value.
-  - ![`example004_bessel_recur.cpp`](./examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
-  - ![`example005_polylog_series.cpp`](./examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
-  - ![`example006_logarithm.cpp`](./examples/example006_logarithm.cpp) calculates the value of a logarithm (internally using a Gauss AGM method).
-  - ![`example007_catalan_series.cpp`](./examples/example007_catalan_series.cpp) computes $1,001$ decimal digits of Catalan's constant using an accelerated series.
-  - ![`example008_bernoulli_tgamma.cpp`](./examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates $1,001$ decimal digits of $\Gamma(n/2)$ for small integer $n$.
-  - ![`example009_boost_math_standalone.cpp`](./examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
-  - ![`example009a_boost_math_standalone.cpp`](./examples/example009a_boost_math_standalone.cpp) also checks standalone `decwide_t` with significantly more of `Boost.Math` by testing a $1,001$ digit generalized Legendre function value (using `boost::math::tgamma` and more to do so).
-  - ![`example009b_boost_math_standalone.cpp`](./examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ${\lesssim}~100$ decimal digits.
-  - ![`example010_hypergeometric_2f1.cpp`](./examples/example010_hypergeometric_2f1.cpp) calculates a $1,001$ decimal digit hypergeometric function value using an iterative rational approximation scheme.
-  - ![`example010a_hypergeometric_1f1.cpp`](./examples/example010a_hypergeometric_1f1.cpp) calculates another $1,001$ decimal digit hypergeometric function in a similar fashion.
-  - ![`example011_trig_trapezoid_integral.cpp`](./examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
-  - ![`example012_rational_floor_ceil.cpp`](./examples/example012_rational_floor_ceil.cpp) verifies the proper representation of a wide selection of small-valued, pure integral rational quotients.
-  - ![`example013_embeddable_sqrt.cpp`](./examples/example013_embeddable_sqrt.cpp) and ![`example013a_embeddable_agm.cpp`](./examples/example013a_embeddable_agm.cpp) exercise calculations that also run on tiny bare-metal embedded systems, featuring a $101$ digit square root calculation and a $53$ digit AGM iteration for $\pi$.
+  - ![`example000_multiply_nines.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example000_multiply_nines.cpp) verifies schoolbook multiplication using a `decwide-t` type having 8-bit limbs in a small digit range.
+  - ![`example000a_multiply_pi_squared.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example000a_multiply_pi_squared.cpp) performs a hard-coded multiplication check resulting in $\pi^2$.
+  - ![`example001_roots_sqrt.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example001_roots_sqrt.cpp) computes a square root.
+  - ![`example001a_roots_seventh.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example001a_roots_seventh.cpp) computes a seventh root.
+  - ![`example001b_roots_almost_integer.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example001b_roots_almost_integer.cpp) uses roots and algebraic operations to compute $5,001$ decimal digits of a fascinating [Pisot number](https://mathworld.wolfram.com/PisotNumber.html) that is [almost integer](https://mathworld.wolfram.com/AlmostInteger.html).
+  - ![`example001c_roots_sqrt_limb08.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example001c_roots_sqrt_limb08.cpp) computes a square root with a wide decimal representation having 8-bit limbs.
+  - ![`example001d_pow2_from_list.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example001d_pow2_from_list.cpp) verifies a list of values $2^n$ with $-128 {\le} n {\le} 127$.
+  - ![`example002_pi.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example002_pi.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a Gauss AGM iteration.
+  - ![`example002a_pi_small_limb.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example002a_pi_small_limb.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a 16-bit internal limb type.
+  - ![`example002b_pi_100k.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example002b_pi_100k.cpp) calculates $100,001$ decimal digits of $\pi$.
+  - ![`example002c_pi_quintic.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example002c_pi_quintic.cpp) calculates $1,000,001$ decimal digits of $\pi$ using a Borwein quintic iteration.
+  - ![`example002d_pi_limb08.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example002d_pi_limb08.cpp) calculates yet again $1,000,001$ decimal digits of $\pi$ using an 8-bit internal limb type and `float` internal floating-point type.
+  - ![`example001e_algebra_and_constexpr.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example001e_algebra_and_constexpr.cpp) (TBD) verifies some basic C++20 `constexpr` algebraic operations.
+  - ![`example003_zeta.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example003_zeta.cpp) computes a Riemann zeta function value.
+  - ![`example004_bessel_recur.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example004_bessel_recur.cpp) implements cylindrical Bessel functions of integral order via downward recursion with a Neumann sum.
+  - ![`example005_polylog_series.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example005_polylog_series.cpp) performs a small-argument polylogarithm series calculation.
+  - ![`example006_logarithm.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example006_logarithm.cpp) calculates the value of a logarithm (internally using a Gauss AGM method).
+  - ![`example007_catalan_series.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example007_catalan_series.cpp) computes $1,001$ decimal digits of Catalan's constant using an accelerated series.
+  - ![`example008_bernoulli_tgamma.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example008_bernoulli_tgamma.cpp) implements `tgamma(x)` using Stirling's asymptotic expansion of the logarithm of the Gamma function with Bernoulli numbers and subsequently calculates $1,001$ decimal digits of $\Gamma(n/2)$ for small integer $n$.
+  - ![`example009_boost_math_standalone.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example009_boost_math_standalone.cpp) checks basic compatibility of standalone `decwide_t` with `Boost.Math` by testing a cube root value obtained from `boost::math::cbrt`.
+  - ![`example009a_boost_math_standalone.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example009a_boost_math_standalone.cpp) also checks standalone `decwide_t` with significantly more of `Boost.Math` by testing a $1,001$ digit generalized Legendre function value (using `boost::math::tgamma` and more to do so).
+  - ![`example009b_boost_math_standalone.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example009b_boost_math_standalone.cpp) checks yet again standalone `decwide_t` with `Boost.Math`'s available `boost::math::tgamma` function for small-ish decimal floats having ${\lesssim}~100$ decimal digits.
+  - ![`example010_hypergeometric_2f1.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example010_hypergeometric_2f1.cpp) calculates a $1,001$ decimal digit hypergeometric function value using an iterative rational approximation scheme.
+  - ![`example010a_hypergeometric_1f1.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example010a_hypergeometric_1f1.cpp) calculates another $1,001$ decimal digit hypergeometric function in a similar fashion.
+  - ![`example011_trig_trapezoid_integral.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example011_trig_trapezoid_integral.cpp) uses trapezoid integration with an integral representation involving locally-written trigonometric sine and cosine functions to compute several cylindrical Bessel function values.
+  - ![`example012_rational_floor_ceil.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example012_rational_floor_ceil.cpp) verifies the proper representation of a wide selection of small-valued, pure integral rational quotients.
+  - ![`example013_embeddable_sqrt.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example013_embeddable_sqrt.cpp) and ![`example013a_embeddable_agm.cpp`](https://github.com/ckormanyos/wide-decimal/blob/main/examples/example013a_embeddable_agm.cpp) exercise calculations that also run on tiny bare-metal embedded systems, featuring a $101$ digit square root calculation and a $53$ digit AGM iteration for $\pi$.
 
 ## Testing, CI and Quality Checks
 
