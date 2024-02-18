@@ -956,7 +956,7 @@
             % static_cast<int>(decwide_t_elem_digits10)
           );
 
-        constexpr auto digit_loops =
+        constexpr auto digit_loops = // NOLINT(altera-id-dependent-backward-branch)
           static_cast<int>
           (
               digit_elem_whole
