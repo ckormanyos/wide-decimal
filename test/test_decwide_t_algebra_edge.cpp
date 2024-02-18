@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022 - 2023.                 //
+//  Copyright Christopher Kormanyos 2022 - 2024.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -94,19 +94,19 @@ auto generate_wide_decimal_value(bool is_positive     = false,
 
     const auto sgn_exp = (dist_sgn(eng_sgn) != static_cast<std::uint32_t>(UINT8_C(0)));
 
-    char pstr_exp[static_cast<std::size_t>(UINT8_C(32))] = { '\0' }; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
+    char p_str_exp[static_cast<std::size_t>(UINT8_C(32))] = { '\0' }; // NOLINT(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
 
-    pstr_exp[static_cast<std::size_t>(UINT8_C(0))] = 'E';
-    pstr_exp[static_cast<std::size_t>(UINT8_C(1))] = static_cast<char>(sgn_exp ? '-' : '+');
+    p_str_exp[static_cast<std::size_t>(UINT8_C(0))] = 'E';
+    p_str_exp[static_cast<std::size_t>(UINT8_C(1))] = static_cast<char>(sgn_exp ? '-' : '+');
 
     {
-      const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[2U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+      const char* p_end = util::baselexical_cast(val_exp, &p_str_exp[2U], &p_str_exp[0U] + sizeof(p_str_exp)); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-      for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
+      for(auto ptr = static_cast<const char*>(p_str_exp); ptr != p_end; ++ptr) // NOLINT(llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
       {
         const auto len = str_x.length();
 
-        str_x.insert(len, static_cast<std::size_t>(UINT8_C(1)), *p);
+        str_x.insert(len, static_cast<std::size_t>(UINT8_C(1)), *ptr);
       }
     }
 
@@ -905,7 +905,7 @@ auto test_string_ops_and_round_trips() -> bool
         {
           uint_digits_array_type data_uint_buf { };
 
-          static_cast<void>(util::baselexical_cast(static_cast<std::uint32_t>(x), data_uint_buf.data()));
+          static_cast<void>(util::baselexical_cast(static_cast<std::uint32_t>(x), data_uint_buf.data(), data_uint_buf.data() + data_uint_buf.size()));
 
           std::string
             str_rep

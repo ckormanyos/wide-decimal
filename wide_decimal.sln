@@ -5,6 +5,15 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wide_decimal", "wide_decimal.vcxproj", "{E8006465-B814-49F0-B17C-5CC35591686D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{67024DAA-EB45-4603-8B77-A834C6A9CDF2}"
+	ProjectSection(SolutionItems) = preProject
+		.clang-tidy = .clang-tidy
+		CMakeLists.txt = CMakeLists.txt
+		codecov.yml = codecov.yml
+		LICENSE_1_0.txt = LICENSE_1_0.txt
+		sonar-project.properties = sonar-project.properties
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		wide-decimal-debug|x64 = wide-decimal-debug|x64

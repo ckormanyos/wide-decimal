@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2023.                 //
+//  Copyright Christopher Kormanyos 2020 - 2024.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -42,7 +42,7 @@ auto example002_pi_digits10_callback(const std::uint32_t d10) -> void
 {
   std::array<char, static_cast<std::size_t>(UINT32_C(10))> p_str = {{ '\0' }};
 
-  const char* p_end = util::baselexical_cast(d10, p_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+  const char* p_end = util::baselexical_cast(d10, p_str.data(), p_str.data() + p_str.size()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
   const auto len = static_cast<std::uint_fast8_t>(p_end - p_str.data());
 
