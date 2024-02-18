@@ -2596,8 +2596,8 @@
               val += static_cast<unsigned long long>(xn.my_data[limb_index]); // NOLINT(google-runtime-int)
             }
 
-            signed_long_long_result = ((!b_neg) ? static_cast<signed long long>(val)                                   // NOLINT(google-runtime-int)
-                                                : static_cast<signed long long>(-static_cast<signed long long>(val))); // NOLINT(google-runtime-int)
+            signed_long_long_result = ((!b_neg) ? static_cast<signed long long>(val)                   // NOLINT(google-runtime-int)
+                                                : static_cast<signed long long>(detail::negate(val))); // NOLINT(google-runtime-int)
           }
         }
       }
@@ -5879,8 +5879,12 @@
 
       // Ensure that the resulting power is non-negative.
       // Also enforce that m >= 3.
-      const auto m = (std::max)(static_cast<std::int32_t>(n_times_factor - lg_x_over_lg2),
-                                static_cast<std::int32_t>(3));
+      const auto m =
+        static_cast<std::int32_t>
+        (
+          (std::max)(static_cast<float>(n_times_factor - lg_x_over_lg2),
+                     static_cast<float>(3))
+        );
 
       local_wide_decimal_type bk =
         one<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>();
