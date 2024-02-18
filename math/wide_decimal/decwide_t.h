@@ -4085,7 +4085,7 @@
 
       const char* ptr_end = util::baselexical_cast(u_exp, ptr_str.data(), ptr_str.data() + ptr_str.size()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,llvm-qualified-auto,readability-qualified-auto)
 
-      const auto str_exp_len = std::distance(static_cast<const char*>(ptr_str.data()), ptr_end);
+      const auto str_exp_len = static_cast<std::size_t>(std::distance(static_cast<const char*>(ptr_str.data()), ptr_end));
 
       auto str_exp = std::string(ptr_str.data(), ptr_str.data() + str_exp_len);
 

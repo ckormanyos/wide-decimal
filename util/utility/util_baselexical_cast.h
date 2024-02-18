@@ -113,8 +113,10 @@
            typename OutputIterator,
            const std::uint_fast8_t BaseRepresentation = static_cast<std::uint_fast8_t>(UINT8_C(10)),
            const bool UpperCase = true>
-  auto baselexical_cast(const UnsignedIntegerType& u, OutputIterator out, OutputIterator) -> OutputIterator
+  auto baselexical_cast(const UnsignedIntegerType& u, OutputIterator out, OutputIterator out_dummy) -> OutputIterator
   {
+    static_cast<void>(out_dummy);
+
     using unsigned_integer_type = UnsignedIntegerType;
     using output_value_type     = typename std::iterator_traits<OutputIterator>::value_type;
 
