@@ -41,7 +41,7 @@ auto example002a_pi_small_limb_digits10_callback(const std::uint32_t d10) -> voi
 {
   std::array<char, static_cast<std::size_t>(UINT32_C(10))> p_str = {{ '\0' }};
 
-  const char* p_end = util::baselexical_cast(d10, p_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+  const char* p_end = util::baselexical_cast(d10, p_str.data(), p_str.data() + p_str.size()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
   const auto len = static_cast<std::uint_fast8_t>(p_end - p_str.data());
 

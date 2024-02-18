@@ -100,7 +100,7 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     pstr_exp[static_cast<std::size_t>(UINT8_C(1))] = static_cast<char>(sgn_exp ? '-' : '+');
 
     {
-      const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[2U]); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+      const char* p_end = util::baselexical_cast(val_exp, &pstr_exp[2U], &pstr_exp[0U] + sizeof(pstr_exp)); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
       for(auto p = static_cast<const char*>(pstr_exp); p != p_end; ++p) // NOLINT(llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
       {
@@ -905,7 +905,7 @@ auto test_string_ops_and_round_trips() -> bool
         {
           uint_digits_array_type data_uint_buf { };
 
-          static_cast<void>(util::baselexical_cast(static_cast<std::uint32_t>(x), data_uint_buf.data()));
+          static_cast<void>(util::baselexical_cast(static_cast<std::uint32_t>(x), data_uint_buf.data(), data_uint_buf.data() + data_uint_buf.size()));
 
           std::string
             str_rep

@@ -2525,7 +2525,7 @@
 
         auto data_exp_buf = exp_array_type { };
 
-        const char* p_end = util::baselexical_cast(ul_exp, data_exp_buf.data());
+        const char* p_end = util::baselexical_cast(ul_exp, data_exp_buf.data(), data_exp_buf.data() + data_exp_buf.size());
 
         const auto exp_len = std::distance(static_cast<const char*>(data_exp_buf.data()), p_end);
 
@@ -3867,7 +3867,7 @@
       // Obtain the digits in the first limb.
       auto it_rep = x.crepresentation().cbegin(); // NOLINT(llvm-qualified-auto,readability-qualified-auto)
 
-      const char* p_end = util::baselexical_cast(*it_rep, data_elem_buf.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+      const char* p_end = util::baselexical_cast(*it_rep, data_elem_buf.data(), data_elem_buf.data() + data_elem_buf.size()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
 
       ++it_rep;
 
@@ -3893,7 +3893,7 @@
       // beginning with the data element having index 1.
       while(it_rep != (x.crepresentation().cbegin() + static_cast<std::size_t>(number_of_elements))) // NOLINT(altera-id-dependent-backward-branch)
       {
-        p_end = util::baselexical_cast(*it_rep, data_elem_buf.data());
+        p_end = util::baselexical_cast(*it_rep, data_elem_buf.data(), data_elem_buf.data() + data_elem_buf.size());
 
         ++it_rep;
 
@@ -4083,12 +4083,13 @@
 
       std::array<char, static_cast<std::size_t>(UINT8_C(20))> ptr_str = {{ '\0' }}; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-      auto ptr_end = util::baselexical_cast(u_exp, ptr_str.data()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,llvm-qualified-auto,readability-qualified-auto)
+      const char* ptr_end = util::baselexical_cast(u_exp, ptr_str.data(), ptr_str.data() + ptr_str.size()); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,llvm-qualified-auto,readability-qualified-auto)
 
-      auto str_exp = std::string(ptr_str.data(), ptr_end);
+      const auto str_exp_len = std::distance(static_cast<const char*>(ptr_str.data()), ptr_end);
+
+      auto str_exp = std::string(ptr_str.data(), ptr_str.data() + str_exp_len);
 
       // Format the exponent string to have a width that is an even multiple of three.
-      const auto str_exp_len      = static_cast<std::size_t>(str_exp.length());
       const auto str_exp_len_mod3 = static_cast<std::size_t>(str_exp_len % static_cast<std::size_t>(UINT8_C(3)));
 
       const auto exp_has_mod3 = (str_exp_len_mod3 != static_cast<std::size_t>(UINT8_C(0)));

@@ -299,14 +299,12 @@
     <None Include=".tidy\make\make_tidy_01_generic.gmk">
       <Filter>.tidy\make</Filter>
     </None>
-    <None Include=".clang-tidy" />
     <None Include=".github\toolchains\gcc.cmake">
       <Filter>.github\toolchains</Filter>
     </None>
     <None Include=".github\workflows\wide_decimal_sonar.yml">
       <Filter>.github\workflows</Filter>
     </None>
-    <None Include="sonar-project.properties" />
     <None Include=".gcov\make\make_gcov_03_flags.gmk">
       <Filter>.gcov\make</Filter>
     </None>
@@ -322,7 +320,6 @@
     <None Include=".github\workflows\wide_decimal_codecov.yml">
       <Filter>.github\workflows</Filter>
     </None>
-    <None Include="codecov.yml" />
     <None Include="target\build\test_examples_emulator.py">
       <Filter>Source Files\target\build</Filter>
     </None>
@@ -340,7 +337,5 @@
     <Text Include="test\CMakeLists.txt">
       <Filter>Source Files\test</Filter>
     </Text>
-    <Text Include="CMakeLists.txt" />
-    <Text Include="LICENSE_1_0.txt" />
   </ItemGroup>
 </Project>
