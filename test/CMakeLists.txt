@@ -6,7 +6,7 @@ if (Boost_FOUND)
   test_decwide_t_algebra_edge.cpp
   test_decwide_t_examples.cpp
   test.cpp)
-  target_compile_features(test_decwide_t PRIVATE cxx_std_14)
+  target_compile_features(test_decwide_t PRIVATE cxx_std_20)
   target_include_directories(test_decwide_t PRIVATE ${PROJECT_SOURCE_DIR})
   target_link_libraries(test_decwide_t Examples ${CMAKE_THREAD_LIBS_INIT})
   add_test(test test_decwide_t)
