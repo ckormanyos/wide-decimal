@@ -668,6 +668,10 @@
         // TBD: Need to properly handle this left shift amount
         // when GCC's __float128 is active (in case of -std=gnu++XX).
         // This happens when native_float_type is of type __float128.
+
+        static_assert(std::numeric_limits<native_float_type>::digits <= std::numeric_limits<long double>::digits,
+                      "Error: The instantiated native float type does not fit in long double");
+
         constexpr auto max_left_shift_amount =
           static_cast<int>
           (
@@ -676,7 +680,17 @@
               : std::numeric_limits<long double>::digits
           );
 
-        my_mantissa_part |= static_cast<std::uintmax_t>(UINTMAX_C(1) << static_cast<unsigned>(max_left_shift_amount - 1)); // NOLINT(google-runtime-int)
+        #if (defined(__GNUC__) && !defined(__clang__))
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wshift-count-overflow"
+        #endif
+
+        my_mantissa_part |= static_cast<std::uintmax_t>(UINTMAX_C(1) << static_cast<unsigned>(max_left_shift_amount - 1));
+
+        #if (defined(__GNUC__) && !defined(__clang__))
+        #pragma GCC diagnostic pop
+        #endif
+
         my_exponent_part -= 1;
       }
 
