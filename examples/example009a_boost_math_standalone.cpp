@@ -611,6 +611,17 @@ auto ::math::wide_decimal::example009a_boost_math_standalone() -> bool
   return result_is_ok;
 }
 
+#if defined(__clang__) && !defined(__APPLE__)
+#pragma GCC diagnostic pop
+#endif
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#endif
+
 #else
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
@@ -638,15 +649,4 @@ auto main() -> int // NOLINT(bugprone-exception-escape)
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
 
-#endif
-
-#if defined(__clang__) && !defined(__APPLE__)
-#pragma GCC diagnostic pop
-#endif
-
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
 #endif

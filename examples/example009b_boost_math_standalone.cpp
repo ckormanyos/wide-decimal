@@ -13,23 +13,15 @@
 #error BOOST_VERSION is not defined. Ensure that <boost/version.hpp> is properly included.
 #endif
 
-#if (BOOST_VERSION >= 108000)
+#if (BOOST_VERSION >= 108300)
+
 #if !defined(BOOST_NO_EXCEPTIONS)
 #define BOOST_NO_EXCEPTIONS
 #endif
-#if !defined(BOOST_NO_RTTI)
-#define BOOST_NO_RTTI
-#endif
-#endif
 
-#if ((BOOST_VERSION >= 107700) && !defined(BOOST_MATH_STANDALONE))
-#if (defined(_MSC_VER) && (_MSC_VER < 1920))
-#else
 #define BOOST_MATH_STANDALONE
-#endif
-#endif
 
-#if ((BOOST_VERSION >= 107900) && !defined(BOOST_MP_STANDALONE))
+#if !defined(BOOST_MP_STANDALONE)
 #define BOOST_MP_STANDALONE
 #endif
 
@@ -49,15 +41,14 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #endif
 
-#if (BOOST_VERSION < 107900)
-#include <boost/math/policies/error_handling.hpp>
-#include <boost/throw_exception.hpp>
-#endif
-
 #include <boost/math/bindings/decwide_t.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 
+#endif
+
 #include <examples/example_decwide_t.h>
+
+#if (BOOST_VERSION >= 108300)
 
 WIDE_DECIMAL_NAMESPACE_BEGIN
 
@@ -405,18 +396,8 @@ auto ::math::wide_decimal::example009b_boost_math_standalone() -> bool
   using wide_decimal_305_type = ::math::wide_decimal::decwide_t<static_cast<std::int32_t>(INT32_C(305)), std::uint32_t, void>;
   #endif
 
-  #if (BOOST_VERSION < 107900)
-  using boost_wrapexcept_round_type  = ::boost::wrapexcept<::boost::math::rounding_error>;
-  using boost_wrapexcept_domain_type = ::boost::wrapexcept<std::domain_error>;
-  #endif
-
   auto result_is_ok = false;
 
-  #if (BOOST_VERSION >= 108000)
-  #else
-  try
-  {
-  #endif
   const auto result_010_is_ok = example009b_boost::test_both<wide_decimal_010_type>();
   const auto result_035_is_ok = example009b_boost::test_both<wide_decimal_035_type>();
   const auto result_105_is_ok = example009b_boost::test_both<wide_decimal_105_type>();
@@ -426,43 +407,33 @@ auto ::math::wide_decimal::example009b_boost_math_standalone() -> bool
                   && result_035_is_ok
                   && result_105_is_ok
                   && result_305_is_ok);
-  #if (BOOST_VERSION >= 108000)
-  #else
-  }
-  #if (BOOST_VERSION < 107900)
-  catch(const boost_wrapexcept_round_type& e)
-  {
-    result_is_ok = false;
-
-    std::cout << "Exception: boost_wrapexcept_round_type: " << e.what() << std::endl;
-  }
-  catch(const boost_wrapexcept_domain_type& e)
-  {
-    result_is_ok = false;
-
-    std::cout << "Exception: boost_wrapexcept_domain_type: " << e.what() << std::endl;
-  }
-  #else
-  // LCOV_EXCL_START
-  catch(const ::boost::math::rounding_error& e)
-  {
-    result_is_ok = false;
-
-    std::cout << "Exception: ::boost::math::rounding_error: " << e.what() << std::endl;
-  }
-  catch(const std::domain_error& e)
-  {
-    result_is_ok = false;
-
-    std::cout << "Exception: std::domain_error: " << e.what() << std::endl;
-  }
-  // LCOV_EXCL_STOP
-  #endif
-  #endif
 
   return result_is_ok;
 }
 
+#if defined(__clang__) && !defined(__APPLE__)
+#pragma GCC diagnostic pop
+#endif
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#endif
+
+#else
+
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example009b_boost_math_standalone() -> bool
+#else
+auto ::math::wide_decimal::example009b_boost_math_standalone() -> bool
+#endif
+{
+  return true;
+}
+
+#endif
 // Enable this if you would like to activate this main() as a standalone example.
 #if defined(WIDE_DECIMAL_STANDALONE_EXAMPLE009B_BOOST_MATH_STANDALONE)
 
@@ -477,15 +448,4 @@ auto main() -> int // NOLINT(bugprone-exception-escape)
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
 
-#endif
-
-#if defined(__clang__) && !defined(__APPLE__)
-#pragma GCC diagnostic pop
-#endif
-
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
 #endif
