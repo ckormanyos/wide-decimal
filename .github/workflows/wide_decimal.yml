@@ -478,6 +478,7 @@ jobs:
         run: |
           git submodule update --init tools
           git submodule update --init libs/config
+          git submodule update --init libs/math
           git submodule update --init libs/multiprecision
       - uses: ilammy/msvc-dev-cmd@v1
         with:
