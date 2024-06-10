@@ -11,7 +11,7 @@ if (Boost_FOUND)
 endif()
 
 add_library(WideDecimal INTERFACE)
-target_compile_features(WideDecimal INTERFACE cxx_std_20)
+target_compile_features(WideDecimal INTERFACE cxx_std_14)
 
 target_include_directories(
   WideDecimal SYSTEM INTERFACE
