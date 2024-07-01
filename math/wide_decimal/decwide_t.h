@@ -2745,7 +2745,7 @@
     {
       const auto b_neg = (flt < static_cast<FloatingPointType>(0.0F));
 
-      const detail::native_float_parts<FloatingPointType> ld_parts((!b_neg) ? flt : -flt);
+      const detail::template native_float_parts<FloatingPointType> ld_parts((!b_neg) ? flt : -flt);
 
       // Create a decwide_t from the fractional part of the
       // mantissa expressed as an unsigned long long.

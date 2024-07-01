@@ -96,12 +96,16 @@
     // floating-point types like float, double and long double.
 
     template<const std::int32_t ParamDigitsBaseTen,
-              typename LimbType,
-              typename AllocatorType,
-              typename InternalFloatType,
-              typename ExponentType,
-              typename FftFloatType>
-    friend class decwide_t;
+             typename LimbType,
+             typename AllocatorType,
+             typename OtherFloatingPointType,
+             typename ExponentType,
+             typename FftFloatType>
+    #if defined(WIDE_DECIMAL_NAMESPACE)
+    friend class WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t;
+    #else
+    friend class ::math::wide_decimal::decwide_t;
+    #endif
 
     explicit native_float_parts(FloatingPointType f)
     {
