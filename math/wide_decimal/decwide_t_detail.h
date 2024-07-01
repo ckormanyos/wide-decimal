@@ -91,6 +91,11 @@
   template<typename FloatingPointType>
   class native_float_parts final
   {
+  public:
+    native_float_parts() = delete;
+
+    ~native_float_parts() noexcept = default; // LCOV_EXCL_LINE
+
   private:
     // Emphasize: This template class can be used with native
     // floating-point types like float, double and long double.
@@ -196,10 +201,6 @@
     constexpr native_float_parts(native_float_parts&& other) noexcept
       : my_mantissa_part(other.my_mantissa_part),
         my_exponent_part(other.my_exponent_part) { }
-
-    native_float_parts() = delete;
-
-    ~native_float_parts() noexcept = default; // LCOV_EXCL_LINE
 
     auto operator=(const native_float_parts& other) noexcept -> native_float_parts& // NOLINT(cert-oop54-cpp)
     {
