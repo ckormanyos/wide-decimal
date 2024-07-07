@@ -92,14 +92,14 @@
   class native_float_parts final
   {
   public:
+    // Emphasize: This template class can be used with native
+    // floating-point types like float, double and long double.
+
     native_float_parts() = delete;
 
     ~native_float_parts() noexcept = default; // LCOV_EXCL_LINE
 
   private:
-    // Emphasize: This template class can be used with native
-    // floating-point types like float, double and long double.
-
     template<const std::int32_t ParamDigitsBaseTen,
              typename LimbType,
              typename AllocatorType,
@@ -432,7 +432,7 @@
 
     for(;;)
     {
-      un = static_cast<local_unsigned_integral_type>(un / static_cast<local_unsigned_integral_type>(UINT8_C(10U)));
+      un = static_cast<local_unsigned_integral_type>(un / static_cast<local_unsigned_integral_type>(UINT8_C(10)));
 
       p10 = static_cast<local_unsigned_exponent_type>(p10 * static_cast<local_unsigned_exponent_type>(UINT8_C(10)));
 
