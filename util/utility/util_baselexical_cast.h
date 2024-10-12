@@ -160,7 +160,16 @@
         }
       }
 
+      #if (defined(__GNUC__) && !defined(__clang__)&& (__GNUC__ > 12))
+      #pragma GCC diagnostic push
+      #pragma GCC diagnostic ignored "-Wstringop-overflow="
+      #endif
+
       std::reverse(out_first, out + static_cast<std::size_t>(UINT8_C(1)));
+
+      #if (defined(__GNUC__) && !defined(__clang__)&& (__GNUC__ > 12))
+      #pragma GCC diagnostic pop
+      #endif
     }
 
     return out + static_cast<std::size_t>(UINT8_C(1));
