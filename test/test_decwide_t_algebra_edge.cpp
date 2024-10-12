@@ -100,9 +100,9 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     p_str_exp[static_cast<std::size_t>(UINT8_C(1))] = static_cast<char>(sgn_exp ? '-' : '+');
 
     {
-      const char* p_end = util::baselexical_cast(val_exp, &p_str_exp[2U], &p_str_exp[0U] + sizeof(p_str_exp)); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      const char* p_end { util::baselexical_cast(val_exp, &p_str_exp[2U], &p_str_exp[0U] + sizeof(p_str_exp)) }; // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-      for(auto ptr = static_cast<const char*>(p_str_exp); ptr != p_end; ++ptr) // NOLINT(llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
+      for(const char* ptr { p_str_exp }; ptr != p_end; ++ptr) // NOLINT(llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
       {
         const auto len = str_x.length();
 
@@ -1509,8 +1509,8 @@ auto test_odds_and_ends() -> bool
   }
 
   {
-    std::mt19937 eng_m1_0_p1;
     std::uniform_int_distribution<int> dist_m1_0_p1(-1, 1); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+    std::mt19937 eng_m1_0_p1(util::util_pseudorandom_time_point_seed::value<typename std::mt19937::result_type>());
 
     unsigned cnt_pow_0 { };
 
