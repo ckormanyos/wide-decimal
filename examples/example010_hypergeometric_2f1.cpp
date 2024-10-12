@@ -66,7 +66,7 @@ namespace example010_hypergeometric
     B[2U] = my_one + ((ABZ2 / CT1) * (my_one + ABZ1 / ((-T(6U)) + (CT1 * 3U)))); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     A[2U] = B[2U]  - ((ABZ  / CP)  * (my_one + ((ABZ2 - ABZ1) / CT1)));
 
-    SABZ /= 4U;
+    SABZ /= 4U; // LCOV_EXCL_LINE
 
     const T Z2(Z / 2U); // NOLINT(readability-identifier-naming)
 

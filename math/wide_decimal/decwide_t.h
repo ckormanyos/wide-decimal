@@ -993,7 +993,7 @@
         else
         {
           std::copy(my_data.cbegin(),
-                    my_data.cend() - static_cast<std::ptrdiff_t>(-ofs),
+                    my_data.cend() - static_cast<std::ptrdiff_t>(-ofs), // LCOV_EXCL_LINE
                     my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(-ofs));
 
           // LCOV_EXCL_START

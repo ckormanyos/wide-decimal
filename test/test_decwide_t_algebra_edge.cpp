@@ -901,7 +901,7 @@ auto test_string_ops_and_round_trips() -> bool
         );
 
       const auto big_uint_str_rep =
-        [&x]() // NOLINT(modernize-use-trailing-return-type)
+        [&x]() // NOLINT(modernize-use-trailing-return-type) // LCOV_EXCL_LINE
         {
           uint_digits_array_type data_uint_buf { };
 
@@ -927,7 +927,7 @@ auto test_string_ops_and_round_trips() -> bool
         }();
 
       const auto result_big_uint_is_ok =
-        [&x, &big_uint_str_rep, &ten_pow_30]() // NOLINT(modernize-use-trailing-return-type)
+        [&x, &big_uint_str_rep, &ten_pow_30]() // NOLINT(modernize-use-trailing-return-type) // LCOV_EXCL_LINE
         {
           std::stringstream strm;
 
@@ -1509,15 +1509,27 @@ auto test_odds_and_ends() -> bool
   }
 
   {
-    const local_wide_decimal_type pi_val = pi_right;
+    std::uniform_int_distribution<int> dist_m1_0_p1(-1, 1); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 
-    using std::pow;
+    using eng_m1_0_p1_type = std::mt19937;
 
-    auto pi_pow_zero = pow(pi_val, static_cast<int>(INT8_C(0)));
+    for(auto i = static_cast<unsigned>(UINT8_C(0)); i < static_cast<unsigned>(UINT8_C(64)); ++i)
+    {
+      const local_wide_decimal_type pi_val = pi_right;
 
-    const auto result_pi_pow_zero_is_ok = (pi_pow_zero == static_cast<int>(INT8_C(1)));
+      using std::pow;
 
-    result_is_ok = (result_pi_pow_zero_is_ok && result_is_ok);
+      const int pwn { dist_m1_0_p1(eng_m1_0_p1_type()) };
+
+      auto pi_pow_zero = pow(pi_val, pwn);
+
+      if(pwn == 0)
+      {
+        const auto result_pi_pow_zero_is_ok = (pi_pow_zero == static_cast<int>(INT8_C(1)));
+
+        result_is_ok = (result_pi_pow_zero_is_ok && result_is_ok);
+      }
+    }
   }
 
   {
