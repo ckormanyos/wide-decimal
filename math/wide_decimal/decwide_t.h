@@ -4500,7 +4500,10 @@
     get_output_string(x, str, the_exp, number_of_digits10_i_want);
 
     // Obtain additional format information.
-    const auto my_showpoint = ((ostrm_flags & std::ios::showpoint) != static_cast<local_flags_type>(UINT8_C(0)));
+    const bool my_showpoint
+    {
+      static_cast<local_flags_type>(ostrm_flags & std::ios::showpoint) == static_cast<local_flags_type>(std::ios::showpoint)
+    };
 
     // Write the output string in the desired format.
     if     (my_float_field == detail::os_float_field_type::scientific) { wr_string_scientific(str, the_exp, os_precision, my_showpoint, my_uppercase); }
