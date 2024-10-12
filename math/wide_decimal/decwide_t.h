@@ -4394,8 +4394,8 @@
     // Determine the kind of output format requested (scientific, fixed, none).
     detail::os_float_field_type my_float_field { };
 
-    if     ((ostrm_flags & std::ios::scientific) != static_cast<local_flags_type>(UINT8_C(0))) { my_float_field = detail::os_float_field_type::scientific; }
-    else if((ostrm_flags & std::ios::fixed)      != static_cast<local_flags_type>(UINT8_C(0))) { my_float_field = detail::os_float_field_type::fixed; }
+    if     (static_cast<local_flags_type>(ostrm_flags & std::ios::scientific) == static_cast<local_flags_type>(std::ios::scientific)) { my_float_field = detail::os_float_field_type::scientific; }
+    else if(static_cast<local_flags_type>(ostrm_flags & std::ios::fixed)      == static_cast<local_flags_type>(std::ios::fixed))      { my_float_field = detail::os_float_field_type::fixed; }
     else                                                                                       { my_float_field = detail::os_float_field_type::none; }
 
     // Get the output stream's precision and limit it to max_digits10.
@@ -4500,7 +4500,8 @@
     get_output_string(x, str, the_exp, number_of_digits10_i_want);
 
     // Obtain additional format information.
-    const bool my_showpoint
+    const bool
+      my_showpoint
     {
       static_cast<local_flags_type>(ostrm_flags & std::ios::showpoint) == static_cast<local_flags_type>(std::ios::showpoint)
     };
@@ -4532,10 +4533,11 @@
       const auto n_fill = static_cast<std::uint_fast32_t>(my_width - str.length());
 
       // Left-justify is the exception, std::right and std::internal justify right.
-      const auto my_left =
-      (
-        static_cast<local_flags_type>(ostrm_flags & std::ios::left) != static_cast<local_flags_type>(static_cast<unsigned>(UINT8_C(0)))
-      );
+      const bool
+        my_left
+        {
+          static_cast<local_flags_type>(ostrm_flags & std::ios::left) == static_cast<local_flags_type>(std::ios::left)
+        };
 
       // Justify left or right and insert the fill characters.
       str.insert((my_left ? str.end() : str.begin()), static_cast<std::size_t>(n_fill), ostrm_fill);
