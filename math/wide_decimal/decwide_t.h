@@ -4382,9 +4382,10 @@
     using local_flags_type = std::ios::fmtflags;
 
     // Assess the format flags.
-    // Obtain the showpos flag.
-    const auto my_showpos   = (static_cast<local_flags_type>(ostrm_flags & std::ios::showpos)   != static_cast<local_flags_type>(UINT8_C(0)));
-    const auto my_uppercase = (static_cast<local_flags_type>(ostrm_flags & std::ios::uppercase) != static_cast<local_flags_type>(UINT8_C(0)));
+
+    // Obtain the showpos and uppercase flags.
+    const bool my_showpos   { static_cast<local_flags_type>(ostrm_flags & std::ios::showpos)   == static_cast<local_flags_type>(std::ios::showpos) };
+    const bool my_uppercase { static_cast<local_flags_type>(ostrm_flags & std::ios::uppercase) == static_cast<local_flags_type>(std::ios::uppercase) };
 
     using std::ilogb;
 
@@ -4396,7 +4397,7 @@
 
     if     (static_cast<local_flags_type>(ostrm_flags & std::ios::scientific) == static_cast<local_flags_type>(std::ios::scientific)) { my_float_field = detail::os_float_field_type::scientific; }
     else if(static_cast<local_flags_type>(ostrm_flags & std::ios::fixed)      == static_cast<local_flags_type>(std::ios::fixed))      { my_float_field = detail::os_float_field_type::fixed; }
-    else                                                                                       { my_float_field = detail::os_float_field_type::none; }
+    else                                                                                                                              { my_float_field = detail::os_float_field_type::none; }
 
     // Get the output stream's precision and limit it to max_digits10.
     // Erroneous negative precision (theoretically impossible) will be
@@ -4404,16 +4405,19 @@
     // at zero.
     const auto prec_default = static_cast<std::streamsize>(INT8_C(6));
 
-    auto os_precision =
-      static_cast<std::uint_fast32_t>
-      (
-        ((ostrm_precision <= static_cast<std::streamsize>(0))
-          ? ((my_float_field != detail::os_float_field_type::scientific) ? static_cast<std::uint_fast32_t>(prec_default) : static_cast<std::uint_fast32_t>(UINT8_C(0)))
-          : static_cast<std::uint_fast32_t>(ostrm_precision))
-      );
+    std::uint_fast32_t
+      os_precision
+      {
+        static_cast<std::uint_fast32_t>
+        (
+          ((ostrm_precision <= static_cast<std::streamsize>(0))
+            ? ((my_float_field != detail::os_float_field_type::scientific) ? static_cast<std::uint_fast32_t>(prec_default) : static_cast<std::uint_fast32_t>(UINT8_C(0)))
+            : static_cast<std::uint_fast32_t>(ostrm_precision))
+        )
+      };
 
-    auto use_scientific = false;
-    auto use_fixed      = false;
+    bool use_scientific { false };
+    bool use_fixed      { false };
 
     if     (my_float_field == detail::os_float_field_type::scientific) { use_scientific = true; }
     else if(my_float_field == detail::os_float_field_type::fixed)      { use_fixed      = true; }
@@ -4502,9 +4506,9 @@
     // Obtain additional format information.
     const bool
       my_showpoint
-    {
-      static_cast<local_flags_type>(ostrm_flags & std::ios::showpoint) == static_cast<local_flags_type>(std::ios::showpoint)
-    };
+      {
+        static_cast<local_flags_type>(ostrm_flags & std::ios::showpoint) == static_cast<local_flags_type>(std::ios::showpoint)
+      };
 
     // Write the output string in the desired format.
     if     (my_float_field == detail::os_float_field_type::scientific) { wr_string_scientific(str, the_exp, os_precision, my_showpoint, my_uppercase); }
