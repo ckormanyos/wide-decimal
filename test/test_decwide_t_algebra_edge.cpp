@@ -102,7 +102,7 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     {
       const char* p_end { util::baselexical_cast(val_exp, &p_str_exp[2U], &p_str_exp[0U] + sizeof(p_str_exp)) }; // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-      for(const char* ptr { p_str_exp }; ptr != p_end; ++ptr) // NOLINT(llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
+      for(const char* ptr { p_str_exp }; ptr != p_end; ++ptr) // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay,cppcoreguidelines-pro-bounds-pointer-arithmetic,llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
       {
         const auto len = str_x.length();
 
