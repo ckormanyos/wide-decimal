@@ -100,9 +100,9 @@ auto generate_wide_decimal_value(bool is_positive     = false,
     p_str_exp[static_cast<std::size_t>(UINT8_C(1))] = static_cast<char>(sgn_exp ? '-' : '+');
 
     {
-      const char* p_end = util::baselexical_cast(val_exp, &p_str_exp[2U], &p_str_exp[0U] + sizeof(p_str_exp)); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      const char* p_end { util::baselexical_cast(val_exp, &p_str_exp[2U], &p_str_exp[0U] + sizeof(p_str_exp)) }; // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-      for(auto ptr = static_cast<const char*>(p_str_exp); ptr != p_end; ++ptr) // NOLINT(llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
+      for(const char* ptr { p_str_exp }; ptr != p_end; ++ptr) // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay,cppcoreguidelines-pro-bounds-pointer-arithmetic,llvm-qualified-auto,readability-qualified-auto,altera-id-dependent-backward-branch)
       {
         const auto len = str_x.length();
 
@@ -901,7 +901,7 @@ auto test_string_ops_and_round_trips() -> bool
         );
 
       const auto big_uint_str_rep =
-        [&x]() // NOLINT(modernize-use-trailing-return-type)
+        [&x]() // NOLINT(modernize-use-trailing-return-type) // LCOV_EXCL_LINE
         {
           uint_digits_array_type data_uint_buf { };
 
@@ -927,7 +927,7 @@ auto test_string_ops_and_round_trips() -> bool
         }();
 
       const auto result_big_uint_is_ok =
-        [&x, &big_uint_str_rep, &ten_pow_30]() // NOLINT(modernize-use-trailing-return-type)
+        [&x, &big_uint_str_rep, &ten_pow_30]() // NOLINT(modernize-use-trailing-return-type) // LCOV_EXCL_LINE
         {
           std::stringstream strm;
 
@@ -1509,15 +1509,32 @@ auto test_odds_and_ends() -> bool
   }
 
   {
-    const local_wide_decimal_type pi_val = pi_right;
+    std::uniform_int_distribution<int> dist_m1_0_p1(-1, 1); // NOLINT(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
+    std::mt19937 eng_m1_0_p1(util::util_pseudorandom_time_point_seed::value<typename std::mt19937::result_type>());
 
-    using std::pow;
+    unsigned cnt_pow_0 { };
 
-    auto pi_pow_zero = pow(pi_val, static_cast<int>(INT8_C(0)));
+    for(auto i = static_cast<unsigned>(UINT8_C(0)); i < static_cast<unsigned>(UINT8_C(128)); ++i)
+    {
+      const local_wide_decimal_type pi_val = pi_right;
 
-    const auto result_pi_pow_zero_is_ok = (pi_pow_zero == static_cast<int>(INT8_C(1)));
+      using std::pow;
 
-    result_is_ok = (result_pi_pow_zero_is_ok && result_is_ok);
+      const int pwn { dist_m1_0_p1(eng_m1_0_p1) };
+
+      auto pi_pow_zero = pow(pi_val, pwn);
+
+      if(pwn == 0)
+      {
+        ++cnt_pow_0;
+
+        const auto result_pi_pow_zero_is_ok = (pi_pow_zero == static_cast<int>(INT8_C(1)));
+
+        result_is_ok = (result_pi_pow_zero_is_ok && result_is_ok);
+      }
+    }
+
+    result_is_ok = ((cnt_pow_0 > static_cast<unsigned>(UINT8_C(0))) && result_is_ok);
   }
 
   {

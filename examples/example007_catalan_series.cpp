@@ -23,7 +23,7 @@ namespace example007_catalan
   template<typename FloatingPointType>
   auto pi() -> FloatingPointType
   {
-    return static_cast<FloatingPointType>(3.1415926535897932384626433832795029L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    return static_cast<FloatingPointType>(3.1415926535897932384626433832795029L); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers,modernize-use-std-numbers)
   }
 
   template<>
