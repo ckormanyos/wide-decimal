@@ -590,7 +590,7 @@
     // In particular, support for NaN is already being
     // partially used through the specialization of limits.
     // When starting, maybe begin with FP-class NaN.
-    enum class fpclass_type
+    enum class fpclass_type // NOLINT(performance-enum-size)
     {
       decwide_t_finite
     };
@@ -2700,7 +2700,7 @@
         && (i  <  static_cast<std::uint_fast32_t>(std::tuple_size<local_tmp_array_type>::value))
       )
       {
-        tmp[static_cast<std::size_t>(i)] =
+        tmp[static_cast<std::size_t>(i)] = // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
           static_cast<limb_type>(uu % static_cast<unsigned long long>(decwide_t_elem_mask)); // NOLINT(google-runtime-int)
 
         uu = static_cast<unsigned long long>(uu / static_cast<unsigned long long>(decwide_t_elem_mask)); // NOLINT(google-runtime-int)
@@ -3376,7 +3376,7 @@
 
       // Get a possible +/- sign and remove it.
 
-      if((pos = str.find('-')) != std::string::npos)
+      if((pos = str.find('-')) != std::string::npos) // NOLINT(bugprone-assignment-in-if-condition)
       {
         my_neg = true;
 
@@ -3387,7 +3387,7 @@
         my_neg = false;
       }
 
-      if((pos = str.find('+')) != std::string::npos)
+      if((pos = str.find('+')) != std::string::npos) // NOLINT(bugprone-assignment-in-if-condition)
       {
         str.erase(pos, static_cast<std::uint_fast32_t>(UINT8_C(1)));
       }

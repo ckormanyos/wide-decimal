@@ -604,7 +604,7 @@
     }
   }
 
-  #if 0
+  #if 0 // NOLINT(readability-avoid-unconditional-preprocessor-if)
   template<typename InputLimbIteratorType,
            typename OutputLimbIteratorType,
            typename TempLimbIteratorType>

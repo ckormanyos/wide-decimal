@@ -54,6 +54,7 @@ TIDY_CHECKS  = "*,                                                             \
                 -readability-avoid-nested-conditional-operator,                \
                 -readability-identifier-length,                                \
                 -readability-redundant-casting,                                \
+                -readability-redundant-inline-specifier,                       \
                 -altera-struct-pack-align,                                     \
                 -altera-unroll-loops,                                          \
                 -fuchsia-*,                                                    \
