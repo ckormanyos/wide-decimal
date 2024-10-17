@@ -50,6 +50,7 @@ TIDY_CHECKS  = "*,                                                             \
                 -misc-include-cleaner,                                         \
                 -misc-const-correctness,                                       \
                 -performance-avoid-endl,                                       \
+                -portability-simd-intrinsics,                                  \
                 -cppcoreguidelines-avoid-magic-numbers,                        \
                 -readability-avoid-nested-conditional-operator,                \
                 -readability-identifier-length,                                \
