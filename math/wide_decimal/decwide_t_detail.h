@@ -101,11 +101,11 @@
 
   private:
     template<const std::int32_t ParamDigitsBaseTen,
-              typename LimbType,
-              typename AllocatorType,
+             typename LimbType,
+             typename AllocatorType,
              typename OtherFloatingPointType,
-              typename ExponentType,
-              typename FftFloatType>
+             typename ExponentType,
+             typename FftFloatType>
     #if defined(WIDE_DECIMAL_NAMESPACE)
     friend class WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t;
     #else

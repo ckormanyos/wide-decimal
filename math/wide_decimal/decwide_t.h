@@ -709,7 +709,7 @@
 
     // Constructors from built-in floating-point types.
     template<typename FloatingPointType,
-             typename std::enable_if<std::is_floating_point<FloatingPointType>::value == true>::type const* = nullptr>
+             typename std::enable_if<std::is_floating_point<FloatingPointType>::value>::type const* = nullptr>
     decwide_t(const FloatingPointType f) : my_data     (), // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
                                            my_exp      (static_cast<exponent_type>(INT8_C(0))),
                                            my_neg      (false),
@@ -993,12 +993,12 @@
         else
         {
           std::copy(my_data.cbegin(),
-                    my_data.cend() - static_cast<std::ptrdiff_t>(-ofs), // LCOV_EXCL_LINE
-                    my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(-ofs));
+                    my_data.cend() + static_cast<std::ptrdiff_t>(ofs), // LCOV_EXCL_LINE
+                    my_n_data_for_add_sub.begin() - static_cast<std::ptrdiff_t>(ofs));
 
           // LCOV_EXCL_START
           std::fill(my_n_data_for_add_sub.begin(),
-                    my_n_data_for_add_sub.begin() + static_cast<std::ptrdiff_t>(-ofs),
+                    my_n_data_for_add_sub.begin() - static_cast<std::ptrdiff_t>(ofs),
                     static_cast<limb_type>(UINT8_C(0)));
           // LCOV_EXCL_STOP
 
