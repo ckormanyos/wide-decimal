@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2023.                 //
+//  Copyright Christopher Kormanyos 2020 - 2024.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -8,6 +8,8 @@
 #if (defined(__GNUC__) && !defined(__clang__) && defined(__arm__))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overread"
 #endif
 
 #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
@@ -438,5 +440,6 @@ extern "C"
 #endif
 
 #if (defined(__GNUC__) && !defined(__clang__) && defined(__arm__))
+#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #endif
