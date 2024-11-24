@@ -406,7 +406,7 @@ extern "C"
 
   auto example_get_standalone_result() noexcept -> bool
   {
-    return { example_standalone_result == static_cast<std::uint32_t>(UINT32_C(0xF00DCAFE)) };
+    return (example_standalone_result == static_cast<std::uint32_t>(UINT32_C(0xF00DCAFE)));
   }
 }
 
