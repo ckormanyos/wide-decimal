@@ -5,7 +5,6 @@
 # //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 # //
 
-
 # Connect to the target (e.g., OpenOCD or another GDB server).
 target remote localhost:9999
 monitor halt
