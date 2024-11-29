@@ -29,9 +29,9 @@
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+#include <test/stopwatch.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_dynamic_array.h>
-#include <test/stopwatch.h>
 
 #include <array>
 #include <cstdint>

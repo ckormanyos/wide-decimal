@@ -20,9 +20,9 @@
 #include <math/constants/constants_pi_control_for_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
 #include <mcal_lcd/mcal_lcd_console.h>
+#include <test/stopwatch.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_baselexical_cast.h>
-#include <test/stopwatch.h>
 
 #include <algorithm>
 #include <cstdint>
