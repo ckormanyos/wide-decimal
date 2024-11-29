@@ -352,11 +352,6 @@ namespace example008_bernoulli
   }
 } // namespace example008_bernoulli
 
-#if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-#include <iomanip>
-#include <iostream>
-#endif
-
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #else
