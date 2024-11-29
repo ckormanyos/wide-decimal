@@ -29,7 +29,9 @@
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+#if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
 #include <test/stopwatch.h>
+#endif
 #include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_dynamic_array.h>
 
