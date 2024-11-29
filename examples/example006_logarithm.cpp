@@ -1,14 +1,18 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2022.                 //
+//  Copyright Christopher Kormanyos 2020 - 2024.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#include <cstdint>
-
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+#include <test/stopwatch.h>
+
+#include <cstdint>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example006_logarithm() -> bool
@@ -48,7 +52,9 @@ auto ::math::wide_decimal::example006_logarithm() -> bool
 
   bool result_is_ok = true;
 
-  const auto start = std::clock();
+  using stopwatch_type = concurrency::stopwatch;
+
+  stopwatch_type my_stopwatch { };
 
   for(auto i = static_cast<unsigned>(0U); i < static_cast<unsigned>(UINT32_C(1000)); ++i)
   {
@@ -63,11 +69,20 @@ auto ::math::wide_decimal::example006_logarithm() -> bool
     x *= 3U;
   }
 
-  const auto stop = std::clock();
+  const float execution_time { stopwatch_type::elapsed_time<float>(my_stopwatch) };
 
-  std::cout << "Time example006_logarithm()         : "
-            << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
-            << std::endl;
+  {
+    std::stringstream strm { };
+
+    strm << "Time example006_logarithm()         : "
+         << std::fixed
+         << std::setprecision(1)
+         << execution_time
+         << "s"
+         ;
+
+    std::cout << strm.str() << std::endl;
+  }
 
   return result_is_ok;
 }

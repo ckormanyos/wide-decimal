@@ -10,10 +10,6 @@
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
 #endif
 
-#include <cstdint>
-#include <ctime>
-#include <iostream>
-
 // Disable heavyweight features via macros for this example.
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
@@ -26,6 +22,12 @@
 #include <mcal_lcd/mcal_lcd_console.h>
 #include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_baselexical_cast.h>
+#include <test/stopwatch.h>
+
+#include <cstdint>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
 namespace example002a_pi
 {
@@ -84,7 +86,9 @@ auto ::math::wide_decimal::example002a_pi_small_limb() -> bool
     ::math::wide_decimal::decwide_t<wide_decimal_digits10, local_limb_type, local_allocator_type>;
   #endif
 
-  const auto start = std::clock();
+  using stopwatch_type = concurrency::stopwatch;
+
+  stopwatch_type my_stopwatch { };
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   const local_wide_decimal_type my_pi =
@@ -94,11 +98,20 @@ auto ::math::wide_decimal::example002a_pi_small_limb() -> bool
     ::math::wide_decimal::pi<wide_decimal_digits10, local_limb_type, local_allocator_type>(example002a_pi_small_limb_digits10_callback);
   #endif
 
-  const auto stop = std::clock();
+  const float execution_time { stopwatch_type::elapsed_time<float>(my_stopwatch) };
 
-  std::cout << "Time example002a_pi_small_limb()    : "
-            << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
-            << std::endl;
+  {
+    std::stringstream strm { };
+
+    strm << "Time example002a_pi_small_limb()    : "
+         << std::fixed
+         << std::setprecision(1)
+         << execution_time
+         << "s"
+         ;
+
+    std::cout << strm.str() << std::endl;
+  }
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),

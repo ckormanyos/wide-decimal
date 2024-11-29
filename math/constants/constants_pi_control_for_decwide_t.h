@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2022.
+//  Copyright Christopher Kormanyos 2020 - 2024.
 //  Distributed under the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,11 +8,11 @@
 #ifndef CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H // NOLINT(llvm-header-guard)
   #define CONSTANTS_PI_CONTROL_FOR_DECWIDE_T_2020_11_21_H
 
+  #include <math/wide_decimal/decwide_t_detail_namespace.h>
+
   #include <array>
   #include <cstddef>
   #include <cstdint>
-
-  #include <math/wide_decimal/decwide_t_detail_namespace.h>
 
   WIDE_DECIMAL_NAMESPACE_BEGIN
 
