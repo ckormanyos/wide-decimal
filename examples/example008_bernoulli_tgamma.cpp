@@ -19,10 +19,6 @@
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
 #endif
 
-#include <array>
-#include <cstdint>
-#include <utility>
-
 #if (defined(__GNUC__) && defined(__arm__))
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #endif
@@ -31,14 +27,23 @@
 #define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 #define WIDE_DECIMAL_DISABLE_USE_STD_FUNCTION
 
-#if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-#include <ctime>
-#endif
-
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+#if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
+#include <test/stopwatch.h>
+#endif
 #include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_dynamic_array.h>
+
+#include <array>
+#include <cstdint>
+#include <utility>
+
+#if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+#endif
 
 namespace example008_bernoulli
 {
@@ -347,11 +352,6 @@ namespace example008_bernoulli
   }
 } // namespace example008_bernoulli
 
-#if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-#include <iomanip>
-#include <iostream>
-#endif
-
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #else
@@ -359,21 +359,28 @@ auto ::math::wide_decimal::example008_bernoulli_tgamma() -> bool
 #endif
 {
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  const auto begin = std::clock();
+  using stopwatch_type = concurrency::stopwatch;
+
+  stopwatch_type my_stopwatch { };
   #endif
 
   const auto result_is_ok = example008_bernoulli::example008_bernoulli_tgamma_run();
 
   #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  const auto end = std::clock();
-  #endif
+  const float execution_time { stopwatch_type::elapsed_time<float>(my_stopwatch) };
 
-  #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
-  const auto elapsed = static_cast<float>(static_cast<float>(end - begin) / CLOCKS_PER_SEC);
+  {
+    std::stringstream strm { };
 
-  std::cout << "Time example008_bernoulli_tgamma()  : "
-            << elapsed
-            << std::endl;
+    strm << "Time example008_bernoulli_tgamma()  : "
+         << std::fixed
+         << std::setprecision(1)
+         << execution_time
+         << "s"
+         ;
+
+    std::cout << strm.str() << std::endl;
+  }
   #endif
 
   return result_is_ok;

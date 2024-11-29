@@ -8,16 +8,18 @@
 #ifndef INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H // NOLINT(llvm-header-guard)
   #define INDEPENDENT_ALGEBRA_TEST_DECWIDE_T_2020_10_17_H
 
-  #include <atomic>
-  #include <random>
-  #include <sstream>
-  #include <string>
-
   #include <math/wide_decimal/decwide_t.h>
 
   #include <test/independent_algebra_test_decwide_t_boost_cpp.h>
   #include <test/independent_algebra_test_decwide_t_wide_decimal.h>
   #include <test/parallel_for.h>
+
+  #include <util/utility/util_pseudorandom_time_point_seed.h>
+
+  #include <atomic>
+  #include <random>
+  #include <sstream>
+  #include <string>
 
   #if !defined(WIDE_DECIMAL_NAMESPACE_BEGIN)
   #error WIDE_DECIMAL_NAMESPACE_BEGIN is not defined. Ensure that <decwide_t_detail_namespace.h> is properly included.
@@ -178,16 +180,14 @@
     {
       if(do_seed_random_generators)
       {
-        const auto s = std::clock();
-
-        eng_sgn.seed(static_cast<typename local_eng_sgn_type::result_type>(s));
-        eng_exp.seed(static_cast<typename local_eng_exp_type::result_type>(s));
-        eng_man.seed(static_cast<typename local_eng_man_type::result_type>(s));
+        eng_sgn.seed(util::util_pseudorandom_time_point_seed::value<typename local_eng_sgn_type::result_type>());
+        eng_exp.seed(util::util_pseudorandom_time_point_seed::value<typename local_eng_exp_type::result_type>());
+        eng_man.seed(util::util_pseudorandom_time_point_seed::value<typename local_eng_man_type::result_type>());
       }
 
-      str = std::string();
+      str = std::string { };
 
-      std::stringstream ss;
+      std::stringstream strm { };
 
       std::uint32_t u { };
 
@@ -195,17 +195,20 @@
       {
         u = dst_man(eng_man);
 
-        constexpr auto wd =
-          static_cast<std::streamsize>
-          (
-            local_wide_decimal_type::decwide_t_elem_digits10
-          );
+        constexpr std::streamsize
+          wd
+          {
+            static_cast<std::streamsize>
+            (
+              local_wide_decimal_type::decwide_t_elem_digits10
+            )
+          };
 
-        ss << std::setw(wd) << std::setfill('0') << u;
+        strm << std::setw(wd) << std::setfill('0') << u;
 
-        str += ss.str();
+        str += strm.str();
 
-        ss.rdbuf()->str(std::string(""));
+        strm.rdbuf()->str(std::string { });
       }
 
       std::uint32_t u_sign = dst_sgn(eng_sgn);
@@ -219,21 +222,21 @@
         str += "E-";
       }
 
-      std::uint32_t u_exp = dst_exp(eng_exp);
+      const std::uint32_t u_exp { dst_exp(eng_exp) };
 
-      ss << u_exp;
+      strm << u_exp;
 
-      str += ss.str();
+      str += strm.str();
 
-      ss.rdbuf()->str(std::string(""));
+      strm.rdbuf()->str(std::string { });
 
       u = dst_man(eng_man);
 
-      ss << u;
+      strm << u;
 
       u_sign = dst_sgn(eng_sgn);
 
-      str = ss.str() + "." + str;
+      str = strm.str() + "." + str;
 
       if((!value_is_unsigned) && (u_sign != static_cast<std::uint32_t>(UINT8_C(0))))
       {

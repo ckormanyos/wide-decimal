@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2023.                 //
+//  Copyright Christopher Kormanyos 2020 - 2024.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -10,11 +10,6 @@
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
 #endif
 
-#include <algorithm>
-#include <cstdint>
-#include <ctime>
-#include <iostream>
-
 // Disable heavyweight features via macros for this example.
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
@@ -24,6 +19,13 @@
 #include <examples/example_decwide_t.h>
 #include <math/constants/constants_pi_control_for_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+#include <test/stopwatch.h>
+
+#include <algorithm>
+#include <cstdint>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
 namespace example002c_pi {
 
@@ -163,7 +165,9 @@ auto ::math::wide_decimal::example002c_pi_quintic() -> bool
     ::math::wide_decimal::decwide_t<wide_decimal_digits10>;
   #endif
 
-  const auto start = std::clock();
+  using stopwatch_type = concurrency::stopwatch;
+
+  stopwatch_type my_stopwatch { };
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   const auto my_pi =
@@ -173,11 +177,20 @@ auto ::math::wide_decimal::example002c_pi_quintic() -> bool
     example002c_pi::pi_borwein_quintic<::math::wide_decimal::decwide_t<wide_decimal_digits10>>(&std::cout);
   #endif
 
-  const auto stop = std::clock();
+  const float execution_time { stopwatch_type::elapsed_time<float>(my_stopwatch) };
 
-  std::cout << "Time example002c_pi_quintic()       : "
-            << static_cast<float>(stop - start) / static_cast<float>(CLOCKS_PER_SEC)
-            << std::endl;
+  {
+    std::stringstream strm { };
+
+    strm << "Time example002c_pi_quintic()       : "
+         << std::fixed
+         << std::setprecision(1)
+         << execution_time
+         << "s"
+         ;
+
+    std::cout << strm.str() << std::endl;
+  }
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   const auto head_is_ok = std::equal(my_pi.crepresentation().cbegin(),
