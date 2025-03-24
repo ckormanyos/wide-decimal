@@ -45,14 +45,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='wide-decimal-debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir);C:\boost\boost_1_85_0;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);C:\boost\boost_1_87_0;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Configuration)-$(PlatformTarget)\</OutDir>
     <IntDir>$(OutDir)</IntDir>
     <TargetName>$(Configuration)-$(PlatformTarget)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='wide-decimal-release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir);C:\boost\boost_1_85_0;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);C:\boost\boost_1_87_0;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Configuration)-$(PlatformTarget)\</OutDir>
     <IntDir>$(OutDir)</IntDir>
     <TargetName>$(Configuration)-$(PlatformTarget)</TargetName>
