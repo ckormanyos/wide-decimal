@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022- 2023.                  //
+//  Copyright Christopher Kormanyos 2022- 2025.                  //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -23,8 +23,8 @@
 #include <test/parallel_for.h>
 
 // cd /mnt/c/Users/User/Documents/Ks/PC_Software/NumericalPrograms/ExtendedNumberTypes/wide_decimal
-// When using g++ and -std=c++14
-// g++ -finline-functions -march=native -mtune=native -O3 -Werror -Wall -Wextra -std=c++14 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_83_0 test/test_high_precision_log.cpp -pthread -lpthread -lgmp -lmpfr -o test_high_precision_log.exe
+// When using g++ and -std=c++20
+// g++ -finline-functions -march=native -mtune=native -O3 -Werror -Wall -Wextra -std=c++20 -DWIDE_DECIMAL_NAMESPACE=ckormanyos -I. -I/mnt/c/boost/boost_1_83_0 test/test_high_precision_log.cpp -pthread -lpthread -lgmp -lmpfr -o test_high_precision_log.exe
 // ./test_high_precision_log.exe
 
 namespace test_high_precision_log
