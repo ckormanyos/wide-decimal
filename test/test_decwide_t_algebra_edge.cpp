@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022 - 2024.                 //
+//  Copyright Christopher Kormanyos 2022 - 2025.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -716,6 +716,28 @@ auto test_various_min_max_operations() -> bool
       (value_having_expected_overflow == (std::numeric_limits<local_wide_decimal_type>::max)());
 
     result_is_ok = (result_overflow_is_ok && result_is_ok);
+  }
+
+  {
+    const auto local_max    = (std::numeric_limits<local_wide_decimal_type>::max)();
+    const auto local_lowest = std::numeric_limits<local_wide_decimal_type>::lowest();
+
+    const bool
+      result_local_max_is_ok
+      {
+        (local_max > local_wide_decimal_type { (std::numeric_limits<long double>::max)() })
+      };
+
+    result_is_ok = (result_local_max_is_ok && result_is_ok);
+
+    const bool
+      result_local_lowest_is_ok
+      {
+           (local_lowest < local_wide_decimal_type { std::numeric_limits<long double>::lowest() })
+        && (-local_lowest == local_max)
+      };
+
+    result_is_ok = (result_local_lowest_is_ok && result_is_ok);
   }
 
   return result_is_ok;

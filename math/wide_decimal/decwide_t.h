@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 1999 - 2024.                 //
+//  Copyright Christopher Kormanyos 1999 - 2025.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -5553,7 +5553,7 @@
       // LCOV_EXCL_START
       static constexpr auto (min)  () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_min(); }
       static constexpr auto (max)  () -> local_wide_decimal_type { return local_wide_decimal_type::my_value_max(); }
-      static constexpr auto lowest () -> local_wide_decimal_type { return local_wide_decimal_type(); }
+      static constexpr auto lowest () -> local_wide_decimal_type { return -(max)(); }
       static constexpr auto epsilon() -> local_wide_decimal_type
       {
         return local_wide_decimal_type::from_lst
