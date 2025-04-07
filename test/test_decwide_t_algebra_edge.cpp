@@ -712,8 +712,12 @@ auto test_various_min_max_operations() -> bool
 
     const auto value_having_expected_overflow = local_near_max * local_wide_decimal_type(static_cast<unsigned>(UINT16_C(1000)));
 
-    const bool result_overflow_is_ok =
-      (value_having_expected_overflow == (std::numeric_limits<local_wide_decimal_type>::max)());
+    const bool
+      result_overflow_is_ok
+      {
+           (local_near_max < (std::numeric_limits<local_wide_decimal_type>::max)())
+        && (value_having_expected_overflow == (std::numeric_limits<local_wide_decimal_type>::max)())
+      };
 
     result_is_ok = (result_overflow_is_ok && result_is_ok);
   }
@@ -730,14 +734,25 @@ auto test_various_min_max_operations() -> bool
 
     result_is_ok = (result_local_max_is_ok && result_is_ok);
 
-    const bool
-      result_local_lowest_is_ok
-      {
-           (local_lowest < local_wide_decimal_type { std::numeric_limits<long double>::lowest() })
-        && (-local_lowest == local_max)
-      };
+    {
+      using local_representation_type = typename local_wide_decimal_type::representation_type;
 
-    result_is_ok = (result_local_lowest_is_ok && result_is_ok);
+      const local_representation_type negated_lowest_rep { (-local_lowest).crepresentation() };
+
+      const bool
+        result_local_lowest_is_ok
+        {
+             (local_lowest < local_wide_decimal_type { std::numeric_limits<long double>::lowest() })
+          && std::equal
+             (
+               negated_lowest_rep.cbegin(),
+               negated_lowest_rep.cend(),
+               local_max.crepresentation().cbegin()
+             )
+        };
+
+      result_is_ok = (result_local_lowest_is_ok && result_is_ok);
+    }
   }
 
   return result_is_ok;
