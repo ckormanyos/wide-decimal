@@ -13,13 +13,13 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  sonar-gcc-native
+  sonar-gcc-native:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-      name: clone-submods-bootstrap-headers-boost-develop
+    - name: clone-submods-bootstrap-headers-boost-develop
       run: |
         git clone -b develop --depth 1 https://github.com/boostorg/boost.git ../boost-root
         cd ../boost-root
