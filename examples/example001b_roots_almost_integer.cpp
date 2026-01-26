@@ -31,6 +31,32 @@ auto ::math::wide_decimal::example001b_roots_almost_integer() -> bool
 
   const dec5001_t p    = pow(cbrt(2 / term) + (cbrt(term / 2) / 3), 23456U);
 
+  // -----------------------------------------------------------------------------------------------
+
+  // Pisot numbers are real-valued algebraic integers greater than $1$ whose
+  // other conjugates all lie strictly inside the unit circle.
+  // They have the remarkable property that large powers of a Pisot number
+  // are extremely close to integers. This is because the contributions
+  // from the smaller conjugates decay exponentially.
+
+  // If $\alpha$ is a Pisot number with conjugates $\beta_1, \dots, \beta_{d-1}$,
+  // then for any $n \in \mathbb{N}$,
+  //
+  // \begin{equation}
+  // \alpha^n = m_n + \sum_{i=1}^{d-1} \beta_i^n \quad \text{for some } m_n \in \mathbb{Z}.
+  // \end{equation}
+
+  // An example of a Pisot number is
+  //
+  // \begin{equation}
+  // \left[\left(\frac{2}{27 + 3 \sqrt{69}}\right)^{1/3} + \frac{1}{3} \left(\frac{27 + 3 \sqrt{69}}{2}\right)^{1/3}\right]^{23456}.
+  // \end{equation}
+  //
+  // The result is extremely close to a huge integer having 2,865 decimal
+  // digits plus a vanishingly small fractional part.
+
+  // -----------------------------------------------------------------------------------------------
+
   // N[((2/(27 + 3 Sqrt[69]))^(1/3) + (1/3) ((27 + 3 Sqrt[69])/2)^(1/3))^23456, 5003]
   // The exact page at Wolftam Alpha that can calculate this number is:
   // https://www.wolframalpha.com/input/?i=N%5B%28%282%2F%2827+%2B+3+Sqrt%5B69%5D%29%29%5E%281%2F3%29+%2B+%281%2F++++++++3%29+%28%2827+%2B+3+Sqrt%5B69%5D%29%2F2%29%5E%281%2F3%29%29%5E23456%2C+5003%5D
