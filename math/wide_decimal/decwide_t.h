@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 1999 - 2025.                 //
+//  Copyright Christopher Kormanyos 1999 - 2026.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -5519,7 +5519,15 @@
              typename InternalFloatType,
              typename ExponentType,
              typename FftFloatType>
-    class numeric_limits<nonstd::wide_decimal_namespace::decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>>
+    class numeric_limits
+          <
+            nonstd::wide_decimal_namespace::decwide_t<ParamDigitsBaseTen,
+            LimbType,
+            AllocatorType,
+            InternalFloatType,
+            ExponentType,
+            FftFloatType>
+          >
     {
     private:
       using local_wide_decimal_type =
@@ -5545,7 +5553,19 @@
       static constexpr auto has_infinity      = false;
       static constexpr auto has_quiet_NaN     = false;
       static constexpr auto has_signaling_NaN = false;
+      #ifdef _MSC_VER
+      #  pragma warning(push)
+      #  pragma warning(disable : 4996)
+      #elif (defined(__clang__) && (__clang_major__ >= 17))
+      #  pragma clang diagnostic push
+      #  pragma clang diagnostic ignored "-Wdeprecated-declarations"
+      #endif
       static constexpr auto has_denorm        = static_cast<std::float_denorm_style>(std::denorm_absent);
+      #ifdef _MSC_VER
+      #pragma warning(pop)
+      #elif (defined(__clang__) && (__clang_major__ >= 17))
+      #  pragma clang diagnostic pop
+      #endif
       static constexpr auto has_denorm_loss   = false;
       static constexpr auto traps             = false;
       static constexpr auto tinyness_before   = false;
