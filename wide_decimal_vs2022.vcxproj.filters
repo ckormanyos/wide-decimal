@@ -335,6 +335,7 @@
     <None Include=".github\workflows\CodeQL.yml">
       <Filter>.github\workflows</Filter>
     </None>
+    <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="examples\CMakeLists.txt">
