@@ -88,9 +88,7 @@ CPPFLAGS     := -std=$(STD)                                              \
                 -Wzero-as-null-pointer-constant
 
 
-C_DEFINES    := -DWIDE_INTEGER_HAS_LIMB_TYPE_UINT64                      \
-                -DWIDE_INTEGER_HAS_MUL_8_BY_8_UNROLL                     \
-                -DWIDE_DECIMAL_NAMESPACE=ckormanyos
+C_DEFINES    := -DWIDE_DECIMAL_NAMESPACE=ckormanyos
 
 C_INCLUDES   := -I.                                                      \
                 -I$(BOOST_ROOT)
@@ -118,7 +116,7 @@ compile_and_link :
 	@-$(ECHO)
 	@-$(ECHO) +++ compiling and linking to wide_decimal
 	@-$(ECHO)
-	-$(CC) $(CPPFLAGS) $(C_INCLUDES) $(LDFLAGS) $(FILES_SRC) -o wide_decimal
+	-$(CC) $(CPPFLAGS) $(C_DEFINES) $(C_INCLUDES) $(LDFLAGS) $(FILES_SRC) -o wide_decimal
 	@-$(ECHO)
 	@-$(ECHO) +++ created executable wide_decimal
 	-ls -la ./wide_decimal
