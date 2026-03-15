@@ -118,8 +118,8 @@ jobs:
           echo "compile ./wide_decimal.exe"
           ${{ matrix.compiler }} -v
           make MY_STD=${{ matrix.standard }} MY_CC=${{ matrix.compiler }} MY_BOOST_ROOT=../boost-root all
-          ls -la ./wide_decimal.exe
-          ./wide_decimal.exe
+          ls -la ./wide_decimal
+          ./wide_decimal
   gcc-clang-native-outer-namespace:
     runs-on: ubuntu-latest
     defaults:
