@@ -121,7 +121,16 @@ namespace local
     allocator_traits_type::destroy(alloc, reused_slot);
     alloc.deallocate(reused_slot, 2U);
 
-    return (exhausted_pool_returns_null && values_are_correct && released_slot_was_reused);
+    std::cout << "n-slot allocator high-water mark: "
+              << allocator_type::high_water_mark()
+              << " slots of "
+              << allocator_type().max_slot_count()
+              << " slots"
+              << std::endl;
+
+    const bool high_water_mark_is_correct = (allocator_type::high_water_mark() == 2U);
+
+    return (exhausted_pool_returns_null && values_are_correct && released_slot_was_reused && high_water_mark_is_correct);
   }
 
   auto test_baselexical_cast() -> bool

@@ -381,6 +381,13 @@ auto ::math::wide_decimal::example008_bernoulli_tgamma() -> bool
 
     std::cout << strm.str() << std::endl;
   }
+
+  std::cout << "n-slot allocator high-water mark: "
+            << example008_bernoulli::wide_decimal_allocator_type::high_water_mark()
+            << " slots of "
+            << example008_bernoulli::wide_decimal_allocator_type().max_slot_count()
+            << " slots"
+            << std::endl;
   #endif
 
   return result_is_ok;

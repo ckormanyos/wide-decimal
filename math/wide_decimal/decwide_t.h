@@ -3249,7 +3249,7 @@
 
           if(do_clear_lower_limbs)
           {
-            std::fill(my_data.begin() + static_cast<local_size_type>(least_digit_idx_plus_one),
+            std::fill(my_data.begin() + static_cast<typename representation_type::difference_type>(least_digit_idx_plus_one),
                       my_data.end(),
                       static_cast<local_limb_type>(UINT8_C(0)));
           }
