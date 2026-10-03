@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022.
+//  Copyright Christopher Kormanyos 2022 - 2026.
 //  Distributed under the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <iostream>
 #include <utility>
+#include <vector>
 
 #define WIDE_INTEGER_NAMESPACE ckormanyos
 #define WIDE_DECIMAL_NAMESPACE ckormanyos
@@ -20,7 +21,6 @@
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
-#include <util/utility/util_dynamic_array.h>
 
 namespace example_mixed_wide_decimal_wide_integer
 {
@@ -177,9 +177,9 @@ namespace example_mixed_wide_decimal_wide_integer
     return wide_decimal_type(strm.str().c_str());
   }
 
-  auto bernoulli_table() -> util::dynamic_array<wide_decimal_type>&
+  auto bernoulli_table() -> std::vector<wide_decimal_type>&
   {
-    static util::dynamic_array<wide_decimal_type> bernoulli_table(std::tuple_size<wide_integer_b2n_array_type>::value);
+    static std::vector<wide_decimal_type> bernoulli_table(std::tuple_size<wide_integer_b2n_array_type>::value);
 
     return bernoulli_table;
   }
@@ -195,7 +195,7 @@ namespace example_mixed_wide_decimal_wide_integer
 
     const auto m = static_cast<std::uint32_t>(n / 2U);
 
-    util::dynamic_array<floating_point_type> tangent_numbers(m + 1U);
+    std::vector<floating_point_type> tangent_numbers(m + 1U);
 
     tangent_numbers[0U] = 0U;
     tangent_numbers[1U] = 1U;

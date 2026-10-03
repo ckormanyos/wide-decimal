@@ -32,12 +32,17 @@
 #include <test/test_decwide_t_algebra.h>
 #include <test/test_decwide_t_examples.h>
 
+#include <array>
 #include <cstdint>
 #include <ctime>
 #include <functional>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <sstream>
+
+#include <util/utility/util_baselexical_cast.h>
+#include <util/memory/util_n_slot_array_allocator.h>
 
 namespace local
 {
@@ -72,6 +77,90 @@ namespace local
 
     return result_test_is_ok;
   }
+
+  auto test_n_slot_array_alloc_() -> bool
+  {
+    using allocator_type = util::n_slot_array_allocator<int, 2U, 2U>;
+    using allocator_traits_type = std::allocator_traits<allocator_type>;
+
+    allocator_type alloc { };
+
+    if((alloc.max_size() != 2U) || (alloc.allocate(0U) != nullptr))
+    {
+      return false;
+    }
+
+    if(alloc.allocate(3U) != nullptr)
+    {
+      return false;
+    }
+
+    auto* const first_slot  = alloc.allocate(2U);
+    auto* const second_slot = alloc.allocate(1U);
+
+    allocator_traits_type::construct(alloc, first_slot, 17);
+    allocator_traits_type::construct(alloc, first_slot + 1, 19);
+    allocator_traits_type::construct(alloc, second_slot, 23);
+
+    const bool exhausted_pool_returns_null = (alloc.allocate(1U) == nullptr);
+
+    const bool values_are_correct =
+      ((first_slot[0] == 17) && (first_slot[1] == 19) && (second_slot[0] == 23));
+
+    allocator_traits_type::destroy(alloc, first_slot);
+    allocator_traits_type::destroy(alloc, first_slot + 1);
+    allocator_traits_type::destroy(alloc, second_slot);
+
+    alloc.deallocate(first_slot, 2U);
+    alloc.deallocate(second_slot, 1U);
+
+    auto* const reused_slot = alloc.allocate(2U);
+    const bool released_slot_was_reused = (reused_slot == first_slot);
+
+    allocator_traits_type::construct(alloc, reused_slot, 29);
+    allocator_traits_type::destroy(alloc, reused_slot);
+    alloc.deallocate(reused_slot, 2U);
+
+    return (exhausted_pool_returns_null && values_are_correct && released_slot_was_reused);
+  }
+
+  auto test_baselexical_cast() -> bool
+  {
+    std::array<char, 8U> buffer { };
+
+    const auto zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size());
+
+    if((zero_end != (buffer.data() + 1U)) || (buffer[0U] != '0'))
+    {
+      return false;
+    }
+
+    const auto upper_hex_end =
+      util::baselexical_cast<std::uint32_t,
+                             static_cast<std::uint_fast8_t>(UINT8_C(16)),
+                             true>
+      (
+        static_cast<std::uint32_t>(UINT32_C(0xBEEF)),
+        buffer.data(),
+        buffer.data() + buffer.size()
+      );
+
+    if(   (upper_hex_end != (buffer.data() + 4U))
+       || (buffer[0U] != 'B')
+       || (buffer[1U] != 'E')
+       || (buffer[2U] != 'E')
+       || (buffer[3U] != 'F'))
+    {
+      return false;
+    }
+
+    std::array<char, 2U> short_buffer { };
+
+    const auto insufficient_buffer_end =
+      util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(255)), short_buffer.data(), short_buffer.data() + short_buffer.size());
+
+    return (insufficient_buffer_end == nullptr);
+  }
 } // namespace local
 
 auto local::run() -> bool
@@ -92,6 +181,7 @@ auto local::run() -> bool
 
   const auto result_test_examples_part1_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_examples_part2_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_n_slot_alloc___is_ok = local::pfn_runner(function_type(local::test_n_slot_array_alloc_), "result_test_n_slot_alloc___is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_algebra_edge___is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_algebra_add____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_algebra_sub____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
@@ -104,6 +194,7 @@ auto local::run() -> bool
   (
        result_test_examples_part1_is_ok
     && result_test_examples_part2_is_ok
+    && result_test_n_slot_alloc___is_ok
     && result_test_algebra_edge___is_ok
     && result_test_algebra_add____is_ok
     && result_test_algebra_sub____is_ok

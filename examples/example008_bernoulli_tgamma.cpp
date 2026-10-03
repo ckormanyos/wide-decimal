@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2024.                 //
+//  Copyright Christopher Kormanyos 2020 - 2026.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -29,11 +29,11 @@
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+#include <vector>
 #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
 #include <test/stopwatch.h>
 #endif
 #include <util/memory/util_n_slot_array_allocator.h>
-#include <util/utility/util_dynamic_array.h>
 
 #include <array>
 #include <cstdint>
@@ -79,9 +79,9 @@ namespace example008_bernoulli
 
   #if defined(__cpp_constexpr_dynamic_alloc)
   #if (defined(__GNUC__) && defined(__arm__))
-  static_assert(std::allocator_traits<wide_decimal_allocator_type>::max_size(wide_decimal_allocator_type()) > static_cast<std::size_t>(UINT32_C(200)),
+  static_assert(wide_decimal_allocator_type().max_slot_count() > static_cast<std::size_t>(UINT32_C(200)),
   #else
-  static_assert(std::allocator_traits<wide_decimal_allocator_type>::max_size(wide_decimal_allocator_type()) > static_cast<std::size_t>(UINT32_C(1500)),
+  static_assert(wide_decimal_allocator_type().max_slot_count() > static_cast<std::size_t>(UINT32_C(1500)),
   #endif
                 "Error: Not enough slots available for tgamma calculation");
   #endif
@@ -108,9 +108,9 @@ namespace example008_bernoulli
     #endif
   }
 
-  auto bernoulli_table() -> util::dynamic_array<wide_decimal_type>&
+  auto bernoulli_table() -> std::vector<wide_decimal_type>&
   {
-    using bernoulli_table_array_type = util::dynamic_array<wide_decimal_type>;
+    using bernoulli_table_array_type = std::vector<wide_decimal_type>;
     using local_size_type            = typename bernoulli_table_array_type::size_type;
 
     constexpr auto bernoulli_table_size =
@@ -136,13 +136,13 @@ namespace example008_bernoulli
     // See also the book Richard P. Brent and Paul Zimmermann, "Modern Computer Arithmetic",
     // Cambridge University Press, 2010, p. 237.
 
-    using tangent_numbers_array_type = util::dynamic_array<floating_point_type>;
+    using tangent_numbers_array_type = std::vector<floating_point_type>;
     using local_size_type = typename tangent_numbers_array_type::size_type;
 
     const auto m          = static_cast<local_size_type>(static_cast<local_size_type>(n) / static_cast<local_size_type>(UINT8_C(2)));
     const auto m_plus_one = static_cast<local_size_type>(m + static_cast<local_size_type>(UINT8_C(1)));
 
-    util::dynamic_array<floating_point_type> tangent_numbers(m_plus_one);
+    std::vector<floating_point_type> tangent_numbers(m_plus_one);
 
     tangent_numbers[static_cast<local_size_type>(UINT8_C(0))] = 0U;
     tangent_numbers[static_cast<local_size_type>(UINT8_C(1))] = 1U;

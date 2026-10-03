@@ -240,9 +240,6 @@
     <ClInclude Include="util\utility\util_baselexical_cast.h">
       <Filter>Source Files\util\utility</Filter>
     </ClInclude>
-    <ClInclude Include="util\utility\util_dynamic_array.h">
-      <Filter>Source Files\util\utility</Filter>
-    </ClInclude>
     <ClInclude Include="mcal_lcd\mcal_lcd_console.h">
       <Filter>Source Files\mcal_lcd</Filter>
     </ClInclude>
