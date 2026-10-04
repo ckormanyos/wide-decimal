@@ -134,7 +134,7 @@ namespace local
     return (exhausted_pool_returns_null && values_are_correct && released_slot_was_reused && high_water_mark_is_correct);
   }
 
-  auto test_baselexical_cast___() -> bool
+  auto test_baselexical_cast___() -> bool // NOLINT(readability-identifier-naming)
   {
     std::array<char, 8U> buffer { }; // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 

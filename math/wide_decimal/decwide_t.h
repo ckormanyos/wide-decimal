@@ -3313,7 +3313,7 @@
               // In rare cases, propagation of the carry reaches the zero'th limb
               // of highest significance, and we must shift the data, create a new limb
               // with the carry value of 1 and adjust the exponent accordingly.
-              std::copy_backward(my_data.cbegin(),
+              std::copy_backward(my_data.cbegin(), // LCOV_EXCL_LINE
                                  my_data.cend() - static_cast<std::ptrdiff_t>(INT8_C(1)),
                                  my_data.end());
 
@@ -3778,7 +3778,7 @@
       {
         p_end = util::baselexical_cast(*it_rep, data_elem_buf.data(), data_elem_buf.data() + data_elem_buf.size());
 
-        ++it_rep;
+        ++it_rep; // LCOV_EXCL_LINE
 
         auto rit = std::copy(static_cast<std::reverse_iterator<const char*>>(p_end),
                              static_cast<std::reverse_iterator<const char*>>(static_cast<const char*>(data_elem_buf.data())),
