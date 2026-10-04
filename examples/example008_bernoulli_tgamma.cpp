@@ -5,18 +5,11 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#if (defined(__GNUC__) && !defined(__clang__) && defined(__arm__))
+#if (defined(__GNUC__) && !defined(__clang__) && ((__GNUC__ >= 11) || defined(__arm__)))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-overread"
-#endif
-
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
 #endif
 
 #if (defined(__GNUC__) && defined(__arm__))
@@ -445,12 +438,6 @@ extern "C"
 
 #endif
 
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#endif
-
-#if (defined(__GNUC__) && !defined(__clang__) && defined(__arm__))
-#pragma GCC diagnostic pop
+#if (defined(__GNUC__) && !defined(__clang__) && ((__GNUC__ >= 11) || defined(__arm__)))
 #pragma GCC diagnostic pop
 #endif

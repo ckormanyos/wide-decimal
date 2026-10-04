@@ -41,8 +41,8 @@
 #include <memory>
 #include <sstream>
 
-#include <util/utility/util_baselexical_cast.h>
 #include <util/memory/util_n_slot_array_allocator.h>
+#include <util/utility/util_baselexical_cast.h>
 
 namespace local
 {
@@ -78,7 +78,7 @@ namespace local
     return result_test_is_ok;
   }
 
-  auto test_n_slot_array_alloc_() -> bool
+  auto test_n_slot_array_alloc_() -> bool // NOLINT(readability-identifier-naming)
   {
     using allocator_type = util::n_slot_array_allocator<int, 2U, 2U>;
     using allocator_traits_type = std::allocator_traits<allocator_type>;
@@ -98,17 +98,18 @@ namespace local
     auto* const first_slot  = alloc.allocate(2U);
     auto* const second_slot = alloc.allocate(1U);
 
-    allocator_traits_type::construct(alloc, first_slot, 17);
-    allocator_traits_type::construct(alloc, first_slot + 1, 19);
-    allocator_traits_type::construct(alloc, second_slot, 23);
+    allocator_traits_type::construct(alloc, first_slot, 17); // NOLINT(readability-magic-numbers)
+    // NOLINTNEXTLINE(readability-magic-numbers)
+    allocator_traits_type::construct(alloc, first_slot + 1, 19); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    allocator_traits_type::construct(alloc, second_slot, 23); // NOLINT(readability-magic-numbers)
 
     const bool exhausted_pool_returns_null = (alloc.allocate(1U) == nullptr);
 
     const bool values_are_correct =
-      ((first_slot[0] == 17) && (first_slot[1] == 19) && (second_slot[0] == 23));
+      ((first_slot[0] == 17) && (first_slot[1] == 19) && (second_slot[0] == 23)); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
     allocator_traits_type::destroy(alloc, first_slot);
-    allocator_traits_type::destroy(alloc, first_slot + 1);
+    allocator_traits_type::destroy(alloc, first_slot + 1); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     allocator_traits_type::destroy(alloc, second_slot);
 
     alloc.deallocate(first_slot, 2U);
@@ -117,7 +118,7 @@ namespace local
     auto* const reused_slot = alloc.allocate(2U);
     const bool released_slot_was_reused = (reused_slot == first_slot);
 
-    allocator_traits_type::construct(alloc, reused_slot, 29);
+    allocator_traits_type::construct(alloc, reused_slot, 29); // NOLINT(readability-magic-numbers)
     allocator_traits_type::destroy(alloc, reused_slot);
     alloc.deallocate(reused_slot, 2U);
 
@@ -135,16 +136,16 @@ namespace local
 
   auto test_baselexical_cast() -> bool
   {
-    std::array<char, 8U> buffer { };
+    std::array<char, 8U> buffer { }; // NOLINT(readability-magic-numbers)
 
-    const auto zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size());
+    const auto zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size()); // NOLINT(llvm-qualified-auto)
 
     if((zero_end != (buffer.data() + 1U)) || (buffer[0U] != '0'))
     {
       return false;
     }
 
-    const auto upper_hex_end =
+    const auto upper_hex_end = // NOLINT(llvm-qualified-auto)
       util::baselexical_cast<std::uint32_t,
                              static_cast<std::uint_fast8_t>(UINT8_C(16)),
                              true>
@@ -163,9 +164,9 @@ namespace local
       return false;
     }
 
-    std::array<char, 2U> short_buffer { };
+    std::array<char, 2U> short_buffer { }; // NOLINT(readability-magic-numbers)
 
-    const auto insufficient_buffer_end =
+    const auto insufficient_buffer_end = // NOLINT(llvm-qualified-auto)
       util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(255)), short_buffer.data(), short_buffer.data() + short_buffer.size());
 
     return (insufficient_buffer_end == nullptr);

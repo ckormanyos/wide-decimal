@@ -8,9 +8,6 @@
 #ifndef UTIL_BASELEXICAL_CAST_2020_06_28_H // NOLINT(llvm-header-guard)
   #define UTIL_BASELEXICAL_CAST_2020_06_28_H
 
-  #include <algorithm>
-  #include <array>
-  #include <cstddef>
   #include <cstdint>
   #include <type_traits>
 
@@ -25,8 +22,10 @@
 
     static_assert(std::is_integral<local_integer_type>::value,
                   "baselexical_cast requires an integral input type.");
+
     static_assert(std::is_unsigned<local_integer_type>::value && (!std::is_same<local_integer_type, bool>::value),
                   "baselexical_cast requires an unsigned, non-bool input type.");
+
     static_assert((BaseRepresentation >= static_cast<std::uint_fast8_t>(UINT8_C(2)))
                   && (BaseRepresentation <= static_cast<std::uint_fast8_t>(UINT8_C(36))),
                   "BaseRepresentation must be in the range [2, 36].");
@@ -37,7 +36,9 @@
     }
 
     auto* out = first;
+
     auto value = static_cast<local_integer_type>(u);
+
     constexpr auto base = static_cast<local_integer_type>(BaseRepresentation);
 
     do
@@ -47,15 +48,29 @@
         return nullptr;
       }
 
-      const auto digit = static_cast<unsigned>(value % base);
-      *out++ = static_cast<char>((digit < 10U)
-                                 ? (static_cast<unsigned>('0') + digit)
-                                 : (static_cast<unsigned>(UpperCase ? 'A' : 'a') + digit - 10U));
+      const auto digit { static_cast<unsigned>(value % base) };
+
+      *out++ = // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        static_cast<char>
+        (
+          (digit < 10U) ? (static_cast<unsigned>('0') + digit)                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+                        : (static_cast<unsigned>(UpperCase ? 'A' : 'a') + digit - 10U) // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        );
+
       value = static_cast<local_integer_type>(value / base);
     }
     while(value != static_cast<local_integer_type>(UINT8_C(0)));
 
-    std::reverse(first, out);
+    auto* reverse = out; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+
+    while(first < --reverse)
+    {
+      const auto digit { *first };
+
+      *first++ = *reverse; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+
+      *reverse = digit;
+    }
 
     return out;
   }

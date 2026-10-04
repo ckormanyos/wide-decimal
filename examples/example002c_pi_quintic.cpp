@@ -205,7 +205,7 @@ auto ::math::wide_decimal::example002c_pi_quintic() -> bool
   using const_iterator_type = typename local_wide_decimal_type::representation_type::const_iterator;
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  const_iterator_type
+  const_iterator_type // NOLINT(hicpp-use-auto)
     fi
     (
         my_pi.crepresentation().cbegin()
