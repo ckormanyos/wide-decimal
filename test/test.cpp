@@ -98,10 +98,10 @@ namespace local
     auto* const first_slot  = alloc.allocate(2U);
     auto* const second_slot = alloc.allocate(1U);
 
-    allocator_traits_type::construct(alloc, first_slot, 17); // NOLINT(readability-magic-numbers)
-    // NOLINTNEXTLINE(readability-magic-numbers)
-    allocator_traits_type::construct(alloc, first_slot + 1, 19); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-    allocator_traits_type::construct(alloc, second_slot, 23); // NOLINT(readability-magic-numbers)
+    allocator_traits_type::construct(alloc, first_slot, 17); // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTNEXTLINE(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
+    allocator_traits_type::construct(alloc, first_slot + 1, 19); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers)
+    allocator_traits_type::construct(alloc, second_slot, 23); // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 
     const bool exhausted_pool_returns_null = (alloc.allocate(1U) == nullptr);
 
@@ -118,7 +118,7 @@ namespace local
     auto* const reused_slot = alloc.allocate(2U);
     const bool released_slot_was_reused = (reused_slot == first_slot);
 
-    allocator_traits_type::construct(alloc, reused_slot, 29); // NOLINT(readability-magic-numbers)
+    allocator_traits_type::construct(alloc, reused_slot, 29); // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
     allocator_traits_type::destroy(alloc, reused_slot);
     alloc.deallocate(reused_slot, 2U);
 
@@ -136,7 +136,7 @@ namespace local
 
   auto test_baselexical_cast() -> bool
   {
-    std::array<char, 8U> buffer { }; // NOLINT(readability-magic-numbers)
+    std::array<char, 8U> buffer { }; // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 
     const auto zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size()); // NOLINT(llvm-qualified-auto,readability-qualified-auto)
 

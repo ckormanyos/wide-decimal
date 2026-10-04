@@ -3725,6 +3725,10 @@
     }
     #endif //!(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
 
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wstringop-overread"
+#endif
     static auto get_output_digits(const decwide_t&         x,
                                         char*              it_dst,
                                   const std::uint_fast32_t number_of_elements,
@@ -3794,6 +3798,9 @@
           );
       }
     }
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
+    #pragma GCC diagnostic pop
+#endif
 
     #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
     static auto get_output_string(const decwide_t&         x,
