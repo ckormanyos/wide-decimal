@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2024.                 //
+//  Copyright Christopher Kormanyos 2020 - 2026.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -127,7 +127,7 @@ auto ::math::wide_decimal::example002d_pi_limb08() -> bool
   using const_iterator_type = typename local_wide_decimal_type::representation_type::const_iterator;
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  const_iterator_type // NOLINT(hicpp-use-auto)
+  const_iterator_type // NOLINT(hicpp-use-auto,modernize-use-auto)
     fi
     (
         my_pi.crepresentation().cbegin()

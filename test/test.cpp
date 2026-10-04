@@ -138,14 +138,14 @@ namespace local
   {
     std::array<char, 8U> buffer { }; // NOLINT(readability-magic-numbers)
 
-    const auto zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size()); // NOLINT(llvm-qualified-auto)
+    const auto zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size()); // NOLINT(llvm-qualified-auto,readability-qualified-auto)
 
     if((zero_end != (buffer.data() + 1U)) || (buffer[0U] != '0'))
     {
       return false;
     }
 
-    const auto upper_hex_end = // NOLINT(llvm-qualified-auto)
+    const auto upper_hex_end = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
       util::baselexical_cast<std::uint32_t,
                              static_cast<std::uint_fast8_t>(UINT8_C(16)),
                              true>
@@ -166,7 +166,7 @@ namespace local
 
     std::array<char, 2U> short_buffer { }; // NOLINT(readability-magic-numbers)
 
-    const auto insufficient_buffer_end = // NOLINT(llvm-qualified-auto)
+    const auto insufficient_buffer_end = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
       util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(255)), short_buffer.data(), short_buffer.data() + short_buffer.size());
 
     return (insufficient_buffer_end == nullptr);
