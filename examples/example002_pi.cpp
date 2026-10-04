@@ -124,8 +124,6 @@ auto ::math::wide_decimal::example002_pi() -> bool
                                      ::math::constants::const_pi_control_head_32.begin());
   #endif
 
-  using const_iterator_type = typename local_wide_decimal_type::representation_type::const_iterator;
-
   #if defined(WIDE_DECIMAL_NAMESPACE)
   auto
     fi
