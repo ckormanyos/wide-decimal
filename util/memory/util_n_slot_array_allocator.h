@@ -85,7 +85,7 @@
     constexpr n_slot_array_allocator(const n_slot_array_allocator&) = default; // LCOV_EXCL_LINE
 
     template <class U>
-    constexpr n_slot_array_allocator(const n_slot_array_allocator<U, SlotWidth, SlotCount>&) noexcept { }
+    constexpr explicit n_slot_array_allocator(const n_slot_array_allocator<U, SlotWidth, SlotCount>&) noexcept { } // NOLINT(hicpp-named-parameter,readability-named-parameter)
 
     template<typename RebindType>
     struct rebind

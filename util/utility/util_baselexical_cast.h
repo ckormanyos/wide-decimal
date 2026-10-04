@@ -16,7 +16,12 @@
   template<typename UnsignedIntegerType,
            const std::uint_fast8_t BaseRepresentation = static_cast<std::uint_fast8_t>(UINT8_C(10)),
            const bool UpperCase = true>
-  auto baselexical_cast(const UnsignedIntegerType& u, char* first, char* last) -> const char*
+  auto baselexical_cast(const UnsignedIntegerType& u, char* first, const char* last) -> const char*;
+
+  template<typename UnsignedIntegerType,
+           const std::uint_fast8_t BaseRepresentation,
+           const bool UpperCase>
+  auto baselexical_cast(const UnsignedIntegerType& u, char* first, const char* last) -> const char*
   {
     using local_integer_type = typename std::remove_cv<UnsignedIntegerType>::type;
 
@@ -63,7 +68,7 @@
 
     auto* reverse = out; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
-    while(first < --reverse)
+    while(first < --reverse) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     {
       const auto digit { *first };
 
