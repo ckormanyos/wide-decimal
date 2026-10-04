@@ -157,14 +157,6 @@ auto ::math::wide_decimal::example002c_pi_quintic() -> bool
     ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
   #endif
 
-  #if defined(WIDE_DECIMAL_NAMESPACE)
-  using local_wide_decimal_type =
-    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
-  #else
-  using local_wide_decimal_type =
-    ::math::wide_decimal::decwide_t<wide_decimal_digits10>;
-  #endif
-
   using stopwatch_type = concurrency::stopwatch;
 
   stopwatch_type my_stopwatch { };
