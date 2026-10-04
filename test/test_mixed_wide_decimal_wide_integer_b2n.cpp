@@ -5,22 +5,21 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <array>
-#include <cstdint>
-#include <iomanip>
-#include <iostream>
-#include <utility>
-#include <vector>
-
 #define WIDE_INTEGER_NAMESPACE ckormanyos
 #define WIDE_DECIMAL_NAMESPACE ckormanyos
-#define WIDE_INTEGER_DISABLE_IMPLEMENT_UTIL_DYNAMIC_ARRAY
 
 #include <math/wide_decimal/decwide_t.h>
 #include <math/wide_integer/uintwide_t.h>
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
+
+#include <array>
+#include <cstdint>
+#include <iomanip>
+#include <iostream>
+#include <utility>
+#include <vector>
 
 namespace example_mixed_wide_decimal_wide_integer
 {

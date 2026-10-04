@@ -5,6 +5,15 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
+#if !defined(WIDE_DECIMAL_NAMESPACE)
+#define WIDE_DECIMAL_NAMESPACE ckormanyos
+#endif
+
+#include <math/wide_decimal/decwide_t.h>
+#include <test/parallel_for.h>
+
+#include <boost/multiprecision/mpfr.hpp>
+
 #include <array>
 #include <atomic>
 #include <cmath>
@@ -12,15 +21,6 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-
-#if !defined(WIDE_DECIMAL_NAMESPACE)
-#define WIDE_DECIMAL_NAMESPACE ckormanyos
-#endif
-
-#include <boost/multiprecision/mpfr.hpp>
-
-#include <math/wide_decimal/decwide_t.h>
-#include <test/parallel_for.h>
 
 // cd /mnt/c/Users/User/Documents/Ks/PC_Software/NumericalPrograms/ExtendedNumberTypes/wide_decimal
 // When using g++ and -std=c++20
