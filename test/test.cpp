@@ -134,7 +134,7 @@ namespace local
     return (exhausted_pool_returns_null && values_are_correct && released_slot_was_reused && high_water_mark_is_correct);
   }
 
-  auto test_baselexical_cast() -> bool
+  auto test_baselexical_cast___() -> bool
   {
     std::array<char, 8U> buffer { }; // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 
@@ -160,6 +160,14 @@ namespace local
        || (buffer[1U] != 'E')
        || (buffer[2U] != 'E')
        || (buffer[3U] != 'F'))
+    {
+      return false;
+    }
+
+    const auto empty_buffer_end = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+      util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data());
+
+    if(empty_buffer_end != nullptr)
     {
       return false;
     }
@@ -192,6 +200,7 @@ auto local::run() -> bool
   const auto result_test_examples_part1_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_examples_part2_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_n_slot_alloc___is_ok = local::pfn_runner(function_type(local::test_n_slot_array_alloc_), "result_test_n_slot_alloc___is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_base_lex_cast__is_ok = local::pfn_runner(function_type(local::test_baselexical_cast___), "result_test_base_lex_cast__is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_algebra_edge___is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_algebra_add____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_algebra_sub____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
@@ -205,6 +214,7 @@ auto local::run() -> bool
        result_test_examples_part1_is_ok
     && result_test_examples_part2_is_ok
     && result_test_n_slot_alloc___is_ok
+    && result_test_base_lex_cast__is_ok
     && result_test_algebra_edge___is_ok
     && result_test_algebra_add____is_ok
     && result_test_algebra_sub____is_ok
