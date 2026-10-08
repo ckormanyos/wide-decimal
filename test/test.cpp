@@ -138,7 +138,7 @@ namespace local
   {
     std::array<char, 8U> buffer { }; // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 
-    if(auto zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size()); (zero_end != (buffer.data() + 1U)) || (buffer[0U] != '0'))
+    if(const auto* zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size()); (zero_end != (buffer.data() + 1U)) || (buffer[0U] != '0'))
     {
       return false;
     }
@@ -161,7 +161,7 @@ namespace local
       return false;
     }
 
-    if(auto empty_buffer_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data()); empty_buffer_end != nullptr)
+    if(const auto* empty_buffer_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data()); empty_buffer_end != nullptr)
     {
       return false;
     }
