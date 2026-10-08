@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2024.                 //
+//  Copyright Christopher Kormanyos 2020 - 2026.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -157,14 +157,6 @@ auto ::math::wide_decimal::example002c_pi_quintic() -> bool
     ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
   #endif
 
-  #if defined(WIDE_DECIMAL_NAMESPACE)
-  using local_wide_decimal_type =
-    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10>;
-  #else
-  using local_wide_decimal_type =
-    ::math::wide_decimal::decwide_t<wide_decimal_digits10>;
-  #endif
-
   using stopwatch_type = concurrency::stopwatch;
 
   stopwatch_type my_stopwatch { };
@@ -202,10 +194,8 @@ auto ::math::wide_decimal::example002c_pi_quintic() -> bool
                                      ::math::constants::const_pi_control_head_32.begin());
   #endif
 
-  using const_iterator_type = typename local_wide_decimal_type::representation_type::const_iterator;
-
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  const_iterator_type
+  auto
     fi
     (
         my_pi.crepresentation().cbegin()
@@ -216,7 +206,7 @@ auto ::math::wide_decimal::example002c_pi_quintic() -> bool
         )
     );
   #else
-  const_iterator_type
+  auto
     fi
     (
         my_pi.crepresentation().cbegin()

@@ -32,12 +32,17 @@
 #include <test/test_decwide_t_algebra.h>
 #include <test/test_decwide_t_examples.h>
 
+#include <array>
 #include <cstdint>
 #include <ctime>
 #include <functional>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <sstream>
+
+#include <util/memory/util_n_slot_array_allocator.h>
+#include <util/utility/util_baselexical_cast.h>
 
 namespace local
 {
@@ -72,6 +77,102 @@ namespace local
 
     return result_test_is_ok;
   }
+
+  auto test_n_slot_array_alloc_() -> bool // NOLINT(readability-identifier-naming)
+  {
+    using allocator_type = util::n_slot_array_allocator<int, 2U, 2U>;
+    using allocator_traits_type = std::allocator_traits<allocator_type>;
+
+    allocator_type alloc { };
+
+    if((alloc.max_size() != 2U) || (alloc.allocate(0U) != nullptr))
+    {
+      return false;
+    }
+
+    if(alloc.allocate(3U) != nullptr)
+    {
+      return false;
+    }
+
+    auto* const first_slot  = alloc.allocate(2U);
+    auto* const second_slot = alloc.allocate(1U);
+
+    allocator_traits_type::construct(alloc, first_slot, 17); // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTNEXTLINE(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
+    allocator_traits_type::construct(alloc, first_slot + 1, 19); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,cppcoreguidelines-avoid-magic-numbers)
+    allocator_traits_type::construct(alloc, second_slot, 23); // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
+
+    const bool exhausted_pool_returns_null = (alloc.allocate(1U) == nullptr);
+
+    const bool values_are_correct =
+      ((first_slot[0] == 17) && (first_slot[1] == 19) && (second_slot[0] == 23)); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+
+    allocator_traits_type::destroy(alloc, first_slot);
+    allocator_traits_type::destroy(alloc, first_slot + 1); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    allocator_traits_type::destroy(alloc, second_slot);
+
+    alloc.deallocate(first_slot, 2U);
+    alloc.deallocate(second_slot, 1U);
+
+    auto* const reused_slot = alloc.allocate(2U);
+    const bool released_slot_was_reused = (reused_slot == first_slot);
+
+    allocator_traits_type::construct(alloc, reused_slot, 29); // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
+    allocator_traits_type::destroy(alloc, reused_slot);
+    alloc.deallocate(reused_slot, 2U);
+
+    std::cout << "n-slot allocator high-water mark: "
+              << allocator_type::high_water_mark()
+              << " slots of "
+              << allocator_type().max_slot_count()
+              << " slots"
+              << std::endl;
+
+    const bool high_water_mark_is_correct = (allocator_type::high_water_mark() == 2U);
+
+    return (exhausted_pool_returns_null && values_are_correct && released_slot_was_reused && high_water_mark_is_correct);
+  }
+
+  auto test_baselexical_cast___() -> bool // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  {
+    std::array<char, 8U> buffer { }; // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
+
+    if(const auto* zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size()); (zero_end != (buffer.data() + 1U)) || (buffer[0U] != '0'))
+    {
+      return false;
+    }
+
+    if(const auto upper_hex_end = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+         util::baselexical_cast<std::uint32_t,
+                                static_cast<std::uint_fast8_t>(UINT8_C(16)),
+                                true>
+         (
+           static_cast<std::uint32_t>(UINT32_C(0xBEEF)),
+           buffer.data(),
+           buffer.data() + buffer.size()
+         );
+          (upper_hex_end != (buffer.data() + 4U))
+       || (buffer[0U] != 'B')
+       || (buffer[1U] != 'E')
+       || (buffer[2U] != 'E')
+       || (buffer[3U] != 'F'))
+    {
+      return false;
+    }
+
+    if(const auto* empty_buffer_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data()); empty_buffer_end != nullptr)
+    {
+      return false;
+    }
+
+    std::array<char, 2U> short_buffer { }; // NOLINT(readability-magic-numbers)
+
+    const auto insufficient_buffer_end = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+      util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(255)), short_buffer.data(), short_buffer.data() + short_buffer.size());
+
+    return (insufficient_buffer_end == nullptr);
+  }
 } // namespace local
 
 auto local::run() -> bool
@@ -92,6 +193,8 @@ auto local::run() -> bool
 
   const auto result_test_examples_part1_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part1__), "result_test_examples_part1_is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_examples_part2_is_ok = local::pfn_runner(function_type(test_decwide_t_examples_part2__), "result_test_examples_part2_is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_n_slot_alloc___is_ok = local::pfn_runner(function_type(local::test_n_slot_array_alloc_), "result_test_n_slot_alloc___is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
+  const auto result_test_base_lex_cast__is_ok = local::pfn_runner(function_type(local::test_baselexical_cast___), "result_test_base_lex_cast__is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_algebra_edge___is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_edge____), "result_test_algebra_edge___is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_algebra_add____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_add_____), "result_test_algebra_add____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   const auto result_test_algebra_sub____is_ok = local::pfn_runner(function_type(test_decwide_t_algebra_sub_____), "result_test_algebra_sub____is_ok    : "); // NOLINT(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
@@ -104,6 +207,8 @@ auto local::run() -> bool
   (
        result_test_examples_part1_is_ok
     && result_test_examples_part2_is_ok
+    && result_test_n_slot_alloc___is_ok
+    && result_test_base_lex_cast__is_ok
     && result_test_algebra_edge___is_ok
     && result_test_algebra_add____is_ok
     && result_test_algebra_sub____is_ok

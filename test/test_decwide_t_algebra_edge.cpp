@@ -5,11 +5,11 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
+#pragma GCC diagnostic ignored "-Wstringop-overread"
 #endif
 
 #include <algorithm>
@@ -1420,7 +1420,7 @@ template<typename NativeUnsignedIntegralType>
 auto test_various_int_operations() -> bool
 {
   using local_unsigned_type = NativeUnsignedIntegralType;
-  using local_signed_type   = typename std::make_signed<local_unsigned_type>::type;
+  using local_signed_type   = typename std::make_signed_t<local_unsigned_type>;
 
   constexpr auto unsigned_integral_digits10_to_use =
     static_cast<unsigned>
@@ -1719,7 +1719,6 @@ auto test_decwide_t_algebra_edge::local_one     () -> const local_wide_decimal_t
 auto test_decwide_t_algebra_edge::local_near_one() -> const local_wide_decimal_type& { static const local_wide_decimal_type my_near_one("0.999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"); return my_near_one; }
 auto test_decwide_t_algebra_edge::local_not_one () -> const local_wide_decimal_type& { static const local_wide_decimal_type my_not_one ("0.899999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"); return my_not_one; }
 
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#pragma GCC diagnostic pop
+#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
 #pragma GCC diagnostic pop
 #endif

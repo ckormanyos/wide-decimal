@@ -36,12 +36,12 @@
 #if defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#if !defined(__clang__) && (__GNUC__ >= 11)
+#pragma GCC diagnostic ignored "-Wstringop-overread"
+#endif
 #endif
 
 #if defined(__clang__) && !defined(__APPLE__)
@@ -167,8 +167,5 @@ auto main() -> int // NOLINT(bugprone-exception-escape)
 #endif
 
 #if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #endif

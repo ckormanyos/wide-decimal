@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022.                        //
+//  Copyright Christopher Kormanyos 2022 - 2026.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -67,7 +67,7 @@ auto ::math::wide_decimal::example013a_embeddable_agm() -> bool
     ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
   #endif
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using dec53_t = WIDE_DECIMAL_NAMESPACE::math::wide_decimal::decwide_t<wide_decimal_digits10,

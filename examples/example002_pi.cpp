@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2024.                 //
+//  Copyright Christopher Kormanyos 2020 - 2026.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -77,7 +77,7 @@ auto ::math::wide_decimal::example002_pi() -> bool
     ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
   #endif
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using local_wide_decimal_type =
@@ -124,10 +124,8 @@ auto ::math::wide_decimal::example002_pi() -> bool
                                      ::math::constants::const_pi_control_head_32.begin());
   #endif
 
-  using const_iterator_type = typename local_wide_decimal_type::representation_type::const_iterator;
-
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  const_iterator_type
+  auto
     fi
     (
         my_pi.crepresentation().cbegin()
@@ -138,7 +136,7 @@ auto ::math::wide_decimal::example002_pi() -> bool
         )
     );
   #else
-  const_iterator_type
+  auto
     fi
     (
         my_pi.crepresentation().cbegin()
@@ -161,6 +159,13 @@ auto ::math::wide_decimal::example002_pi() -> bool
   #endif
 
   const auto result_is_ok = (head_is_ok && tail_is_ok);
+
+  std::cout << "n-slot allocator high-water mark: "
+            << local_allocator_type::template high_water_mark<local_limb_type>()
+            << " slots of "
+            << local_allocator_type().max_slot_count()
+            << " slots"
+            << std::endl;
 
   return result_is_ok;
 }
