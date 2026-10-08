@@ -23,7 +23,7 @@
            const bool UpperCase>
   auto baselexical_cast(const UnsignedIntegerType& u, char* first, const char* last) -> const char*
   {
-    using local_integer_type = typename std::remove_cv<UnsignedIntegerType>::type;
+    using local_integer_type = std::remove_cv_t<UnsignedIntegerType>;
 
     static_assert(std::is_integral_v<local_integer_type>,
                   "baselexical_cast requires an integral input type.");

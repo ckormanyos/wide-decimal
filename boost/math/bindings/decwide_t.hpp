@@ -84,9 +84,9 @@
     using local_digits_2 = digits2<((static_cast<std::intmax_t>(std::numeric_limits<local_wide_decimal_type>::digits10) + INTMAX_C(1)) * INTMAX_C(1000)) / INTMAX_C(301)>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     using type =
-      typename std::conditional<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
-                                  local_digits_2,
-                                  precision_type>::type;
+      std::conditional_t<((local_digits_2::value <= precision_type::value) || (precision_type::value <= 0)),
+                                    local_digits_2,
+                                    precision_type>;
   };
 
   } // namespace policies
@@ -251,11 +251,11 @@
       typename boost::math::policies::precision<local_backend_type, Policy>::type;
 
     using type =
-      typename std::conditional<precision_type::value && (precision_type::value <= 73), // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-                                lanczos13UDT,
-                                typename std::conditional<precision_type::value && (precision_type::value <= 122), // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-                                                          lanczos22UDT,
-                                                          undefined_lanczos>::type>::type;
+      std::conditional_t<precision_type::value && (precision_type::value <= 73), // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+                                  lanczos13UDT,
+                                  std::conditional_t<precision_type::value && (precision_type::value <= 122), // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+                                                     lanczos22UDT,
+                                                     undefined_lanczos>>;
   };
 
   } // namespace lanczos
