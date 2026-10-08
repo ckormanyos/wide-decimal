@@ -134,28 +134,25 @@ namespace local
     return (exhausted_pool_returns_null && values_are_correct && released_slot_was_reused && high_water_mark_is_correct);
   }
 
-  auto test_baselexical_cast___() -> bool // NOLINT(readability-identifier-naming)
+  auto test_baselexical_cast___() -> bool // NOLINT(readability-identifier-naming,bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
   {
     std::array<char, 8U> buffer { }; // NOLINT(readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 
-    const auto zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size()); // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-
-    if((zero_end != (buffer.data() + 1U)) || (buffer[0U] != '0'))
+    if(auto zero_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data() + buffer.size()); (zero_end != (buffer.data() + 1U)) || (buffer[0U] != '0'))
     {
       return false;
     }
 
-    const auto upper_hex_end = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-      util::baselexical_cast<std::uint32_t,
-                             static_cast<std::uint_fast8_t>(UINT8_C(16)),
-                             true>
-      (
-        static_cast<std::uint32_t>(UINT32_C(0xBEEF)),
-        buffer.data(),
-        buffer.data() + buffer.size()
-      );
-
-    if(   (upper_hex_end != (buffer.data() + 4U))
+    if(const auto upper_hex_end = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+         util::baselexical_cast<std::uint32_t,
+                                static_cast<std::uint_fast8_t>(UINT8_C(16)),
+                                true>
+         (
+           static_cast<std::uint32_t>(UINT32_C(0xBEEF)),
+           buffer.data(),
+           buffer.data() + buffer.size()
+         );
+          (upper_hex_end != (buffer.data() + 4U))
        || (buffer[0U] != 'B')
        || (buffer[1U] != 'E')
        || (buffer[2U] != 'E')
@@ -164,10 +161,7 @@ namespace local
       return false;
     }
 
-    const auto empty_buffer_end = // NOLINT(llvm-qualified-auto,readability-qualified-auto)
-      util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data());
-
-    if(empty_buffer_end != nullptr)
+    if(auto empty_buffer_end = util::baselexical_cast(static_cast<std::uint32_t>(UINT32_C(0)), buffer.data(), buffer.data()); empty_buffer_end != nullptr)
     {
       return false;
     }

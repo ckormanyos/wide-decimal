@@ -25,10 +25,10 @@
   {
     using local_integer_type = typename std::remove_cv<UnsignedIntegerType>::type;
 
-    static_assert(std::is_integral<local_integer_type>::value,
+    static_assert(std::is_integral_v<local_integer_type>,
                   "baselexical_cast requires an integral input type.");
 
-    static_assert(std::is_unsigned<local_integer_type>::value && (!std::is_same<local_integer_type, bool>::value),
+    static_assert(std::is_unsigned_v<local_integer_type> && (!std::is_same_v<local_integer_type, bool>),
                   "baselexical_cast requires an unsigned, non-bool input type.");
 
     static_assert((BaseRepresentation >= static_cast<std::uint_fast8_t>(UINT8_C(2)))
