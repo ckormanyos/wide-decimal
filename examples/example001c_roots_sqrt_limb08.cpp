@@ -20,14 +20,6 @@ auto ::math::wide_decimal::example001c_roots_sqrt_limb08() -> bool
 
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(1001);
 
-  #if defined(WIDE_DECIMAL_NAMESPACE)
-  constexpr std::int32_t local_elem_number =
-    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
-  #else
-  constexpr std::int32_t local_elem_number =
-    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
-  #endif
-
   using local_allocator_type = std::allocator<void>;
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
