@@ -551,7 +551,7 @@ jobs:
       - name: update-tools
         run: sudo apt install gcc-arm-none-eabi
       - id: upcase_my_example
-        uses: ASzc/change-string-case-action@v6
+        uses: ASzc/change-string-case-action@v8
         with:
           string: ${{ matrix.example }}
       - name: gcc-arm-none-eabi
