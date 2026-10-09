@@ -3122,7 +3122,15 @@
         }
         else
         {
-          const auto copy_limit = static_cast<std::ptrdiff_t>((std::min)(prec_elems_for_multiply, decwide_t_elem_number));
+          const auto
+            copy_limit
+            {
+              static_cast<std::ptrdiff_t>
+              (
+                (std::min)(prec_elems_for_multiply,
+                           static_cast<std::int32_t>(decwide_t_elem_number - INT32_C(1)))
+              )
+            };
 
           std::copy(my_data.cbegin() +                             static_cast<std::ptrdiff_t>(INT8_C(1)),               // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                     my_data.cbegin() + static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(INT8_C(1)) + copy_limit), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
