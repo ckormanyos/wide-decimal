@@ -1014,7 +1014,6 @@
           #if(__GNUC__ >= 12)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
-          #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Wrestrict"
           #endif
           #if(__GNUC__ >= 8)
@@ -1029,7 +1028,6 @@
 
           #if (defined(__GNUC__) && !defined(__clang__))
           #if(__GNUC__ >= 12)
-          #pragma GCC diagnostic pop
           #pragma GCC diagnostic pop
           #endif
           #if(__GNUC__ >= 8)
@@ -1633,7 +1631,7 @@
     #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Warray-bounds"
-    #pragma GCC diagnostic ignored "-Wstringop-overflow"
+    #pragma GCC diagnostic ignored "-Wstringop-overread"
     #endif
     static constexpr auto my_value_max() -> decwide_t { return from_lst( { static_cast<limb_type>(UINT8_C(9)) }, decwide_t_max_exp10 ); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     static constexpr auto my_value_min() -> decwide_t { return from_lst( { static_cast<limb_type>(UINT8_C(1)) }, decwide_t_min_exp10 ); }
@@ -4310,7 +4308,6 @@
   #if ((defined(__GNUC__) && (__GNUC__ >= 12)) && !defined(__clang__))
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Warray-bounds"
-  #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstringop-overread"
   #endif
   template<const ::std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
@@ -4324,7 +4321,6 @@
     return other_wide_decimal_type::from_lst( { static_cast<other_limb_type>(UINT8_C(0)) } );
   }
   #if ((defined(__GNUC__) && (__GNUC__ >= 12)) && !defined(__clang__))
-  #pragma GCC diagnostic pop
   #pragma GCC diagnostic pop
   #endif
 
