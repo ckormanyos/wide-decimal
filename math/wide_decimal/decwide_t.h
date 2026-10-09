@@ -2570,6 +2570,7 @@
     #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Warray-bounds"
+    #pragma GCC diagnostic ignored "-Wstringop-overread"
     #endif
     static auto from_lst(      std::initializer_list<limb_type> limb_values,
                          const exponent_type                    e      = static_cast<exponent_type>(INT8_C(0)),
@@ -3747,10 +3748,10 @@
     }
     #endif //!(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
 
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
+    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wstringop-overread"
-#endif
+    #endif
     static auto get_output_digits(const decwide_t&         x,
                                         char*              it_dst,
                                   const std::uint_fast32_t number_of_elements,
@@ -3820,9 +3821,9 @@
           );
       }
     }
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
+    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic pop
-#endif
+    #endif
 
     #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
     static auto get_output_string(const decwide_t&         x,
