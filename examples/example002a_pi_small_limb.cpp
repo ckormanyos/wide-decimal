@@ -21,7 +21,6 @@
 #include <math/wide_decimal/decwide_t.h>
 #include <mcal_lcd/mcal_lcd_console.h>
 #include <test/stopwatch.h>
-#include <util/memory/util_n_slot_array_allocator.h>
 #include <util/utility/util_baselexical_cast.h>
 
 #include <cstdint>
@@ -61,14 +60,6 @@ auto ::math::wide_decimal::example002a_pi_small_limb() -> bool
   constexpr std::int32_t wide_decimal_digits10 = INT32_C(1000001);
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
-  constexpr std::int32_t local_elem_number =
-    WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
-  #else
-  constexpr std::int32_t local_elem_number =
-    ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_number;
-  #endif
-
-  #if defined(WIDE_DECIMAL_NAMESPACE)
   constexpr std::int32_t local_elem_digits10 =
     WIDE_DECIMAL_NAMESPACE::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
   #else
@@ -76,7 +67,7 @@ auto ::math::wide_decimal::example002a_pi_small_limb() -> bool
     ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
   #endif
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  using local_allocator_type = std::allocator<void>;
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using local_wide_decimal_type =

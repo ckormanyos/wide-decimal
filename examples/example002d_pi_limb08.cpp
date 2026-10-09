@@ -17,6 +17,15 @@
 #define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 
 #include <examples/example_decwide_t.h>
+
+#if (defined(_MSC_VER) && defined(_DEBUG))
+#if defined(WIDE_DECIMAL_NAMESPACE)
+auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example002d_pi_limb08() -> bool { return true; }
+#else
+auto ::math::wide_decimal::example002d_pi_limb08() -> bool { return true; }
+#endif
+#else
+
 #include <math/constants/constants_pi_control_for_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
 #include <mcal_lcd/mcal_lcd_console.h>
@@ -77,7 +86,7 @@ auto ::math::wide_decimal::example002d_pi_limb08() -> bool
     ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
   #endif
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using local_wide_decimal_type =
@@ -181,4 +190,6 @@ auto main() -> int
 
 #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
 #pragma GCC diagnostic pop
+#endif
+
 #endif

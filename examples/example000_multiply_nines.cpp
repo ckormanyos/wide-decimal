@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2022.                 //
+//  Copyright Christopher Kormanyos 2020 - 2026.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -9,7 +9,6 @@
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
-#include <util/memory/util_n_slot_array_allocator.h>
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
 auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example000_multiply_nines() -> bool

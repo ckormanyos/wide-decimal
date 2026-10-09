@@ -55,7 +55,7 @@ auto ::math::wide_decimal::example002b_pi_100k() -> bool
     ::math::wide_decimal::detail::decwide_t_helper<wide_decimal_digits10, local_limb_type>::elem_digits10;
   #endif
 
-  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 18U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  using local_allocator_type = util::n_slot_array_allocator<void, local_elem_number, 16U>; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   #if defined(WIDE_DECIMAL_NAMESPACE)
   using local_wide_decimal_type =

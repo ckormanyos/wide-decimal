@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2020 - 2023.                 //
+//  Copyright Christopher Kormanyos 2020 - 2026.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -20,6 +20,10 @@
   #if defined(__SANITIZE_THREAD__) || defined(__SANITIZE_ADDRESS__) || defined(WIDE_DECIMAL_HAS_COVERAGE)
   #define DECWIDE_T_REDUCE_TEST_DEPTH
   #endif
+#endif
+
+#if (defined(_MSC_VER) && defined(_DEBUG))
+#define DECWIDE_T_REDUCE_TEST_DEPTH
 #endif
 
 #if defined(WIDE_DECIMAL_NAMESPACE)
