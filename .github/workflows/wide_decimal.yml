@@ -431,6 +431,38 @@ jobs:
           MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-release -p:Platform=x64 /t:Rebuild
           dir %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
           %cd%\wide-decimal-release-x64\wide-decimal-release-x64.exe
+  msvc-debug-x64-vs2022:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: clone-boost-develop
+        working-directory: ${{ runner.workspace }}
+        run: |
+          git clone -b develop --depth 1 https://github.com/boostorg/boost.git ${{ runner.workspace }}/boost-root
+      - name: clone-boost-submods
+        working-directory: ${{ runner.workspace }}/boost-root
+        run: |
+          git submodule update --init tools
+          git submodule update --init libs/config
+          git submodule update --init libs/math
+          git submodule update --init libs/multiprecision
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          toolset: 14.4
+      - name: bootstrap-boost
+        working-directory: ${{ runner.workspace }}/boost-root
+        run: |
+          ./bootstrap.bat
+          ./b2 headers
+      - name: msvc-debug-x64-vs2022
+        shell: cmd
+        working-directory: ./
+        run: |
+          set INCLUDE=%cd%
+          set INCLUDE=${{ runner.workspace }}\boost-root;%INCLUDE%
+          MSBuild -m wide_decimal_vs2022.sln -p:useenv=true -p:Configuration=wide-decimal-debug -p:Platform=x64 /t:Rebuild
+          dir %cd%\wide-decimal-debug-x64\wide-decimal-debug-x64.exe
+          %cd%\wide-decimal-debug-x64\wide-decimal-debug-x64.exe
   mingw-winhost-x64:
     runs-on: windows-latest
     defaults:
