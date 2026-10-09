@@ -1630,8 +1630,16 @@
     }
 
     // Specific special values.
+    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Warray-bounds"
+    #pragma GCC diagnostic ignored "-Wstringop-overflow"
+    #endif
     static constexpr auto my_value_max() -> decwide_t { return from_lst( { static_cast<limb_type>(UINT8_C(9)) }, decwide_t_max_exp10 ); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     static constexpr auto my_value_min() -> decwide_t { return from_lst( { static_cast<limb_type>(UINT8_C(1)) }, decwide_t_min_exp10 ); }
+    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+    #pragma GCC diagnostic pop
+    #endif
 
     static constexpr auto my_value_eps() -> decwide_t
     {
