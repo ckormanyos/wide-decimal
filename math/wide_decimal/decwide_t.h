@@ -2554,9 +2554,16 @@
       return unsigned_long_long_result;
     }
 
+    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wstringop-overread"
+    #endif
     explicit operator long double() const { return                     extract_long_double(); }
     explicit operator double     () const { return static_cast<double>(extract_long_double()); }
     explicit operator float      () const { return static_cast<float> (extract_long_double()); }
+    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #pragma GCC diagnostic pop
+    #endif
 
     template<typename IntegralType,
              typename = std::enable_if_t<std::is_integral_v<IntegralType>>>
