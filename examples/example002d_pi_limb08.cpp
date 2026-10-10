@@ -5,17 +5,6 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
-#endif
-
-// Disable heavyweight features via macros for this example.
-#define WIDE_DECIMAL_DISABLE_IOSTREAM
-#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
-#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
-#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
-
 #include <examples/example_decwide_t.h>
 
 #if (defined(_MSC_VER) && defined(_DEBUG))
@@ -25,6 +14,12 @@ auto WIDE_DECIMAL_NAMESPACE::math::wide_decimal::example002d_pi_limb08() -> bool
 auto ::math::wide_decimal::example002d_pi_limb08() -> bool { return true; }
 #endif
 #else
+
+// Disable heavyweight features via macros for this example.
+#define WIDE_DECIMAL_DISABLE_IOSTREAM
+#define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
+#define WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING
+#define WIDE_DECIMAL_DISABLE_CACHED_CONSTANTS
 
 #include <math/constants/constants_pi_control_for_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
@@ -186,10 +181,5 @@ auto main() -> int
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
 
-#endif
-
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#pragma GCC diagnostic pop
-#endif
-
-#endif
+#endif // WIDE_DECIMAL_STANDALONE_EXAMPLE002D_PI_LIMB08
+#endif // !(defined(_MSC_VER) && defined(_DEBUG))

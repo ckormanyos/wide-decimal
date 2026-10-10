@@ -5,18 +5,12 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
-#pragma GCC diagnostic ignored "-Wstringop-overread"
-#endif
+#include <examples/example_decwide_t.h>
+#include <math/wide_decimal/decwide_t.h>
 
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
-
-#include <examples/example_decwide_t.h>
-#include <math/wide_decimal/decwide_t.h>
 
 namespace example004_bessel
 {
@@ -283,8 +277,4 @@ auto main() -> int
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
 
-#endif
-
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
-#pragma GCC diagnostic pop
 #endif

@@ -5,15 +5,6 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
-#endif
-
-#include <algorithm>
-#include <array>
-#include <cstdint>
-
 #if (defined(__GNUC__) && defined(__AVR__))
 #include <avr/pgmspace.h>
 
@@ -31,6 +22,10 @@
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
 #include <util/memory/util_n_slot_array_allocator.h>
+
+#include <algorithm>
+#include <array>
+#include <cstdint>
 
 #if(__cplusplus >= 201703L)
 namespace mcal::memory::progmem {
@@ -148,7 +143,3 @@ auto main() -> int
 }
 
 #endif // WIDE_DECIMAL_STANDALONE_EXAMPLE013A_EMBEDDABLE_AGM
-
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#pragma GCC diagnostic pop
-#endif

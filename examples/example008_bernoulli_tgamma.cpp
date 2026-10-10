@@ -5,13 +5,6 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#if (defined(__GNUC__) && !defined(__clang__) && ((__GNUC__ >= 11) || defined(__arm__)))
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
-#pragma GCC diagnostic ignored "-Wstringop-overread"
-#pragma GCC diagnostic ignored "-Warray-bounds"
-#endif
-
 #if (defined(__GNUC__) && defined(__arm__))
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #endif
@@ -22,7 +15,6 @@
 
 #include <examples/example_decwide_t.h>
 #include <math/wide_decimal/decwide_t.h>
-#include <vector>
 #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
 #include <test/stopwatch.h>
 #endif
@@ -30,13 +22,13 @@
 
 #include <array>
 #include <cstdint>
-#include <utility>
-
 #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #endif
+#include <utility>
+#include <vector>
 
 namespace example008_bernoulli
 {
@@ -436,8 +428,4 @@ extern "C"
   volatile std::uint32_t example_standalone_result; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 }
 
-#endif
-
-#if (defined(__GNUC__) && !defined(__clang__) && ((__GNUC__ >= 11) || defined(__arm__)))
-#pragma GCC diagnostic pop
 #endif
