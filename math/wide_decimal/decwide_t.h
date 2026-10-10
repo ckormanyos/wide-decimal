@@ -2300,7 +2300,7 @@
       return x;
     }
 
-    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wstringop-overread"
     #endif
@@ -2427,7 +2427,7 @@
 
       return ldbl_retrieved;
     }
-    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic pop
     #endif
 
@@ -2554,14 +2554,14 @@
       return unsigned_long_long_result;
     }
 
-    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wstringop-overread"
     #endif
     explicit operator long double() const { return                     extract_long_double(); }
     explicit operator double     () const { return static_cast<double>(extract_long_double()); }
     explicit operator float      () const { return static_cast<float> (extract_long_double()); }
-    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic pop
     #endif
 
@@ -3817,11 +3817,38 @@
 
         ++it_rep; // LCOV_EXCL_LINE
 
+        #if 0
         auto rit = std::copy(static_cast<std::reverse_iterator<const char*>>(p_end),
                              static_cast<std::reverse_iterator<const char*>>(static_cast<const char*>(data_elem_buf.data())),
                              data_elem_array.rbegin());
 
         std::fill(rit, data_elem_array.rend(), '0');
+        #else
+        // Workaround compiler warning/error stringop-overread
+        const char* src_start = static_cast<const char*>(data_elem_buf.data());
+        const char* src_end = p_end;
+
+        std::size_t count = src_end - src_start;
+
+        char* dst_ptr = data_elem_array.data() + data_elem_array.size();
+
+        for(std::size_t idx { }; idx < count; ++idx)
+        {
+          --src_end;
+          --dst_ptr;
+          *dst_ptr = *src_end;
+        }
+
+        char* rit = dst_ptr;
+
+        char* fill_ptr = data_elem_array.data();
+
+        while (fill_ptr < rit)
+        {
+          *fill_ptr = '0';
+          ++fill_ptr;
+        }
+        #endif
 
         it_dst = std::copy(data_elem_array.cbegin(),
                            data_elem_array.cend(),
