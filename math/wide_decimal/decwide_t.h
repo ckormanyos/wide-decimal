@@ -2363,11 +2363,18 @@
 
       auto count_retrieved = std::size_t { };
 
+      #if defined(__GNUC__) && (__GNUC__ >= 11)
+      #pragma GCC diagnostic push
+      #pragma GCC diagnostic ignored "-Wstringop-overread"
+      #endif
       get_output_digits(*this,
                         ldbl_str_rep.data() + ldbl_str_pos,
                         elems_of_ldbl_to_get,
                         &count_retrieved,
                         true);
+      #if defined(__GNUC__) && (__GNUC__ >= 11)
+      #pragma GCC diagnostic pop
+      #endif
 
       // Note: Add an additional 1 to the long double string position
       // in order to include both the retrieved decimal digits as well as
@@ -2547,9 +2554,16 @@
       return unsigned_long_long_result;
     }
 
+    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wstringop-overread"
+    #endif
     explicit operator long double() const { return                     extract_long_double(); }
     explicit operator double     () const { return static_cast<double>(extract_long_double()); }
     explicit operator float      () const { return static_cast<float> (extract_long_double()); }
+    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #pragma GCC diagnostic pop
+    #endif
 
     template<typename IntegralType,
              typename = std::enable_if_t<std::is_integral_v<IntegralType>>>
