@@ -37,20 +37,20 @@ Wide-decimal implements both elementary algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`.
 It also includes full support for `std::numeric_limits`.
 
-Wide-decimal is written in header-only C++14, and compatible through C++14, 17, 20, 23 and beyond.
+Wide-decimal is written in header-only C++20, and compatible through C++20, 23 and beyond.
 
 ## Implementation goals
 
   - Instances of the `decwide_t` type should behave as closely as possible to the behavior of built-in floating-point types.
   - Relatively wide precision range from about ${\sim}~10 {\ldots} 10^{7}$ decimal digits.
   - Moderately good efficiency over the entire wide precision range.
-  - Clean header-only C++14 design.
-  - Seamless portability to any modern C++14, 17, 20, 23 compiler and beyond.
+  - Clean header-only C++20 design.
+  - Seamless portability to any modern C++20, 23 compiler and beyond.
   - Scalability with small memory footprint and efficiency suitable for both PC/workstation systems as well as _bare-metal_ embedded systems.
 
 ## Quick start
 
-Easy application follows via a traditional C-style typedef or C++14 alias.
+Easy application follows via a traditional C-style typedef or alias.
 The defined type can be used very much like a built-in floating-point type.
 
 The following sample, for instance, defines and uses a decimal type
@@ -80,7 +80,7 @@ void do_something()
 }
 ```
 
-The local data type `dec101_t` is defined with a C++14 alias.
+The local data type `dec101_t` is defined with an alias.
 The first template parameter `INT32_C(101)` sets the decimal digit
 count while the second optional template parameter `std::uint32_t`
 sets the internal _limb_ _type_. If the second template parameter is left blank,
@@ -169,7 +169,7 @@ of the issue resolution process.
 
 CI runs on both push-to-branch as well as pull request using GitHub Actions.
 Various compilers, operating systems, and C++ standards
-ranging from C++14, 17, 20, 23 are included in CI.
+ranging from C++20, 23 are included in CI.
 
 In CI, we use both elevated GCC/clang compiler warnings
 as well as MSVC level 4 warnings active on the correspondoing platforms.
