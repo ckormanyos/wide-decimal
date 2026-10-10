@@ -3824,7 +3824,7 @@
 
         std::fill(rit, data_elem_array.rend(), '0');
         #else
-        // Workaround compiler warning/error stringop-overread
+        // Workaround compiler warning/error -Wstringop-overread
         const char* src_start = static_cast<const char*>(data_elem_buf.data());
         const char* src_end = p_end;
 
@@ -3834,19 +3834,16 @@
 
         for(std::size_t idx { }; idx < count; ++idx) // NOLINT(altera-id-dependent-backward-branch)
         {
-          --src_end; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-          --dst_ptr; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-          *dst_ptr = *src_end;
+          *(--dst_ptr) = *(--src_end); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,clang-analyzer-core.NullDereference)
         }
 
-        char* rit = dst_ptr;
+        char* rit { dst_ptr };
 
-        char* fill_ptr = data_elem_array.data();
+        char* fill_ptr { data_elem_array.data() };
 
-        while (fill_ptr < rit) // NOLINT(altera-id-dependent-backward-branch)
+        while(fill_ptr < rit) // NOLINT(altera-id-dependent-backward-branch)
         {
-          *fill_ptr = '0';
-          ++fill_ptr; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          *fill_ptr++ = '0'; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
         #endif
 
