@@ -3832,12 +3832,15 @@
 
         char* dst_ptr = data_elem_array.data() + data_elem_array.size();
 
-        for(std::size_t idx { }; idx < count; ++idx) // NOLINT(altera-id-dependent-backward-branch)
+        if(src_end >= src_start + count) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         {
-          *(--dst_ptr) = *(--src_end); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic,clang-analyzer-core.NullDereference)
+          for(std::size_t idx { }; idx < count; ++idx) // NOLINT(altera-id-dependent-backward-branch)
+          {
+            *(--dst_ptr) = *(--src_end); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          }
         }
 
-        char* rit { dst_ptr };
+        const char* rit { dst_ptr };
 
         char* fill_ptr { data_elem_array.data() };
 
