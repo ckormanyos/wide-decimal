@@ -3828,14 +3828,14 @@
         const char* src_start = static_cast<const char*>(data_elem_buf.data());
         const char* src_end = p_end;
 
-        std::size_t count = src_end - src_start;
+        std::size_t count = static_cast<std::size_t>(src_end - src_start);
 
         char* dst_ptr = data_elem_array.data() + data_elem_array.size();
 
         for(std::size_t idx { }; idx < count; ++idx)
         {
-          --src_end;
-          --dst_ptr;
+          --src_end; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+          --dst_ptr; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
           *dst_ptr = *src_end;
         }
 
@@ -3846,7 +3846,7 @@
         while (fill_ptr < rit)
         {
           *fill_ptr = '0';
-          ++fill_ptr;
+          ++fill_ptr; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
         #endif
 
