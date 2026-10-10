@@ -2300,6 +2300,10 @@
       return x;
     }
 
+    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wstringop-overread"
+    #endif
     WIDE_DECIMAL_NODISCARD auto extract_long_double() const -> long double
     {
       // Returns the long double conversion of a decwide_t.
@@ -2363,18 +2367,11 @@
 
       auto count_retrieved = std::size_t { };
 
-      #if defined(__GNUC__) && (__GNUC__ >= 11)
-      #pragma GCC diagnostic push
-      #pragma GCC diagnostic ignored "-Wstringop-overread"
-      #endif
       get_output_digits(*this,
                         ldbl_str_rep.data() + ldbl_str_pos,
                         elems_of_ldbl_to_get,
                         &count_retrieved,
                         true);
-      #if defined(__GNUC__) && (__GNUC__ >= 11)
-      #pragma GCC diagnostic pop
-      #endif
 
       // Note: Add an additional 1 to the long double string position
       // in order to include both the retrieved decimal digits as well as
@@ -2430,6 +2427,9 @@
 
       return ldbl_retrieved;
     }
+    #if defined(__GNUC__) && (__GNUC__ >= 11)
+    #pragma GCC diagnostic pop
+    #endif
 
     WIDE_DECIMAL_NODISCARD auto extract_signed_long_long() const -> signed long long // NOLINT(google-runtime-int)
     {
@@ -2554,16 +2554,9 @@
       return unsigned_long_long_result;
     }
 
-    #if defined(__GNUC__) && (__GNUC__ >= 11)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wstringop-overread"
-    #endif
     explicit operator long double() const { return                     extract_long_double(); }
     explicit operator double     () const { return static_cast<double>(extract_long_double()); }
     explicit operator float      () const { return static_cast<float> (extract_long_double()); }
-    #if defined(__GNUC__) && (__GNUC__ >= 11)
-    #pragma GCC diagnostic pop
-    #endif
 
     template<typename IntegralType,
              typename = std::enable_if_t<std::is_integral_v<IntegralType>>>
