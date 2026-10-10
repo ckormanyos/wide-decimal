@@ -3817,7 +3817,7 @@
 
         ++it_rep; // LCOV_EXCL_LINE
 
-        #if 0
+        #if 0 // NOLINT(readability-avoid-unconditional-preprocessor-if)
         auto rit = std::copy(static_cast<std::reverse_iterator<const char*>>(p_end),
                              static_cast<std::reverse_iterator<const char*>>(static_cast<const char*>(data_elem_buf.data())),
                              data_elem_array.rbegin());
@@ -3828,11 +3828,11 @@
         const char* src_start = static_cast<const char*>(data_elem_buf.data());
         const char* src_end = p_end;
 
-        std::size_t count = static_cast<std::size_t>(src_end - src_start);
+        auto count { static_cast<std::size_t>(src_end - src_start) };
 
         char* dst_ptr = data_elem_array.data() + data_elem_array.size();
 
-        for(std::size_t idx { }; idx < count; ++idx)
+        for(std::size_t idx { }; idx < count; ++idx) // NOLINT(altera-id-dependent-backward-branch)
         {
           --src_end; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
           --dst_ptr; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -3843,7 +3843,7 @@
 
         char* fill_ptr = data_elem_array.data();
 
-        while (fill_ptr < rit)
+        while (fill_ptr < rit) // NOLINT(altera-id-dependent-backward-branch)
         {
           *fill_ptr = '0';
           ++fill_ptr; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
