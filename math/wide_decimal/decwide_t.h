@@ -1011,7 +1011,7 @@
           // LCOV_EXCL_STOP
 
           #if (defined(__GNUC__) && !defined(__clang__))
-          #if(__GNUC__ >= 12)
+          #if(__GNUC__ >= 11)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
           #pragma GCC diagnostic ignored "-Wrestrict"
@@ -1027,7 +1027,7 @@
                     my_data.data());
 
           #if (defined(__GNUC__) && !defined(__clang__))
-          #if(__GNUC__ >= 12)
+          #if(__GNUC__ >= 11)
           #pragma GCC diagnostic pop
           #endif
           #if(__GNUC__ >= 8)
@@ -1268,7 +1268,7 @@
           const auto prec_elems_for_multiply = (std::min)(my_prec_elem, v.my_prec_elem);
 
           #if (defined(__GNUC__) && !defined(__clang__))
-          #if(__GNUC__ >= 12)
+          #if(__GNUC__ >= 11)
           #pragma GCC diagnostic push
           #pragma GCC diagnostic ignored "-Warray-bounds"
           #endif
@@ -1281,7 +1281,7 @@
           eval_mul_dispatch_multiplication_method(v, prec_elems_for_multiply);
 
           #if (defined(__GNUC__) && !defined(__clang__))
-          #if(__GNUC__ >= 12)
+          #if(__GNUC__ >= 11)
           #pragma GCC diagnostic pop
           #endif
           #if(__GNUC__ >= 8)
@@ -1628,7 +1628,7 @@
     }
 
     // Specific special values.
-    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Warray-bounds"
     #pragma GCC diagnostic ignored "-Wstringop-overread"
@@ -1636,7 +1636,7 @@
     #endif
     static constexpr auto my_value_max() -> decwide_t { return from_lst( { static_cast<limb_type>(UINT8_C(9)) }, decwide_t_max_exp10 ); } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     static constexpr auto my_value_min() -> decwide_t { return from_lst( { static_cast<limb_type>(UINT8_C(1)) }, decwide_t_min_exp10 ); }
-    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic pop
     #endif
 
@@ -2581,7 +2581,7 @@
     // Cast operator to built-in Boolean type.
     explicit constexpr operator bool() const { return (!iszero()); }
 
-    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Warray-bounds"
     #pragma GCC diagnostic ignored "-Wstringop-overread"
@@ -2615,7 +2615,7 @@
 
       return a;
     }
-    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic pop
     #endif
 
@@ -2758,7 +2758,7 @@
                 tmp.cbegin() + static_cast<std::ptrdiff_t>((std::min)(static_cast<std::ptrdiff_t>(i), copy_limit)),
                 my_data.begin());
 
-      #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+      #if (defined(__GNUC__) && (__GNUC__ >= 11))
       #pragma GCC diagnostic push
       #pragma GCC diagnostic ignored "-Warray-bounds"
       #pragma GCC diagnostic ignored "-Wstringop-overflow"
@@ -2766,7 +2766,7 @@
       std::fill(my_data.begin() + static_cast<std::ptrdiff_t>((std::min)(static_cast<std::ptrdiff_t>(i), copy_limit)),
                 my_data.end(),
                 static_cast<limb_type>(UINT8_C(0)));
-      #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
+      #if (defined(__GNUC__) && (__GNUC__ >= 11))
       #pragma GCC diagnostic pop
       #endif
     }
@@ -3762,7 +3762,7 @@
     }
     #endif //!(WIDE_DECIMAL_DISABLE_CONSTRUCT_FROM_STRING)
 
-    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wstringop-overread"
     #endif
@@ -3817,16 +3817,9 @@
 
         ++it_rep; // LCOV_EXCL_LINE
 
-        #if defined(__GNUC__) && (__GNUC__ >= 11)
-        #pragma GCC diagnostic push
-        #pragma GCC diagnostic ignored "-Wstringop-overread"
-        #endif
         auto rit = std::copy(static_cast<std::reverse_iterator<const char*>>(p_end),
                              static_cast<std::reverse_iterator<const char*>>(static_cast<const char*>(data_elem_buf.data())),
                              data_elem_array.rbegin());
-        #if defined(__GNUC__) && (__GNUC__ >= 11)
-        #pragma GCC diagnostic pop
-        #endif
 
         std::fill(rit, data_elem_array.rend(), '0');
 
@@ -3842,9 +3835,6 @@
           );
       }
     }
-    #if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 11))
-    #pragma GCC diagnostic pop
-    #endif
 
     #if !defined(WIDE_DECIMAL_DISABLE_IOSTREAM)
     static auto get_output_string(const decwide_t&         x,
@@ -3937,6 +3927,9 @@
         }
       }
     }
+    #if (defined(__GNUC__) && (__GNUC__ >= 11))
+    #pragma GCC diagnostic pop
+    #endif
 
     static auto wr_string_scientific(      std::string&       str, // NOLINT(google-runtime-references)
                                      const exponent_type      the_exp,
@@ -4335,7 +4328,7 @@
     friend constexpr auto half() -> decwide_t<OtherMyDigits10, OtherLimbType, OtherAllocatorType, OtherInternalFloatType, OtherExponentType, OtherFftFloatType>; // NOLINT(readability-redundant-declaration)
   };
 
-  #if ((defined(__GNUC__) && (__GNUC__ >= 12)) && !defined(__clang__))
+  #if ((defined(__GNUC__) && (__GNUC__ >= 11)) && !defined(__clang__))
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Warray-bounds"
   #pragma GCC diagnostic ignored "-Wstringop-overread"
@@ -4350,15 +4343,7 @@
 
     return other_wide_decimal_type::from_lst( { static_cast<other_limb_type>(UINT8_C(0)) } );
   }
-  #if ((defined(__GNUC__) && (__GNUC__ >= 12)) && !defined(__clang__))
-  #pragma GCC diagnostic pop
-  #endif
 
-  #if ((defined(__GNUC__) && (__GNUC__ >= 12)) && !defined(__clang__))
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Warray-bounds"
-  #pragma GCC diagnostic ignored "-Wstringop-overread"
-  #endif
   template<const ::std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   constexpr auto one() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
@@ -4369,7 +4354,7 @@
 
     return other_wide_decimal_type::from_lst( { static_cast<other_limb_type>(UINT8_C(1)) } );
   }
-  #if ((defined(__GNUC__) && (__GNUC__ >= 12)) && !defined(__clang__))
+  #if ((defined(__GNUC__) && (__GNUC__ >= 11)) && !defined(__clang__))
   #pragma GCC diagnostic pop
   #endif
 
