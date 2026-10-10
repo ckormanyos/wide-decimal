@@ -3803,9 +3803,16 @@
 
         ++it_rep; // LCOV_EXCL_LINE
 
+        #if defined(__GNUC__) && (__GNUC__ >= 11)
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wstringop-overread"
+        #endif
         auto rit = std::copy(static_cast<std::reverse_iterator<const char*>>(p_end),
                              static_cast<std::reverse_iterator<const char*>>(static_cast<const char*>(data_elem_buf.data())),
                              data_elem_array.rbegin());
+        #if defined(__GNUC__) && (__GNUC__ >= 11)
+        #pragma GCC diagnostic pop
+        #endif
 
         std::fill(rit, data_elem_array.rend(), '0');
 
