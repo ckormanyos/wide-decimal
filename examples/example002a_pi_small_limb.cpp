@@ -5,11 +5,6 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////
 
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
-#endif
-
 // Disable heavyweight features via macros for this example.
 #define WIDE_DECIMAL_DISABLE_IOSTREAM
 #define WIDE_DECIMAL_DISABLE_DYNAMIC_MEMORY_ALLOCATION
@@ -166,8 +161,4 @@ auto main() -> int
   std::cout << "result_is_ok: " << std::boolalpha << result_is_ok << std::endl;
 }
 
-#endif
-
-#if (defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12))
-#pragma GCC diagnostic pop
 #endif
