@@ -70,7 +70,7 @@
 
     #if defined(__GNUC__)
     #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Werror=stringop-overflow"
+    #pragma GCC diagnostic ignored "-Wstringop-overflow"
     #endif
     while(first < --reverse) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     {
