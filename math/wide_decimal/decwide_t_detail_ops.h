@@ -687,7 +687,7 @@
     using local_fft_float_type = typename std::iterator_traits<FftFloatIteratorType>::value_type;
 
     for(auto   i = static_cast<std::uint32_t>(UINT8_C(0));
-               i < static_cast<std::uint32_t>(prec_elems_for_multiply);
+               i < static_cast<std::uint32_t>(prec_elems_for_multiply); // NOLINT(modernize-use-integer-sign-comparison)
              ++i)
     {
       af[ i * 2U]       = static_cast<local_fft_float_type>(u[i] / local_elem_mask_half); // NOLINT(bugprone-integer-division)

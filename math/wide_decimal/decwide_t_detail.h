@@ -341,7 +341,7 @@
         static_cast<std::uint32_t>(UINT32_C( 2097152))
       }};
 
-      const auto it = std::lower_bound(a029750_data.cbegin(), a029750_data.cend(), value); // NOLINT(llvm-qualified-auto,readability-qualified-auto,boost-use-ranges)
+      const auto it = std::lower_bound(a029750_data.cbegin(), a029750_data.cend(), value); // NOLINT(llvm-qualified-auto,readability-qualified-auto,boost-use-ranges,modernize-use-ranges)
 
       return ((it != a029750_data.cend()) ? *it : a029750_data.back());
     }

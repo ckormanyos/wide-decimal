@@ -3628,7 +3628,7 @@
       pos          = str.find('.');
       pos_plus_one = static_cast<std::ptrdiff_t>(pos + static_cast<std::size_t>(UINT8_C(1)));
 
-      if(pos > static_cast<std::size_t>(decwide_t_elem_digits10))
+      if(pos > static_cast<std::size_t>(decwide_t_elem_digits10)) // NOLINT(modernize-use-integer-sign-comparison)
       {
         const auto n_pos         = static_cast<std::int32_t>(pos);
         const auto n_rem_is_zero = static_cast<std::int32_t>((static_cast<std::int32_t>(n_pos % decwide_t_elem_digits10) == static_cast<std::int32_t>(INT8_C(0))) ? static_cast<std::int32_t>(INT8_C(1)) : static_cast<std::int32_t>(0));
@@ -3679,7 +3679,7 @@
           * static_cast<std::ptrdiff_t>(decwide_t_elem_digits10)
         );
 
-      if(static_cast<std::ptrdiff_t>(str.length() - pos) > static_cast<std::ptrdiff_t>(max_dec))
+      if(static_cast<std::ptrdiff_t>(str.length() - pos) > static_cast<std::ptrdiff_t>(max_dec)) // NOLINT(modernize-use-integer-sign-comparison)
       {
         str = str.substr(static_cast<std::string::size_type>(UINT8_C(0)),
                          static_cast<std::string::size_type>(pos_plus_one + max_dec));

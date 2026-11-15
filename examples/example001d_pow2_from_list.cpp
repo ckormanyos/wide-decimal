@@ -305,7 +305,7 @@ auto ::math::wide_decimal::example001d_pow2_from_list() -> bool
     {
       x2 = pow(local_half, static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / 2U) - i));
     }
-    else if(i == static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / static_cast<std::size_t>(UINT8_C(2))))
+    else if(i == static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / static_cast<std::size_t>(UINT8_C(2)))) // NOLINT(modernize-use-integer-sign-comparison)
     {
       x2 = local_one;
     }
