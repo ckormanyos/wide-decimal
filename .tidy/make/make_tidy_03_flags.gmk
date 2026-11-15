@@ -44,7 +44,7 @@ TIDY_CHECKS  = "*,                                                             \
                 -cert-dcl58-cpp,                                               \
                 -cppcoreguidelines-avoid-do-while,                             \
                 -cppcoreguidelines-avoid-magic-numbers,                        \
-                -cppcoreguidelines-pro-bounds-pointer-arithmetic               \
+                -cppcoreguidelines-pro-bounds-pointer-arithmetic,              \
                 -cppcoreguidelines-rvalue-reference-param-not-moved,           \
                 -fuchsia-*,                                                    \
                 -llvmlibc-*,                                                   \
