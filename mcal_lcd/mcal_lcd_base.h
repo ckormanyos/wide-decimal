@@ -27,8 +27,8 @@
     virtual auto init() -> bool = 0;
 
     virtual auto write(const char* pstr,
-                       const std::size_t length,
-                       const std::uint_fast8_t line_index) -> bool = 0;
+                       const std::size_t length,                        // NOLINT(readability-avoid-const-params-in-decls)
+                       const std::uint_fast8_t line_index) -> bool = 0; // NOLINT(readability-avoid-const-params-in-decls)
 
   protected:
     lcd_base() = default; // LCOV_EXCL_LINE
