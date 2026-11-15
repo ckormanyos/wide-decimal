@@ -89,7 +89,7 @@ auto sin_series(const FloatingPointType& x) -> FloatingPointType
       break;
     }
 
-    term_is_neg ? sum -= term : sum += term;
+    sum += term_is_neg ? -term : term;
 
     term_is_neg = (!term_is_neg);
   }
@@ -120,7 +120,7 @@ auto cos_series(const FloatingPointType& x) -> FloatingPointType
       break;
     }
 
-    term_is_neg ? sum -= term : sum += term;
+    sum += term_is_neg ? -term : term;
 
     term_is_neg = (!term_is_neg);
   }

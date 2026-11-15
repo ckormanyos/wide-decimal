@@ -91,7 +91,7 @@ auto sin_series(const FloatingPointType& x) -> FloatingPointType
       break;
     }
 
-    term_is_neg ? sum -= term : sum += term;
+    sum += term_is_neg ? -term : term;
 
     term_is_neg = (!term_is_neg);
   }
@@ -120,7 +120,7 @@ auto cos_series(const FloatingPointType& x) -> FloatingPointType
       break;
     }
 
-    term_is_neg ? sum -= term : sum += term;
+    sum += term_is_neg ? -term : term;
 
     term_is_neg = (!term_is_neg);
   }
@@ -260,10 +260,9 @@ auto cos(const dec1001_t& x) -> dec1001_t // NOLINT(misc-no-recursion)
   return c;
 }
 
-auto hypergeometric_2f1(const dec1001_t& a, // NOLINT(bugprone-easily-swappable-parameters)
-                        const dec1001_t& b,
-                        const dec1001_t& c,
-                        const dec1001_t& x) -> dec1001_t
+static auto hypergeometric_2f1(const dec1001_t& a, const dec1001_t& b, const dec1001_t& c, const dec1001_t& x) -> dec1001_t; // NOLINT(bugprone-easily-swappable-parameters)
+
+static auto hypergeometric_2f1(const dec1001_t& a, const dec1001_t& b, const dec1001_t& c, const dec1001_t& x) -> dec1001_t // NOLINT(bugprone-easily-swappable-parameters)
 {
   // Compute the series representation of hypergeometric_2f1
   // taken from Abramowitz and Stegun 15.1.1.
@@ -304,21 +303,25 @@ auto hypergeometric_2f1(const dec1001_t& a, // NOLINT(bugprone-easily-swappable-
   return h2f1;
 }
 
-auto hypergeometric_2f1_regularized(const dec1001_t& a,
-                                    const dec1001_t& b,
-                                    const dec1001_t& c,
-                                    const dec1001_t& x) -> dec1001_t
+static auto hypergeometric_2f1_regularized(const dec1001_t& a, const dec1001_t& b, const dec1001_t& c, const dec1001_t& x) -> dec1001_t;
+
+static auto hypergeometric_2f1_regularized(const dec1001_t& a, const dec1001_t& b, const dec1001_t& c, const dec1001_t& x) -> dec1001_t
 {
   return hypergeometric_2f1(a, b, c, x) / ::boost::math::tgamma(c);
 }
 
-auto pochhammer(const dec1001_t& x, const dec1001_t& a) -> dec1001_t
+static auto pochhammer(const dec1001_t& x, const dec1001_t& a) -> dec1001_t;
+
+static auto pochhammer(const dec1001_t& x, const dec1001_t& a) -> dec1001_t
 {
   return ::boost::math::tgamma(x + a) / ::boost::math::tgamma(x);
 }
 
 template<typename T>
-auto test_sin_cos_zero_neg_only() -> bool
+static auto test_sin_cos_zero_neg_only() -> bool;
+
+template<typename T>
+static auto test_sin_cos_zero_neg_only() -> bool
 {
   // N[Sin[-123/100], 1013]
   // N[Cos[-123/100], 1013]
@@ -434,9 +437,10 @@ WIDE_DECIMAL_NAMESPACE_END
 namespace example009a_boost
 {
   template<typename FloatingPointType>
-  auto legendre_pvu(const FloatingPointType& v, // NOLINT(bugprone-easily-swappable-parameters)
-                    const FloatingPointType& u,
-                    const FloatingPointType& x) -> FloatingPointType
+  static auto legendre_pvu(const FloatingPointType& v, const FloatingPointType& u, const FloatingPointType& x) -> FloatingPointType; // NOLINT(bugprone-easily-swappable-parameters)
+
+  template<typename FloatingPointType>
+  static auto legendre_pvu(const FloatingPointType& v, const FloatingPointType& u, const FloatingPointType& x) -> FloatingPointType // NOLINT(bugprone-easily-swappable-parameters)
   {
     using floating_point_type = FloatingPointType;
 
@@ -458,9 +462,10 @@ namespace example009a_boost
   }
 
   template<typename FloatingPointType>
-  auto legendre_qvu(const FloatingPointType& v,                      // NOLINT(bugprone-easily-swappable-parameters)
-                    const FloatingPointType& u,                      // NOLINT(bugprone-easily-swappable-parameters)
-                    const FloatingPointType& x) -> FloatingPointType // NOLINT(bugprone-easily-swappable-parameters)
+  static auto legendre_qvu(const FloatingPointType& v, const FloatingPointType& u, const FloatingPointType& x) -> FloatingPointType; // NOLINT(bugprone-easily-swappable-parameters)
+
+  template<typename FloatingPointType>
+  static auto legendre_qvu(const FloatingPointType& v, const FloatingPointType& u, const FloatingPointType& x) -> FloatingPointType // NOLINT(bugprone-easily-swappable-parameters)
   {
     using std::cos;
     using std::pow;

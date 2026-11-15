@@ -35,7 +35,9 @@ auto ::math::wide_decimal::example002d_pi_limb08() -> bool { return true; }
 
 namespace example002d_pi {
 
-auto lcd0() -> mcal::lcd::lcd_base&
+static auto lcd0() -> mcal::lcd::lcd_base&;
+
+static auto lcd0() -> mcal::lcd::lcd_base&
 {
   static mcal::lcd::lcd_console lc0;
 
@@ -44,7 +46,7 @@ auto lcd0() -> mcal::lcd::lcd_base&
 
 } // namespace example002d_pi
 
-auto example002d_pi_limb8_digits10_callback(const std::uint32_t d10) -> void
+auto example002d_pi_limb8_digits10_callback(const std::uint32_t d10) -> void // NOLINT(misc-use-internal-linkage)
 {
   std::array<char, static_cast<std::size_t>(UINT32_C(10))> p_str = {{ '\0' }};
 

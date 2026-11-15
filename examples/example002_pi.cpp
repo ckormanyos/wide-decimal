@@ -27,7 +27,9 @@
 
 namespace example002_pi
 {
-  auto lcd0() -> mcal::lcd::lcd_base&
+  static auto lcd0() -> mcal::lcd::lcd_base&;
+
+  static auto lcd0() -> mcal::lcd::lcd_base&
   {
     static mcal::lcd::lcd_console lc0;
 
@@ -35,7 +37,7 @@ namespace example002_pi
   }
 } // namespace example002_pi
 
-auto example002_pi_digits10_callback(const std::uint32_t d10) -> void
+auto example002_pi_digits10_callback(const std::uint32_t d10) -> void // NOLINT(misc-use-internal-linkage)
 {
   std::array<char, static_cast<std::size_t>(UINT32_C(10))> p_str = {{ '\0' }};
 

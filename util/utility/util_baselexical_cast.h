@@ -68,6 +68,10 @@
 
     auto* reverse = out; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
+    #if defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wstringop-overflow"
+    #endif
     while(first < --reverse) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     {
       const auto digit { *first };
@@ -76,6 +80,9 @@
 
       *reverse = digit;
     }
+    #if defined(__GNUC__) && !defined(__clang__)
+    #pragma GCC diagnostic pop
+    #endif
 
     return out;
   }

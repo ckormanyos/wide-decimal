@@ -436,7 +436,7 @@ namespace example011_trig
           using example011_trig::cos;
           using example011_trig::sin;
 
-          return example011_trig::cos(x * example011_trig::sin(t) - (t * n));
+          return example011_trig::cos((x * example011_trig::sin(t)) - (t * n));
         }
       );
 

@@ -195,7 +195,7 @@
       my_exponent_part -= 1;
     }
 
-    constexpr native_float_parts(const native_float_parts& other) noexcept
+    constexpr native_float_parts(const native_float_parts& other) noexcept // NOLINT(hicpp-use-equals-default,modernize-use-equals-default)
       : my_mantissa_part(other.my_mantissa_part),
         my_exponent_part(other.my_exponent_part) { }
 
@@ -341,7 +341,7 @@
         static_cast<std::uint32_t>(UINT32_C( 2097152))
       }};
 
-      const auto it = std::lower_bound(a029750_data.cbegin(), a029750_data.cend(), value); // NOLINT(llvm-qualified-auto,readability-qualified-auto)
+      const auto it = std::lower_bound(a029750_data.cbegin(), a029750_data.cend(), value); // NOLINT(llvm-qualified-auto,readability-qualified-auto,boost-use-ranges,modernize-use-ranges)
 
       return ((it != a029750_data.cend()) ? *it : a029750_data.back());
     }

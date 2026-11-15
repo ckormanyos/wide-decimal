@@ -297,7 +297,7 @@ auto ::math::wide_decimal::example001d_pow2_from_list() -> bool
   wide_decimal_type local_one (static_cast<unsigned>(UINT8_C(1)));
   wide_decimal_type local_two (static_cast<unsigned>(UINT8_C(2)));
 
-  for(auto i = static_cast<std::ptrdiff_t>(INT8_C(0)); i < static_cast<std::ptrdiff_t>(local_pow2_data.size()); ++i)
+  for(auto i = static_cast<std::ptrdiff_t>(INT8_C(0)); i < static_cast<std::ptrdiff_t>(local_pow2_data.size()); ++i) // NOLINT(modernize-use-integer-sign-comparison)
   {
     wide_decimal_type x2;
 
@@ -305,7 +305,7 @@ auto ::math::wide_decimal::example001d_pow2_from_list() -> bool
     {
       x2 = pow(local_half, static_cast<std::ptrdiff_t>(static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / 2U) - i));
     }
-    else if(i == static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / static_cast<std::size_t>(UINT8_C(2))))
+    else if(i == static_cast<std::ptrdiff_t>(std::tuple_size<local_pow2_data_type>::value / static_cast<std::size_t>(UINT8_C(2)))) // NOLINT(modernize-use-integer-sign-comparison)
     {
       x2 = local_one;
     }
