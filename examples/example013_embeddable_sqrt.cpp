@@ -60,7 +60,7 @@ auto ::math::wide_decimal::example013_embeddable_sqrt() -> bool
     { 35U, 1363U, 600U, 9596U, 3986U, 6393U, 3384U, 6404U, 1805U, 5759U, 7515U, 1828U, 7169U, 3145U, 2816U, 5976U, 1647U, 1771U, 895U, 4528U, 9092U, 8635U, 312U, 1913U, 2220U, 9780U } // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   );
 
-  std::copy(rep.cbegin(), rep.cend(), control.representation().begin());
+  std::copy(rep.cbegin(), rep.cend(), control.representation().begin()); // NOLINT(boost-use-ranges,modernize-use-ranges)
 
   using std::fabs;
 

@@ -157,7 +157,10 @@ namespace example004_bessel
   std::int32_t  jn_algo::m_p; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
   template<typename FloatingPointType>
-  auto cyl_bessel_j(std::int32_t n, FloatingPointType x) -> FloatingPointType
+  static auto cyl_bessel_j(std::int32_t n, const FloatingPointType& x) -> FloatingPointType;
+
+  template<typename FloatingPointType>
+  static auto cyl_bessel_j(std::int32_t n, const FloatingPointType& x) -> FloatingPointType
   {
     using floating_point_type = FloatingPointType;
 

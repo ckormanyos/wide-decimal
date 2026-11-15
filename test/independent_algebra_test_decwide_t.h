@@ -319,7 +319,7 @@
       (
         static_cast<std::size_t>(0U),
         static_cast<std::size_t>(count),
-        [&result_is_ok, &algebra_test_lock](std::size_t j)
+        [&result_is_ok, &algebra_test_lock](std::size_t j) // NOLINT(modernize-use-trailing-return-type)
         {
           std::string str_a;
           std::string str_b;
@@ -380,7 +380,7 @@
       (
         static_cast<std::size_t>(0U),
         static_cast<std::size_t>(count),
-        [&result_is_ok, &algebra_test_lock](std::size_t j)
+        [&result_is_ok, &algebra_test_lock](std::size_t j) // NOLINT(modernize-use-trailing-return-type)
         {
           std::string str_a;
           std::string str_b;
@@ -441,7 +441,7 @@
       (
         static_cast<std::size_t>(0U),
         static_cast<std::size_t>(count),
-        [&result_is_ok, &algebra_test_lock](std::size_t j)
+        [&result_is_ok, &algebra_test_lock](std::size_t j) // NOLINT(modernize-use-trailing-return-type)
         {
           std::string str_a;
           std::string str_b;
@@ -502,7 +502,7 @@
       (
         static_cast<std::size_t>(0U),
         static_cast<std::size_t>(count),
-        [&result_is_ok, &algebra_test_lock](std::size_t j)
+        [&result_is_ok, &algebra_test_lock](std::size_t j) // NOLINT(modernize-use-trailing-return-type)
         {
           std::string str_a;
           std::string str_b;
@@ -563,7 +563,7 @@
       (
         static_cast<std::size_t>(0U),
         static_cast<std::size_t>(count),
-        [&result_is_ok, &algebra_test_lock](std::size_t j)
+        [&result_is_ok, &algebra_test_lock](std::size_t j) // NOLINT(modernize-use-trailing-return-type)
         {
           std::string str_a;
 
@@ -624,7 +624,7 @@
         (
           static_cast<std::size_t>(0U),
           static_cast<std::size_t>(count),
-          [&result_is_ok, &algebra_test_lock](std::size_t j)
+          [&result_is_ok, &algebra_test_lock](std::size_t j) // NOLINT(modernize-use-trailing-return-type)
           {
             std::string str_a;
 
