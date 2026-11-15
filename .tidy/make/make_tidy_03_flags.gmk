@@ -51,6 +51,8 @@ TIDY_CHECKS  = "*,                                                             \
                 -misc-const-correctness,                                       \
                 -misc-header-include-cycle,                                    \
                 -misc-include-cleaner,                                         \
+                -misc-use-anonymous-namespace,                                 \
+                -misc-use-internal-linkage,                                    \
                 -modernize-type-traits,                                        \
                 -modernize-use-constraints,                                    \
                 -performance-avoid-endl,                                       \
