@@ -6077,7 +6077,7 @@
           }
         }
 
-        (negative_term ? sum -= term : sum += term);
+        sum += negative_term ? -term : term;
 
         negative_term = (!negative_term);
       }

@@ -70,7 +70,7 @@ endif
 LCOV_BRANCH  =
 
 ifneq ($(ALL_COV),0)
-LCOV_BRANCH := --rc lcov_branch_coverage=1
+LCOV_BRANCH := --branch_coverage
 endif
 
 LCOV_REMOVES = '/usr/*'                                                       \
