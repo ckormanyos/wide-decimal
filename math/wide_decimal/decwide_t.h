@@ -1018,7 +1018,7 @@
           #endif
           #if(__GNUC__ >= 8)
           #pragma GCC diagnostic push
-          #pragma GCC diagnostic ignored "-Wstringop-overflow="
+          #pragma GCC diagnostic ignored "-Wstringop-overflow"
           #endif
           #endif
 
@@ -1274,7 +1274,7 @@
           #endif
           #if(__GNUC__ >= 8)
           #pragma GCC diagnostic push
-          #pragma GCC diagnostic ignored "-Wstringop-overflow="
+          #pragma GCC diagnostic ignored "-Wstringop-overflow"
           #endif
           #endif
 
@@ -3836,7 +3836,14 @@
         {
           for(std::size_t idx { }; idx < count; ++idx) // NOLINT(altera-id-dependent-backward-branch)
           {
+            #if defined(__GNUC__) && !defined(__clang__)
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wstringop-overflow"
+            #endif
             *(--dst_ptr) = *(--src_end); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+            #if defined(__GNUC__) && !defined(__clang__)
+            #pragma GCC diagnostic pop
+            #endif
           }
         }
 
